@@ -59,7 +59,6 @@ public class MainActivity extends ActionBarActivity {
 
    //     setContentView(plf.getListView());
 
-
         android.app.ActionBar  ab = getActionBar();
         System.out.println("ActionBar=" + ab);
         if(ab != null)ab.setIcon(R.drawable.alexey_photor_fo_visa);
