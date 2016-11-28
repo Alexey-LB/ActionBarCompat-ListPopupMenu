@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android2="http://schemas.android.com/apk/res/android"
+    xmlns:android="http://schemas.android.com/apk/res-auto">
+
+  <!---->
+    <!--<items android:id="@+id/new_game_"-->
+        <!--android:icon="@android:drawable/ic_menu_call"-->
+        <!--android:title="AL"-->
+        <!--android:orderInCategory="0" />-->
+
+
+
+    <!--<items android:id="@+id/helpa_"-->
+        <!--android:orderInCategory="5"-->
+        <!--android:icon="@android:drawable/ic_menu_help"-->
+        <!--android:title="helpa"-->
+        <!--/>-->
+
+    <!-- android:showAsAction="always"
+    android:showAsAction="always"
+    android:id="@+id/new_game"
+    android:id="@+id/help"
+"http://schemas.android.com/apk/res-auto"
+    <menu xmlns:android="http://schemas.android.com/apk/res/android">
+    android:showAsAction="ifRoom"/>
+
+android:actionProviderClass = "android.widget.ShareActionProvider"
+//показывает в этом меню увеличительное текло и при вызове- текстовую строку с клавой!
+android:actionViewClass="android.widget.SearchView"
+    -->
+  <item android2:title="@string/edit"
+    android2:id="@+id/edit_a"
+    android2:icon="@android:drawable/ic_menu_edit"
+    android:showAsAction="always"
+    android2:checkable="false"
+    android2:visible="true"
+    android2:enabled="true"
+
+
+      />
+  <group android:showAsAction="always">
+
+    <item android2:title="@string/add"
+        android2:id="@+id/add_a"
+        android2:icon="@drawable/ic_add"
+        android:showAsAction="always"
+        android2:checkable="false"
+        android2:visible="true"
+
+        android2:enabled="true" />
+  </group>
+  <!--
+   xmlns:android2="http://schemas.android.com/apk/res/android"
+  tools:ignore="AppCompatResource"
+  android2:checkable="true"tools:ignore="AppCompatResource"-->
+</menu>

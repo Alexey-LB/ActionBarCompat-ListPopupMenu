@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Copyright 2013 The Android Open Source Project
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="64dp"
+
+      android:id="@+id/par"
+    android:theme="@android:style/TextAppearance.Inverse"
+    android:elevation="1dp"
+    android:background="@android:drawable/screen_background_light">
+<!-- @drawable/ic_overflow, android:background="@android:drawable/ic_menu_my_calendar">
+editbox_dropdown_light_frame,[sym_contact_card](screen_background_light)screen_background_light_transparent  -->
+
+    <include layout="@layout/list_item_g" />
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/level2">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:weightSum="1"
+            android:id="@+id/lvel2.1">
+
+            <TextView
+                android:text="Img"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:id="@+id/textView5"
+                android:background="@drawable/rounded_a"
+                android:gravity="center_vertical|center_horizontal"
+                />
+
+            <TextView
+                android:text="+"
+                android:layout_height="match_parent"
+                android:id="@+id/textView"
+
+                android:layout_weight="0.99"
+                android:maxLines="1"
+
+                android:background="@drawable/rounded_a"
+                android:gravity="center_vertical|center_horizontal"
+                android:textSize="30sp"
+                android:textStyle="normal|bold"
+                android:layout_width="wrap_content" />
+            <!--
+                            android:paddingLeft="20dp"
+                            android:paddingRight="20dp"
+                            android:drawablePadding="10dp"
+                            android:drawableStart="10"
+            -->
+            <TextView
+                android:text="Signal"
+                android:layout_width="35dp"
+                android:layout_height="match_parent"
+                android:id="@+id/textView7"
+                android:gravity="center_vertical|center_horizontal" />
+
+            <TextView
+                android:text="Batt"
+                android:layout_width="34dp"
+                android:layout_height="match_parent"
+                android:id="@+id/batt"
+                android:gravity="center_vertical|center_horizontal" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:id="@+id/level2.2">
+
+            <TextView
+                android:id="@+id/textView4"
+                android:layout_height="match_parent"
+                android:layout_width="95dp"
+                android:gravity="center_vertical|center_horizontal"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <TextView
+                android:text="tekushee"
+                android:layout_width="169dp"
+                android:layout_height="match_parent"
+                android:id="@android:id/text1"
+                android:maxLines="1"
+                android:gravity="center_vertical|center_horizontal"
+                android:textSize="24sp"
+                android:textStyle="normal|bold"
+                android:layout_weight="15.63" />
+
+
+            <TextView
+                android:id="@+id/textViewName"
+                android:text="Prognoz"
+                android:layout_width="95dp"
+                android:layout_height="match_parent"
+
+                android:layout_weight="1"
+                android:maxLines="1"
+                android:gravity="center_vertical|center_horizontal"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+    </LinearLayout>
+    <!--android:background="?attr/selectableItemBackground" android:background="?attr/background_floating_material_light"-->
+    <!--    android:textAppearance="@style/TextAppearance.AppCompat.Body2" -->
+   <!-- android:textAlignment="center" -->
+
+
+
+    <!--
+        <include layout="@layout/float_button" />
+        -->
+</FrameLayout>

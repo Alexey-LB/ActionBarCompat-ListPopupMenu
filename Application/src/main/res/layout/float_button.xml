@@ -1,0 +1,23 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+    android:gravity="top|center_horizontal"
+    android:foregroundGravity="top|center_horizontal"
+    android:layout_height="64dp">
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/floatingActionButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|center_horizontal"
+            android:src="@android:drawable/ic_menu_add"
+            android:visibility="invisible"
+            app:backgroundTint="@color/cardview_dark_background"
+            app:fabSize="mini"
+            android:foregroundGravity="top|center_horizontal"
+            app:rippleColor="?android:attr/textColorHint" />
+    </LinearLayout>
+
+    <!-- android:layout_margin="@dimen/fab_margin" -->
+

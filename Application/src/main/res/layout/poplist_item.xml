@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="64dp"
+    android:id="@+id/item_parent"
+    android:theme="@android:style/TextAppearance.Inverse"
+    android:elevation="1dp"
+    android:background="@android:drawable/screen_background_light">
+    <!--
+    https://developer.android.com/guide/topics/ui/menus.html
+
+    @drawable/ic_overflow, android:background="@android:drawable/ic_menu_my_calendar">
+    editbox_dropdown_light_frame,[sym_contact_card](screen_background_light)screen_background_light_transparent  -->
+<!-- первый это у нас картинка -удалить и Редактировать -->
+    <include layout="@layout/poplist_item_0" />
+    <!-- текстовый вывод весь -->
+    <include layout="@layout/poplist_item_1" />
+    <!-- кнопка удалить -->
+   <!--<include layout="@layout/poplist_item_3" />-->
+</FrameLayout>

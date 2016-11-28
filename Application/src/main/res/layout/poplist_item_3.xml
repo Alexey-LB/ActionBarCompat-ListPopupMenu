@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:id="@+id/item_2"
+    android:theme="@android:style/TextAppearance.Inverse"
+    android:elevation="1dp"
+    android:background="#00000000"
+    android:gravity="top|center_horizontal"
+    app:layout_gravity="top|center_horizontal"
+    android:visibility="visible"
+    android:transitionGroup="true"
+    android:foregroundGravity="top"
+    android:layout_height="56dp"
+
+    app:layout_scrollFlags="scroll|enterAlways"
+>
+    <!-- @drawable/ic_overflow, android:background="@android:drawable/ic_menu_my_calendar">
+    editbox_dropdown_light_frame,[sym_contact_card](screen_background_light)screen_background_light_transparent  -->
+
+
+    <TextView
+        android:text="+"
+        android:id="@+id/floatingActionButton"
+         android:gravity="center_vertical|center_horizontal"
+        android:background="@drawable/fbutton"
+        android:textSize="30sp"
+        android:layout_height="46dp"
+        android:layout_width="46dp"
+
+        app:layout_scrollFlags="scroll|enterAlways"
+        />
+
+
+    <!--         android:background="@android:color/holo_red_dark"
+    android:layout_alignParentStart="true"android:layout_marginStart="71dp"
+     tools:text="@android:string/cut"
+    android:background="@drawable/rounded"       android:layout_margin="20dp" - отступ рисунка от краев контейнера!! р
+    android:background="@android:color/holo_red_dark"
+        <include layout="@layout/float_button" />
+        -->
+</LinearLayout>

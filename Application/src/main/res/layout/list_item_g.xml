@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="64dp"
+    android:id="@+id/par"
+    android:theme="@android:style/TextAppearance.Inverse"
+    android:elevation="1dp"
+    android:background="@android:drawable/screen_background_light"
+    android:gravity="right">
+<!-- @drawable/ic_overflow, android:background="@android:drawable/ic_menu_my_calendar">
+editbox_dropdown_light_frame,[sym_contact_card](screen_background_light)screen_background_light_transparent  -->
+
+    <TextView
+        android:text="TextView"
+        android:layout_height="match_parent"
+
+        android:id="@+id/par_dell"
+        android:contentDescription="@android:string/cut"
+        tools:text="@android:string/cut"
+
+
+
+        android:textColor="@color/cardview_light_background"
+        android:background="@drawable/rounded"
+        android:textStyle="normal|bold"
+
+        android:layout_width="100dp"
+        android:gravity="center_vertical|center_horizontal" />
+
+    <!--        android:layout_margin="20dp" - отступ рисунка от краев контейнера!! р
+    android:background="@android:color/holo_red_dark"
+        <include layout="@layout/float_button" />
+        -->
+</LinearLayout>

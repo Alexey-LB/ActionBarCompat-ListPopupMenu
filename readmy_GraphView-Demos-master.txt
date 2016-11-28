@@ -1,0 +1,5 @@
+в ActionBarCompat-ListPopupMenu_v22.rar 
+  ListPopupMenu_v22 реализован как в иОС сдвижка и удаление пункта
+реакция на событи длинного нажаьтия!!
+в каталог раскрыть
+C:\_firm\android\GraphView-Demos-master\ 
