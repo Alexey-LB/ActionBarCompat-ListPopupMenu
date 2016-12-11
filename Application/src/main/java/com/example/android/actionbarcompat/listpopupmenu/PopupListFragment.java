@@ -339,6 +339,7 @@ public class PopupListFragment extends ListFragmentA  {
      //       parentActivity
             mBluetoothLeService.mbleDot.add(new Sensor());
             mBluetoothLeService.mbleDot.add(new Sensor());
+            mBluetoothLeService.connect("74:DA:EA:9F:54:C9",true);
 Log.w(TAG,"mBluetoothLeService.mbleDot= " + mBluetoothLeService.mbleDot +
 "   size= " +  mBluetoothLeService.mbleDot.size());
 

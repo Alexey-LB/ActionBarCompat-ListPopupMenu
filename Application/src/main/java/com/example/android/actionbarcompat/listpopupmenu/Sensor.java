@@ -110,15 +110,16 @@ public class Sensor {
         changeValue.postDelayed(new Runnable() {
             @Override
             public void run() {
-                intermediateValue = getNewValue(20f,100f);
-                rssi = (int)getNewValue(0f,5f);
-
+                if (mBluetoothDeviceAddress == null) {
+                    intermediateValue = getNewValue(20f, 100f);
+                    rssi = (int) getNewValue(0f, 5f);
+                }
                 final String val = getStringIntermediateValue(false,true);
                 final String rs = String.valueOf(rssi);
                 final String lb = deviceLabel;
-                if(deviceLabelView instanceof TextView) ((TextView)deviceLabelView).setText(lb);
-                if(rssiView  instanceof TextView) ((TextView)rssiView ).setText(rs);
-                if(intermediateValueView instanceof TextView) ((TextView)intermediateValueView).setText(val);
+                if((deviceLabelView != null)&&(deviceLabelView instanceof TextView)) ((TextView)deviceLabelView).setText(lb);
+                if((rssiView != null)&&(rssiView  instanceof TextView)) ((TextView)rssiView ).setText(rs);
+                if((intermediateValueView != null)&&(intermediateValueView instanceof TextView)) ((TextView)intermediateValueView).setText(val);
 
                 loop();
             }
@@ -139,7 +140,7 @@ public class Sensor {
     }
     Sensor (){    loop();    deviceLabel = deviceLabelStringDefault + " " + indexDevace++;}
     Sensor (final String adress){
-
+        loop();
         mBluetoothDeviceAddress = adress;
         deviceLabel = deviceLabelStringDefault + " " + indexDevace++;
     }
@@ -245,7 +246,8 @@ public class Sensor {
             intermediateValue = characteristic.getFloatValue(BluetoothGattCharacteristic.FORMAT_FLOAT, 1);
             str = String.format("%.2f", intermediateValue);
             Log.v(TAG, "TEMPERATURE: " + str + "  Properties= " + flag);
-            return str;
+            //
+           return str;
         }
 
 //        // carried out as per profile specifications:
@@ -265,6 +267,8 @@ public class Sensor {
             intermediateValue = (float)heartRate;
             // intent.putExtra(EXTRA_DATA, String.valueOf(heartRate) +" / "+ String.valueOf(heartRR1) +"/"+ String.valueOf(heartRR1));
             // sendsendBroadcastPutExtra(action,String.valueOf(heartRate) +" / "+ String.valueOf(heartRR1) +"/"+ String.valueOf(heartRR1));
+            //
+
             return getStringIntermediateValue( false, false);
         }
         //----------Health Thermometer-------------------
@@ -513,6 +517,7 @@ public class Sensor {
         if(mBluetoothGatt == null) return;
         // ЭТО для отладки--!!!
         //todo(loop_rssi++ & 0xFFFFFFC0) == 0)- В ТЕЧЕНИИ первой МИНУТЫ запросы будут идти КАЖДУЮ секунду!!!
+
         //каждые 16 сек смотрим уровень сигнала
         loop_rssi++;
         if(((loop_rssi & 0x0F) == 1) || ((loop_rssi & 0xFFFFFFC0) == 0)) {

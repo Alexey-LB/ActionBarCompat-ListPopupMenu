@@ -109,6 +109,7 @@ public class BluetoothLeServiceNew extends Service {
      */
     private Sensor getBluetoothDevice(final String adr){
         for(Sensor sensor: mbleDot){
+            if(sensor.mBluetoothDeviceAddress == null) continue;
             if(adr.compareTo(sensor.mBluetoothDeviceAddress) == 0)return sensor;
         }
         return null;
