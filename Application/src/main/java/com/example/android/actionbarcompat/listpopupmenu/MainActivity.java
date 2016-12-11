@@ -20,11 +20,15 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.ComponentName;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.shapes.RectShape;
 import android.os.Bundle;
 //import android.support.v7.app.ActionBar;
+import android.os.IBinder;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -64,6 +68,7 @@ private PopupListFragment popupListFragment;
         // http://developer.alexanderklimov.ru/android/theory/fragments.php
   popupListFragment= (PopupListFragment)getSupportFragmentManager()
                 .findFragmentById(R.id.popUpListFragment);
+        popupListFragment.parentActivity = this;
         //--------------
        // getSupportActionBar();??--это решалось в другом методе(getDelegate().getSupportActionBar();)
        //android.support.v7.app.ActionBar
@@ -79,8 +84,8 @@ private PopupListFragment popupListFragment;
         gtab.setDisplayUseLogoEnabled(true);
 
         System.out.println("ActionBar=" + ab + "  gtab="+ gtab);
-        if(ab != null)ab.setIcon(R.drawable.alexey_photor_fo_visa);
-Log.e(TAG, "---------ActionBar=" + ab + "  gtab="+ gtab);
+        //if(ab != null)ab.setIcon(R.drawable.alexey_photor_fo_visa);
+
 //        actionBar.setDisplayHomeAsUpEnabled(false);
 //        actionBar.setHomeButtonEnabled(false);
 //        actionBar.setDisplayUseLogoEnabled(false);
@@ -90,7 +95,36 @@ Log.e(TAG, "---------ActionBar=" + ab + "  gtab="+ gtab);
         //  ab.setTitle("Датчики");
        // ab.setIcon(R.drawable.rounded_a);
        // View.SYSTEM_UI_FLAG_FULLSCREEN
+        //-------------ЗАПУСТИЛИ ервис ---------
+        Intent gattServiceIntent = new Intent(this, BluetoothLeServiceNew.class);
+        bindService(gattServiceIntent, mServiceConnectionM, BIND_AUTO_CREATE);
+        Log.e(TAG, "----onCreate END-----ActionBar=" + ab + "  gtab="+ gtab);
     }
+    public BluetoothLeServiceNew mBluetoothLeServiceM;
+
+    // Code to manage Service lifecycle.
+    private final ServiceConnection mServiceConnectionM = new ServiceConnection() {
+
+        @Override
+        public void onServiceConnected(ComponentName componentName, IBinder service) {
+            //     mBluetoothLeService = ((BluetoothLeService.LocalBinder) service).getService();
+            mBluetoothLeServiceM = ((BluetoothLeServiceNew.LocalBinder) service).getService();
+            if (!mBluetoothLeServiceM.initialize()) {
+                Log.e(TAG, "Unable to initialize Bluetooth");
+                finish();
+            }
+            popupListFragment.initList();
+            // Automatically connects to the device upon successful start-up initialization.
+            //         mBluetoothLeService.connect(mDeviceAddress,true);
+            Log.w(TAG, "---initialize ---onServiceConnected-----");
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName componentName) {
+            mBluetoothLeServiceM = null;
+            Log.v(TAG, "onServiceDisconnected");
+        }
+    };
 //    Анимация Floating Action Button в Android
 //    https://geektimes.ru/company/nixsolutions/blog/276128/
 //
@@ -171,5 +205,11 @@ Log.e(TAG, "---------ActionBar=" + ab + "  gtab="+ gtab);
                 return super.onOptionsItemSelected(item);
         }
 
+    }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unbindService(mServiceConnectionM);
+        mBluetoothLeServiceM = null;
     }
 }

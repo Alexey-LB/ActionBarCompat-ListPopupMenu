@@ -22,7 +22,19 @@
 
     <!-- ActionBarCompat provides an implementation of Popup Menu from API v7 onwards -->
     <!-- Min/target SDK versions (<uses-sdk>) managed by build.gradle -->
+    <!-- PackageManager.hasSystemFeature(FEATURE_BLUETOOTH_LE) -->
+    <uses-feature android:name="android.hardware.bluetooth_le" android:required="true"/>
+    <uses-permission android:name="android.permission.BLUETOOTH"/>
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
+    <!--Для вибрации необходимо прописать в манифесте-->
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <!--<uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />-->
+    <!--<uses-permission android:name="android.permission.WRITE_SETTINGS" />-->
+    <!--<uses-permission android:name="android.permission.CHANGE_CONFIGURATION" />-->
+    <!--<uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS"/>-->
 
+    <!--для записи пользовательских настроек-->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <application
         android:icon="@android:drawable/ic_menu_revert"
         android:label="@string/app_name"
@@ -52,6 +64,7 @@ http://www.fandroid.info/nastrojka-paneli-dejstvij-actionbar/
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <service android:name=".BluetoothLeServiceNew" android:enabled="true"/>
     </application>
 
 </manifest>

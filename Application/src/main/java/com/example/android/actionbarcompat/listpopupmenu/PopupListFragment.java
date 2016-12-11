@@ -20,10 +20,14 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.ListFragment;
 import android.app.usage.UsageEvents;
+import android.content.ComponentName;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.renderscript.ScriptGroup;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.ActionMenuView;
@@ -55,6 +59,8 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.TreeMap;
+
+import static android.content.Context.BIND_AUTO_CREATE;
 //Анимация Floating Action Button в Android
 //        https://geektimes.ru/company/nixsolutions/blog/276128/
 //
@@ -114,6 +120,7 @@ public class PopupListFragment extends ListFragmentA  {
     private static final String TAG = "PopListFA";
     private Menu menuFragment;
     private boolean dellItem= false;
+    public  MainActivity parentActivity;
 
     private static int index_object = 0;
     private final int ofset_y = 60;
@@ -168,13 +175,15 @@ public class PopupListFragment extends ListFragmentA  {
     public int getGraphPixelsX(int xDp){return (int)(densityX *(float)xDp);}
     public int getGraphPixelsY(int yDp){return (int)(densityY *(float)yDp);}
 
-    private void addObject(Object obj){adapter.add(obj);//setListShown(true);
-
-    }
     @SuppressWarnings("ResourceType")
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
+        Log.e(TAG,"Fragment --- onActivityCreated-----STaRT--");
         super.onActivityCreated(savedInstanceState);
+        //-------------ЗАПУСТИЛИ ервис ---------
+        Intent gattServiceIntent = new Intent(this.getActivity(), BluetoothLeServiceNew.class);
+        this.getActivity().bindService(gattServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
+        //-----------------------------
         ListView lw = getListView();
         View root;
         if(lw == null ){
@@ -196,11 +205,9 @@ public class PopupListFragment extends ListFragmentA  {
       //  android.app.
                 ActionBar ab = getActivity().getActionBar();
         System.out.println("-----ActionBar=" + ab);
-        if(ab != null){
-            ab.setIcon(R.drawable.alexey_photor_fo_visa);
-        }
-
-
+//        if(ab != null){
+//            ab.setIcon(R.drawable.alexey_photor_fo_visa);
+//        }
         //---------
         //это для ГРАФИКИ - точного представления соотношений РИСУНКА!!но НЕ для меню!!
         densityX = getResources().getDisplayMetrics().xdpi/160f;
@@ -218,7 +225,7 @@ public class PopupListFragment extends ListFragmentA  {
         //
     // при создании заталкиваем перечень названий в лист? с котоого потом и разворачиваем рор лист
         // We want to allow modifications to the list so copy the dummy data array into an ArrayList
-        ArrayList<Object> items = new ArrayList<Object>();
+
 //        for (int i = 0, z = Cheeses.CHEESES.length ; i < z ; i++) {
 //            items.add(Cheeses.CHEESES[i]);
 //        }
@@ -229,12 +236,17 @@ public class PopupListFragment extends ListFragmentA  {
       //  items.add("еуые++");
         // Set the ListAdapter
         // в адаптере навести все ссылки на отображение данных Объекта-
-        PopupAdapter pop = new PopupAdapter(items);
-        setListAdapter(pop);//создали адаптер для работы
 
-        //final ArrayAdapter
-        adapter = (ArrayAdapter) getListAdapter();
-        int count = adapter.getCount();
+//        ArrayList<Sensor> item =  mBluetoothLeService.mbleDot;
+//        ArrayList<Object> it = (ArrayList)(Object)item;
+//                PopupAdapter pop = new PopupAdapter(it);
+ //------------------
+        // ArrayList<Object> items = new ArrayList<Object>();
+//        PopupAdapter pop = new PopupAdapter(items);
+//        setListAdapter(pop);//создали адаптер для работы
+//        //final ArrayAdapter
+//        adapter = (ArrayAdapter) getListAdapter();//int count = adapter.getCount();
+ //-----------
         //View v = (View)adapter.get(count -1);
        // ViewGroup vg = ((ViewGroup) v.getParent().getParent());
         //getActionBar();
@@ -262,7 +274,7 @@ public class PopupListFragment extends ListFragmentA  {
 
      //   ((ViewGroup)lw.getParent()).addView(fbButton2);
        // ((ViewGroup)root).addView(fbButton);
-        objectDataToView.moveButton();//позиционируем
+  objectDataToView.moveButton();//позиционируем
         //слушательна кнопку: Если она в КОНТЕЙНЕРЕ, то ише ее там по ИД, иначе вешаем на все
         View vie = fbButton.findViewById(R.id.floatingActionButton);
         if(vie == null) vie = fbButton;//просто кнопка БЕЗ контейнера
@@ -278,7 +290,87 @@ public class PopupListFragment extends ListFragmentA  {
         //этот метод должен вроде сохранять отображение фрагмента при повороте ТЕЛЕфона НО!!
         // http://developer.alexanderklimov.ru/android/theory/fragments.php
         setRetainInstance(true);
+  //      ((MainActivity)getActivity()).
+        Log.e(TAG,"Fragment --- onActivityCreated---END----");
     }
+    public BluetoothLeServiceNew mBluetoothLeService = null;
+    public void initList(){
+        Log.e(TAG,"Activity to frag initList()---");
+        //            setListAdapter(pop);//создали адаптер для работы
+        //--------ЭТО делать надо  1 раз только иначе падает!!
+  //      ArrayList<Sensor> item =  mBluetoothLeService.mbleDot;
+     //     ArrayList<Sensor> item =  parentActivity.mBluetoothLeServiceM.mbleDot;
+        ArrayList<Sensor> item = ((MainActivity)getActivity()).mBluetoothLeServiceM.mbleDot;
+        ArrayList<Object> it = (ArrayList)(Object)item;
+        PopupAdapter pop = new PopupAdapter(it);
+
+        setListAdapter(pop);//создали адаптер для работы
+        //final ArrayAdapter
+        adapter = (ArrayAdapter) getListAdapter();//int count = adapter.getCount();
+
+    }
+    public void upd(){
+       this.getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Log.w(TAG,"PopupAdapter= ");
+
+                ArrayList<Sensor> item =  mBluetoothLeService.mbleDot;
+                ArrayList<Object> it = (ArrayList)(Object)item;
+                PopupAdapter pop = new PopupAdapter(it);
+
+                setListAdapter(pop);//создали адаптер для работы
+                //mLeDeviceListAdapter.notifyDataSetChanged();
+            }
+        });
+    }
+    // Code to manage Service lifecycle.
+    private final ServiceConnection mServiceConnection = new ServiceConnection() {
+
+        @Override
+        public void onServiceConnected(ComponentName componentName, IBinder service) {
+            //     mBluetoothLeService = ((BluetoothLeService.LocalBinder) service).getService();
+            mBluetoothLeService = ((BluetoothLeServiceNew.LocalBinder) service).getService();
+            if (!mBluetoothLeService.initialize()) {
+                Log.e(TAG, "Unable to initialize Bluetooth");
+             }
+            if(mBluetoothLeService == null)Log.w(TAG,"mBluetoothLeService= null");
+            if(mBluetoothLeService.mbleDot == null)Log.w(TAG,"mBluetoothLeService.mbleDot= null");
+     //       parentActivity
+            mBluetoothLeService.mbleDot.add(new Sensor());
+            mBluetoothLeService.mbleDot.add(new Sensor());
+Log.w(TAG,"mBluetoothLeService.mbleDot= " + mBluetoothLeService.mbleDot +
+"   size= " +  mBluetoothLeService.mbleDot.size());
+
+       //--------------------
+//            ArrayList<Object> items = new ArrayList<Object>();
+//            PopupAdapter pop = new PopupAdapter(items);
+////            setListAdapter(pop);//создали адаптер для работы
+//            //--------ЭТО делать надо  1 раз только иначе падает!!
+//            ArrayList<Sensor> item =  mBluetoothLeService.mbleDot;
+//          //  ArrayList<Sensor> item =  parentActivity.mBluetoothLeServiceM.mbleDot;
+//            ArrayList<Object> it = (ArrayList)(Object)item;
+//            PopupAdapter pop = new PopupAdapter(it);
+//
+//            setListAdapter(pop);//создали адаптер для работы
+//            //final ArrayAdapter
+//            adapter = (ArrayAdapter) getListAdapter();//int count = adapter.getCount();
+            //addObject(new Sensor());
+       //-----------
+            // upd();
+
+            // Automatically connects to the device upon successful start-up initialization.
+            //         mBluetoothLeService.connect(mDeviceAddress,true);
+            Log.w(TAG, "---initialize ---onServiceConnected-----");
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName componentName) {
+            mBluetoothLeService = null;
+            Log.v(TAG, "onServiceDisconnected");
+        }
+    };
+    ///--------------------------------------------------------------------------------------
     final int iconActionEdit = 12345678;
     final int iconActionAdd = 23456789;
 
@@ -308,6 +400,8 @@ public void onPrepareOptionsMenu(Menu menu){
     public void onDestroy() {
         super.onDestroy();
         if(menuFragment != null)menuFragment.clear();
+        this.getActivity().unbindService(mServiceConnection);
+        mBluetoothLeService = null;
         //Fragment
        // this.getActivity().invalidateOptionsMenu();
     }
@@ -388,7 +482,21 @@ return null;//fbButton_;
     public boolean addNoInitObject(){
         Log.i(TAG," addd------------");
         if(maxChidren <= adapter.getCount()) return false;
-        adapter.add(new Cheeses(index_object++));
+       // adapter.add(new Cheeses(index_object++));
+        //без адреса включается иммитатор
+        adapter.add(new Sensor());
+        objectDataToView.moveButton();//позиционируем
+        return true;
+    }
+    // добавить объект данные которого отображаются на листе
+    public boolean addObject(Object object){
+        Log.i(TAG," addd------------");
+        if(maxChidren <= adapter.getCount()) return false;
+        // adapter.add(new Cheeses(index_object++));
+        //без адреса включается иммитатор
+       // adapter.add(object);
+        mBluetoothLeService.mbleDot.add((Sensor) object);
+
         objectDataToView.moveButton();//позиционируем
         return true;
     }
@@ -499,13 +607,13 @@ return null;//fbButton_;
         // пермещение плавное кнопки, с учетом размера итемов и расстояний между ними, используем\
         // масштабный коэффициент плотности пикселов на дюйм, который примерный, поскольку он использукется для МЕНЮ
         public  void moveButton(){
-            int offset, i;ListView lw = getListView();
+            int offset, i= 0;ListView lw = getListView();
             //fbButton = 40dp - mini, 56dp-norm//getMetricsDispleyX();// float density = getResources().getDisplayMetrics().density;
             //позиционирование по середине= берем 1/2 экрана в пикселах, и ВЫЧИТАЕМ 1/2 ширины (40/2=20) кнопки УМНОЖЕННУЮ на density
    //         fbButton.setX((DispleyWidthPixels >> 1) -getPixels(hightButton >> 1 ));//getPixels(20) при density=3, получим 60dpi  !
  //           fbButton.setX(DispleyWidthPixels >> 4);
             fbButton.setVisibility(View.VISIBLE);//иногда ее выключаем? по этому !! всегда включаем((View)fbButton.getParent()).getWidth()
-            i = adapter.getCount();
+            if(adapter != null)i = adapter.getCount();
             if(i > 0) {// в дальнейше, ОПРЕДЕЛИ 64- через высоту реального объекта!!
                 offset = i  * getPixels(hightPopListItem) + getPixels((dividerHeight) * i); //высота наших лист вюверов + РАССТОЯНИЕ МЕЖДУ ними!!
                 offset -= getPixels(OverFloatButton + dividerHeight)  ;  //небольшой наезд на последнюю
@@ -680,6 +788,7 @@ return null;//fbButton_;
         Object obj = adapter.getItem(position);//получение объекта данные которого связаны с View
         if(l == obj) return "??";
         if(obj instanceof Cheeses)System.out.println("position=" +position + "=" + obj+"  " +((Cheeses)obj).getObject());
+     //   if(obj instanceof Sensor)System.out.println("position=" +position + "=" + obj+"  " +((Sensor)obj).getObject());
         if(l.getItemAtPosition(position) instanceof CharSequence) return (String) l.getItemAtPosition(position);
         else return l.getItemAtPosition(position).toString();
     }
@@ -791,6 +900,7 @@ return null;//fbButton_;
                 if(v != null)v.setVisibility(View.GONE);
             }
             //-------------------------------------------------
+            if((position + 1) >= adapter.getCount())objectDataToView.moveButton();//позиционируем
             //сдвигать можнл, но вехний перекрывает нижний итем
        //     if(convertView != null )convertView.setScrollY((int)(rr *20f));
        //     rr = rr *(-1f);
@@ -798,17 +908,24 @@ return null;//fbButton_;
             Log.d(TAG,"position"+position+"  view"+ view+"  convertView=" + convertView +"  container= " +container);
             if(adapter.getItem(position) != null){
               //  ((Cheeses)adapter.getItem(position)).textValue = view.findViewById(R.id.numbe_cur);
-                TreeMap<Integer,Object> map = ((Cheeses)adapter.getItem(position)).value;
+                //берем объект
 
-                //загоняем в мап что есть на Вюверах, таким образм, потом сравнивая что есть, то и выводим!
-                map.put(R.id.numbe_min,view.findViewById(R.id.numbe_min));
-                map.put(R.id.numbe_min, view.findViewById(R.id.numbe_min));
-                map.put(R.id.numbe_cur, view.findViewById(R.id.numbe_cur));
-                map.put(R.id.numbe_max, view.findViewById(R.id.numbe_max));
-                map.put(R.id.imgTitle, view.findViewById(R.id.imgTitle));
-                map.put(R.id.signal, view.findViewById(R.id.signal));
-                map.put(R.id.battery, view.findViewById(R.id.battery));
-        //       map.put(R.id.text1, view.findViewById(R.id.text1));
+
+                //присвоил текущее значение для отображения
+     ((Sensor)adapter.getItem(position)).intermediateValueView = view.findViewById(R.id.numbe_cur);
+     ((Sensor)adapter.getItem(position)).rssiView = view.findViewById(R.id.signal);
+      ((Sensor)adapter.getItem(position)).deviceLabelView = view.findViewById(R.id.imgTitle);
+//                TreeMap<Integer,Object> map = ((Cheeses)adapter.getItem(position)).value;
+//
+//                //загоняем в мап что есть на Вюверах, таким образм, потом сравнивая что есть, то и выводим!
+//                map.put(R.id.numbe_min,view.findViewById(R.id.numbe_min));
+//                map.put(R.id.numbe_min, view.findViewById(R.id.numbe_min));
+//                map.put(R.id.numbe_cur, view.findViewById(R.id.numbe_cur));
+//                map.put(R.id.numbe_max, view.findViewById(R.id.numbe_max));
+//                map.put(R.id.imgTitle, view.findViewById(R.id.imgTitle));
+//                map.put(R.id.signal, view.findViewById(R.id.signal));
+//                map.put(R.id.battery, view.findViewById(R.id.battery));
+                //       map.put(R.id.text1, view.findViewById(R.id.text1));
             }
 //            getActivity().runOnUiThread(new Runnable() {
 //
