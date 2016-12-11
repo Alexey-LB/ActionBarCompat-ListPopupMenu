@@ -111,9 +111,13 @@ import java.util.TreeMap;
  */
 //public class PopupListFragment extends ListFragmentA implements OnClickListener  {//если встраивать обработку нажатия
 public class PopupListFragment extends ListFragmentA  {
-    private static final String teg = "PopListFA";
+    private static final String TAG = "PopListFA";
+    private Menu menuFragment;
+    private boolean dellItem= false;
+
     private static int index_object = 0;
     private final int ofset_y = 60;
+
     //private FloatingActionButton fbButton;
     private View fbButton = null;
     private View fbButton2 = null;
@@ -165,6 +169,7 @@ public class PopupListFragment extends ListFragmentA  {
     public int getGraphPixelsY(int yDp){return (int)(densityY *(float)yDp);}
 
     private void addObject(Object obj){adapter.add(obj);//setListShown(true);
+
     }
     @SuppressWarnings("ResourceType")
     @Override
@@ -234,7 +239,7 @@ public class PopupListFragment extends ListFragmentA  {
        // ViewGroup vg = ((ViewGroup) v.getParent().getParent());
         //getActionBar();
         //setMenuVisibility(false);
-        Log.d(teg,"  getActivity().getActionBar()=" + getActivity().getActionBar());
+        Log.d(TAG,"  getActivity().getActionBar()=" + getActivity().getActionBar());
         //
         //-------------Установка плавающей копки --------------------------------
         fbButton = View.inflate(getContext(),R.layout.poplist_item_3,null);//породил ИЗ ХМЛ, просто рисунок!!
@@ -247,7 +252,7 @@ public class PopupListFragment extends ListFragmentA  {
         View mProgressContainer = root.findViewById(ListFragmentA.INTERNAL_PROGRESS_CONTAINER_ID);//
         View mListContainer = root.findViewById(ListFragmentA.INTERNAL_LIST_CONTAINER_ID);
         View rawListView = root.findViewById(android.R.id.list);
-        Log.i(teg,"mProgressContainer=" + mProgressContainer
+        Log.i(TAG,"mProgressContainer=" + mProgressContainer
                 +"\nmListContainer=" + mListContainer
                 +"\nrawListView=" + rawListView
         );
@@ -267,7 +272,86 @@ public class PopupListFragment extends ListFragmentA  {
                 objectDataToView.controlObject(CLICK_ADD,null,0);
              }
         });
+        //http://developer.alexanderklimov.ru/android/theory/fragments.php
+        //ДОБАВЛЕНИЯ СВОЕГО МЕНЮ ИЗ ФРАГМЕНТА!!
+        setHasOptionsMenu(true);
+        //этот метод должен вроде сохранять отображение фрагмента при повороте ТЕЛЕфона НО!!
+        // http://developer.alexanderklimov.ru/android/theory/fragments.php
+        setRetainInstance(true);
     }
+    final int iconActionEdit = 12345678;
+    final int iconActionAdd = 23456789;
+
+    //http://developer.alexanderklimov.ru/android/theory/fragments.php
+    //ДОБАВЛЕНИЯ СВОЕГО МЕНЮ ИЗ ФРАГМЕНТА!!
+    //вызывается при построениии и после вызова метода invalidateOptionsMenu();
+    //ДЛЯ НАШЕГО случая-- this.getActivity().invalidateOptionsMenu();
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menuFragment = menu;//запомил, чтоб потом  изменить меню или удалить ПРИ ВЫХОДЕ из фрейма
+       // inflater.inflate(R.menu.myfragment_options, menu);
+        menu.add(Menu.NONE,iconActionEdit,Menu.NONE,"Edit")
+                .setIcon(R.drawable.ic_clear_black_24dp)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+
+        menu.add(Menu.NONE,iconActionAdd,Menu.NONE,"Add")
+                .setIcon(R.drawable.ic_add_black_32dp)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+       // menu.clear();
+    }
+    @Override
+public void onPrepareOptionsMenu(Menu menu){
+
+}
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if(menuFragment != null)menuFragment.clear();
+        //Fragment
+       // this.getActivity().invalidateOptionsMenu();
+    }
+    //Видимые и не видимые символы РЕДАКТИРОВАНИЯ
+    private void setDellItemView(boolean visibilityDell){
+        ListView lw = getListView();ViewGroup vg;
+        int vis = View.GONE;
+        if(visibilityDell) vis = View.VISIBLE;
+        //Видимые и не видимые символы РЕДАКТИРОВАНИЯ
+        for(int i=0;i < lw.getCount(); i++){
+            vg =  (ViewGroup)lw.getChildAt(i);
+            vg.getChildAt(2).setVisibility(vis);
+        }
+    }
+    //http://developer.alexanderklimov.ru/android/theory/fragments.php
+    //ДОБАВЛЕНИЯ СВОЕГО МЕНЮ ИЗ ФРАГМЕНТА!!
+    // СЮДА прилетают ВСЕ клики по меню, также и кнопка назад!!
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                Log.i(TAG,"android.R.id.home");
+ //               adapter.notifyDataSetChanged();
+                return true;
+            case iconActionEdit:
+                Log.i(TAG,"edit-");
+//Видимые и не видимые символы РЕДАКТИРОВАНИЯ
+                dellItem = !dellItem;
+                setDellItemView(dellItem );
+  //              adapter.notifyDataSetChanged();
+                return true;
+            case iconActionAdd:
+                Log.i(TAG,"ADD+");
+                addNoInitObject();
+
+              //  if(menuFragment != null)menuFragment.clear();
+                return true;
+            default:
+                // Not one of ours. Perform default menu processing
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
     //получение плавающей кнопки НАСТОЯЩЕЙ- ГЛЮЧИТ от АРИ 19 к АРИ 25: появляется отступ у нее вверху и слева!!
     private View getFloatButton(){
         // ВАРИАТ 1 изначально как по документации -НО ГЛЯЧИТ в разных АРИ ОТСТУПЫ!!
@@ -302,16 +386,17 @@ return null;//fbButton_;
     }
     // добавить объект данные которого отображаются на листе
     public boolean addNoInitObject(){
-        Log.i(teg," addd------------");
+        Log.i(TAG," addd------------");
         if(maxChidren <= adapter.getCount()) return false;
         adapter.add(new Cheeses(index_object++));
+        objectDataToView.moveButton();//позиционируем
         return true;
     }
     ///распечатка ХАРАКТЕРИСТИКИ ДИСПЛЕЯ- ЭКРАНА устройства
     public void getMetricsDispleyX(){
         //http://developer.alexanderklimov.ru/android/theory/scales.php
         DisplayMetrics dm = getResources().getDisplayMetrics();
-        Log.i(teg," widthPixels= "+dm.widthPixels + "   heightPixels= "+dm.heightPixels
+        Log.i(TAG," widthPixels= "+dm.widthPixels + "   heightPixels= "+dm.heightPixels
         +"\n   densityDpi= "+dm.densityDpi+"   density= "+dm.density+"  scaledDensity= "+dm.scaledDensity
         +"\n   xdpi= " + dm.xdpi +"   ydpi= "+ dm.ydpi);
         //        getResources().getDisplayMetrics().widthPixels;//абсалютное количество пикселей по ширине
@@ -578,7 +663,7 @@ return null;//fbButton_;
                     str = "onClickWorks---= img_??" + adapter.getPosition(obj) + "    obj= " + obj;
                     return false;
             }
-            Log.v( teg,str);
+            Log.v( TAG,str);
             return rez;
         }
     }
@@ -607,6 +692,8 @@ return null;//fbButton_;
     @Override
     //synchronized Здесь фиксируем РЕЖИМ на удаление. если до конца доведем и нажмем на него то ИТЕМ удалится!!
     public boolean onListItemLongClick(ListView l, View v, int position, long id) {
+       //если НЕ разрешено редактирование!! выходим!
+        if(dellItem == false) return false;
             return objectDataToView.controlObject(CLICK_LONG,adapter.getItem(position),0);
     }
     //дает данные по всему списку Х и У а также кнопе=ка нажата отжата и тд
@@ -694,11 +781,21 @@ return null;//fbButton_;
             // Let ArrayAdapter inflate the layout and set the text
 
             View view = super.getView(position, convertView, container);
+            //-----------------------------------
+            //при изменениях, всегда сбрасываем РЕДАКТИРОВАНИЕ!!и убираем ИКОНКУ редактирования!!!
+            if(dellItem == true)dellItem = false;
+            ViewGroup vg = (ViewGroup)view;
+            //гасим рАЗРЕШЕНИЕ редактирования, ЭТО 2 слой!!
+            if(vg != null){//Видимые и не видимые символы РЕДАКТИРОВАНИЯ
+                View v  = vg.getChildAt(2);
+                if(v != null)v.setVisibility(View.GONE);
+            }
+            //-------------------------------------------------
             //сдвигать можнл, но вехний перекрывает нижний итем
        //     if(convertView != null )convertView.setScrollY((int)(rr *20f));
        //     rr = rr *(-1f);
 
-            Log.d(teg,"position"+position+"  view"+ view+"  convertView=" + convertView +"  container= " +container);
+            Log.d(TAG,"position"+position+"  view"+ view+"  convertView=" + convertView +"  container= " +container);
             if(adapter.getItem(position) != null){
               //  ((Cheeses)adapter.getItem(position)).textValue = view.findViewById(R.id.numbe_cur);
                 TreeMap<Integer,Object> map = ((Cheeses)adapter.getItem(position)).value;

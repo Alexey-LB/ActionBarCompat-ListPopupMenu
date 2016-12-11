@@ -51,19 +51,25 @@ private PopupListFragment popupListFragment;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        // Set content view (which contains a PopupListFragment)
         setContentView(R.layout.sample_main);
-       //взаимодействие АКТИВНОсТИ и фрагмента, вызов явно метода из фрагмента, по ссылке на него!
+
+//Экземпляр фрагмента связан с активностью. Активность может вызывать методы фрагмента
+// через ссылку на объект фрагмента. Доступ к фрагменту можно получить через
+// методы findFragmentById() или findFragmentByTag().
+// Фрагмент в свою очередь может получить доступ к своей активности через
+// метод Fragment.getActivity().
+//--
+//взаимодействие АКТИВНОсТИ и фрагмента, вызов явно метода из фрагмента, по ссылке на него!
         //там же взаимодействи обратное, работа с АкшионБар и КНОПКА НАЗАД!
         // http://developer.alexanderklimov.ru/android/theory/fragments.php
-        popupListFragment= (PopupListFragment)getSupportFragmentManager()
+  popupListFragment= (PopupListFragment)getSupportFragmentManager()
                 .findFragmentById(R.id.popUpListFragment);
+        //--------------
        // getSupportActionBar();??--это решалось в другом методе(getDelegate().getSupportActionBar();)
        //android.support.v7.app.ActionBar
         //!!! так НЕ работает!!
         ActionBar ab = getActionBar();
-        //ТАК СРАБОТАЛО!!!
+  //ТАК СРАБОТАЛО!!!
         android.support.v7.app.ActionBar gtab = getSupportActionBar();
 //установить картинку
         gtab.setHomeAsUpIndicator(R.drawable.ic_chevron_left_black_24dp); //gtab.setIcon(R.drawable.ic_add);
@@ -120,8 +126,8 @@ Log.e(TAG, "---------ActionBar=" + ab + "  gtab="+ gtab);
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
-        MenuInflater menuInflater= getMenuInflater();
-        menuInflater.inflate(R.menu.poplist_menu,menu);
+ //       MenuInflater menuInflater= getMenuInflater();
+ //       menuInflater.inflate(R.menu.poplist_menu,menu);
 
 
         return super.onCreateOptionsMenu(menu);
@@ -134,8 +140,8 @@ Log.e(TAG, "---------ActionBar=" + ab + "  gtab="+ gtab);
         // Handle item selection
         switch (item.getItemId()) {
             case android.R.id.home:
-                Log.i(TAG,"android.R.id.home");
-                return true;
+                Log.i(TAG,"android.R.id.home--");
+                return false;//установили ФАЛШ, чтоб вызов попал в ФРАГМЕНТ, в которм будет обработан!!
             case R.id.edit_a://.new_game_:
                 View v =((View)findViewById(R.id.textViewName));
                 if(v != null){
@@ -153,6 +159,9 @@ Log.e(TAG, "---------ActionBar=" + ab + "  gtab="+ gtab);
 
                 return true;
             case R.id.add_a://
+                //взаимодействие АКТИВНОсТИ и фрагмента, вызов явно метода из фрагмента, по ссылке на него!
+                //там же взаимодействи обратное, работа с АкшионБар и КНОПКА НАЗАД!
+                // http://developer.alexanderklimov.ru/android/theory/fragments.php
                 popupListFragment.addNoInitObject();
 
                 android.app.ActionBar  ab = getActionBar();

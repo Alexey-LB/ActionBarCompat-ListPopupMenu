@@ -19,6 +19,8 @@
     <include layout="@layout/poplist_item_0" />
     <!-- текстовый вывод весь -->
     <include layout="@layout/poplist_item_1" />
+
+    <include layout="@layout/poplist_item_2" />
     <!-- кнопка удалить -->
    <!--<include layout="@layout/poplist_item_3" />-->
 </FrameLayout>
