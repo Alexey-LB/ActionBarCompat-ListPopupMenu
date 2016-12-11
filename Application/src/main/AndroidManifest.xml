@@ -27,10 +27,12 @@
         android:icon="@android:drawable/ic_menu_revert"
         android:label="@string/app_name"
         android:allowBackup="true"
-        android:theme="@style/Theme.Design.Light"
-
+        android:theme="@style/Theme.AppCompat.Light"
         >
-
+        <!--android:theme="@android:style/Theme.Holo"-->
+        <!--android:theme="@style/Theme.AppCompat.Light"-->
+        <!--android:theme="@style/AppThemeN"-->
+        <!--android:theme="@style/Theme.Design.Light"-->
         <!--
         Support Library Setup
         https://developer.android.com/topic/libraries/support-library/setup.html

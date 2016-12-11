@@ -17,6 +17,7 @@
 package com.example.android.actionbarcompat.listpopupmenu;
 
 import android.app.ActionBar;
+import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.res.Resources;
@@ -25,6 +26,7 @@ import android.graphics.drawable.shapes.RectShape;
 import android.os.Bundle;
 //import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -42,8 +44,9 @@ import android.widget.SpinnerAdapter;
  * necessary to display a compatible Action Bar on devices running Android v2.1+.
  */
 //
-public class MainActivity extends ActionBarActivity {
-
+public class MainActivity extends   ActionBarActivity {
+    private String TAG = "MAIN";
+private PopupListFragment popupListFragment;
   //  private PopupListFragment popupListFragment= new PopupListFragment();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,18 +54,27 @@ public class MainActivity extends ActionBarActivity {
 
         // Set content view (which contains a PopupListFragment)
         setContentView(R.layout.sample_main);
-        getBaseContext();
-        getApplication();
+       //взаимодействие АКТИВНОсТИ и фрагмента, вызов явно метода из фрагмента, по ссылке на него!
+        //там же взаимодействи обратное, работа с АкшионБар и КНОПКА НАЗАД!
+        // http://developer.alexanderklimov.ru/android/theory/fragments.php
+        popupListFragment= (PopupListFragment)getSupportFragmentManager()
+                .findFragmentById(R.id.popUpListFragment);
+       // getSupportActionBar();??--это решалось в другом методе(getDelegate().getSupportActionBar();)
+       //android.support.v7.app.ActionBar
+        //!!! так НЕ работает!!
+        ActionBar ab = getActionBar();
+        //ТАК СРАБОТАЛО!!!
+        android.support.v7.app.ActionBar gtab = getSupportActionBar();
+//установить картинку
+        gtab.setHomeAsUpIndicator(R.drawable.ic_chevron_left_black_24dp); //gtab.setIcon(R.drawable.ic_add);
+       //разрешить копку доиой
+        gtab.setDisplayHomeAsUpEnabled(true);
+        gtab.setHomeButtonEnabled(true);
+        gtab.setDisplayUseLogoEnabled(true);
 
-        PopupListFragment plf = new  PopupListFragment();
-    //    setContentView(plf.getListView());
-
-   //     setContentView(plf.getListView());
-
-        android.app.ActionBar  ab = getActionBar();
-        System.out.println("ActionBar=" + ab);
+        System.out.println("ActionBar=" + ab + "  gtab="+ gtab);
         if(ab != null)ab.setIcon(R.drawable.alexey_photor_fo_visa);
-
+Log.e(TAG, "---------ActionBar=" + ab + "  gtab="+ gtab);
 //        actionBar.setDisplayHomeAsUpEnabled(false);
 //        actionBar.setHomeButtonEnabled(false);
 //        actionBar.setDisplayUseLogoEnabled(false);
@@ -117,8 +129,13 @@ public class MainActivity extends ActionBarActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        System.out.println("Menu-edit_a  item= " +item );
+
         // Handle item selection
         switch (item.getItemId()) {
+            case android.R.id.home:
+                Log.i(TAG,"android.R.id.home");
+                return true;
             case R.id.edit_a://.new_game_:
                 View v =((View)findViewById(R.id.textViewName));
                 if(v != null){
@@ -136,6 +153,8 @@ public class MainActivity extends ActionBarActivity {
 
                 return true;
             case R.id.add_a://
+                popupListFragment.addNoInitObject();
+
                 android.app.ActionBar  ab = getActionBar();
                 System.out.println("Menu-add_a  ab=" + getActionBar());
                 ;return true;

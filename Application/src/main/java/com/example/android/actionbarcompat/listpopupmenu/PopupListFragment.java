@@ -15,8 +15,12 @@
  */
 package com.example.android.actionbarcompat.listpopupmenu;
 
+import android.app.ActionBar;
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.app.ListFragment;
 import android.app.usage.UsageEvents;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Bundle;
@@ -29,6 +33,10 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -180,9 +188,12 @@ public class PopupListFragment extends ListFragmentA  {
 //========================
 
 
-        android.app.ActionBar  ab = getActivity().getActionBar();
-        System.out.println("ActionBar=" + ab);
-        if(ab != null)ab.setIcon(R.drawable.alexey_photor_fo_visa);
+      //  android.app.
+                ActionBar ab = getActivity().getActionBar();
+        System.out.println("-----ActionBar=" + ab);
+        if(ab != null){
+            ab.setIcon(R.drawable.alexey_photor_fo_visa);
+        }
 
 
         //---------
@@ -270,7 +281,8 @@ public class PopupListFragment extends ListFragmentA  {
         fbButton_.setSize(FloatingActionButton.SIZE_MINI);
         fbButton_.setLayoutParams(new LinearLayout.LayoutParams(ActionMenuView.LayoutParams.WRAP_CONTENT,
                 ActionMenuView.LayoutParams.MATCH_PARENT));
-        return fbButton_;
+return null;//fbButton_;
+
         // ВАРИАНТ 2) создаем кнопку внутри Слоя, чтоб он автоматически позиционировал ее по центру и ТД, но все бестолку!
         //добавляю к контэйнеру В КОТОРМ лежит и список отображаемых объектов, тоесть находится
         // на том же уровне и в том же пространстве
@@ -290,6 +302,7 @@ public class PopupListFragment extends ListFragmentA  {
     }
     // добавить объект данные которого отображаются на листе
     public boolean addNoInitObject(){
+        Log.i(teg," addd------------");
         if(maxChidren <= adapter.getCount()) return false;
         adapter.add(new Cheeses(index_object++));
         return true;
