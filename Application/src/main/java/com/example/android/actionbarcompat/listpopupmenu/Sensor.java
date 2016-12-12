@@ -153,7 +153,7 @@ public class Sensor {
                     int i = battery_level;
                     if(i < 0) i = i*(-1);
                     i = i/10;
-                    Log.v(TAG,"rssiView= " + i);
+        //            Log.v(TAG,"rssiView= " + i);
                     ImageView iv = (ImageView)battery_levelView;
                     // iv.setImageResource(R.drawable.ic_signal_wifi_4_bar_black_24dp);
                     // TODO: 12.12.2016 переделать с указанием уровня отображения!! iv.setImageLevel();
@@ -175,7 +175,7 @@ public class Sensor {
                     int i = rssi;
                     if(i < 0) i = i*(-1);
                     i = i/10;
-                    Log.v(TAG,"rssiView= " + i);
+             //       Log.v(TAG,"rssiView= " + i);
                     ImageView iv = (ImageView)rssiView;
                    // iv.setImageResource(R.drawable.ic_signal_wifi_4_bar_black_24dp);
                     switch(i){
