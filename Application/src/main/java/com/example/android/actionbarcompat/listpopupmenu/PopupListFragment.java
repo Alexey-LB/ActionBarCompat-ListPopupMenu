@@ -287,14 +287,14 @@ public class PopupListFragment extends ListFragmentA  {
         //этот метод должен вроде сохранять отображение фрагмента при повороте ТЕЛЕфона НО!!
         // http://developer.alexanderklimov.ru/android/theory/fragments.php
         setRetainInstance(true);
-        //-------------ЗАПУСТИЛИ ервис ---------
-        Intent gattServiceIntent = new Intent(this.getActivity(), BluetoothLeServiceNew.class);
-        this.getActivity().bindService(gattServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
-        //-----------------------------
+// ЗАПУСТИЛИ ервис       //-------------ЗАПУСТИЛИ ервис ---------
+//        Intent gattServiceIntent = new Intent(this.getActivity(), BluetoothLeServiceNew.class);
+//        this.getActivity().bindService(gattServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
+//        //-----------------------------
   //      ((MainActivity)getActivity()).
         Log.e(TAG,"Fragment --- onActivityCreated---END----");
     }
-    public BluetoothLeServiceNew mBluetoothLeService = null;
+    // ЗАПУСТИЛИ ервис    public BluetoothLeServiceNew mBluetoothLeService = null;
     public void initList(){
         Log.e(TAG,"Activity to frag initList()---");
         //            setListAdapter(pop);//создали адаптер для работы
@@ -310,68 +310,68 @@ public class PopupListFragment extends ListFragmentA  {
         adapter = (ArrayAdapter) getListAdapter();//int count = adapter.getCount();
 
     }
-    public void upd(){
-       this.getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                Log.w(TAG,"PopupAdapter= ");
-
-                ArrayList<Sensor> item =  mBluetoothLeService.mbleDot;
-                ArrayList<Object> it = (ArrayList)(Object)item;
-                PopupAdapter pop = new PopupAdapter(it);
-
-                setListAdapter(pop);//создали адаптер для работы
-                //mLeDeviceListAdapter.notifyDataSetChanged();
-            }
-        });
-    }
-    // Code to manage Service lifecycle.
-    private final ServiceConnection mServiceConnection = new ServiceConnection() {
-
-        @Override
-        public void onServiceConnected(ComponentName componentName, IBinder service) {
-            //     mBluetoothLeService = ((BluetoothLeService.LocalBinder) service).getService();
-            mBluetoothLeService = ((BluetoothLeServiceNew.LocalBinder) service).getService();
-            if (!mBluetoothLeService.initialize()) {
-                Log.e(TAG, "Unable to initialize Bluetooth");
-             }
-            if(mBluetoothLeService == null)Log.w(TAG,"mBluetoothLeService= null");
-            if(mBluetoothLeService.mbleDot == null)Log.w(TAG,"mBluetoothLeService.mbleDot= null");
-     //       parentActivity
-   //         mBluetoothLeService.mbleDot.add(new Sensor());
-   //         mBluetoothLeService.mbleDot.add(new Sensor());
-    //        mBluetoothLeService.connect("74:DA:EA:9F:54:C9",true);
-Log.w(TAG,"mBluetoothLeService.mbleDot= " + mBluetoothLeService.mbleDot +
-"   size= " +  mBluetoothLeService.mbleDot.size());
-
-       //--------------------
-//            ArrayList<Object> items = new ArrayList<Object>();
-//            PopupAdapter pop = new PopupAdapter(items);
-////            setListAdapter(pop);//создали адаптер для работы
-//            //--------ЭТО делать надо  1 раз только иначе падает!!
-//            ArrayList<Sensor> item =  mBluetoothLeService.mbleDot;
-//          //  ArrayList<Sensor> item =  parentActivity.mBluetoothLeServiceM.mbleDot;
-//            ArrayList<Object> it = (ArrayList)(Object)item;
-//            PopupAdapter pop = new PopupAdapter(it);
+// ЗАПУСТИЛИ ервис    public void upd(){
+//       this.getActivity().runOnUiThread(new Runnable() {
+//            @Override
+//            public void run() {
+//                Log.w(TAG,"PopupAdapter= ");
 //
-//            setListAdapter(pop);//создали адаптер для работы
-//            //final ArrayAdapter
-//            adapter = (ArrayAdapter) getListAdapter();//int count = adapter.getCount();
-            //addObject(new Sensor());
-       //-----------
-            // upd();
-
-            // Automatically connects to the device upon successful start-up initialization.
-            //         mBluetoothLeService.connect(mDeviceAddress,true);
-            Log.w(TAG, "---initialize ---onServiceConnected-----");
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName componentName) {
-            mBluetoothLeService = null;
-            Log.v(TAG, "onServiceDisconnected");
-        }
-    };
+//                ArrayList<Sensor> item =  mBluetoothLeService.mbleDot;
+//                ArrayList<Object> it = (ArrayList)(Object)item;
+//                PopupAdapter pop = new PopupAdapter(it);
+//
+//                setListAdapter(pop);//создали адаптер для работы
+//                //mLeDeviceListAdapter.notifyDataSetChanged();
+//            }
+//        });
+//    }
+//// ЗАПУСТИЛИ ервис    // Code to manage Service lifecycle.
+//    private final ServiceConnection mServiceConnection = new ServiceConnection() {
+//
+//        @Override
+//        public void onServiceConnected(ComponentName componentName, IBinder service) {
+//            //     mBluetoothLeService = ((BluetoothLeService.LocalBinder) service).getService();
+//            mBluetoothLeService = ((BluetoothLeServiceNew.LocalBinder) service).getService();
+//            if (!mBluetoothLeService.initialize()) {
+//                Log.e(TAG, "Unable to initialize Bluetooth");
+//             }
+//            if(mBluetoothLeService == null)Log.w(TAG,"mBluetoothLeService= null");
+//            if(mBluetoothLeService.mbleDot == null)Log.w(TAG,"mBluetoothLeService.mbleDot= null");
+//     //       parentActivity
+//   //         mBluetoothLeService.mbleDot.add(new Sensor());
+//   //         mBluetoothLeService.mbleDot.add(new Sensor());
+//    //        mBluetoothLeService.connect("74:DA:EA:9F:54:C9",true);
+//Log.w(TAG,"mBluetoothLeService.mbleDot= " + mBluetoothLeService.mbleDot +
+//"   size= " +  mBluetoothLeService.mbleDot.size());
+//
+//       //--------------------
+////            ArrayList<Object> items = new ArrayList<Object>();
+////            PopupAdapter pop = new PopupAdapter(items);
+//////            setListAdapter(pop);//создали адаптер для работы
+////            //--------ЭТО делать надо  1 раз только иначе падает!!
+////            ArrayList<Sensor> item =  mBluetoothLeService.mbleDot;
+////          //  ArrayList<Sensor> item =  parentActivity.mBluetoothLeServiceM.mbleDot;
+////            ArrayList<Object> it = (ArrayList)(Object)item;
+////            PopupAdapter pop = new PopupAdapter(it);
+////
+////            setListAdapter(pop);//создали адаптер для работы
+////            //final ArrayAdapter
+////            adapter = (ArrayAdapter) getListAdapter();//int count = adapter.getCount();
+//            //addObject(new Sensor());
+//       //-----------
+//            // upd();
+//
+//            // Automatically connects to the device upon successful start-up initialization.
+//            //         mBluetoothLeService.connect(mDeviceAddress,true);
+//            Log.w(TAG, "---initialize ---onServiceConnected-----");
+//        }
+//
+//        @Override
+//        public void onServiceDisconnected(ComponentName componentName) {
+//            mBluetoothLeService = null;
+//            Log.v(TAG, "onServiceDisconnected");
+//        }
+//    };
     ///--------------------------------------------------------------------------------------
     final int iconActionEdit = 12345678;
     final int iconActionAdd = 23456789;
@@ -402,8 +402,9 @@ public void onPrepareOptionsMenu(Menu menu){
     public void onDestroy() {
         super.onDestroy();
         if(menuFragment != null)menuFragment.clear();
-        this.getActivity().unbindService(mServiceConnection);
-        mBluetoothLeService = null;
+
+// ЗАПУСТИЛИ ервис       this.getActivity().unbindService(mServiceConnection);
+// ЗАПУСТИЛИ ервис      mBluetoothLeService = null;
         //Fragment
        // this.getActivity().invalidateOptionsMenu();
     }
@@ -499,8 +500,8 @@ return null;//fbButton_;
         // adapter.add(new Cheeses(index_object++));
         //без адреса включается иммитатор
        // adapter.add(object);
-        mBluetoothLeService.mbleDot.add((Sensor) object);
-
+ //       mBluetoothLeService.mbleDot.add((Sensor) object);
+        ((MainActivity)getActivity()).mBluetoothLeServiceM.mbleDot.add((Sensor) object);
         objectDataToView.moveButton();//позиционируем
         return true;
     }
