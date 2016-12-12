@@ -49,14 +49,18 @@ import android.widget.SpinnerAdapter;
  */
 //
 public class MainActivity extends   ActionBarActivity {
-    private String TAG = "MAIN";
-private PopupListFragment popupListFragment;
+    public  final static String TAG = "MAIN";
+    public  final static String EXTRAS_DEVICE_NAME = "EXTRAS_DEVICE_NAME";
+    public  final static String EXTRAS_DEVICE_ADDRESS = "EXTRAS_DEVICE_ADDRESS";
+    public  final static String EXTRAS_DEVICE_ITEM = "EXTRAS_DEVICE_ITEM";
+    public  final static int MAINACTIVITY = 11111;
+    public PopupListFragment popupListFragment;
   //  private PopupListFragment popupListFragment= new PopupListFragment();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.sample_main);
-
+        //setContentView(R.layout.sample_main);
+        setContentView(R.layout.sample);
 //Экземпляр фрагмента связан с активностью. Активность может вызывать методы фрагмента
 // через ссылку на объект фрагмента. Доступ к фрагменту можно получить через
 // методы findFragmentById() или findFragmentByTag().
@@ -166,7 +170,29 @@ private PopupListFragment popupListFragment;
 
         return super.onCreateOptionsMenu(menu);
     }
+    @Override//сюда прилетают ответы при возвращении из других ОКОН активити
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // User chose not to enable Bluetooth.
+        Log.v(TAG,"onActivityResult requestCode= " + requestCode + "   resultCode= " +resultCode);
+//        if (requestCode == MAINACTIVITY && resultCode == Activity.RESULT_CANCELED) {
+//            finish();
+//            return;
+//        }
+        if (requestCode == MAINACTIVITY && resultCode == Activity.RESULT_OK) {
+            Log.w(TAG,"NAME= " + data.getStringExtra(EXTRAS_DEVICE_NAME)
+            +"   EXTRAS_DEVICE_ADDRESS= " + data.getStringExtra(EXTRAS_DEVICE_ADDRESS));
+            return;
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
 
+    public void onScanDevice(int i){
+        final Intent intent = new Intent(this, MainActivity.class);
+          intent.putExtra(MainActivity.EXTRAS_DEVICE_ITEM, i);
+        //  intent.putExtra(MainActivity.EXTRAS_DEVICE_ADDRESS, device.getAddress());
+Log.i(TAG,"startActivity SCAN");
+        startActivityForResult(intent,MAINACTIVITY);//на подклшючение к устройству
+    }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         System.out.println("Menu-edit_a  item= " +item );
@@ -175,6 +201,32 @@ private PopupListFragment popupListFragment;
         switch (item.getItemId()) {
             case android.R.id.home:
                 Log.i(TAG,"android.R.id.home--");
+
+//                DetailFragment fragment = (DetailFragment) getFragmentManager().
+//                        findFragmentById(R.id.detail_fragment);
+//                if (fragment == null || ! fragment.isInLayout()) {
+//                    // запускаем новую активность
+//                }
+//                else {
+//                    fragment.update(...);
+//        Fragment        popListFragment= (Fragment)getSupportFragmentManager()
+//                        .findFragmentById(R.id.popUpListFragment);
+//DialogFragmentNote fragment = new DialogFragmentNote();
+//
+//                if (fragment != null && fragment.isInLayout()){
+//                    FragmentManager fragmentManager = getFragmentManager();
+//                    fragmentManager.beginTransaction()
+//                         //   .remove(fragment1)
+//                           // .add(R.id.fragment_container, fragment2)
+//                            .show(fragment)
+//                            .hide((Fragment)popupFragment)
+//                            .commit();
+//                }
+// останавливается приложение!! надо както иначе
+//                android.support.v4.app.Fragment fragment= getSupportFragmentManager()
+//                        .findFragmentById(R.id.dialogFragmentNote);
+//                fragment.onDetach();
+
                 return false;//установили ФАЛШ, чтоб вызов попал в ФРАГМЕНТ, в которм будет обработан!!
             case R.id.edit_a://.new_game_:
                 View v =((View)findViewById(R.id.textViewName));

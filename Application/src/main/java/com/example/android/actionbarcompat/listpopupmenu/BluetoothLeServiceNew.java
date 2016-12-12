@@ -291,8 +291,8 @@ public class BluetoothLeServiceNew extends Service {
         // Читаем данные
         if(mSettings != null){
             int listSizeBluetooth = mSettings.getInt("listSizeBluetooth", 0);
-
-            for(int i= 0; i < listSizeBluetooth;i++){
+            int i;
+            for(i= 0; i < listSizeBluetooth;i++){
                 String devAdr = mSettings.getString("item"+i, null);
                 Log.v(TAG,"onCreate: get sensor from flash= "+i +"   devAdr= " +devAdr + "  size= "+listSizeBluetooth);
                 if (devAdr != null) {
@@ -309,6 +309,10 @@ public class BluetoothLeServiceNew extends Service {
                         Log.w(TAG,"connect sensor= "+i+ "  adress= " + sensor.mBluetoothDeviceAddress);
                     }
                 }
+            }
+            //если нет никого то Пишем своего
+            if(i == 0){
+                connect("74:DA:EA:9F:54:C9",true);
             }
         }else{
             Log.e(TAG,"getSharedPreferences= null!");

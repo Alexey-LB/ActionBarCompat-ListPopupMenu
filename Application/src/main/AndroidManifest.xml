@@ -65,6 +65,14 @@ http://www.fandroid.info/nastrojka-paneli-dejstvij-actionbar/
             </intent-filter>
         </activity>
         <service android:name=".BluetoothLeServiceNew" android:enabled="true"/>
+
+        <activity android:name=".DeviceScanActivity"
+            android:theme="@android:style/Theme.Holo.Light">
+            <intent-filter>
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
     </application>
 
 </manifest>

@@ -428,7 +428,7 @@ public void onPrepareOptionsMenu(Menu menu){
         switch (item.getItemId()) {
             case android.R.id.home:
                 Log.i(TAG,"android.R.id.home");
-                //сохранение в файл
+     //сохранение в файл
                 ((MainActivity)getActivity()).mBluetoothLeServiceM.settingPutFile();
  //               adapter.notifyDataSetChanged();
                 return true;
@@ -437,6 +437,9 @@ public void onPrepareOptionsMenu(Menu menu){
 //Видимые и не видимые символы РЕДАКТИРОВАНИЯ
                 dellItem = !dellItem;
                 setDellItemView(dellItem );
+        //вызов активного окна для сканирования
+    //!!ОБламывает, возвращяетс назад НЕ запускает!!            ((MainActivity)getActivity()).onScanDevice(1);
+
   //              adapter.notifyDataSetChanged();
                 return true;
             case iconActionAdd:
@@ -694,7 +697,8 @@ return null;//fbButton_;
                             if ((positionScroll > 0) && (positionStartX > (DispleyWidthDp -maxScroll))){//удаления
         // УДАЛИТЬ--------------------------------
     clearScrollX_View(true);//затираем на него ссылку? с ним закончили
-                                if(obj instanceof Sensor){
+                                //
+                                if((obj instanceof Sensor)){
                                     ((Sensor)obj).close();
                                     Log.w(TAG,"Dell sensor -- close GATT --");
                                 }
