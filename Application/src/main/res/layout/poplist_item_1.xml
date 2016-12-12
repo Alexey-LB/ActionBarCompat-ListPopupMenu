@@ -103,7 +103,7 @@
             android:background="@android:drawable/screen_background_light">
 
             <TextView
-                android:text="--.-%C"
+                android:text="-"
                 android:id="@+id/numbe_min"
                 android:layout_weight="1"
                 android:layout_width="95dp"
@@ -119,7 +119,7 @@
                 android:textStyle="normal|bold"/>
 
             <TextView
-                android:text="--.-%C"
+                android:text="-"
                 android:layout_weight="2"
                 android:layout_width="169dp"
                 android:layout_height="match_parent"
@@ -132,7 +132,7 @@
 
 
             <TextView
-                android:text="--.-%C"
+                android:text="-"
                 android:layout_weight="1"
                 android:id="@+id/numbe_max"
                 android:maxLines="1"

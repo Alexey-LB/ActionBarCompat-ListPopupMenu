@@ -180,10 +180,7 @@ public class PopupListFragment extends ListFragmentA  {
     public void onActivityCreated(Bundle savedInstanceState) {
         Log.e(TAG,"Fragment --- onActivityCreated-----STaRT--");
         super.onActivityCreated(savedInstanceState);
-        //-------------ЗАПУСТИЛИ ервис ---------
-        Intent gattServiceIntent = new Intent(this.getActivity(), BluetoothLeServiceNew.class);
-        this.getActivity().bindService(gattServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
-        //-----------------------------
+
         ListView lw = getListView();
         View root;
         if(lw == null ){
@@ -290,6 +287,10 @@ public class PopupListFragment extends ListFragmentA  {
         //этот метод должен вроде сохранять отображение фрагмента при повороте ТЕЛЕфона НО!!
         // http://developer.alexanderklimov.ru/android/theory/fragments.php
         setRetainInstance(true);
+        //-------------ЗАПУСТИЛИ ервис ---------
+        Intent gattServiceIntent = new Intent(this.getActivity(), BluetoothLeServiceNew.class);
+        this.getActivity().bindService(gattServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
+        //-----------------------------
   //      ((MainActivity)getActivity()).
         Log.e(TAG,"Fragment --- onActivityCreated---END----");
     }
@@ -337,9 +338,9 @@ public class PopupListFragment extends ListFragmentA  {
             if(mBluetoothLeService == null)Log.w(TAG,"mBluetoothLeService= null");
             if(mBluetoothLeService.mbleDot == null)Log.w(TAG,"mBluetoothLeService.mbleDot= null");
      //       parentActivity
-            mBluetoothLeService.mbleDot.add(new Sensor());
-            mBluetoothLeService.mbleDot.add(new Sensor());
-            mBluetoothLeService.connect("74:DA:EA:9F:54:C9",true);
+   //         mBluetoothLeService.mbleDot.add(new Sensor());
+   //         mBluetoothLeService.mbleDot.add(new Sensor());
+    //        mBluetoothLeService.connect("74:DA:EA:9F:54:C9",true);
 Log.w(TAG,"mBluetoothLeService.mbleDot= " + mBluetoothLeService.mbleDot +
 "   size= " +  mBluetoothLeService.mbleDot.size());
 
@@ -426,6 +427,8 @@ public void onPrepareOptionsMenu(Menu menu){
         switch (item.getItemId()) {
             case android.R.id.home:
                 Log.i(TAG,"android.R.id.home");
+                //сохранение в файл
+                ((MainActivity)getActivity()).mBluetoothLeServiceM.settingPutFile();
  //               adapter.notifyDataSetChanged();
                 return true;
             case iconActionEdit:
@@ -688,8 +691,12 @@ return null;//fbButton_;
                      }else{
                         if((i >= 0) && (objectD != null) && (i == adapter.getPosition(objectD))){
                             if ((positionScroll > 0) && (positionStartX > (DispleyWidthDp -maxScroll))){//удаления
-                                // УДАЛИТЬ
+        // УДАЛИТЬ--------------------------------
     clearScrollX_View(true);//затираем на него ссылку? с ним закончили
+                                if(obj instanceof Sensor){
+                                    ((Sensor)obj).close();
+                                    Log.w(TAG,"Dell sensor -- close GATT --");
+                                }
                                 adapter.remove(obj);// УДАЛИТЬ
                                 objectD = null;//чтоб сдвижки поом НЕ было с NULL  объектом
                                 moveButton();
@@ -899,6 +906,9 @@ return null;//fbButton_;
             if(vg != null){//Видимые и не видимые символы РЕДАКТИРОВАНИЯ
                 View v  = vg.getChildAt(2);
                 if(v != null)v.setVisibility(View.GONE);
+                //
+     //           v  = vg.getChildAt(1);
+     //           v.setBackgroundColor(0x808080);
             }
             //-------------------------------------------------
             if((position + 1) >= adapter.getCount())objectDataToView.moveButton();//позиционируем

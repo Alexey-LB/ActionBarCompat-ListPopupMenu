@@ -34,9 +34,9 @@ public class BluetoothLeServiceNew extends Service {
     // private BluetoothGatt mBluetoothGatt;
     //private int mConnectionState = STATE_DISCONNECTED;
 
-    private static final int STATE_DISCONNECTED = 0;
-    private static final int STATE_CONNECTING = 1;
-    private static final int STATE_CONNECTED = 2;
+    public  static final int STATE_DISCONNECTED = 0;
+    public  static final int STATE_CONNECTING = 1;
+    public  static final int STATE_CONNECTED = 2;
 
     public final static String ACTION_GATT_CONNECTED =
             "com.example.bluetooth.le.ACTION_GATT_CONNECTED";
@@ -233,10 +233,7 @@ public class BluetoothLeServiceNew extends Service {
 
     @Override
     public boolean onUnbind(Intent intent) {
-        // After using a given device, you should make sure that BluetoothGatt.close() is called
-        // such that resources are cleaned up properly.  In this particular example, close() is
-        // invoked when the UI is disconnected from the Service.
-        close();
+
         return super.onUnbind(intent);
     }
 
@@ -297,14 +294,15 @@ public class BluetoothLeServiceNew extends Service {
 
             for(int i= 0; i < listSizeBluetooth;i++){
                 String devAdr = mSettings.getString("item"+i, null);
+                Log.v(TAG,"onCreate: get sensor from flash= "+i +"   devAdr= " +devAdr + "  size= "+listSizeBluetooth);
                 if (devAdr != null) {
                     //читаем УСТРОЙСТВО в файле отдельном
                     SharedPreferences mSettingsDevace =
                             getSharedPreferences(devAdr, Context.MODE_PRIVATE);
                     Sensor sensor = new Sensor(mSettingsDevace);
                     mbleDot.add(sensor);
-                    Log.i(TAG,"add sensor= "+i);
-                    //--
+                    Log.i(TAG,"onCreate: get sensor from flash= "+i +"   adress= " +sensor.mBluetoothDeviceAddress);
+                    //--запускаем на соннект
                     if((sensor.mBluetoothDeviceAddress != null) &&(sensor.mBluetoothDeviceAddress.length() == 17)){
                         // запускаем на соннект
                         connect(sensor.mBluetoothDeviceAddress, true);
@@ -317,14 +315,10 @@ public class BluetoothLeServiceNew extends Service {
         }
         //------------------------------------------------------
     }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        //mSettings = getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
+    public void settingPutFile(){
         // Запоминаем данные
         if(mSettings != null){
-            Sensor sensor;int i;
+            Sensor sensor;int i;SharedPreferences settingsDevace;String defName;
             // TODO: 09.12.2016 ОБЯЗАТЕЛЬНО ввести контроль изменения!! и толко при наличие изменений Записывать данные
             // это относится к списку устройств, поскольку устройства сами контролируют свои изменения!
             // в первом файле храним количство и адреса блутуз устройств
@@ -332,12 +326,23 @@ public class BluetoothLeServiceNew extends Service {
             editor.putInt("listSizeBluetooth", mbleDot.size());
             //Остальные файлы- имена ЭТО БЛУЗ АДРЕСА, в них все настройки
             for(i= 0; i < mbleDot.size(); i++){
-                //занесли в список устройст ЕГО АДРЕС под номером в листе
-                editor.putString("item"+i, mbleDot.get(i).mBluetoothDeviceAddress);
+                defName = "item"+i;
                 //сохраняем УСТРОЙСТВО в файле отдельном
                 sensor = mbleDot.get(i);
-                SharedPreferences settingsDevace =
-                        getSharedPreferences(sensor.mBluetoothDeviceAddress, Context.MODE_PRIVATE);
+                // "74:DA:EA:9F:54:C9"= 17
+                if((sensor.mBluetoothDeviceAddress != null)
+                        && (sensor.mBluetoothDeviceAddress.length() == 17)){
+                    //занесли в список устройст ЕГО АДРЕС под номером в листе
+                    editor.putString(defName, mbleDot.get(i).mBluetoothDeviceAddress);
+                    //
+                    settingsDevace = getSharedPreferences(sensor.mBluetoothDeviceAddress, Context.MODE_PRIVATE);
+                    Log.i(TAG,"SettingPutFile item= " +i+ "  name= " + sensor.mBluetoothDeviceAddress);
+                }else {//имя ЗАПИСЫВАЕМОМУ файлу даем по умолчанию!!!
+                    editor.putString(defName, defName);
+                    //
+                    settingsDevace = getSharedPreferences(defName, Context.MODE_PRIVATE);
+                    Log.i(TAG,"SettingPutFile item= " +i+ "  name= " + defName);
+                }
                 SharedPreferences.Editor settingsDevaceEditor = settingsDevace.edit();
                 sensor.putConfig(settingsDevaceEditor);
                 settingsDevaceEditor.apply();
@@ -347,6 +352,18 @@ public class BluetoothLeServiceNew extends Service {
         }else{
             Log.e(TAG,"getSharedPreferences= null!");
         }
+    }
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        //mSettings = getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
+        // Запоминаем данные
+        settingPutFile();
+        //-------
+        // After using a given device, you should make sure that BluetoothGatt.close() is called
+        // such that resources are cleaned up properly.  In this particular example, close() is
+        // invoked when the UI is disconnected from the Service.
+        close();
         Log.e(TAG,"----SERVICE ---onDestroy----");
         //------------------------------------------------------
     }
@@ -362,7 +379,8 @@ public class BluetoothLeServiceNew extends Service {
      *         callback.
      */
     synchronized public boolean connect(final String address, boolean avtoConnect) {
-        if (mBluetoothAdapter == null || address == null) {
+        // "74:DA:EA:9F:54:C9"= 17
+        if (mBluetoothAdapter == null || address == null || address.length() != 17) {
             Log.e(TAG, "BluetoothAdapter not initialized or unspecified address.");
             return false;
         }
@@ -376,7 +394,9 @@ public class BluetoothLeServiceNew extends Service {
             sensor = getBluetoothDevice(address);
             Log.w(TAG, " connect: OLd sensor (get from setting file)");
         }
-
+        if(sensor.goToConnect == true) {
+            Log.w(TAG, " connect: sensor GoTo connect Old");
+        }
         // Previously connected device.  Try to reconnect.
         if (sensor.mBluetoothDeviceAddress != null && address.equals(sensor.mBluetoothDeviceAddress)
                 && sensor.mBluetoothGatt != null) {
@@ -401,6 +421,7 @@ public class BluetoothLeServiceNew extends Service {
         Log.v(TAG, "Trying to create a new connection.");
         sensor.mBluetoothDeviceAddress = address;
         sensor.mConnectionState = STATE_CONNECTING;
+        sensor.goToConnect = true;//указали, что коннект заказан!
         return true;
     }
 
@@ -410,15 +431,13 @@ public class BluetoothLeServiceNew extends Service {
      * {@code BluetoothGattCallback#onConnectionStateChange(android.bluetooth.BluetoothGatt, int, int)}
      * callback.
      */
+    //дисконнект для всех!
     public void disconnect() {
-        for(Sensor sensor: mbleDot){
-            if (mBluetoothAdapter == null || sensor.mBluetoothGatt == null) {
-                Log.e(TAG, "BluetoothAdapter not initialized");
-                continue;
-            }
-            //дисконнект для всех!
-            sensor.mBluetoothGatt.disconnect();
+        if (mBluetoothAdapter == null) {
+            Log.e(TAG, "BluetoothAdapter not initialized");
+            return;
         }
+        for(Sensor sensor: mbleDot) sensor.disconnect();
     }
 
     /**
@@ -426,13 +445,7 @@ public class BluetoothLeServiceNew extends Service {
      * released properly.
      */
     public void close() {
-        for(Sensor sensor: mbleDot){
-            if (sensor.mBluetoothGatt == null) {
-                continue;
-            }
-            sensor.mBluetoothGatt.close();
-            sensor.mBluetoothGatt = null;
-        }
+        for(Sensor sensor: mbleDot) sensor.close();
     }
 
     /**

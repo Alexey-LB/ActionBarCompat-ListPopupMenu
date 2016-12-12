@@ -19,6 +19,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import static android.R.attr.value;
+//import static android.bluetooth.BluetoothAdapter.STATE_DISCONNECTED;
 
 /**
  * Created by lesa on 07.12.2016.
@@ -101,7 +102,18 @@ public class Sensor {
     public boolean onMinmelody = false;
     public boolean onMaxmelody = false;
     public boolean onEndmelody = false;
-
+    public boolean goToConnect = false;//Устанавливается после того как отправляется на коннект!!чтоб повторно НЕ коннектить
+//
+    public void close() {
+        if (mBluetoothGatt == null) return;
+        mBluetoothGatt.close();
+        mBluetoothGatt = null;
+    }
+    public void disconnect(){
+        if (mBluetoothGatt == null) return;
+        mBluetoothGatt.disconnect();
+    }
+    //
     private Handler changeValue = new Handler();
     private float getNewValue(float min, float max){
         return (float)( Math.random() * (max-min) + min);
@@ -110,13 +122,21 @@ public class Sensor {
         changeValue.postDelayed(new Runnable() {
             @Override
             public void run() {
+                final String val,rs,lb;
                 if (mBluetoothDeviceAddress == null) {
                     intermediateValue = getNewValue(20f, 100f);
                     rssi = (int) getNewValue(0f, 5f);
                 }
-                final String val = getStringIntermediateValue(false,true);
-                final String rs = String.valueOf(rssi);
-                final String lb = deviceLabel;
+                //если имитация или КОННЕКТ
+                if((mBluetoothDeviceAddress == null)
+                    || (mConnectionState == BluetoothLeServiceNew.STATE_CONNECTED)){
+                    val = getStringIntermediateValue(false,true);
+                    rs = String.valueOf(rssi);
+                }else{//если коннекта НЕТ
+                    val = "-";
+                    rs = "0";
+                }
+                lb = deviceLabel;
                 if((deviceLabelView != null)&&(deviceLabelView instanceof TextView)) ((TextView)deviceLabelView).setText(lb);
                 if((rssiView != null)&&(rssiView  instanceof TextView)) ((TextView)rssiView ).setText(rs);
                 if((intermediateValueView != null)&&(intermediateValueView instanceof TextView)) ((TextView)intermediateValueView).setText(val);
@@ -149,6 +169,7 @@ public class Sensor {
             deviceLabel = deviceLabelStringDefault + " " + indexDevace++;
             return;
         }
+
         changeConfig = false;//установки считаны из ФЛЕШИ- не изменены!!
         //if (mSettings.contains("COUNTER"))
         mBluetoothDeviceAddress = mSettings.getString("mBluetoothDeviceAddress", mBluetoothDeviceAddress);
@@ -177,6 +198,7 @@ public class Sensor {
         onMinmelody = mSettings.getBoolean("onMinmelody", onMinmelody);
         onMaxmelody = mSettings.getBoolean("onMaxmelody", onMaxmelody);
         onEndmelody = mSettings.getBoolean("onEndmelody", onEndmelody);
+        loop();
     }
     public void putConfig(SharedPreferences.Editor editor){
         if(editor == null) return;
