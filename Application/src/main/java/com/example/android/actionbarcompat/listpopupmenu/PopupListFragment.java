@@ -933,6 +933,10 @@ return null;//fbButton_;
                 ((Sensor)adapter.getItem(position)).battery_levelView = view.findViewById(R.id.battery);
   //    ((Sensor)adapter.getItem(position)).deviceLabelView = view.findViewById(R.id.imgTitle);
        ((Sensor)adapter.getItem(position)).markerColorView = view.findViewById(R.id.marker);
+
+
+      //                  view.findViewById(R.id.numbe_min);
+      //          ((Sensor)adapter.getItem(position)).markerColorView = view.findViewById(R.id.numbe_max);
 //                TreeMap<Integer,Object> map = ((Cheeses)adapter.getItem(position)).value;
 //
 //                //загоняем в мап что есть на Вюверах, таким образм, потом сравнивая что есть, то и выводим!

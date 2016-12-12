@@ -102,7 +102,7 @@
             android:background="@android:drawable/screen_background_light">
 
             <TextView
-                android:text="-"
+                android:text="-20 °C"
                 android:id="@+id/numbe_min"
                 android:layout_weight="1"
                 android:layout_width="95dp"
@@ -131,7 +131,7 @@
 
 
             <TextView
-                android:text="-"
+                android:text="70 °C"
                 android:layout_weight="1"
                 android:id="@+id/numbe_max"
                 android:maxLines="1"

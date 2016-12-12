@@ -156,6 +156,7 @@ public class Sensor {
                     Log.v(TAG,"rssiView= " + i);
                     ImageView iv = (ImageView)battery_levelView;
                     // iv.setImageResource(R.drawable.ic_signal_wifi_4_bar_black_24dp);
+                    // TODO: 12.12.2016 переделать с указанием уровня отображения!! iv.setImageLevel();
                     switch(i){
                         case 0: iv.setImageResource(R.drawable.ic_battery_alert_black_24dp);break;
                         case 1: iv.setImageResource(R.drawable.ic_battery_alert_black_24dp);break;
