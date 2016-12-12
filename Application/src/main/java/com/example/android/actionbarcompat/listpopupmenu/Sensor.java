@@ -9,6 +9,7 @@ import android.bluetooth.BluetoothManager;
 import android.bluetooth.BluetoothProfile;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.media.Image;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
@@ -56,6 +57,7 @@ public class Sensor {
 
     // Sample Characteristics.
     public int battery_level = -1;//%
+    public View battery_levelView = null;
     // "Health Thermometer"
     public float temperatureMeasurement = 0f;//C- у релсиба НЕ потдерживается
 
@@ -78,7 +80,9 @@ public class Sensor {
     private long mBluetoothDeviceAddressLong = 0;//64 bita
     //
     public int deviceItem = 0;
-    public int markerColor = 0xFFFFFF;
+    public int markerColor = 0;
+    public View markerColorView = null;
+
     public int measurementMode = 0;//режим медецинский Или универсальный
 
     //"Device Information Service":-character--
@@ -125,7 +129,8 @@ public class Sensor {
                 final String val,rs,lb;
                 if (mBluetoothDeviceAddress == null) {
                     intermediateValue = getNewValue(20f, 100f);
-                    rssi = (int) getNewValue(0f, 5f);
+                    rssi = (int) getNewValue(40f, 100f);
+                    battery_level = (int) getNewValue(0f, 100f);
                 }
                 //если имитация или КОННЕКТ
                 if((mBluetoothDeviceAddress == null)
@@ -138,9 +143,72 @@ public class Sensor {
                 }
                 lb = deviceLabel;
                 if((deviceLabelView != null)&&(deviceLabelView instanceof TextView)) ((TextView)deviceLabelView).setText(lb);
-                if((rssiView != null)&&(rssiView  instanceof TextView)) ((TextView)rssiView ).setText(rs);
-                if((intermediateValueView != null)&&(intermediateValueView instanceof TextView)) ((TextView)intermediateValueView).setText(val);
 
+                if((intermediateValueView != null)&&(intermediateValueView instanceof TextView)) {
+                    ((TextView)intermediateValueView).setText(val);
+                   // Log.v(TAG,"intermediateValue= " + val);
+                }
+
+                if((battery_levelView != null)&&(battery_levelView  instanceof ImageView)){
+                    int i = battery_level;
+                    if(i < 0) i = i*(-1);
+                    i = i/10;
+                    Log.v(TAG,"rssiView= " + i);
+                    ImageView iv = (ImageView)battery_levelView;
+                    // iv.setImageResource(R.drawable.ic_signal_wifi_4_bar_black_24dp);
+                    switch(i){
+                        case 0: iv.setImageResource(R.drawable.ic_battery_alert_black_24dp);break;
+                        case 1: iv.setImageResource(R.drawable.ic_battery_alert_black_24dp);break;
+                        case 2: iv.setImageResource(R.drawable.ic_battery_20_black_24dp);break;
+                        case 3: iv.setImageResource(R.drawable.ic_battery_30_black_24dp);break;
+                        case 4: iv.setImageResource(R.drawable.ic_battery_30_black_24dp);break;
+                        case 5: iv.setImageResource(R.drawable.ic_battery_60_black_24dp);break;
+                        case 6: iv.setImageResource(R.drawable.ic_battery_60_black_24dp);break;
+                        case 7: iv.setImageResource(R.drawable.ic_battery_80_black_24dp);break;
+                        case 8: iv.setImageResource(R.drawable.ic_battery_90_black_24dp);break;
+                        default: iv.setImageResource(R.drawable.ic_battery_full_black_24dp);break;
+                    }
+                }
+
+                if((rssiView != null)&&(rssiView  instanceof ImageView)){
+                    int i = rssi;
+                    if(i < 0) i = i*(-1);
+                    i = i/10;
+                    Log.v(TAG,"rssiView= " + i);
+                    ImageView iv = (ImageView)rssiView;
+                   // iv.setImageResource(R.drawable.ic_signal_wifi_4_bar_black_24dp);
+                    switch(i){
+                        case 0: iv.setImageResource(R.drawable.ic_signal_wifi_4_bar_black_24dp);break;
+                        case 1: iv.setImageResource(R.drawable.ic_signal_wifi_4_bar_black_24dp);break;
+                        case 2: iv.setImageResource(R.drawable.ic_signal_wifi_4_bar_black_24dp);break;
+                        case 3: iv.setImageResource(R.drawable.ic_signal_wifi_4_bar_black_24dp);break;
+                        case 4: iv.setImageResource(R.drawable.ic_signal_wifi_4_bar_black_24dp);break;
+                        case 5: iv.setImageResource(R.drawable.ic_signal_wifi_4_bar_black_24dp);break;
+                        case 6: iv.setImageResource(R.drawable.ic_signal_wifi_3_bar_black_24dp);break;
+                        case 7: iv.setImageResource(R.drawable.ic_signal_wifi_2_bar_black_24dp);break;
+                        case 8: iv.setImageResource(R.drawable.ic_signal_wifi_1_bar_black_24dp);break;
+                        case 9: iv.setImageResource(R.drawable.ic_signal_wifi_0_bar_black_24dp);break;
+                        default: iv.setImageResource(R.drawable.ic_signal_wifi_0_bar_black_24dp);break;
+                    }
+                }
+                //
+                if((markerColorView != null)&&(markerColorView instanceof TextView)
+                        &&(markerColorView.getTag() == null)
+                        ){
+                    TextView tv = ((TextView)markerColorView);
+                    switch(markerColor){
+                        case 0: tv.setBackgroundResource(R.drawable.marker_white);break;
+                        case 1: tv.setBackgroundResource(R.drawable.marker_red);break;
+                        case 2: tv.setBackgroundResource(R.drawable.marker_yellow);break;
+                        case 3: tv.setBackgroundResource(R.drawable.marker_green);break;
+                        case 4: tv.setBackgroundResource(R.drawable.marker_cyan);break;
+                        case 5: tv.setBackgroundResource(R.drawable.marker_blue);break;
+                        case 6: tv.setBackgroundResource(R.drawable.marker_purple);break;
+                        case 7: tv.setBackgroundResource(R.drawable.marker_black);break;
+                    }
+                 //   ((TextView)markerColorView).setBackgroundResource(Marker.marker.get(markerColor));
+                    markerColorView.setTag((Object) 1);//чтоб не перезаписывать
+                }
                 loop();
             }
         }, 1000);
@@ -158,18 +226,26 @@ public class Sensor {
     public String getAddress(){
         return mBluetoothDeviceAddress;
     }
-    Sensor (){    loop();    deviceLabel = deviceLabelStringDefault + " " + indexDevace++;}
-    Sensor (final String adress){
+    Sensor (){
+
+        deviceLabel = deviceLabelStringDefault + " " + indexDevace++;
+        markerColor = 0x7 & indexDevace;
+        Log.v(TAG,"markerColor= " + markerColor);
         loop();
+    }
+    Sensor (final String adress){
+
         mBluetoothDeviceAddress = adress;
         deviceLabel = deviceLabelStringDefault + " " + indexDevace++;
+        markerColor = 0x7 & indexDevace;
+        loop();
     }
     Sensor (SharedPreferences mSettings){
         if(mSettings == null){
             deviceLabel = deviceLabelStringDefault + " " + indexDevace++;
             return;
         }
-
+        markerColor = 0x7 & indexDevace;
         changeConfig = false;//установки считаны из ФЛЕШИ- не изменены!!
         //if (mSettings.contains("COUNTER"))
         mBluetoothDeviceAddress = mSettings.getString("mBluetoothDeviceAddress", mBluetoothDeviceAddress);

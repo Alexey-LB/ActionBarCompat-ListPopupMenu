@@ -45,16 +45,14 @@
             android:background="@android:drawable/screen_background_light">
 
             <TextView
-                android:text="+"
 
-                android:id="@+id/imgTitle"
+                android:id="@+id/marker"
                 android:textColor="?attr/colorPrimaryDark"
                 android:gravity="center_vertical|center_horizontal"
-                android:background="@drawable/marker"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="1dp"
-                android:layout_height="22dp"
-                android:layout_width="22dp" />
+                android:background="@drawable/marker_white"
+                android:layout_marginLeft="12dp"
+                android:layout_height="24dp"
+                android:layout_width="24dp" />
 
             <TextView
                 android:text="Температура 1"
@@ -74,17 +72,18 @@
                             android:drawablePadding="10dp"
                             android:drawableStart="10"
             -->
-            <TextView
-                android:text="signal"
+            <!--android:text="signal"-->
+            <ImageView
+
                 android:layout_width="35dp"
                 android:layout_weight="0.25"
                 android:textColor="@color/cardview_dark_background"
                 android:layout_height="match_parent"
                 android:id="@+id/signal"
                 android:gravity="center_vertical|center_horizontal" />
+            <!--android:text="Batt"-->
+            <ImageView
 
-            <TextView
-                android:text="Batt"
                 android:layout_weight="0.25"
                 android:layout_width="34dp"
                 android:textColor="@color/cardview_dark_background"
