@@ -16,6 +16,7 @@
 -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="horizontal"
     android:layout_width="match_parent"
@@ -73,20 +74,30 @@
                             android:drawableStart="10"
             -->
             <!--android:text="signal"-->
+            <!--android:textColor="@color/cardview_dark_background"-->
+            <!--android:background="@drawable/ic_sgnal_bluetooth_level"-->
+            <!--android:src="@drawable/ic_sgnal_bluetooth_level"-->
             <ImageView
 
                 android:layout_width="35dp"
                 android:layout_weight="0.25"
-                android:textColor="@color/cardview_dark_background"
+
+                android:src="@drawable/ic_sgnal_bluetooth_level"
+
                 android:layout_height="match_parent"
                 android:id="@+id/signal"
-                android:gravity="center_vertical|center_horizontal" />
+                android:gravity="center_vertical|center_horizontal"
+                 />
+            <!--app:srcCompat="@drawable/ic_sgnal_bluetooth_level"-->
             <!--android:text="Batt"-->
+            <!--android:textColor="@color/cardview_dark_background"-->
+            <!--android:src="@drawable/ic_battatery_level"-->
             <ImageView
+                android:src="@drawable/ic_battatery_level"
 
                 android:layout_weight="0.25"
                 android:layout_width="34dp"
-                android:textColor="@color/cardview_dark_background"
+
                 android:layout_height="match_parent"
                 android:id="@+id/battery"
                 android:gravity="center_vertical|center_horizontal" />

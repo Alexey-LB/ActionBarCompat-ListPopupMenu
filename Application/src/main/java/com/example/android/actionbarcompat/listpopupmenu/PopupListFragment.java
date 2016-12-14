@@ -119,7 +119,8 @@ import static android.content.Context.BIND_AUTO_CREATE;
 public class PopupListFragment extends ListFragmentA  {
     private static final String TAG = "PopListFA";
     private Menu menuFragment;
-    private boolean dellItem= false;
+    //private boolean dellItem= false;// убрал- НЕ понравилось заказчику
+
     public  MainActivity parentActivity;
 
     private static int index_object = 0;
@@ -434,9 +435,6 @@ public void onPrepareOptionsMenu(Menu menu){
                 return true;
             case iconActionEdit:
                 Log.i(TAG,"edit-");
-//Видимые и не видимые символы РЕДАКТИРОВАНИЯ
-                dellItem = !dellItem;
-                setDellItemView(dellItem );
         //вызов активного окна для сканирования
     //!!ОБламывает, возвращяетс назад НЕ запускает!!            ((MainActivity)getActivity()).onScanDevice(1);
 
@@ -685,6 +683,8 @@ return null;//fbButton_;
             boolean rez = false;// false ДАЕТ распространять события дальше, true- НЕ разрешает?после ONTach-Click, LongClick
             switch(click){
                 case CLICK_SHORT: rez = true;//выбор,СОСТОЯНИЕ (удалитение, работа) в состоянии удаления все отменяем, иначе вызов соответсв пункта
+                    str =  "CLICK_SHORT--- X= " + x+ "  positionScroll= " + positionScroll + "  stateDell= "+ stateDell;
+
                     i = adapter.getPosition(obj);//работаеем только с объектами, их запоминаем, позиции для временвх значение
                     if((objectD == null) || (i != adapter.getPosition(objectD))//если объект для удаления отсутствует или не совпадает позиция текущая и ранее выбранного объекта
                             || ((positionScroll > 0) && (positionStartX < (DispleyWidthDp -maxScroll)))//мы не попали тычком на картинку удалить
@@ -739,14 +739,16 @@ return null;//fbButton_;
                     str =  "CLICK_DOWN X= " + x;
                     break;
                 case CLICK_MOVE://смещение вювера влево или вправо
-                    positionScroll = positionStartX - x;
-                    i = maxScroll + (maxScroll >> 1);
-                    if(Math.abs(positionScroll) > i){//разрешаем сдвигать влево и вправо но НЕ БОЛЕЕ 1.5 МАХ(пол экрана)
-                        if(positionScroll < 0) i = -i;//инверсия числа- отрицательно число
-                        positionScroll = i;
+                    if(stateDell == true) {
+                        positionScroll = positionStartX - x;
+                        i = maxScroll + (maxScroll >> 1);
+                        if (Math.abs(positionScroll) > i) {//разрешаем сдвигать влево и вправо но НЕ БОЛЕЕ 1.5 МАХ(пол экрана)
+                            if (positionScroll < 0) i = -i;//инверсия числа- отрицательно число
+                            positionScroll = i;
+                        }
+                        setScrollX_View(positionScroll);
                     }
-                    setScrollX_View(positionScroll);
-                    str =  "CLICK_MOVE--- X= " + x + "  positionScroll= " + positionScroll;
+                    str =  "CLICK_MOVE--- X= " + x + "  positionScroll= " + positionScroll+ "  stateDell= "+ stateDell;
                     break;
                 case CLICK_UP:
                     if(stateDell == true){//обработка СДВИГА
@@ -763,7 +765,7 @@ return null;//fbButton_;
                         positionStartX = x;
                     }
                     stateDell = false;//закончили смещение
-                    str =  "CLICK_UP--- X= " + x+ "  positionScroll= " + positionScroll;
+                    str =  "CLICK_UP--- X= " + x+ "  positionScroll= " + positionScroll + "  stateDell= "+ stateDell;
                     break;
                 case CLICK_ADD:
                     if((objectD != null) && (adapter.getPosition(objectD) >= 0)){
@@ -814,8 +816,6 @@ return null;//fbButton_;
     @Override
     //synchronized Здесь фиксируем РЕЖИМ на удаление. если до конца доведем и нажмем на него то ИТЕМ удалится!!
     public boolean onListItemLongClick(ListView l, View v, int position, long id) {
-       //если НЕ разрешено редактирование!! выходим!
-        if(dellItem == false) return false;
             return objectDataToView.controlObject(CLICK_LONG,adapter.getItem(position),0);
     }
     //дает данные по всему списку Х и У а также кнопе=ка нажата отжата и тд
@@ -905,7 +905,7 @@ return null;//fbButton_;
             View view = super.getView(position, convertView, container);
             //-----------------------------------
             //при изменениях, всегда сбрасываем РЕДАКТИРОВАНИЕ!!и убираем ИКОНКУ редактирования!!!
-            if(dellItem == true)dellItem = false;
+           /// if(dellItem == true)dellItem = false;// убрал- НЕ понравилось заказчику
             ViewGroup vg = (ViewGroup)view;
             //гасим рАЗРЕШЕНИЕ редактирования, ЭТО 2 слой!!
             if(vg != null){//Видимые и не видимые символы РЕДАКТИРОВАНИЯ
@@ -930,7 +930,8 @@ return null;//fbButton_;
                 //присвоил текущее значение для отображения
      ((Sensor)adapter.getItem(position)).intermediateValueView = view.findViewById(R.id.numbe_cur);
      ((Sensor)adapter.getItem(position)).rssiView = view.findViewById(R.id.signal);
-                ((Sensor)adapter.getItem(position)).battery_levelView = view.findViewById(R.id.battery);
+     ((Sensor)adapter.getItem(position)).battery_levelView = view.findViewById(R.id.battery);
+
   //    ((Sensor)adapter.getItem(position)).deviceLabelView = view.findViewById(R.id.imgTitle);
        ((Sensor)adapter.getItem(position)).markerColorView = view.findViewById(R.id.marker);
 

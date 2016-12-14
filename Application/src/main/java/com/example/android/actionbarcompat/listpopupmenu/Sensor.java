@@ -150,47 +150,55 @@ public class Sensor {
                 }
 
                 if((battery_levelView != null)&&(battery_levelView  instanceof ImageView)){
+
                     int i = battery_level;
                     if(i < 0) i = i*(-1);
-                    i = i/10;
+            //        i = i/10;
         //            Log.v(TAG,"rssiView= " + i);
                     ImageView iv = (ImageView)battery_levelView;
-                    // iv.setImageResource(R.drawable.ic_signal_wifi_4_bar_black_24dp);
-                    // TODO: 12.12.2016 переделать с указанием уровня отображения!! iv.setImageLevel();
-                    switch(i){
-                        case 0: iv.setImageResource(R.drawable.ic_battery_alert_black_24dp);break;
-                        case 1: iv.setImageResource(R.drawable.ic_battery_alert_black_24dp);break;
-                        case 2: iv.setImageResource(R.drawable.ic_battery_20_black_24dp);break;
-                        case 3: iv.setImageResource(R.drawable.ic_battery_30_black_24dp);break;
-                        case 4: iv.setImageResource(R.drawable.ic_battery_30_black_24dp);break;
-                        case 5: iv.setImageResource(R.drawable.ic_battery_60_black_24dp);break;
-                        case 6: iv.setImageResource(R.drawable.ic_battery_60_black_24dp);break;
-                        case 7: iv.setImageResource(R.drawable.ic_battery_80_black_24dp);break;
-                        case 8: iv.setImageResource(R.drawable.ic_battery_90_black_24dp);break;
-                        default: iv.setImageResource(R.drawable.ic_battery_full_black_24dp);break;
-                    }
+                    iv.setImageLevel(i);
+//
+//                    // iv.setImageResource(R.drawable.ic_signal_wifi_4_bar_black_24dp);
+//                    // TODO: 12.12.2016 переделать с указанием уровня отображения!! iv.setImageLevel();
+//                switch(i){
+//                        case 0: iv.setImageResource(R.drawable.ic_battery_alert_black_24dp);break;
+//                        case 1: iv.setImageResource(R.drawable.ic_battery_alert_black_24dp);break;
+//                        case 2: iv.setImageResource(R.drawable.ic_battery_20_black_24dp);break;
+//                        case 3: iv.setImageResource(R.drawable.ic_battery_30_black_24dp);break;
+//                        case 4: iv.setImageResource(R.drawable.ic_battery_30_black_24dp);break;
+//                        case 5: iv.setImageResource(R.drawable.ic_battery_60_black_24dp);break;
+//                        case 6: iv.setImageResource(R.drawable.ic_battery_60_black_24dp);break;
+//                        case 7: iv.setImageResource(R.drawable.ic_battery_80_black_24dp);break;
+//                        case 8: iv.setImageResource(R.drawable.ic_battery_90_black_24dp);break;
+//                        default: iv.setImageResource(R.drawable.ic_battery_full_black_24dp);break;
+//                    }
                 }
 
                 if((rssiView != null)&&(rssiView  instanceof ImageView)){
-                    int i = rssi;
-                    if(i < 0) i = i*(-1);
-                    i = i/10;
-             //       Log.v(TAG,"rssiView= " + i);
                     ImageView iv = (ImageView)rssiView;
-                   // iv.setImageResource(R.drawable.ic_signal_wifi_4_bar_black_24dp);
-                    switch(i){
-                        case 0: iv.setImageResource(R.drawable.ic_signal_wifi_4_bar_black_24dp);break;
-                        case 1: iv.setImageResource(R.drawable.ic_signal_wifi_4_bar_black_24dp);break;
-                        case 2: iv.setImageResource(R.drawable.ic_signal_wifi_4_bar_black_24dp);break;
-                        case 3: iv.setImageResource(R.drawable.ic_signal_wifi_4_bar_black_24dp);break;
-                        case 4: iv.setImageResource(R.drawable.ic_signal_wifi_4_bar_black_24dp);break;
-                        case 5: iv.setImageResource(R.drawable.ic_signal_wifi_4_bar_black_24dp);break;
-                        case 6: iv.setImageResource(R.drawable.ic_signal_wifi_3_bar_black_24dp);break;
-                        case 7: iv.setImageResource(R.drawable.ic_signal_wifi_2_bar_black_24dp);break;
-                        case 8: iv.setImageResource(R.drawable.ic_signal_wifi_1_bar_black_24dp);break;
-                        case 9: iv.setImageResource(R.drawable.ic_signal_wifi_0_bar_black_24dp);break;
-                        default: iv.setImageResource(R.drawable.ic_signal_wifi_0_bar_black_24dp);break;
-                    }
+                    int i = rssi;
+                    //Отрицательное число уровеня- ломает вывод ИЗОБРАЖЕНИЯ по уровням
+                    if(i < 0) i = i*(-1);
+
+                    iv.setImageLevel(i);
+
+//                    i = i/10;
+//             //       Log.v(TAG,"rssiView= " + i);
+//
+//                   // iv.setImageResource(R.drawable.ic_signal_wifi_4_bar_black_24dp);
+//                    switch(i){
+//                        case 0: iv.setImageResource(R.drawable.ic_signal_wifi_4_bar_black_24dp);break;
+//                        case 1: iv.setImageResource(R.drawable.ic_signal_wifi_4_bar_black_24dp);break;
+//                        case 2: iv.setImageResource(R.drawable.ic_signal_wifi_4_bar_black_24dp);break;
+//                        case 3: iv.setImageResource(R.drawable.ic_signal_wifi_4_bar_black_24dp);break;
+//                        case 4: iv.setImageResource(R.drawable.ic_signal_wifi_4_bar_black_24dp);break;
+//                        case 5: iv.setImageResource(R.drawable.ic_signal_wifi_4_bar_black_24dp);break;
+//                        case 6: iv.setImageResource(R.drawable.ic_signal_wifi_3_bar_black_24dp);break;
+//                        case 7: iv.setImageResource(R.drawable.ic_signal_wifi_2_bar_black_24dp);break;
+//                        case 8: iv.setImageResource(R.drawable.ic_signal_wifi_1_bar_black_24dp);break;
+//                        case 9: iv.setImageResource(R.drawable.ic_signal_wifi_0_bar_black_24dp);break;
+//                        default: iv.setImageResource(R.drawable.ic_signal_wifi_0_bar_black_24dp);break;
+//                    }
                 }
                 //
                 if((markerColorView != null)&&(markerColorView instanceof TextView)
