@@ -374,7 +374,7 @@ public class PopupListFragment extends ListFragmentA  {
 //        }
 //    };
     ///--------------------------------------------------------------------------------------
-    final int iconActionEdit = 12345678;
+
     final int iconActionAdd = 23456789;
 
     //http://developer.alexanderklimov.ru/android/theory/fragments.php
@@ -385,10 +385,6 @@ public class PopupListFragment extends ListFragmentA  {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menuFragment = menu;//запомил, чтоб потом  изменить меню или удалить ПРИ ВЫХОДЕ из фрейма
-       // inflater.inflate(R.menu.myfragment_options, menu);
-        menu.add(Menu.NONE,iconActionEdit,Menu.NONE,"Edit")
-                .setIcon(R.drawable.ic_clear_black_24dp)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
         menu.add(Menu.NONE,iconActionAdd,Menu.NONE,"Add")
                 .setIcon(R.drawable.ic_add_black_32dp)
@@ -433,13 +429,13 @@ public void onPrepareOptionsMenu(Menu menu){
                 ((MainActivity)getActivity()).mBluetoothLeServiceM.settingPutFile();
  //               adapter.notifyDataSetChanged();
                 return true;
-            case iconActionEdit:
-                Log.i(TAG,"edit-");
-        //вызов активного окна для сканирования
-    //!!ОБламывает, возвращяетс назад НЕ запускает!!            ((MainActivity)getActivity()).onScanDevice(1);
-
-  //              adapter.notifyDataSetChanged();
-                return true;
+//            case iconActionEdit:
+//                Log.i(TAG,"edit-");
+//        //вызов активного окна для сканирования
+//    //!!ОБламывает, возвращяетс назад НЕ запускает!!            ((MainActivity)getActivity()).onScanDevice(1);
+//
+//  //              adapter.notifyDataSetChanged();
+//                return true;
             case iconActionAdd:
                 Log.i(TAG,"ADD+");
                 addNoInitObject();

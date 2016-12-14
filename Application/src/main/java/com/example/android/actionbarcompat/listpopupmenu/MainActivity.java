@@ -118,6 +118,7 @@ public class MainActivity extends AppCompatActivity {// ActionBarActivity {
         //-------------ЗАПУСТИЛИ ервис ---------
         Intent gattServiceIntent = new Intent(this, BluetoothLeServiceNew.class);
         bindService(gattServiceIntent, mServiceConnectionM, BIND_AUTO_CREATE);
+
         Log.e(TAG, "----onCreate END-----ActionBar=" + ab + "  gtab="+ gtab);
     }
     public BluetoothLeServiceNew mBluetoothLeServiceM;
@@ -177,13 +178,16 @@ public class MainActivity extends AppCompatActivity {// ActionBarActivity {
 
 //Develop API Guides User Interface Меню
     // https://developer.android.com/guide/topics/ui/menus.html#context-menu
-
+final int iconActionEdit = 12345678;
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
  //       MenuInflater menuInflater= getMenuInflater();
  //       menuInflater.inflate(R.menu.poplist_menu,menu);
 
-
+        // inflater.inflate(R.menu.myfragment_options, menu);
+        menu.add(Menu.NONE,iconActionEdit,Menu.NONE,"Edit")
+                .setIcon(R.drawable.ic_clear_black_24dp)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         return super.onCreateOptionsMenu(menu);
     }
     @Override//сюда прилетают ответы при возвращении из других ОКОН активити
@@ -197,13 +201,17 @@ public class MainActivity extends AppCompatActivity {// ActionBarActivity {
         if (requestCode == MAINACTIVITY && resultCode == Activity.RESULT_OK) {
             Log.w(TAG,"NAME= " + data.getStringExtra(EXTRAS_DEVICE_NAME)
             +"   EXTRAS_DEVICE_ADDRESS= " + data.getStringExtra(EXTRAS_DEVICE_ADDRESS));
+            //запуск на коннект!!
+            if(mBluetoothLeServiceM != null){
+                mBluetoothLeServiceM.connect(data.getStringExtra(EXTRAS_DEVICE_ADDRESS),true);
+            }
             return;
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
 
     public void onScanDevice(int i){
-        final Intent intent = new Intent(this, MainActivity.class);
+        final Intent intent = new Intent(this, DeviceScanActivity.class);
           intent.putExtra(MainActivity.EXTRAS_DEVICE_ITEM, i);
         //  intent.putExtra(MainActivity.EXTRAS_DEVICE_ADDRESS, device.getAddress());
 Log.i(TAG,"startActivity SCAN");
@@ -217,33 +225,12 @@ Log.i(TAG,"startActivity SCAN");
         switch (item.getItemId()) {
             case android.R.id.home:
                 Log.i(TAG,"android.R.id.home--");
-
-//                DetailFragment fragment = (DetailFragment) getFragmentManager().
-//                        findFragmentById(R.id.detail_fragment);
-//                if (fragment == null || ! fragment.isInLayout()) {
-//                    // запускаем новую активность
-//                }
-//                else {
-//                    fragment.update(...);
-//        Fragment        popListFragment= (Fragment)getSupportFragmentManager()
-//                        .findFragmentById(R.id.popUpListFragment);
-//DialogFragmentNote fragment = new DialogFragmentNote();
-//
-//                if (fragment != null && fragment.isInLayout()){
-//                    FragmentManager fragmentManager = getFragmentManager();
-//                    fragmentManager.beginTransaction()
-//                         //   .remove(fragment1)
-//                           // .add(R.id.fragment_container, fragment2)
-//                            .show(fragment)
-//                            .hide((Fragment)popupFragment)
-//                            .commit();
-//                }
-// останавливается приложение!! надо както иначе
-//                android.support.v4.app.Fragment fragment= getSupportFragmentManager()
-//                        .findFragmentById(R.id.dialogFragmentNote);
-//                fragment.onDetach();
-
                 return false;//установили ФАЛШ, чтоб вызов попал в ФРАГМЕНТ, в которм будет обработан!!
+            case iconActionEdit:
+                Log.i(TAG,"edit-");
+        //вызов активного окна для сканирования
+                onScanDevice(1);
+                return true;
             case R.id.edit_a://.new_game_:
                 View v =((View)findViewById(R.id.textViewName));
                 if(v != null){
@@ -277,7 +264,11 @@ Log.i(TAG,"startActivity SCAN");
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        if (isFinishing()) {
+            mBluetoothLeServiceM = null;
+        } else {
+           ; //It's an orientation change.
+        }
         unbindService(mServiceConnectionM);
-        mBluetoothLeServiceM = null;
     }
 }
