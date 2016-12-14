@@ -30,6 +30,7 @@ import android.os.Bundle;
 //import android.support.v7.app.ActionBar;
 import android.os.IBinder;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -48,7 +49,9 @@ import android.widget.SpinnerAdapter;
  * necessary to display a compatible Action Bar on devices running Android v2.1+.
  */
 //
-public class MainActivity extends   ActionBarActivity {
+// LIB !!=> http://developer.alexanderklimov.ru/android/theory/appcompat.php
+//fragments-> https://github.com/codepath/android_guides/wiki/creating-and-using-fragments
+public class MainActivity extends AppCompatActivity {// ActionBarActivity {
     public  final static String TAG = "MAIN";
     public  final static String EXTRAS_DEVICE_NAME = "EXTRAS_DEVICE_NAME";
     public  final static String EXTRAS_DEVICE_ADDRESS = "EXTRAS_DEVICE_ADDRESS";

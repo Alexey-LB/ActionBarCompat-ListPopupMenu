@@ -20,7 +20,7 @@
     <!-- @drawable/ic_overflow, android:background="@android:drawable/ic_menu_my_calendar">
     editbox_dropdown_light_frame,[sym_contact_card](screen_background_light)screen_background_light_transparent  -->
 
-
+    <!---->
     <TextView
         android:text="+"
         android:id="@+id/floatingActionButton"
@@ -32,8 +32,14 @@
 
         app:layout_scrollFlags="scroll|enterAlways"
         />
-
-
+    <!--У компонентов в стиле Material Design при нажатии появляется анимация в виде -->
+    <!--расходящего круга (ripple). Стиль selectableItemBackgroundBorderless применим -->
+    <!--к различным компонентам: кнопки, рамки и т.д. Применим к ImageView. -->
+    <!--В первом случае анимация не распространяется за пределы своего компонента. -->
+    <!--Во втором случае анимация выходит за пределы границ компонента.-->
+    <!--http://developer.alexanderklimov.ru/android/theory/styles.php-->
+    <!--android:background="?android:attr/selectableItemBackgroundBorderless"-->
+    <!--&lt;!&ndash;android:background="?android:attr/selectableItemBackgroundBorderless"&ndash;&gt;-->
     <!--         android:background="@android:color/holo_red_dark"
     android:layout_alignParentStart="true"android:layout_marginStart="71dp"
      tools:text="@android:string/cut"
