@@ -20,7 +20,7 @@
     <!-- @drawable/ic_overflow, android:background="@android:drawable/ic_menu_my_calendar">
     editbox_dropdown_light_frame,[sym_contact_card](screen_background_light)screen_background_light_transparent  -->
 
-    <!---->
+    <!--android:background="@drawable/fbutton"-->
     <TextView
         android:text="+"
         android:id="@+id/floatingActionButton"
@@ -32,6 +32,7 @@
 
         app:layout_scrollFlags="scroll|enterAlways"
         />
+    <!--selectableItemBackground для стрых устройств в виде прямоугольника-->
     <!--У компонентов в стиле Material Design при нажатии появляется анимация в виде -->
     <!--расходящего круга (ripple). Стиль selectableItemBackgroundBorderless применим -->
     <!--к различным компонентам: кнопки, рамки и т.д. Применим к ImageView. -->

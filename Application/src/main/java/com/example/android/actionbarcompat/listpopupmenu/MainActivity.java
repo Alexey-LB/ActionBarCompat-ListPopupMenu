@@ -29,6 +29,7 @@ import android.graphics.drawable.shapes.RectShape;
 import android.os.Bundle;
 //import android.support.v7.app.ActionBar;
 import android.os.IBinder;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -63,7 +64,10 @@ public class MainActivity extends AppCompatActivity {// ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //setContentView(R.layout.sample_main);
-        setContentView(R.layout.sample);
+        setContentView(R.layout.sample_main);
+        //  программное создоние и подключения слоя
+      //  https://github.com/codepath/android_guides/wiki/creating-and-using-fragments
+        //http://developer.alexanderklimov.ru/android/theory/layout.php
 //Экземпляр фрагмента связан с активностью. Активность может вызывать методы фрагмента
 // через ссылку на объект фрагмента. Доступ к фрагменту можно получить через
 // методы findFragmentById() или findFragmentByTag().
@@ -73,9 +77,18 @@ public class MainActivity extends AppCompatActivity {// ActionBarActivity {
 //взаимодействие АКТИВНОсТИ и фрагмента, вызов явно метода из фрагмента, по ссылке на него!
         //там же взаимодействи обратное, работа с АкшионБар и КНОПКА НАЗАД!
         // http://developer.alexanderklimov.ru/android/theory/fragments.php
-  popupListFragment= (PopupListFragment)getSupportFragmentManager()
-                .findFragmentById(R.id.popUpListFragment);
-        popupListFragment.parentActivity = this;
+         popupListFragment = new PopupListFragment();
+        // Begin the transaction
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+// Replace the contents of the container with the new fragment
+        ft.replace(R.id.mainFragment, popupListFragment);
+// or ft.add(R.id.your_placeholder, new FooFragment());
+// Complete the changes added above
+        ft.commit();
+
+//  popupListFragment= (PopupListFragment)getSupportFragmentManager()
+//                .findFragmentById(R.id.popUpListFragment);
+//        popupListFragment.parentActivity = this;
         //--------------
        // getSupportActionBar();??--это решалось в другом методе(getDelegate().getSupportActionBar();)
        //android.support.v7.app.ActionBar
@@ -120,7 +133,7 @@ public class MainActivity extends AppCompatActivity {// ActionBarActivity {
                 Log.e(TAG, "Unable to initialize Bluetooth");
                 finish();
             }
-            popupListFragment.initList();
+           if(popupListFragment != null) popupListFragment.initList();
             // Automatically connects to the device upon successful start-up initialization.
             //         mBluetoothLeService.connect(mDeviceAddress,true);
             Log.w(TAG, "---initialize ---onServiceConnected-----");
