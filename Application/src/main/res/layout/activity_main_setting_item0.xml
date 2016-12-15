@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:id="@+id/activity_main_setting_item0"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:weightSum = "100"
+    android:background="@color/colorTextlight"
+    android:visibility="visible"
+    >
+     <!--ОТСТУПЫ - НЕ работает!? почемуто, хотел добапввить разделители-->
+    <!--android:divider="@color/colorAccent"-->
+    <!--android:dividerPadding="15dp"-->
+    <!--android:showDividers="beginning|middle|end">-->
+    <!---->
+
+    <!--Также можно указать атрибут android:weightSum. Если атрибуту присвоить значение 100, то -->
+    <!--можно указывать вес дочерних элементов в удобном виде, как в процентах. Такой способ широко -->
+    <!--используется веб-мастерами при вёрстке.-->
+
+    <!--"ИДЕНТИФИКАЦИЯ"-->
+    <LinearLayout
+        android:layout_height="@dimen/iten_setting_wight"
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:background="@color/colorBackgroundGrey"
+        android:layout_marginBottom="@dimen/iten_vertical_gap_wight">
+        <TextView
+            android:text="ИДЕНТИФИКАЦИЯ"
+            android:id="@+id/textViewGroupIdentefication"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:lines="1"
+            android:textColor="@color/colorTextlight"
+            android:layout_marginLeft="10dp"
+            android:gravity="left|bottom"
+            android:textSize="18sp"
+            android:layout_marginBottom="5dp" />
+    </LinearLayout>
+
+    <!--<LinearLayout android:orientation="horizontal"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:background="@color/colorTextlight"-->
+        <!--android:layout_height="@dimen/iten_vertical_gap_wight">-->
+        <!--&lt;!&ndash;android:background="?attr/actionBarItemBackground"&ndash;&gt;-->
+    <!--</LinearLayout>-->
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:background="@color/colorBackground"
+        android:layout_height="@dimen/iten_setting_wight"
+        android:divider="@android:color/background_dark"
+        android:layout_marginBottom="@dimen/iten_vertical_gap_wight">
+        <!--Например, если есть три текстовых поля, и двум из них объявлен вес со значением 1, -->
+        <!--в то время как другому не даётся никакого веса (0), -->
+        <!--третье текстовое поле без веса не будет расширяться и займёт область, определяемую размером текста, -->
+        <!--отображаемого этим полем. Другие два расширятся одинаково, чтобы заполнить остаток пространства, -->
+        <!--не занятого третьим полем.Если третьему полю присвоить вес 2 (вместо 0), это поле будет объявлено -->
+        <!--как "более важное", чем два других, так что третье поле получит 50% общего пространства, -->
+        <!--в то время как первые два получат по 25% общего пространства.-->
+        <!--если установить android:layout_weight="0", то будет дествовать android:layout_width="wrap_content" И!!-->
+        <!--И!! android:minWidth="100dp", если он больше чем android:layout_width="wrap_content"!!-->
+ <!--NAME-->
+        <TextView
+            android:text="Имя"
+            android:id="@+id/textViewLabelName"
+            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_weight="0"
+            android:layout_marginLeft="10dp"
+            android:gravity="left|center_vertical"
+            android:textColor="@color/colorText"
+            android:lines="1"
+            android:textSize="@dimen/iten_text_size" />
+
+
+        <!--android:ems="10"
+        android:inputType="textPersonName"-->
+        <TextView
+            android:id="@+id/textViewName"
+            android:inputType="textAutoComplete"
+
+            android:text="Монитор 1"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:layout_marginLeft="7dp"
+            android:layout_weight="100"
+            android:textColor="@color/colorTextlight"
+            android:textSize="@dimen/iten_text_size"
+            android:textAlignment="gravity"
+            android:paddingRight="10dp"
+            android:lines="1"
+            android:textStyle="normal|bold"
+            android:gravity="right|center_vertical"
+            android:clickable="true"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:enabled="true"
+            />
+        <!--"@dimen/iten_setting_wight"-->
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginRight="7dp"
+            android:background="@color/colorBackground"
+            android:src="@drawable/ic_chevron_right_black_24dp"
+            android:id="@+id/imageButtonName"
+            android:layout_weight="0" />
+            <!--app:srcCompat="@drawable/ic_chevron_right_black_24dp"-->
+    </LinearLayout>
+    <!--<LinearLayout android:orientation="horizontal"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="@dimen/iten_vertical_gap_wight"-->
+        <!--android:background="@color/colorTextlight">-->
+
+    <!--</LinearLayout>-->
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:background="@color/colorBackground"
+        android:layout_height="@dimen/iten_setting_wight"
+        android:layout_marginBottom="@dimen/iten_vertical_gap_wight">
+        <!--разделитель- не работает почемуто-->
+        <!--android:divider="@color/colorText"-->
+        <!--android:dividerPadding="15dp"-->
+        <!--android:showDividers="beginning|middle|end"-->
+<!--MARKER -->
+        <TextView
+            android:text="Маркер"
+            android:id="@+id/textViewLabelMarker"
+            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_weight="0"
+            android:layout_marginLeft="10dp"
+            android:gravity="left|center_vertical"
+            android:textColor="@color/colorText"
+            android:lines="1"
+            android:textSize="@dimen/iten_text_size" />
+
+        <TextView
+            android:id="@+id/textViewMarker"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:layout_marginLeft="7dp"
+            android:layout_weight="100"
+            android:textColor="@color/colorTextlight"
+            android:textSize="@dimen/iten_text_size"
+            android:textAlignment="gravity"
+            android:paddingRight="10dp"
+            android:lines="1"
+            android:textStyle="normal|bold"
+            android:gravity="right|center_vertical" />
+        <!--"@dimen/iten_setting_wight"-->
+        <!--<ImageView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--app:srcCompat="@drawable/marker"-->
+            <!--android:id="@+id/imageView9"-->
+            <!--android:layout_weight="0" />-->
+
+        <!--<ImageButton-->
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="48dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginRight="5dp"
+                android:id="@+id/imageButtonMarker"
+                android:layout_weight="1"
+                android:cropToPadding="false"
+                android:elevation="0dp"
+                android:padding="8dp"
+                android:adjustViewBounds="true"
+                android:layout_margin="8dp"
+                android:background="@drawable/marker_black" />
+        </LinearLayout>
+
+        <!--app:srcCompat="@drawable/marker_test"-->
+        <!--app:srcCompat="@drawable/wifi"-->
+        <!--app:srcCompat="@drawable/ic_chevron_right_black_24dp"-->
+    </LinearLayout>
+    <!--android:src="@drawable/ic_brightness_1_black_24dp"-->
+    <!--<LinearLayout android:orientation="horizontal"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="@dimen/iten_vertical_gap_wight"-->
+        <!--android:background="@color/colorTextlight">-->
+    <!--</LinearLayout>-->
+
+
+</LinearLayout>

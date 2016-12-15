@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:id="@+id/activity_main_setting_item0"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:weightSum = "100"
+    android:background="@color/colorTextlight"
+    android:visibility="visible"
+    >
+     <!--ОТСТУПЫ - НЕ работает!? почемуто, хотел добапввить разделители-->
+    <!--android:divider="@color/colorAccent"-->
+    <!--android:dividerPadding="15dp"-->
+    <!--android:showDividers="beginning|middle|end">-->
+    <!---->
+
+    <!--Также можно указать атрибут android:weightSum. Если атрибуту присвоить значение 100, то -->
+    <!--можно указывать вес дочерних элементов в удобном виде, как в процентах. Такой способ широко -->
+    <!--используется веб-мастерами при вёрстке.-->
+
+    <!--NAME-->
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:background="@color/colorBackground"
+        android:layout_height="@dimen/iten_setting_wight"
+        android:divider="@android:color/background_dark"
+        android:layout_marginBottom="@dimen/iten_vertical_gap_wight">
+        <!--Например, если есть три текстовых поля, и двум из них объявлен вес со значением 1, -->
+        <!--в то время как другому не даётся никакого веса (0), -->
+        <!--третье текстовое поле без веса не будет расширяться и займёт область, определяемую размером текста, -->
+        <!--отображаемого этим полем. Другие два расширятся одинаково, чтобы заполнить остаток пространства, -->
+        <!--не занятого третьим полем.Если третьему полю присвоить вес 2 (вместо 0), это поле будет объявлено -->
+        <!--как "более важное", чем два других, так что третье поле получит 50% общего пространства, -->
+        <!--в то время как первые два получат по 25% общего пространства.-->
+        <!--если установить android:layout_weight="0", то будет дествовать android:layout_width="wrap_content" И!!-->
+        <!--И!! android:minWidth="100dp", если он больше чем android:layout_width="wrap_content"!!-->
+
+        <TextView
+            android:text="Имя"
+            android:id="@+id/textViewLabelName"
+            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_weight="0"
+            android:layout_marginLeft="10dp"
+            android:gravity="left|center_vertical"
+            android:textColor="@color/colorText"
+            android:lines="1"
+            android:textSize="@dimen/iten_text_size" />
+
+
+        <!--android:ems="10"
+        android:inputType="textPersonName"-->
+        <EditText
+            android:id="@+id/editTextName"
+            android:inputType="textAutoComplete"
+
+            android:text="TextView1"
+            android:hint="Введите имя..."
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:layout_marginLeft="7dp"
+            android:layout_weight="100"
+            android:textColor="@color/colorTextlight"
+            android:textSize="@dimen/iten_text_size"
+            android:textAlignment="gravity"
+            android:paddingRight="10dp"
+            android:lines="1"
+            android:textStyle="normal|bold"
+            android:gravity="right|center_vertical"
+             android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:enabled="true"
+            android:defaultValue="Термометр1"
+            android:key="textName"
+            android:maxLines="1"
+            android:selectAllOnFocus="true"
+            android:title="Ввод имени измерителя"
+            />
+        <!--"@dimen/iten_setting_wight"-->
+        <!--<ImageButton-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:layout_marginRight="7dp"-->
+            <!--android:background="@color/colorBackground"-->
+            <!--android:src="@drawable/ic_chevron_right_black_24dp"-->
+            <!--android:id="@+id/imageButtonName"-->
+            <!--android:layout_weight="0" />-->
+        <!--app:srcCompat="@drawable/ic_chevron_right_black_24dp"-->
+    </LinearLayout>
+
+
+    <!--<AutoCompleteTextView-->
+        <!--android:text="AutoCompleteTextView"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:id="@+id/autoCompleteTextView" />-->
+
+    <!--<MultiAutoCompleteTextView-->
+        <!--android:text="MultiAutoCompleteTextView"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:id="@+id/multiAutoCompleteTextView" />-->
+</LinearLayout>
