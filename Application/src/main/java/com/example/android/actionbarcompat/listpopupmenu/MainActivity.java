@@ -219,7 +219,7 @@ Log.i(TAG,"startActivity SCAN");
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        System.out.println("Menu-edit_a  item= " +item );
+        Log.v(TAG,"Menu-edit_a  item= " +item );
 
         // Handle item selection
         switch (item.getItemId()) {

@@ -16,6 +16,7 @@ import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.RingtonePreference;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
@@ -24,7 +25,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 //public class MainSettingSetting extends AppCompatActivity implements View.OnClickListener{
-public class MainSettingSetting extends Activity implements View.OnClickListener{
+public class MainSettingSetting  extends Activity implements View.OnClickListener{
     private final int EDIT_NAME= 456;
     private final int GET_URL_RING= 567;
 
@@ -44,16 +45,21 @@ public class MainSettingSetting extends Activity implements View.OnClickListener
         //   findViewById(R.id.imageButtonMeasurementMode).setOnClickListener(this);
         findViewById(R.id.textViewMeasurementMode).setOnClickListener(this);
         findViewById(R.id.imageButtonName).setOnClickListener(this);
+
         ActionBar actionBar = getActionBar();//getSupportActionBar();??--это решалось в другом методе(getDelegate().getSupportActionBar();)
         if (actionBar != null) {
             Log.d(TEG,"actionBar != null--");
             //вместо ЗНачка по умолчанию, назначаемого выше, подставляет свой
             // actionBar.setHomeAsUpIndicator(R.drawable.ic_navigate_before_black_24dp);
             //------------------------------
-            actionBar.setHomeButtonEnabled(true); //устанавливает надпись и иконку как кнопку домой(не требуется метод - actionBar.setDisplayHomeAsUpEnabled(true);)
+          //  actionBar.
+            //разрешить копку доиой
+            actionBar.setHomeAsUpIndicator(R.drawable.ic_chevron_left_black_24dp);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeButtonEnabled(true);//устанавливает надпись и иконку как кнопку домой(не требуется
+           // actionBar.setDisplayUseLogoEnabled(true);
+        //    actionBar.setHomeButtonEnabled(true); метод - actionBar.setDisplayHomeAsUpEnabled(true);)
             //чето не показыввет ее
-            actionBar.setHomeAsUpIndicator(R.drawable.ic_access_alarm);
-            actionBar.setHomeButtonEnabled(true);
 //-- срабатывают только если вместе, отменяют ИКОНКУ, если заменить- достаточно одного
             actionBar.setIcon(null);//actionBar.setIcon(R.drawable.ic_language_black_24dp);
             actionBar.setDisplayUseLogoEnabled(false);
@@ -66,17 +72,19 @@ public class MainSettingSetting extends Activity implements View.OnClickListener
         //   SampleGattAttributes.attributes.get("dd");
 
     }
-
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Log.w(TEG,"onOptionsItemSelected= "+ item);
+        Intent intent = new Intent();
+      //  intent.putExtra(MainActivity.EXTRAS_DEVICE_NAME, device.getName());
+      //  intent.putExtra(MainActivity.EXTRAS_DEVICE_ADDRESS, device.getAddress());
+        setResult(RESULT_OK, intent);
+        finish();
+        return true;
+    }
     @Override
     protected void onResume() {
-        ActionBar actionBar = getActionBar();//getSupportActionBar();??--это решалось в другом методе(getDelegate().getSupportActionBar();)
-        if (actionBar != null) {
-            super.onResume();
-            actionBar.setHomeButtonEnabled(true); //устанавливает надпись и иконку как кнопку домой(не требуется метод - actionBar.setDisplayHomeAsUpEnabled(true);)
-            //чето не показыввет ее
-            actionBar.setHomeAsUpIndicator(R.drawable.ic_access_alarm);
-            actionBar.setHomeButtonEnabled(true);
-        }
+        super.onResume();
         // установка ИЗОБРАЖЕНИЕ на всь экран, УБИРАЕМ СВЕРХУ И СНИЗУ панели системные
         findViewById(R.id.textViewName).getRootView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
 
@@ -134,7 +142,7 @@ public class MainSettingSetting extends Activity implements View.OnClickListener
     private int index = 0;
     @Override
     public void onClick(View view) {
-        Log.d(TEG,"onClick= "+view);
+        Log.w(TEG,"onClick= "+view);
         String action="";Intent intent;Vibrator vibrator;
         Uri alert;
 

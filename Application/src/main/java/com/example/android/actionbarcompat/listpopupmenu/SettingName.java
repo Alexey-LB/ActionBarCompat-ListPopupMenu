@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 
@@ -59,7 +60,13 @@ public class SettingName extends Activity {//} implements View.OnKeyListener{
             //вместо ЗНачка по умолчанию, назначаемого выше, подставляет свой
             // actionBar.setHomeAsUpIndicator(R.drawable.ic_navigate_before_black_24dp);
             //------------------------------
-            actionBar.setHomeButtonEnabled(true); //устанавливает надпись и иконку как кнопку домой(не требуется метод - actionBar.setDisplayHomeAsUpEnabled(true);)
+            //разрешить копку доиой
+            actionBar.setHomeAsUpIndicator(R.drawable.ic_chevron_left_black_24dp);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeButtonEnabled(true);//устанавливает надпись и иконку как кнопку домой(не требуется
+            //-- срабатывают только если вместе, отменяют ИКОНКУ, если заменить- достаточно одного
+            actionBar.setIcon(null);//actionBar.setIcon(R.drawable.ic_language_black_24dp);
+            actionBar.setDisplayUseLogoEnabled(false);
             //--- все ниже както не работет или для другого предназаначена
             //actionBar.setIcon(null);
             //actionBar.setCustomView(null);
@@ -71,15 +78,19 @@ public class SettingName extends Activity {//} implements View.OnKeyListener{
         //getParent()
     }
     @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Log.w(TEG,"onOptionsItemSelected= "+ item);
+        Intent intent = new Intent();
+        //  intent.putExtra(MainActivity.EXTRAS_DEVICE_NAME, device.getName());
+        //  intent.putExtra(MainActivity.EXTRAS_DEVICE_ADDRESS, device.getAddress());
+        setResult(RESULT_OK, intent);
+        finish();
+        return true;
+    }
+    @Override
     protected void onResume() {
         ActionBar actionBar = getActionBar();//getSupportActionBar();??--это решалось в другом методе(getDelegate().getSupportActionBar();)
-        if (actionBar != null) {
-            super.onResume();
-            actionBar.setHomeButtonEnabled(true); //устанавливает надпись и иконку как кнопку домой(не требуется метод - actionBar.setDisplayHomeAsUpEnabled(true);)
-            //чето не показыввет ее
-            actionBar.setHomeAsUpIndicator(R.drawable.ic_access_alarm);
-            actionBar.setHomeButtonEnabled(true);
-        }
+        super.onResume();
         // установка ИЗОБРАЖЕНИЕ на всь экран, УБИРАЕМ СВЕРХУ И СНИЗУ панели системные
         findViewById(R.id.editTextName).getRootView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
 

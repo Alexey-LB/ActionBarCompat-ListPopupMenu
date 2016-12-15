@@ -74,14 +74,14 @@ http://www.fandroid.info/nastrojka-paneli-dejstvij-actionbar/
         </activity>
 
         <activity android:name=".MainSettingSetting"
-            android:theme="@android:style/Theme.Holo.Light">
+            android:theme="@style/AppThemeM">
             <intent-filter>
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <!--android:windowSoftInputMode="stateAlwaysVisible" -  задал клавиатуру видимой всегда в этой активности-->
         <activity android:name=".SettingName"
-            android:theme="@android:style/Theme.Holo.Light"
+            android:theme="@style/AppThemeM"
             android:windowSoftInputMode="stateAlwaysVisible">
             <intent-filter>
                 <category android:name="android.intent.category.LAUNCHER" />
