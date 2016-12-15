@@ -18,41 +18,15 @@ public class DataHubSingleton {
     public final   String TAG = getClass().getSimpleName();
     private static DataHubSingleton instance;
 
-    private DataHubSingleton(Context context){
-        //подключение сервиса//-------------ЗАПУСТИЛИ ервис ---------
-        Intent gattServiceIntent = new Intent(context,BluetoothLeServiceNew.class);
-        context.bindService(gattServiceIntent, mServiceConnectionM, BIND_AUTO_CREATE);
+    private DataHubSingleton(){
+
     }
-    public static DataHubSingleton getInstance(Context context){
+    public static DataHubSingleton getInstance(){
         if (null == instance){
-            instance = new DataHubSingleton(context);
+            instance = new DataHubSingleton();
         }return instance;
     }
-    public BluetoothLeServiceNew mBluetoothLeServiceM;
 
-    // Code to manage Service lifecycle.
-    private ServiceConnection mServiceConnectionM = new ServiceConnection() {
-
-        @Override
-        public void onServiceConnected(ComponentName componentName, IBinder service) {
-            //     mBluetoothLeService = ((BluetoothLeService.LocalBinder) service).getService();
-            mBluetoothLeServiceM = ((BluetoothLeServiceNew.LocalBinder) service).getService();
-            if (!mBluetoothLeServiceM.initialize()) {
-                Log.e(TAG, "Unable to initialize Bluetooth");
-       //         finish();
-            }
- //           if(popupListFragment != null) popupListFragment.initList();
-            // Automatically connects to the device upon successful start-up initialization.
-            //         mBluetoothLeService.connect(mDeviceAddress,true);
-            Log.w(TAG, "---initialize ---onServiceConnected-----");
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName componentName) {
-            mBluetoothLeServiceM = null;
-            Log.v(TAG, "onServiceDisconnected");
-        }
-    };
     @Override
     public void finalize(){
         Log.e(TAG,"--------finalize()");

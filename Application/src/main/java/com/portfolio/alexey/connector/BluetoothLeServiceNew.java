@@ -221,7 +221,7 @@ public class BluetoothLeServiceNew extends Service {
     }
 
     public class LocalBinder extends Binder {
-        BluetoothLeServiceNew getService() {
+        public  BluetoothLeServiceNew getService() {
             return BluetoothLeServiceNew.this;
         }
     }
@@ -245,47 +245,38 @@ public class BluetoothLeServiceNew extends Service {
      * @return Return true if the initialization is successful.
      */
    synchronized public boolean initialize() {
-//        // For API level 18 and above, get a reference to BluetoothAdapter through
-//        // BluetoothManager.
-//        if (mBluetoothManager == null) {
-//            mBluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
-//            if (mBluetoothManager == null) {
-//                Log.e(TAG, "Unable to initialize BluetoothManager.");
-//                return false;
-//            }
-//        }
-//
-//        mBluetoothAdapter = mBluetoothManager.getAdapter();
-//        if (mBluetoothAdapter == null) {
-//            Log.e(TAG, "Unable to obtain a BluetoothAdapter.");
-//            return false;
-//        }
-        Log.e(TAG,"Servise------init-- init--");
+       //если мы прошли ХОТЬ 1 инициализацию- болше НЕ надо
+       // все заново делать и ЧИТАТЬ НАСТРОЙКИ сенсоров
+       if(mBluetoothAdapter != null ) return true;
+       // For API level 18 and above, get a reference to BluetoothAdapter through
+       // BluetoothManager.
+       if (mBluetoothManager == null) {
+           mBluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
+           if (mBluetoothManager == null) {
+               Log.e(TAG, "Service--- Unable to initialize BluetoothManager.");
+               return false;
+           }
+       }
+       mBluetoothAdapter = mBluetoothManager.getAdapter();
+       if (mBluetoothAdapter == null) {
+           Log.e(TAG, "Service--- Unable to obtain a BluetoothAdapter.");
+           return false;
+       }
+       Log.e(TAG,"Service------get BluetoothAdapter = OK----");
+       //---// Читаем сеттинги из фалов НА флеши------------------
+       settingGetFileGoToConnect();
+        Log.e(TAG,"Servise------init-- init-- OK");
         return true;
     }
-    // это будет именем файла настроек
-    public static final String APP_PREFERENCES = "mySettings";
-    private SharedPreferences mSettings;
     @Override
     public void onCreate() {
         super.onCreate();//---------
         Log.e(TAG,"Service------START -- onCreate()--------------");
-        // For API level 18 and above, get a reference to BluetoothAdapter through
-        // BluetoothManager.
-        if (mBluetoothManager == null) {
-            mBluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
-            if (mBluetoothManager == null) {
-                Log.e(TAG, "Service--- Unable to initialize BluetoothManager.");
-                return;
-            }
-        }
-        mBluetoothAdapter = mBluetoothManager.getAdapter();
-        if (mBluetoothAdapter == null) {
-            Log.e(TAG, "Service--- Unable to obtain a BluetoothAdapter.");
-            return;
-        }
-        Log.e(TAG,"Service------get BluetoothAdapter = OK----");
-        //---------------------
+    }
+    // это будет именем файла настроек
+    public static final String APP_PREFERENCES = "mySettings";
+    private SharedPreferences mSettings;
+    public void settingGetFileGoToConnect(){
         // SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         mSettings = getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
         // Читаем данные
@@ -313,12 +304,11 @@ public class BluetoothLeServiceNew extends Service {
             //если нет никого то Пишем своего
             if(i == 0){
                 connect("74:DA:EA:9F:54:C9",true);
-              //  connect("B4:99:4C:30:41:BA",true);
+                //  connect("B4:99:4C:30:41:BA",true);
             }
         }else{
             Log.e(TAG,"getSharedPreferences= null!");
         }
-        //------------------------------------------------------
     }
     public void settingPutFile(){
         // Запоминаем данные

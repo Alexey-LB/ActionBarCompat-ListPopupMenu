@@ -1,9 +1,15 @@
 package com.example.android.actionbarcompat.listpopupmenu;
 
 import android.app.Application;
+import android.content.ComponentName;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.res.Configuration;
+import android.os.IBinder;
 import android.util.Log;
-import com.portfolio.alexey.connector.DataHubSingleton;
+
+import com.portfolio.alexey.connector.*;
+import com.portfolio.alexey.connector.BluetoothLeServiceNew;
 
 /**
  * Created by lesa on 15.12.2016.
@@ -16,14 +22,40 @@ public class RunDataHub extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        if(dataHub == null)dataHub = DataHubSingleton.getInstance(RunDataHub.this);
+        if(dataHub == null)dataHub = DataHubSingleton.getInstance();
+        //
+        //подключение сервиса//-------------ЗАПУСТИЛИ ервис ---------
+        Intent gattServiceIntent = new Intent(this, com.portfolio.alexey.connector.BluetoothLeServiceNew.class);
+        this.bindService(gattServiceIntent, mServiceConnectionM, BIND_AUTO_CREATE);
+        //
         myThread.start();
         Log.e("--------RunDataHub", "onCreate DataHub -------------------");
     }
     //---------------------------------------------------------------------------
+    public BluetoothLeServiceNew mBluetoothLeServiceM;
+    // Code to manage Service lifecycle.
+    private ServiceConnection mServiceConnectionM = new ServiceConnection() {
 
+        @Override
+        public void onServiceConnected(ComponentName componentName, IBinder service) {
+            mBluetoothLeServiceM = ((BluetoothLeServiceNew.LocalBinder) service).getService();
+            Log.w(TAG, "---mBluetoothLeServiceM = getService() OK -----");
+//            if (!mBluetoothLeServiceM.initialize()) {
+//                Log.e(TAG, "Unable to initialize Bluetooth");
+//                //         finish();
+//            }
+//            //           if(popupListFragment != null) popupListFragment.initList();
+//            // Automatically connects to the device upon successful start-up initialization.
+//            //         mBluetoothLeService.connect(mDeviceAddress,true);
+//            Log.w(TAG, "---initialize ---onServiceConnected-----");
+        }
 
-
+        @Override
+        public void onServiceDisconnected(ComponentName componentName) {
+            mBluetoothLeServiceM = null;
+            Log.v(TAG, "onServiceDisconnected");
+        }
+    };
     //========================================================================
     //dataHub -  в нем все ссылки и все наши данные!!
     public DataHubSingleton getDataHub() {return dataHub;}
@@ -53,6 +85,8 @@ public class RunDataHub extends Application {
     public void finalize(){
        // stopWork();
         work = false;
+        unbindService(mServiceConnectionM);
+        mBluetoothLeServiceM = null;
         if(dataHub != null){//таким бразом мы как бы обнулим его, но в тоже время заставим выполнять зачистку
             DataHubSingleton dh = dataHub;
             dataHub = null;
