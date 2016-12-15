@@ -39,11 +39,11 @@ public class Marker {
     public  static int get(String key){
         int id = whiteId;
         if(key != null){
-            //          Log.d(TEG, " key= "+key + "  id= " + id);
+            //          Log.d(TAG, " key= "+key + "  id= " + id);
             id = marker.get(key);
             if(id <= 0)id = whiteId;
         }
-        //      Log.i(TEG, " key= "+key + "  id= " + id);
+        //      Log.i(TAG, " key= "+key + "  id= " + id);
         return id;
     }
     // ходим ПО кругу!!
@@ -55,7 +55,7 @@ public class Marker {
             // по этому делаем иначе
             for(int i = 0; i < markerKey.length; i++){
                 //сраниваем строки, ключи
-                //              Log.d(TEG, " key= "+markerKey[i] + "   key= "+key + "   compInt= " + markerKey[i].compareTo(key));
+                //              Log.d(TAG, " key= "+markerKey[i] + "   key= "+key + "   compInt= " + markerKey[i].compareTo(key));
                 if(markerKey[i].compareTo(key) == 0){
                     if((i+1) < markerKey.length){
                         k = markerKey[i+1];
@@ -70,7 +70,7 @@ public class Marker {
 //            for(int i = 1; i < set.size(); i++){
 //                Map.Entry me = (Map.Entry)it.next();
 //                //сраниваем строки, ключи
-//                Log.d(TEG, " key= "+me.getKey().toString() + "   key= "+key + "   compInt= " + me.getKey().toString().compareTo(key));
+//                Log.d(TAG, " key= "+me.getKey().toString() + "   key= "+key + "   compInt= " + me.getKey().toString().compareTo(key));
 //                if(me.getKey().toString().compareTo(key) == 0){
 //
 //                    // иначе берем следующий ключь
@@ -80,7 +80,7 @@ public class Marker {
 //                }
 //            }
         }
-        //       Log.i(TEG, " key= "+k);
+        //       Log.i(TAG, " key= "+k);
         return k;
     }
 }

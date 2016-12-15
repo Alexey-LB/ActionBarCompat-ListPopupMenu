@@ -21,7 +21,7 @@ public class SettingName extends Activity {//} implements View.OnKeyListener{
         setContentView(R.layout.setting_name);
         final Intent intent = getIntent();
         String mDeviceName = intent.getStringExtra("EXTRAs_DEVICE_NAME");
-        //    Log.v(TEG,"imageButtonName= " + mDeviceName);
+        //    Log.v(TAG,"imageButtonName= " + mDeviceName);
         View editText = findViewById(R.id.editTextName);
 
         if(editText != null){
@@ -29,7 +29,7 @@ public class SettingName extends Activity {//} implements View.OnKeyListener{
             if(mDeviceName == null)mDeviceName = "";
             ((EditText)editText).setText(mDeviceName);
             //
-            //   Log.d(TEG,"Name= "+mDeviceName);
+            //   Log.d(TAG,"Name= "+mDeviceName);
             //
             editText.setOnKeyListener(new View.OnKeyListener() {
                 @Override
@@ -98,7 +98,7 @@ public class SettingName extends Activity {//} implements View.OnKeyListener{
 //    @Override
 //    public boolean onKey(View view, int i, KeyEvent keyEvent) {
 //
-//        Log.e(TEG,"view= " + view +"\n  i= " + i +"   keyEvent= " + keyEvent + "   KeyEvent.KEYCODE_ENTER=" + KeyEvent.KEYCODE_ENTER);
+//        Log.e(TAG,"view= " + view +"\n  i= " + i +"   keyEvent= " + keyEvent + "   KeyEvent.KEYCODE_ENTER=" + KeyEvent.KEYCODE_ENTER);
 //        return false;
 //    }
 
@@ -130,14 +130,14 @@ public class SettingName extends Activity {//} implements View.OnKeyListener{
 //    static boolean flag = false;
 //    @Override
 //    public void onClick(View view) {
-//        Log.d(TEG,"onClick= "+view);
+//        Log.d(TAG,"onClick= "+view);
 //
 //        switch (view.getId()){
 //            case android.R.id.home:
-//                Log.v(TEG,"home");
+//                Log.v(TAG,"home");
 //                break;
 //            case R.id.imageButtonName:
-//                Log.v(TEG,"imageButtonName");
+//                Log.v(TAG,"imageButtonName");
 //
 //                break;
 //            case R.id.textViewName:
@@ -148,31 +148,31 @@ public class SettingName extends Activity {//} implements View.OnKeyListener{
 //                view.refreshDrawableState();
 //                flag = !flag;
 //               // view.setEnabled(!view.isEnabled());
-//                Log.v(TEG,"textViewName");
+//                Log.v(TAG,"textViewName");
 //                break;
 //            case R.id.imageButtonMarker:
-//                Log.v(TEG,"imageButtonMarker");
+//                Log.v(TAG,"imageButtonMarker");
 //                break;
 //            case R.id.imageButtonTermometer:
-//                Log.v(TEG,"imageButtonTermometer");
+//                Log.v(TAG,"imageButtonTermometer");
 //                break;
 //            case R.id.imageButtonMeasurementMode:
-//                Log.v(TEG,"imageButtonMeasurementMode");
+//                Log.v(TAG,"imageButtonMeasurementMode");
 //                break;
 //            case R.id.imageButtonMelody:
-//                Log.v(TEG,"imageButtonMelody");
+//                Log.v(TAG,"imageButtonMelody");
 //                break;
 //            case R.id.imageButtonVibration:
-//                Log.v(TEG,"imageButtonVibration");
+//                Log.v(TAG,"imageButtonVibration");
 //                break;
 //            case R.id.imageButtonTemperaturesAbove:
-//                Log.v(TEG,"imageButtonTemperaturesAbove");
+//                Log.v(TAG,"imageButtonTemperaturesAbove");
 //                break;
 //            case R.id.imageButtonTemperaturesBelow:
-//                Log.v(TEG,"imageButtonTemperaturesBelow");
+//                Log.v(TAG,"imageButtonTemperaturesBelow");
 //                break;
 //            case R.id.imageButtonDecor:
-//                Log.v(TEG,"imageButtonDecor");
+//                Log.v(TAG,"imageButtonDecor");
 //                break;
 //            default:
 //        }

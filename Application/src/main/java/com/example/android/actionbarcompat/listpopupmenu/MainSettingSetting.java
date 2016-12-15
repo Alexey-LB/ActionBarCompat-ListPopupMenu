@@ -16,7 +16,6 @@ import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.RingtonePreference;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
@@ -29,7 +28,7 @@ public class MainSettingSetting  extends Activity implements View.OnClickListene
     private final int EDIT_NAME= 456;
     private final int GET_URL_RING= 567;
 
-    final   String TEG = getClass().getSimpleName();
+    final   String TAG = getClass().getSimpleName();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,7 +47,7 @@ public class MainSettingSetting  extends Activity implements View.OnClickListene
 
         ActionBar actionBar = getActionBar();//getSupportActionBar();??--это решалось в другом методе(getDelegate().getSupportActionBar();)
         if (actionBar != null) {
-            Log.d(TEG,"actionBar != null--");
+            Log.d(TAG,"actionBar != null--");
             //вместо ЗНачка по умолчанию, назначаемого выше, подставляет свой
             // actionBar.setHomeAsUpIndicator(R.drawable.ic_navigate_before_black_24dp);
             //------------------------------
@@ -68,13 +67,13 @@ public class MainSettingSetting  extends Activity implements View.OnClickListene
             //actionBar.setLogo(null);
 
 
-        } else Log.e(TEG,"actionBar == null--");
+        } else Log.e(TAG,"actionBar == null--");
         //   SampleGattAttributes.attributes.get("dd");
 
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Log.w(TEG,"onOptionsItemSelected= "+ item);
+        Log.w(TAG,"onOptionsItemSelected= "+ item);
         Intent intent = new Intent();
       //  intent.putExtra(MainActivity.EXTRAS_DEVICE_NAME, device.getName());
       //  intent.putExtra(MainActivity.EXTRAS_DEVICE_ADDRESS, device.getAddress());
@@ -124,9 +123,9 @@ public class MainSettingSetting  extends Activity implements View.OnClickListene
                     break;
             }
 
-            Log.v(TEG,"requestCode= "+ requestCode +"  resultCode= RESULT_OK    " +str);
+            Log.v(TAG,"requestCode= "+ requestCode +"  resultCode= RESULT_OK    " +str);
         } else{
-            Log.e(TEG,"requestCode= "+ requestCode+"  resultCode= OBLOM");
+            Log.e(TAG,"requestCode= "+ requestCode+"  resultCode= OBLOM");
         }
         // User chose not to enable Bluetooth.
 //    if (requestCode == REQUEST_ENABLE_BT && resultCode == Activity.RESULT_CANCELED) {
@@ -142,28 +141,28 @@ public class MainSettingSetting  extends Activity implements View.OnClickListene
     private int index = 0;
     @Override
     public void onClick(View view) {
-        Log.w(TEG,"onClick= "+view);
+        Log.w(TAG,"onClick= "+view);
         String action="";Intent intent;Vibrator vibrator;
         Uri alert;
 
         switch (view.getId()){
             case android.R.id.home:
-                Log.v(TEG,"home");
+                Log.v(TAG,"home");
 
                 break;
             case R.id.imageButtonName:
-                Log.v(TEG,"imageButtonName");
+                Log.v(TAG,"imageButtonName");
                 intent = new Intent(this, SettingName.class);
                 View edv = findViewById(R.id.textViewName);
                 if(edv instanceof TextView){
                     intent.putExtra("EXTRAs_DEVICE_NAME", ((TextView)edv).getText().toString());
-                    //     Log.v(TEG,"imageButtonName= " + ((TextView)edv).getText().toString());
+                    //     Log.v(TAG,"imageButtonName= " + ((TextView)edv).getText().toString());
                     //startActivity(intent);//на подклшючение к устройству
                     startActivityForResult(intent,EDIT_NAME);
                 }
                 break;
             case R.id.textViewName:
-                Log.v(TEG,"textViewName");
+                Log.v(TAG,"textViewName");
                 //   intent = new      Intent(Intent.ACTION_EDIT);//ACTION_PROCESS_TEXT
 //                intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_RINGTONE);
 //                intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, "Select Ringtone");
@@ -186,7 +185,7 @@ public class MainSettingSetting  extends Activity implements View.OnClickListene
 
 
             case R.id.imageButtonMarker:
-                Log.v(TEG,"imageButtonMarker");
+                Log.v(TAG,"imageButtonMarker");
 //======= ЭТО работает тОЛЬКО с ВЕКТОРАМИ и бит мап, с ШЕПАМИ НЕ работает!!===================================
 //               index++;
 //                if(index > 2) index = 0;
@@ -204,12 +203,12 @@ public class MainSettingSetting  extends Activity implements View.OnClickListene
                 view.setTag(key);
                 break;
             case R.id.imageButtonTermometer:
-                Log.v(TEG,"imageButtonTermometer");
+                Log.v(TAG,"imageButtonTermometer");
 
                 break;
             //case R.id.imageButtonMeasurementMode:
             case R.id.textViewMeasurementMode:
-                Log.v(TEG,"imageButtonMeasurementMode");
+                Log.v(TAG,"imageButtonMeasurementMode");
                 if(view instanceof TextView){
                     TextView v = (TextView)view;
                     String str = "Медицинский";
@@ -220,7 +219,7 @@ public class MainSettingSetting  extends Activity implements View.OnClickListene
                 }
                 break;
             case R.id.imageButtonMelody:
-                Log.v(TEG,"imageButtonMelody");
+                Log.v(TAG,"imageButtonMelody");
 //работает
 //                intent = new Intent(Intent.ACTION_PICK);
 //                intent.setType("*/*");
@@ -236,7 +235,7 @@ public class MainSettingSetting  extends Activity implements View.OnClickListene
                 pickRingtone();
                 break;
             case R.id.imageButtonVibration:
-                Log.v(TEG,"imageButtonVibration");
+                Log.v(TAG,"imageButtonVibration");
                 action = VIBRATOR_SERVICE;
                 //startActivity(new Intent(action));
                 // https://geektimes.ru/post/232885/
@@ -244,25 +243,25 @@ public class MainSettingSetting  extends Activity implements View.OnClickListene
                 try {
                     vibrator.vibrate(400);
                 }catch (Exception e){
-                    Log.e(TEG, " vibrator ERR= " + e);
+                    Log.e(TAG, " vibrator ERR= " + e);
                 }
                 break;
             case R.id.imageButtonTemperaturesAbove:
-                Log.v(TEG,"imageButtonTemperaturesAbove");
+                Log.v(TAG,"imageButtonTemperaturesAbove");
 // https://geektimes.ru/post/232885/
                 vibrator = (Vibrator) getSystemService (VIBRATOR_SERVICE);
                 try {
                     vibrator.vibrate(400);
                 }catch (Exception e){
-                    Log.e(TEG, " vibrator ERR= " + e);
+                    Log.e(TAG, " vibrator ERR= " + e);
                 }
                 break;
             case R.id.imageButtonTemperaturesBelow:
-                Log.v(TEG,"imageButtonTemperaturesBelow");
+                Log.v(TAG,"imageButtonTemperaturesBelow");
                 playerRingtone(0f, urI);
                 break;
             case R.id.imageButtonDecor:
-                Log.v(TEG,"imageButtonDecor");
+                Log.v(TAG,"imageButtonDecor");
                 playerRingtone(1f,  urI);
                 break;
             default:
@@ -326,7 +325,7 @@ public class MainSettingSetting  extends Activity implements View.OnClickListene
             });
         } catch (Exception e) {
             Toast.makeText(getApplicationContext(), "Error default media ", Toast.LENGTH_LONG).show();
-            Log.e(TEG, "  Ringtone ERR= " + e);
+            Log.e(TAG, "  Ringtone ERR= " + e);
         }
 
     }
