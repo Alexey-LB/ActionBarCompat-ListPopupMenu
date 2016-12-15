@@ -229,7 +229,13 @@ Log.i(TAG,"startActivity SCAN");
             case iconActionEdit:
                 Log.i(TAG,"edit-");
         //вызов активного окна для сканирования
-                onScanDevice(1);
+             //   onScanDevice(1);
+                //-------Setting --
+                final Intent intent = new Intent(this, MainSettingSetting.class);
+                intent.putExtra(MainActivity.EXTRAS_DEVICE_ITEM, 1);
+
+                startActivityForResult(intent,MAINACTIVITY);//
+
                 return true;
             case R.id.edit_a://.new_game_:
                 View v =((View)findViewById(R.id.textViewName));
