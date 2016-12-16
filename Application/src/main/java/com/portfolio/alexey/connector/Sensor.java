@@ -204,7 +204,7 @@ public class Sensor {
                 }
                 //
                 if((markerColorView != null)&&(markerColorView instanceof TextView)
-                        &&(markerColorView.getTag() == null)
+                    //   &&(markerColorView.getTag() == null)
                         ){
                     TextView tv = ((TextView)markerColorView);
                     switch(markerColor){

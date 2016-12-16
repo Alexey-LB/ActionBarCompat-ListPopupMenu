@@ -306,9 +306,12 @@ public class PopupListFragment extends ListFragmentA  {
         ArrayList<Object> it  = new  ArrayList();
         RunDataHub app = ((RunDataHub) getActivity().getApplicationContext());
         if(app.mBluetoothLeServiceM != null){
+            Log.e(TAG,"Activity to frag initList()--- mbleDot.size= " + app.mBluetoothLeServiceM.mbleDot.size());
             ArrayList<Sensor> item = app.mBluetoothLeServiceM.mbleDot;
             it = (ArrayList)(Object)item;
         }
+   //     it.add(new Sensor());
+
         PopupAdapter pop = new PopupAdapter(it);
 
         setListAdapter(pop);//создали адаптер для работы
@@ -400,6 +403,17 @@ public class PopupListFragment extends ListFragmentA  {
 public void onPrepareOptionsMenu(Menu menu){
 
 }
+    @Override
+    public  void onResume() {
+        super.onResume();
+        ListView lw = getListView();
+        // Принудительное обновление отображения списка ПЕРЕ каждым выводом
+        if(adapter != null) adapter.notifyDataSetChanged();
+        //убрать системный бар----------------
+        //if(root.getSystemUiVisibility() != View.SYSTEM_UI_FLAG_FULLSCREEN)
+        lw.getRootView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
+    }
+
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -699,6 +713,13 @@ return null;//fbButton_;
                         //то вызываем пункт меню!контроль указателя!
                         if(i >= 0) Toast.makeText(getActivity(), "onClick GoTo N= " + i, Toast.LENGTH_SHORT).show();
                         str = "CLICK_SHORT GoTo i= " + i;
+                        //--------------
+                        //-------Setting --
+                        final Intent intent = new Intent(getActivity(), MainSettingSetting.class);
+                        intent.putExtra(MainActivity.EXTRAS_DEVICE_ITEM, i);
+
+                        startActivityForResult(intent,MainActivity.MAINACTIVITY);//
+                        //----------------
                      }else{
                         if((i >= 0) && (objectD != null) && (i == adapter.getPosition(objectD))){
                             if ((positionScroll > 0) && (positionStartX > (DispleyWidthDp -maxScroll))){//удаления
@@ -935,6 +956,8 @@ return null;//fbButton_;
 
 
                 //присвоил текущее значение для отображения
+                // по умолчанию из метода toString -> заталкивается в R.id.text1, по этому мы сами это НЕ делаем
+    // ((Sensor)adapter.getItem(position)).deviceLabelView = view.findViewById(R.id.text1);
      ((Sensor)adapter.getItem(position)).intermediateValueView = view.findViewById(R.id.numbe_cur);
      ((Sensor)adapter.getItem(position)).rssiView = view.findViewById(R.id.signal);
      ((Sensor)adapter.getItem(position)).battery_levelView = view.findViewById(R.id.battery);

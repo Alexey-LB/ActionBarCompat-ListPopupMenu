@@ -83,4 +83,13 @@ public class Marker {
         //       Log.i(TAG, " key= "+k);
         return k;
     }
+    // ходим ПО кругу!!
+    public  static int getItemKey(String key){
+        if(key != null) {
+            for (int i = 0; i < markerKey.length; i++)
+                if (markerKey[i].compareTo(key) == 0) return i;
+        }
+        return 0;
+    }
+
 }

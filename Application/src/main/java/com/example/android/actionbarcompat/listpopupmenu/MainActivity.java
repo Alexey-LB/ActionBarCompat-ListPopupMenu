@@ -81,15 +81,15 @@ public class MainActivity extends AppCompatActivity {// ActionBarActivity {
 // метод Fragment.getActivity().
 //--
 //взаимодействие АКТИВНОсТИ и фрагмента, вызов явно метода из фрагмента, по ссылке на него!
-//        //там же взаимодействи обратное, работа с АкшионБар и КНОПКА НАЗАД!
-//        // http://developer.alexanderklimov.ru/android/theory/fragments.php
-//         popupListFragment = new PopupListFragment();
-//        // Begin the transaction
-//        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-//// Replace the contents of the container with the new fragment
-//        ft.replace(R.id.mainFragment, popupListFragment);
-//// Complete the changes added above
-//        ft.commit();
+        //там же взаимодействи обратное, работа с АкшионБар и КНОПКА НАЗАД!
+        // http://developer.alexanderklimov.ru/android/theory/fragments.php
+         popupListFragment = new PopupListFragment();
+        // Begin the transaction
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+// Replace the contents of the container with the new fragment
+        ft.replace(R.id.mainFragment, popupListFragment);
+// Complete the changes added above
+        ft.commit();
 
 //  popupListFragment= (PopupListFragment)getSupportFragmentManager()
 //                .findFragmentById(R.id.popUpListFragment);
@@ -132,22 +132,17 @@ public class MainActivity extends AppCompatActivity {// ActionBarActivity {
         if(app.mBluetoothLeServiceM != null){
             if(app.mBluetoothLeServiceM.initialize()) {
                 Log.e(TAG, "----init() ---------- OK OK");
-                //popupListFragment.addObject(app.mBluetoothLeServiceM.mbleDot);
-                //там же взаимодействи обратное, работа с АкшионБар и КНОПКА НАЗАД!
-                // http://developer.alexanderklimov.ru/android/theory/fragments.php
-                popupListFragment = new PopupListFragment();
-                // Begin the transaction
-                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-// Replace the contents of the container with the new fragment
-                ft.replace(R.id.mainFragment, popupListFragment);
-// Complete the changes added above
-                ft.commit();
+
+            } else{
+                Log.e(TAG, "----init() ---------- ERROR!");
             }
         }
+        popupListFragment.initList();
     }
     @Override
     protected void onResume() {
         super.onResume();
+
         Log.e(TAG, "----onResume() ----------");
         // установка ИЗОБРАЖЕНИЕ на всь экран, УБИРАЕМ СВЕРХУ И СНИЗУ панели системные
         findViewById(R.id.mainFragment).getRootView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
@@ -261,6 +256,11 @@ Log.i(TAG,"startActivity SCAN");
         switch (item.getItemId()) {
             case android.R.id.home:
                 Log.i(TAG,"android.R.id.home--");
+//
+//                RunDataHub app = ((RunDataHub) getApplicationContext());
+//                if(app.mBluetoothLeServiceM != null){
+//                    app.mBluetoothLeServiceM.settingPutFile();
+//                }
                 return false;//установили ФАЛШ, чтоб вызов попал в ФРАГМЕНТ, в которм будет обработан!!
             case iconActionEdit:
                 Log.i(TAG,"edit-");
@@ -268,7 +268,7 @@ Log.i(TAG,"startActivity SCAN");
              //   onScanDevice(1);
                 //-------Setting --
                 final Intent intent = new Intent(this, MainSettingSetting.class);
-                intent.putExtra(MainActivity.EXTRAS_DEVICE_ITEM, 1);
+                intent.putExtra(MainActivity.EXTRAS_DEVICE_ITEM, 0);
 
                 startActivityForResult(intent,MAINACTIVITY);//
 

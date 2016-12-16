@@ -23,18 +23,67 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.portfolio.alexey.connector.Sensor;
+
 //public class MainSettingSetting extends AppCompatActivity implements View.OnClickListener{
 public class MainSettingSetting  extends Activity implements View.OnClickListener{
     private final int EDIT_NAME= 456;
     private final int GET_URL_RING= 567;
-
+    //private  int mItem= 0;
+    private Sensor sensor;
     final   String TAG = getClass().getSimpleName();
+//    private void getSttingInSensor(int idView, Object object ){
+//        View view;
+//        view = findViewById(idView);
+//        if((view == null) || (sensor == null)) return;
+//        //
+//        view.setOnClickListener(this);
+//        if((object instanceof String) && (view instanceof TextView)){
+//
+//        }
+//        if(sensor != null){
+//            if(view instanceof TextView) {
+//                if(sensor.deviceLabel != null) ((TextView)view).setText(sensor.deviceLabel);
+//                else ((TextView)view).setText("?");
+//            }
+//        }
+//    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_setting);
-        findViewById(R.id.textViewName).setOnClickListener(this);
+        //--------------------------
+        final Intent intent = getIntent();
+        int i = intent.getIntExtra(MainActivity.EXTRAS_DEVICE_ITEM,0);
+        RunDataHub app = ((RunDataHub) getApplicationContext());
+        if((app.mBluetoothLeServiceM != null)
+                && (app.mBluetoothLeServiceM.mbleDot != null)
+                && (app.mBluetoothLeServiceM.mbleDot.size() > 0)){
+            sensor = app.mBluetoothLeServiceM.mbleDot.get(i);
+            Log.v(TAG,"sensor item= " + i);
+        } else {
+            finish();
+        }
+        //-------------------------------------------
+        View view;
+        view = findViewById(R.id.textViewName);
+        view.setOnClickListener(this);
+        if(sensor != null){
+            if(view instanceof TextView) {
+               if(sensor.deviceLabel != null) ((TextView)view).setText(sensor.deviceLabel);
+                else ((TextView)view).setText("?");
+            }
+        }
+        //view = findViewById(R.id.textViewName).setOnClickListener(this);
         findViewById(R.id.imageButtonMarker).setOnClickListener(this);
+        view = findViewById(R.id.imageButtonMarker);
+        String key = "white";
+        if(sensor != null){
+            key = marker. markerKey[sensor.markerColor];
+        }
+        view.setBackgroundResource(marker.get(key));
+        view.setTag(key);
+        //
         findViewById(R.id.imageButtonTermometer).setOnClickListener(this);
         findViewById(R.id.imageButtonVibration).setOnClickListener(this);
         findViewById(R.id.imageButtonTemperaturesAbove).setOnClickListener(this);
@@ -69,7 +118,6 @@ public class MainSettingSetting  extends Activity implements View.OnClickListene
 
         } else Log.e(TAG,"actionBar == null--");
         //   SampleGattAttributes.attributes.get("dd");
-
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -114,6 +162,9 @@ public class MainSettingSetting  extends Activity implements View.OnClickListene
                     View edv = findViewById(R.id.textViewName);
                     if(edv instanceof TextView){
                         if((name != null) && (name.length() > 0)) ((TextView)edv).setText(name);
+                    }
+                    if(sensor != null){
+                        if(name != null)sensor.deviceLabel = name;
                     }
                     break;
                 case GET_URL_RING:
@@ -201,6 +252,7 @@ public class MainSettingSetting  extends Activity implements View.OnClickListene
                 key = marker.getNextKey(key);
                 view.setBackgroundResource(marker.get(key));
                 view.setTag(key);
+                if(sensor != null) sensor.markerColor = marker.getItemKey(key);
                 break;
             case R.id.imageButtonTermometer:
                 Log.v(TAG,"imageButtonTermometer");
