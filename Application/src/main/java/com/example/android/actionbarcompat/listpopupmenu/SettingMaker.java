@@ -16,6 +16,7 @@ import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.RingtonePreference;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
@@ -27,32 +28,15 @@ import android.widget.Toast;
 import com.portfolio.alexey.connector.Sensor;
 
 //public class MainSettingSetting extends AppCompatActivity implements View.OnClickListener{
-public class MainSettingSetting  extends Activity implements View.OnClickListener{
-    private final int EDIT_NAME= 456;
-    private final int GET_URL_RING= 567;
+public class SettingMaker extends AppCompatActivity implements View.OnClickListener{
     //private  int mItem= 0;
     private Sensor sensor;
     final   String TAG = getClass().getSimpleName();
-//    private void getSttingInSensor(int idView, Object object ){
-//        View view;
-//        view = findViewById(idView);
-//        if((view == null) || (sensor == null)) return;
-//        //
-//        view.setOnClickListener(this);
-//        if((object instanceof String) && (view instanceof TextView)){
-//
-//        }
-//        if(sensor != null){
-//            if(view instanceof TextView) {
-//                if(sensor.deviceLabel != null) ((TextView)view).setText(sensor.deviceLabel);
-//                else ((TextView)view).setText("?");
-//            }
-//        }
-//    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main_setting);
+        setContentView(R.layout.activity_setting_maker);
         //--------------------------
         final Intent intent = getIntent();
         int i = intent.getIntExtra(MainActivity.EXTRAS_DEVICE_ITEM,0);
@@ -67,7 +51,7 @@ public class MainSettingSetting  extends Activity implements View.OnClickListene
         }
         //-------------------------------------------
         View view;
-        view = findViewById(R.id.textViewName);
+        view = findViewById(R.id.imageButtonFind);
         view.setOnClickListener(this);
         if(sensor != null){
             if(view instanceof TextView) {
@@ -75,30 +59,6 @@ public class MainSettingSetting  extends Activity implements View.OnClickListene
                 else ((TextView)view).setText("?");
             }
         }
-        //view = findViewById(R.id.textViewName).setOnClickListener(this);
-        findViewById(R.id.imageButtonMarker).setOnClickListener(this);
-        if(sensor != null){
-            int im = 0x7 & sensor.markerColor;
-            ((ImageView)findViewById(R.id.imageButtonMarker))
-                    .setBackgroundResource(Marker.getIdImg(im));
-        }
-        //
-        findViewById(R.id.imageButtonTermometer).setOnClickListener(this);
-        findViewById(R.id.imageButtonVibration).setOnClickListener(this);
-        findViewById(R.id.imageButtonTemperaturesAbove).setOnClickListener(this);
-        findViewById(R.id.imageButtonTemperaturesBelow).setOnClickListener(this);
-        findViewById(R.id.imageButtonMelody).setOnClickListener(this);
-        findViewById(R.id.imageButtonDecor).setOnClickListener(this);
-        //   findViewById(R.id.imageButtonMeasurementMode).setOnClickListener(this);
-        //00000
-        view = findViewById(R.id.textViewMeasurementMode);
-        view.setOnClickListener(this);
-        if(sensor != null){
-            ((TextView)view).setText(sensor.getStringMeasurementMode());
-        }
-        changeMeasurementMode();
-
-        findViewById(R.id.imageButtonName).setOnClickListener(this);
 
         ActionBar actionBar = getActionBar();//getSupportActionBar();??--это решалось в другом методе(getDelegate().getSupportActionBar();)
         if (actionBar != null) {
@@ -132,11 +92,6 @@ public class MainSettingSetting  extends Activity implements View.OnClickListene
       //  intent.putExtra(MainActivity.EXTRAS_DEVICE_NAME, device.getName());
       //  intent.putExtra(MainActivity.EXTRAS_DEVICE_ADDRESS, device.getAddress());
         setResult(RESULT_OK, intent);
-        //--сохранение настроек
-        RunDataHub app = ((RunDataHub) getApplicationContext());
-        if(app.mBluetoothLeServiceM != null){
-            app.mBluetoothLeServiceM.settingPutFile();
-        }
         finish();
         return true;
     }
@@ -427,7 +382,7 @@ public class MainSettingSetting  extends Activity implements View.OnClickListene
         public boolean onOptionsItemSelected(MenuItem item) {
             int id = item.getItemId();
             if (id == android.R.id.home) {
-                startActivity(new Intent(getActivity(), MainSettingSetting.class));
+                startActivity(new Intent(getActivity(), SettingMaker.class));
                 return true;
             }
             return super.onOptionsItemSelected(item);

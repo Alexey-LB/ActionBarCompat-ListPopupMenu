@@ -16,9 +16,11 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.android.actionbarcompat.listpopupmenu.Marker;
 import com.example.android.actionbarcompat.listpopupmenu.R;
 
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.UUID;
 
 import static android.R.attr.value;
@@ -30,10 +32,7 @@ import static android.R.attr.value;
 
 public class Sensor {
     private final static String TAG = Sensor.class.getSimpleName();
-    public static final String EXTRAS_DEVICE_NAME = "DEVICE_NAME";
-    public static final String EXTRAS_DEVICE_ADDRESS = "DEVICE_ADDRESS";
-    //
-
+ //   public TreeMap <Integer,Object> mData = new TreeMap();
 //
 //    public static final int STATE_BLUETOOT_ADAPTER_IS_NOT = 0;
 //    public static final int STATE_UART_NOT_SUPPORT = 1;
@@ -58,7 +57,7 @@ public class Sensor {
     public View rssiView = null;
 
     // Sample Characteristics.
-    public int battery_level = -1;//%
+    public int battery_level = 0;//%
     public View battery_levelView = null;
     // "Health Thermometer"
     public float temperatureMeasurement = 0f;//C- у релсиба НЕ потдерживается
@@ -155,25 +154,9 @@ public class Sensor {
 
                     int i = battery_level;
                     if(i < 0) i = i*(-1);
-            //        i = i/10;
-        //            Log.v(TAG,"rssiView= " + i);
                     ImageView iv = (ImageView)battery_levelView;
                     iv.setImageLevel(i);
-//
-//                    // iv.setImageResource(R.drawable.ic_signal_wifi_4_bar_black_24dp);
-//                    // TODO: 12.12.2016 переделать с указанием уровня отображения!! iv.setImageLevel();
-//                switch(i){
-//                        case 0: iv.setImageResource(R.drawable.ic_battery_alert_black_24dp);break;
-//                        case 1: iv.setImageResource(R.drawable.ic_battery_alert_black_24dp);break;
-//                        case 2: iv.setImageResource(R.drawable.ic_battery_20_black_24dp);break;
-//                        case 3: iv.setImageResource(R.drawable.ic_battery_30_black_24dp);break;
-//                        case 4: iv.setImageResource(R.drawable.ic_battery_30_black_24dp);break;
-//                        case 5: iv.setImageResource(R.drawable.ic_battery_60_black_24dp);break;
-//                        case 6: iv.setImageResource(R.drawable.ic_battery_60_black_24dp);break;
-//                        case 7: iv.setImageResource(R.drawable.ic_battery_80_black_24dp);break;
-//                        case 8: iv.setImageResource(R.drawable.ic_battery_90_black_24dp);break;
-//                        default: iv.setImageResource(R.drawable.ic_battery_full_black_24dp);break;
-//                    }
+
                 }
 
                 if((rssiView != null)&&(rssiView  instanceof ImageView)){
@@ -183,42 +166,17 @@ public class Sensor {
                     if(i < 0) i = i*(-1);
 
                     iv.setImageLevel(i);
-
-//                    i = i/10;
-//             //       Log.v(TAG,"rssiView= " + i);
-//
-//                   // iv.setImageResource(R.drawable.ic_signal_wifi_4_bar_black_24dp);
-//                    switch(i){
-//                        case 0: iv.setImageResource(R.drawable.ic_signal_wifi_4_bar_black_24dp);break;
-//                        case 1: iv.setImageResource(R.drawable.ic_signal_wifi_4_bar_black_24dp);break;
-//                        case 2: iv.setImageResource(R.drawable.ic_signal_wifi_4_bar_black_24dp);break;
-//                        case 3: iv.setImageResource(R.drawable.ic_signal_wifi_4_bar_black_24dp);break;
-//                        case 4: iv.setImageResource(R.drawable.ic_signal_wifi_4_bar_black_24dp);break;
-//                        case 5: iv.setImageResource(R.drawable.ic_signal_wifi_4_bar_black_24dp);break;
-//                        case 6: iv.setImageResource(R.drawable.ic_signal_wifi_3_bar_black_24dp);break;
-//                        case 7: iv.setImageResource(R.drawable.ic_signal_wifi_2_bar_black_24dp);break;
-//                        case 8: iv.setImageResource(R.drawable.ic_signal_wifi_1_bar_black_24dp);break;
-//                        case 9: iv.setImageResource(R.drawable.ic_signal_wifi_0_bar_black_24dp);break;
-//                        default: iv.setImageResource(R.drawable.ic_signal_wifi_0_bar_black_24dp);break;
-//                    }
                 }
                 //
-                if((markerColorView != null)&&(markerColorView instanceof TextView)
-                    //   &&(markerColorView.getTag() == null)
-                        ){
-                    TextView tv = ((TextView)markerColorView);
-                    switch(markerColor){
-                        case 0: tv.setBackgroundResource(R.drawable.marker_white);break;
-                        case 1: tv.setBackgroundResource(R.drawable.marker_red);break;
-                        case 2: tv.setBackgroundResource(R.drawable.marker_yellow);break;
-                        case 3: tv.setBackgroundResource(R.drawable.marker_green);break;
-                        case 4: tv.setBackgroundResource(R.drawable.marker_cyan);break;
-                        case 5: tv.setBackgroundResource(R.drawable.marker_blue);break;
-                        case 6: tv.setBackgroundResource(R.drawable.marker_purple);break;
-                        case 7: tv.setBackgroundResource(R.drawable.marker_black);break;
+                if((markerColorView != null)&&(markerColorView instanceof ImageView)
+                       ){
+                    //если ранее не запоминали то обновляем
+                    if((markerColorView.getTag() == null) ||
+                            ((Integer)markerColorView.getTag() != markerColor)){
+                        ImageView tv = ((ImageView)markerColorView);
+                        tv.setBackgroundResource(Marker.getIdImg( markerColor));
+                        markerColorView.setTag( markerColor);//чтоб не перезаписывать
                     }
-                 //   ((TextView)markerColorView).setBackgroundResource(Marker.marker.get(markerColor));
-                    markerColorView.setTag((Object) 1);//чтоб не перезаписывать
                 }
                 loop();
             }
@@ -317,6 +275,45 @@ public class Sensor {
         editor.putBoolean("onMaxmelody", onMaxmelody);
         editor.putBoolean("onEndmelody", onEndmelody);
     }
+    public Sensor (SharedPreferences mSettings, int i){
+
+        if(mSettings == null){
+            deviceLabel = deviceLabelStringDefault + " " + indexDevace++;
+            //выходим по скольку все по умолчанию устанавливается
+            return;
+        }
+        markerColor = 0x7 & indexDevace;
+        changeConfig = false;//установки считаны из ФЛЕШИ- не изменены!!
+        //if (mSettings.contains("COUNTER"))
+        mBluetoothDeviceAddress = mSettings.getString("mBluetoothDeviceAddress", mBluetoothDeviceAddress);
+        avtoConnect = mSettings.getBoolean("avtoConnect", avtoConnect);
+        deviceLabel = mSettings.getString("deviceLabel", deviceLabel);//имя назначаемое пользоватлем
+        deviceName = mSettings.getString("deviceName", deviceName);
+        deviceItem = mSettings.getInt("deviceItem", deviceItem);
+        markerColor = mSettings.getInt("markerColor", markerColor);
+        //
+        measurementMode = mSettings.getInt("measurementMode", measurementMode);//режим медецинский Или универсальный
+        fonColor = mSettings.getInt("fonColor", fonColor);
+        fonImg = mSettings.getInt("fonImg", fonImg);
+        //"Device Information Service":-character--
+        softwareRevision = mSettings.getString("softwareRevision", softwareRevision);
+        firmwareRevision = mSettings.getString("firmwareRevision", firmwareRevision);
+        hardwareRevision = mSettings.getString("hardwareRevision", hardwareRevision);
+        serialNumber = mSettings.getString("serialNumber", serialNumber);
+        modelNumber = mSettings.getString("modelNumber",modelNumber);
+        manufacturerName = mSettings.getString("manufacturerName", manufacturerName);
+        //
+        onFahrenheit = mSettings.getBoolean("onFahrenheit", onFahrenheit);
+        onMinVibration = mSettings.getBoolean("onMinVibration", onMinVibration);
+        onMaxVibration = mSettings.getBoolean("onMaxVibration", onMaxVibration);
+        onEndVibration = mSettings.getBoolean("onEndVibration", onEndVibration);
+
+        onMinmelody = mSettings.getBoolean("onMinmelody", onMinmelody);
+        onMaxmelody = mSettings.getBoolean("onMaxmelody", onMaxmelody);
+        onEndmelody = mSettings.getBoolean("onEndmelody", onEndmelody);
+        loop();
+    }
+
     // TODO: 09.12.2016 МЛАДШИЙ разряд датчика температуры-to 0.0625°C, а выдает 0.1 точность, ГДЕ теряется? надо выдавать все, чтоб НЕ РЫСКАЛО
     // в будующем сделать порог  0.0625°C, чтоб показания не прыгали!
     public String getStringValue( float inp, boolean fahrenheit, boolean addType){
@@ -339,6 +336,20 @@ public class Sensor {
     }
     public String getStringEndTemperature( boolean fahrenheit, boolean addType){
         return getStringValue( endTemperature, fahrenheit, addType);
+    }
+    //режим медецинский Или универсальный
+    public String getStringMeasurementMode(){
+        if(measurementMode == 0) return "Медицинский";
+        return "Универсальный";
+    }
+    //режим медецинский Или универсальный
+    public int changeMeasurementMode(){
+        measurementMode = (measurementMode + 1)  & 0x1;
+        return measurementMode;
+    }
+    //режим медецинский Или универсальный
+    public int getMeasurementMode(){
+        return measurementMode & 0x1;
     }
     //C для градусника ПРЕСКАЗАНИЯ
     public String getStringPredictedTemperature( boolean fahrenheit, boolean addType){

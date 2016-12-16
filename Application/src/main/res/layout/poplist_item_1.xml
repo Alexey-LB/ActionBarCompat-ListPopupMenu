@@ -45,16 +45,15 @@
             android:id="@+id/lvel2.1"
             android:background="@android:drawable/screen_background_light">
 
-            <TextView
+            <ImageView
 
                 android:id="@+id/marker"
-                android:textColor="?attr/colorPrimaryDark"
                 android:gravity="center_vertical|center_horizontal"
                 android:background="@drawable/marker_white"
                 android:layout_marginLeft="12dp"
                 android:layout_height="24dp"
                 android:layout_width="24dp" />
-
+            <!--android:background="@drawable/marker_white"-->
             <TextView
                 android:text="Температура 1"
                 android:layout_weight="1.25"
