@@ -19,14 +19,15 @@ import com.portfolio.alexey.connector.BluetoothLeServiceNew;
 public class RunDataHub extends Application {
     public final   String TAG = getClass().getSimpleName();
     private static DataHubSingleton dataHub;
+    public MainActivity mainActivity;
     @Override
     public void onCreate() {
         super.onCreate();
         if(dataHub == null)dataHub = DataHubSingleton.getInstance();
         //
         //подключение сервиса//-------------ЗАПУСТИЛИ ервис ---------
-        Intent gattServiceIntent = new Intent(this, com.portfolio.alexey.connector.BluetoothLeServiceNew.class);
-        this.bindService(gattServiceIntent, mServiceConnectionM, BIND_AUTO_CREATE);
+        Intent gattServiceIntent = new Intent(this, BluetoothLeServiceNew.class);
+        bindService(gattServiceIntent, mServiceConnectionM, BIND_AUTO_CREATE);
         //
         myThread.start();
         Log.e("--------RunDataHub", "onCreate DataHub -------------------");
@@ -39,7 +40,8 @@ public class RunDataHub extends Application {
         @Override
         public void onServiceConnected(ComponentName componentName, IBinder service) {
             mBluetoothLeServiceM = ((BluetoothLeServiceNew.LocalBinder) service).getService();
-            Log.w(TAG, "---mBluetoothLeServiceM = getService() OK -----");
+            if(mainActivity != null)mainActivity.init();
+            Log.e(TAG, "---mBluetoothLeServiceM = getService() OK -----");
 //            if (!mBluetoothLeServiceM.initialize()) {
 //                Log.e(TAG, "Unable to initialize Bluetooth");
 //                //         finish();
@@ -63,7 +65,7 @@ public class RunDataHub extends Application {
     private void controlState(){
         Log.v(TAG,"controlState\\");
     }
-    private boolean work = true;
+    private boolean work = false;
     // создаём новый поток // описываем объект Runnable в конструкторе
     // TODO: 15.12.2016   // вообще поток этотт ВОЗМОЖНО будет лучше защишен от удаления
     // если его разместить в DataHubSingleton - проверить

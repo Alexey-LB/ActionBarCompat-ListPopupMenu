@@ -65,6 +65,12 @@ public class MainActivity extends AppCompatActivity {// ActionBarActivity {
         super.onCreate(savedInstanceState);
         //setContentView(R.layout.sample_main);
         setContentView(R.layout.sample_main);
+        RunDataHub app = ((RunDataHub) getApplicationContext());
+        if(app != null){
+            app.mainActivity = this;
+            Log.e(TAG,"--app != null");
+        }
+
         //  программное создоние и подключения слоя
       //  https://github.com/codepath/android_guides/wiki/creating-and-using-fragments
         //http://developer.alexanderklimov.ru/android/theory/layout.php
@@ -75,16 +81,15 @@ public class MainActivity extends AppCompatActivity {// ActionBarActivity {
 // метод Fragment.getActivity().
 //--
 //взаимодействие АКТИВНОсТИ и фрагмента, вызов явно метода из фрагмента, по ссылке на него!
-        //там же взаимодействи обратное, работа с АкшионБар и КНОПКА НАЗАД!
-        // http://developer.alexanderklimov.ru/android/theory/fragments.php
-         popupListFragment = new PopupListFragment();
-        // Begin the transaction
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-// Replace the contents of the container with the new fragment
-        ft.replace(R.id.mainFragment, popupListFragment);
-// or ft.add(R.id.your_placeholder, new FooFragment());
-// Complete the changes added above
-        ft.commit();
+//        //там же взаимодействи обратное, работа с АкшионБар и КНОПКА НАЗАД!
+//        // http://developer.alexanderklimov.ru/android/theory/fragments.php
+//         popupListFragment = new PopupListFragment();
+//        // Begin the transaction
+//        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+//// Replace the contents of the container with the new fragment
+//        ft.replace(R.id.mainFragment, popupListFragment);
+//// Complete the changes added above
+//        ft.commit();
 
 //  popupListFragment= (PopupListFragment)getSupportFragmentManager()
 //                .findFragmentById(R.id.popUpListFragment);
@@ -116,36 +121,63 @@ public class MainActivity extends AppCompatActivity {// ActionBarActivity {
        // ab.setIcon(R.drawable.rounded_a);
        // View.SYSTEM_UI_FLAG_FULLSCREEN
         //-------------ЗАПУСТИЛИ ервис ---------
-        Intent gattServiceIntent = new Intent(this, BluetoothLeServiceNew.class);
-        bindService(gattServiceIntent, mServiceConnectionM, BIND_AUTO_CREATE);
+//!!        Intent gattServiceIntent = new Intent(this, BluetoothLeServiceNew.class);
+//!!        bindService(gattServiceIntent, mServiceConnectionM, BIND_AUTO_CREATE);
 
         Log.e(TAG, "----onCreate END-----ActionBar=" + ab + "  gtab="+ gtab);
     }
-    public BluetoothLeServiceNew mBluetoothLeServiceM;
-
-    // Code to manage Service lifecycle.
-    private final ServiceConnection mServiceConnectionM = new ServiceConnection() {
-
-        @Override
-        public void onServiceConnected(ComponentName componentName, IBinder service) {
-            //     mBluetoothLeService = ((BluetoothLeService.LocalBinder) service).getService();
-            mBluetoothLeServiceM = ((BluetoothLeServiceNew.LocalBinder) service).getService();
-            if (!mBluetoothLeServiceM.initialize()) {
-                Log.e(TAG, "Unable to initialize Bluetooth");
-                finish();
+    public void init(){
+        Log.e(TAG, "----init() ----------");
+        RunDataHub app = ((RunDataHub) getApplicationContext());
+        if(app.mBluetoothLeServiceM != null){
+            if(app.mBluetoothLeServiceM.initialize()) {
+                Log.e(TAG, "----init() ---------- OK OK");
+                //popupListFragment.addObject(app.mBluetoothLeServiceM.mbleDot);
+                //там же взаимодействи обратное, работа с АкшионБар и КНОПКА НАЗАД!
+                // http://developer.alexanderklimov.ru/android/theory/fragments.php
+                popupListFragment = new PopupListFragment();
+                // Begin the transaction
+                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+// Replace the contents of the container with the new fragment
+                ft.replace(R.id.mainFragment, popupListFragment);
+// Complete the changes added above
+                ft.commit();
             }
-           if(popupListFragment != null) popupListFragment.initList();
-            // Automatically connects to the device upon successful start-up initialization.
-            //         mBluetoothLeService.connect(mDeviceAddress,true);
-            Log.w(TAG, "---initialize ---onServiceConnected-----");
         }
-
-        @Override
-        public void onServiceDisconnected(ComponentName componentName) {
-            mBluetoothLeServiceM = null;
-            Log.v(TAG, "onServiceDisconnected");
-        }
-    };
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.e(TAG, "----onResume() ----------");
+        // установка ИЗОБРАЖЕНИЕ на всь экран, УБИРАЕМ СВЕРХУ И СНИЗУ панели системные
+        findViewById(R.id.mainFragment).getRootView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
+    }
+//!!!    public BluetoothLeServiceNew mBluetoothLeServiceM;
+//
+//    // Code to manage Service lifecycle.
+//    private final ServiceConnection mServiceConnectionM = new ServiceConnection() {
+//
+//        @Override
+//        public void onServiceConnected(ComponentName componentName, IBinder service) {
+//            //     mBluetoothLeService = ((BluetoothLeService.LocalBinder) service).getService();
+//            mBluetoothLeServiceM = ((BluetoothLeServiceNew.LocalBinder) service).getService();
+//            if (!mBluetoothLeServiceM.initialize()) {
+//                Log.e(TAG, "Unable to initialize Bluetooth");
+//                finish();
+//            }
+//           if(popupListFragment != null) popupListFragment.initList();
+//            // Automatically connects to the device upon successful start-up initialization.
+//            //         mBluetoothLeService.connect(mDeviceAddress,true);
+//            Log.w(TAG, "---initialize ---onServiceConnected-----");
+//        }
+//
+//        @Override
+//        public void onServiceDisconnected(ComponentName componentName) {
+//            mBluetoothLeServiceM = null;
+//            Log.v(TAG, "onServiceDisconnected");
+//        }
+//    };
+    //----------
 //    Анимация Floating Action Button в Android
 //    https://geektimes.ru/company/nixsolutions/blog/276128/
 //
@@ -202,9 +234,13 @@ final int iconActionEdit = 12345678;
             Log.w(TAG,"NAME= " + data.getStringExtra(EXTRAS_DEVICE_NAME)
             +"   EXTRAS_DEVICE_ADDRESS= " + data.getStringExtra(EXTRAS_DEVICE_ADDRESS));
             //запуск на коннект!!
-            if(mBluetoothLeServiceM != null){
-                mBluetoothLeServiceM.connect(data.getStringExtra(EXTRAS_DEVICE_ADDRESS),true);
+            RunDataHub app = ((RunDataHub) getApplicationContext());
+            if(app.mBluetoothLeServiceM != null){
+                app.mBluetoothLeServiceM.connect(data.getStringExtra(EXTRAS_DEVICE_ADDRESS),true);
             }
+//!!            if(mBluetoothLeServiceM != null){
+//!!                mBluetoothLeServiceM.connect(data.getStringExtra(EXTRAS_DEVICE_ADDRESS),true);
+//!!            }
             return;
         }
         super.onActivityResult(requestCode, resultCode, data);
@@ -271,10 +307,10 @@ Log.i(TAG,"startActivity SCAN");
     protected void onDestroy() {
         super.onDestroy();
         if (isFinishing()) {
-            mBluetoothLeServiceM = null;
+ //!!           mBluetoothLeServiceM = null;
         } else {
            ; //It's an orientation change.
         }
-        unbindService(mServiceConnectionM);
+ //!!       unbindService(mServiceConnectionM);
     }
 }

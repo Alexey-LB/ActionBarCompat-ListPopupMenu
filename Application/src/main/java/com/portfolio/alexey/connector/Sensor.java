@@ -237,21 +237,21 @@ public class Sensor {
     public String getAddress(){
         return mBluetoothDeviceAddress;
     }
-    Sensor (){
+    public Sensor (){
 
         deviceLabel = deviceLabelStringDefault + " " + indexDevace++;
         markerColor = 0x7 & indexDevace;
         Log.v(TAG,"markerColor= " + markerColor);
         loop();
     }
-    Sensor (final String adress){
+    public Sensor (final String adress){
 
         mBluetoothDeviceAddress = adress;
         deviceLabel = deviceLabelStringDefault + " " + indexDevace++;
         markerColor = 0x7 & indexDevace;
         loop();
     }
-    Sensor (SharedPreferences mSettings){
+    public Sensor (SharedPreferences mSettings){
         if(mSettings == null){
             deviceLabel = deviceLabelStringDefault + " " + indexDevace++;
             return;

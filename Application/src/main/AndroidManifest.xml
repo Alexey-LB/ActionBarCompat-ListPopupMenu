@@ -64,7 +64,6 @@ http://www.fandroid.info/nastrojka-paneli-dejstvij-actionbar/
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <service android:name=".BluetoothLeServiceNew" android:enabled="true"/>
 
         <activity android:name=".DeviceScanActivity"
             android:theme="@android:style/Theme.Holo.Light">
@@ -87,6 +86,7 @@ http://www.fandroid.info/nastrojka-paneli-dejstvij-actionbar/
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <service android:name="com.portfolio.alexey.connector.BluetoothLeServiceNew" android:enabled="true"/>
 
     </application>
 

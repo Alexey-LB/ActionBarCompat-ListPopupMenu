@@ -59,6 +59,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.TreeMap;
+import com.portfolio.alexey.connector.Sensor;
 
 import static android.content.Context.BIND_AUTO_CREATE;
 //Анимация Floating Action Button в Android
@@ -302,8 +303,12 @@ public class PopupListFragment extends ListFragmentA  {
         //--------ЭТО делать надо  1 раз только иначе падает!!
   //      ArrayList<Sensor> item =  mBluetoothLeService.mbleDot;
      //     ArrayList<Sensor> item =  parentActivity.mBluetoothLeServiceM.mbleDot;
-        ArrayList<Sensor> item = ((MainActivity)getActivity()).mBluetoothLeServiceM.mbleDot;
-        ArrayList<Object> it = (ArrayList)(Object)item;
+        ArrayList<Object> it  = new  ArrayList();
+        RunDataHub app = ((RunDataHub) getActivity().getApplicationContext());
+        if(app.mBluetoothLeServiceM != null){
+            ArrayList<Sensor> item = app.mBluetoothLeServiceM.mbleDot;
+            it = (ArrayList)(Object)item;
+        }
         PopupAdapter pop = new PopupAdapter(it);
 
         setListAdapter(pop);//создали адаптер для работы
@@ -426,7 +431,10 @@ public void onPrepareOptionsMenu(Menu menu){
             case android.R.id.home:
                 Log.i(TAG,"android.R.id.home");
      //сохранение в файл
-                ((MainActivity)getActivity()).mBluetoothLeServiceM.settingPutFile();
+                RunDataHub app = ((RunDataHub) getActivity().getApplicationContext());
+                if(app.mBluetoothLeServiceM != null){
+                    app.mBluetoothLeServiceM.settingPutFile();
+                }
  //               adapter.notifyDataSetChanged();
                 return true;
 //            case iconActionEdit:
@@ -498,7 +506,10 @@ return null;//fbButton_;
         //без адреса включается иммитатор
        // adapter.add(object);
  //       mBluetoothLeService.mbleDot.add((Sensor) object);
-        ((MainActivity)getActivity()).mBluetoothLeServiceM.mbleDot.add((Sensor) object);
+        RunDataHub app = ((RunDataHub) getActivity().getApplicationContext());
+        if(app.mBluetoothLeServiceM != null){
+            app.mBluetoothLeServiceM.mbleDot.add((Sensor) object);
+        }
         objectDataToView.moveButton();//позиционируем
         return true;
     }
