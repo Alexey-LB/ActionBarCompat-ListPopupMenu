@@ -104,10 +104,11 @@ public class Sensor {
     public boolean onMaxVibration = false;
     public boolean onEndVibration = false;
     //
-    public boolean onMinmelody = false;
-    public boolean onMaxmelody = false;
-    public boolean onEndmelody = false;
-    public boolean goToConnect = false;//Устанавливается после того как отправляется на коннект!!чтоб повторно НЕ коннектить
+    public String minMelody;
+    public String  maxMelody;
+    public String  endMelody;
+
+    public boolean   goToConnect= false;//Устанавливается после того как отправляется на коннект!!чтоб повторно НЕ коннектить
 //
     public void close() {
         if (mBluetoothGatt == null) return;
@@ -240,9 +241,9 @@ public class Sensor {
         onMaxVibration = mSettings.getBoolean("onMaxVibration", onMaxVibration);
         onEndVibration = mSettings.getBoolean("onEndVibration", onEndVibration);
 
-        onMinmelody = mSettings.getBoolean("onMinmelody", onMinmelody);
-        onMaxmelody = mSettings.getBoolean("onMaxmelody", onMaxmelody);
-        onEndmelody = mSettings.getBoolean("onEndmelody", onEndmelody);
+        minMelody = mSettings.getString("minMelody", minMelody);
+        maxMelody = mSettings.getString("maxMelody", maxMelody);
+        endMelody = mSettings.getString("endMelody", endMelody);
         loop();
     }
     public void putConfig(SharedPreferences.Editor editor){
@@ -271,9 +272,9 @@ public class Sensor {
         editor.putBoolean("onMaxVibration", onMaxVibration);
         editor.putBoolean("onEndVibration", onEndVibration);
 
-        editor.putBoolean("onMinmelody", onMinmelody);
-        editor.putBoolean("onMaxmelody", onMaxmelody);
-        editor.putBoolean("onEndmelody", onEndmelody);
+        editor.putString("minMelody", minMelody);
+        editor.putString("maxMelody", maxMelody);
+        editor.putString("endMelody", endMelody);
     }
     public Sensor (SharedPreferences mSettings, int i){
 
@@ -308,9 +309,11 @@ public class Sensor {
         onMaxVibration = mSettings.getBoolean("onMaxVibration", onMaxVibration);
         onEndVibration = mSettings.getBoolean("onEndVibration", onEndVibration);
 
-        onMinmelody = mSettings.getBoolean("onMinmelody", onMinmelody);
-        onMaxmelody = mSettings.getBoolean("onMaxmelody", onMaxmelody);
-        onEndmelody = mSettings.getBoolean("onEndmelody", onEndmelody);
+// TODO: 17.12.2016 в случае чтения непонятного типа(например булеан,
+// а чтиаем стринг- выбрасывает из программы- обработаь !!прерывания
+        minMelody = mSettings.getString("minMelody", minMelody);
+        maxMelody = mSettings.getString("maxMelody", maxMelody);
+        endMelody = mSettings.getString("endMelody", endMelody);
         loop();
     }
 

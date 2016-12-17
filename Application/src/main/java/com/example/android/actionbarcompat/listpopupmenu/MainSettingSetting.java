@@ -152,8 +152,14 @@ public class MainSettingSetting  extends Activity implements View.OnClickListene
                     break;
                 case GET_URL_RING:
                     uri = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
-                    urI = uri;
-                    str = "Uri= " + uri;
+                    //если без звука= то нулл!
+                    if(Util.isNoNull(sensor)){
+                        if(uri != null){
+                            sensor.endMelody = uri.toString();
+                            str = "Uri= " + uri.toString();
+                        } else sensor.endMelody = null;
+                    }
+                    str = str + "   Uri= " + uri;
                     break;
                 case MainActivity.ACTIVITY_SETTING_SETTING:
                     //обновить отображение
@@ -171,8 +177,6 @@ public class MainSettingSetting  extends Activity implements View.OnClickListene
 //    }
         super.onActivityResult(requestCode, resultCode, data);
     }
-    private Uri urI = null;
-
     private void udateMeasurementMode(){
         View v,v2;
         if(sensor == null) return;
@@ -257,19 +261,6 @@ public class MainSettingSetting  extends Activity implements View.OnClickListene
                     str = sensor.getStringMeasurementMode();
                     Util.setTextToTextView(str, view,"!");
                 }
-                Log.v(TAG,"imageButtonMeasurementMode " + str);
-//                if(view instanceof TextView){
-//                    TextView v = (TextView)view;
-//                    if(sensor != null){
-//
-//                        v.setText(sensor.getStringMeasurementMode());
-//                        Log.v(TAG,"imageButtonMeasurementMode = "
-//                                +sensor.getStringMeasurementMode() +
-//                        "   MeasurementMode= " + sensor.getMeasurementMode());
-//                    }
-//
-//                }
-
                 udateMeasurementMode();
                 break;
             case R.id.imageButtonMelody:
@@ -312,11 +303,15 @@ public class MainSettingSetting  extends Activity implements View.OnClickListene
                 break;
             case R.id.imageButtonTemperaturesBelow:
                 Log.v(TAG,"imageButtonTemperaturesBelow");
-                playerRingtone(0f, urI);
+                if(sensor != null){
+                    Util.playerRingtone(0f, sensor.endMelody , this,TAG);
+                } else Util.playerRingtone(0f, (Uri) null , this,TAG);
                 break;
             case R.id.imageButtonDecor:
                 Log.v(TAG,"imageButtonDecor");
-                playerRingtone(1f,  urI);
+                  if(sensor != null){
+                    Util.playerRingtone(1f, sensor.endMelody , this,TAG);
+                } else Util.playerRingtone(1f, (Uri)null , this,TAG);
                 break;
             default:
         }
@@ -329,59 +324,28 @@ public class MainSettingSetting  extends Activity implements View.OnClickListene
 
         Intent intent = new      Intent(RingtoneManager.ACTION_RINGTONE_PICKER);
         intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_RINGTONE);
-        intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, "Select Ringtone");
+        intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, "  BB4");
 
         // for existing ringtone
         Uri urie;
 //        urie =     RingtoneManager.getActualDefaultRingtoneUri(
 //                getApplicationContext(), RingtoneManager.TYPE_RINGTONE);
-        urie = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        if(Util.isNoNull(sensor)){
+            // TODO: 17.12.2016 обработать в случае ошибок парсера
+            if(sensor.endMelody != null) {
+                urie = Uri.parse(sensor.endMelody);
+                Log.v(TAG,"goto change melody carent= "+ urie.toString());
+            } else {
+                urie = null;//тоесть БЕЗ звука!!
+                Log.v(TAG,"Звука нет urie == null");
+            }
+
+        } else urie = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+
         intent.putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI, urie);
         intent.putExtra(RingtoneManager.EXTRA_RINGTONE_DEFAULT_URI, urie);
 
         startActivityForResult(intent, GET_URL_RING);
-    }
-    // https://geektimes.ru/post/232885/
-// Что бы звук не был тихим:
-// stackoverflow.com/questions/8278939/android-mediaplayer-volume-is-very-low-already-adjusted-volume
-    //пример: playerRingtone(0.8f, null); рингтонг 0.8 от макимума звука и мелодия по умолчанию
-    //пример: playerRingtone(0f, Uri); ГРОМКОСТ звука СИТЕМНОЙ настройки проигрывателя и мелодия по Uri
-    public void playerRingtone(Float setVolume, Uri uriRingtone ){
-        if(uriRingtone == null){// Сигнал по умолчанию
-            uriRingtone = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-        }
-        MediaPlayer mediaPlayer= new MediaPlayer();
-        if(setVolume == 0){//ГРОМКОСТЬ системных настроек
-            setVolume = 1f;
-        }else{
-            // (Завист только от setVolume)НА ПОЛНУЮ гмкость ВНЕ зависмости от УСТАНОВКИ в СИСТЕМЕ!!!
-//http://stackoverflow.com/questions/8278939/android-mediaplayer-volume-is-very-low-already-adjusted-volume
-            AudioManager amanager = (AudioManager) this.getSystemService(Context.AUDIO_SERVICE);
-            // int maxVolume = amanager.getStreamMaxVolume(AudioManager.STREAM_ALARM);
-            int maxVolume = amanager.getStreamVolume(AudioManager.STREAM_ALARM);
-            amanager.setStreamVolume(AudioManager.STREAM_ALARM, maxVolume, 0);
-            mediaPlayer.setAudioStreamType(AudioManager.STREAM_ALARM); // this is important.
-        }
-        //устанавливает ОТ максимума!!!
-        mediaPlayer.setVolume(setVolume, setVolume);
-        try {
-            mediaPlayer.setDataSource(getApplicationContext(), uriRingtone);
-            //  mediaPlayer.setLooping(looping);
-            mediaPlayer.prepare();
-            mediaPlayer.start();
-            mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                //после проигрывания попадает сюда
-                @Override
-                public void onCompletion(MediaPlayer mp) {
-                    //останавливается ПЛЕЕР и выбрасывается из памяти
-                    mp.release();//Это закончит, освободить, отпустить
-                }
-            });
-        } catch (Exception e) {
-            Toast.makeText(getApplicationContext(), "Error default media ", Toast.LENGTH_LONG).show();
-            Log.e(TAG, "  Ringtone ERR= " + e);
-        }
-
     }
 
     public static class NotificationPreferenceFragment extends PreferenceFragment {

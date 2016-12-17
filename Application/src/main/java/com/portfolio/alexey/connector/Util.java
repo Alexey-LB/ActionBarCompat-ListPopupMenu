@@ -3,9 +3,14 @@ package com.portfolio.alexey.connector;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.android.actionbarcompat.listpopupmenu.R;
 
@@ -14,6 +19,62 @@ import com.example.android.actionbarcompat.listpopupmenu.R;
  */
 
 public class Util {
+    // https://geektimes.ru/post/232885/
+// Что бы звук не был тихим:
+// stackoverflow.com/questions/8278939/android-mediaplayer-volume-is-very-low-already-adjusted-volume
+    //пример: playerRingtone(0.8f, null); рингтонг 0.8 от макимума звука и мелодия по умолчанию
+    //пример: playerRingtone(0f, Uri); ГРОМКОСТ звука СИТЕМНОЙ настройки проигрывателя и мелодия по Uri
+    static public void playerRingtone(Float setVolume, String uriRingtone , Activity activity,String  tag){
+        Uri uri= null;
+        if(uriRingtone != null){
+            // TODO: 17.12.2016 обработать возможные ИСКЛЮЧЕНИЯ парсера
+            uri = Uri.parse(uriRingtone);
+        }
+        playerRingtone(setVolume, uri ,activity,tag);
+    }
+    static boolean onRingtoneWork = false;
+    static public void playerRingtone(Float setVolume, Uri uriRingtone , Activity activity,String  tag){
+        if(onRingtoneWork) return;//если чет о играем, то пока НЕ закончим, новй играть НЕ будем
+        onRingtoneWork = true;
+        if(uriRingtone == null){// Сигнал по умолчанию
+            uriRingtone = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        }
+        MediaPlayer mediaPlayer= new MediaPlayer();
+        if(setVolume == 0){//ГРОМКОСТЬ системных настроек
+            setVolume = 1f;
+        }else{
+            // (Завист только от setVolume)НА ПОЛНУЮ гмкость ВНЕ зависмости от УСТАНОВКИ в СИСТЕМЕ!!!
+//http://stackoverflow.com/questions/8278939/android-mediaplayer-volume-is-very-low-already-adjusted-volume
+            AudioManager amanager = (AudioManager) activity.getSystemService(Context.AUDIO_SERVICE);
+            // int maxVolume = amanager.getStreamMaxVolume(AudioManager.STREAM_ALARM);
+            int maxVolume = amanager.getStreamVolume(AudioManager.STREAM_ALARM);
+            amanager.setStreamVolume(AudioManager.STREAM_ALARM, maxVolume, 0);
+            mediaPlayer.setAudioStreamType(AudioManager.STREAM_ALARM); // this is important.
+        }
+        //устанавливает ОТ максимума!!!
+        mediaPlayer.setVolume(setVolume, setVolume);
+        try {
+            mediaPlayer.setDataSource(activity.getApplicationContext(), uriRingtone);
+            //  mediaPlayer.setLooping(looping);
+            mediaPlayer.prepare();
+            mediaPlayer.start();
+            mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                //после проигрывания попадает сюда
+                @Override
+                public void onCompletion(MediaPlayer mp) {
+                    //останавливается ПЛЕЕР и выбрасывается из памяти
+                    mp.release();//Это закончит, освободить, отпустить
+                    onRingtoneWork = false;//разрешили другим вызывать музыку
+                }
+            });
+        } catch (Exception e) {
+            Toast.makeText(activity.getApplicationContext(), "Error default media ", Toast.LENGTH_LONG).show();
+            Log.e(tag, "  Ringtone ERR= " + e);
+        }
+
+    }
+
+
     //android.support.v7.app.ActionBar
     // getSupportActionBar();??--это решалось в другом методе(getDelegate().getSupportActionBar();)
     static public boolean setSupportV7appActionBar(

@@ -133,7 +133,9 @@ public class DeviceScanActivity extends ListActivity {//AppCompatActivity {//Act
                 scanLeDevice(false);
                 break;
             case android.R.id.home://ккнопка ДОМОЙ!!
-                Toast.makeText(this,"Go to home", Toast.LENGTH_SHORT).show();
+               // Toast.makeText(this,"Go to home", Toast.LENGTH_SHORT).show();
+                setResult(RESULT_CANCELED, new Intent());
+                finish();
                 break;
         }
         return true;
