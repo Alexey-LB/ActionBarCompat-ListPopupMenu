@@ -1,14 +1,19 @@
 package com.example.android.actionbarcompat.listpopupmenu;
 
 import android.app.ActionBar;
+//import android.support.v7.app.AppCompatActivity;
+//import android.support.v7.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+
+import com.portfolio.alexey.connector.Util;
 
 
 //public class SettingName extends AppCompatActivity {//} implements View.OnKeyListener{
@@ -20,43 +25,32 @@ public class SettingName extends Activity {//} implements View.OnKeyListener{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.setting_name);
         final Intent intent = getIntent();
-        String mDeviceName = intent.getStringExtra("EXTRAs_DEVICE_NAME");
-        //    Log.v(TAG,"imageButtonName= " + mDeviceName);
-        View editText = findViewById(R.id.editTextName);
-
-        if(editText != null){
-            editText.setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
-            if(mDeviceName == null)mDeviceName = "";
-            ((EditText)editText).setText(mDeviceName);
-            //
-            //   Log.d(TAG,"Name= "+mDeviceName);
-            //
-            editText.setOnKeyListener(new View.OnKeyListener() {
-                @Override
-                public boolean onKey(View view, int i, KeyEvent keyEvent) {
-                    if(i == KeyEvent.KEYCODE_ENTER){//выходим с результатом
-                        Intent intent = new Intent();
-                        if(view instanceof EditText){
-                            String name = ((EditText)view).getText().toString();
-                            if((name != null) && (name.length() >= 1)){
-                                if(name.length() > 24) name = name.substring(0,24);
-                                intent.putExtra("EXTRAs_DEVICE_NAME",name);
-                                setResult(RESULT_OK,intent);
-                                finish();
-                            }
+        Util.setTextToTextView(intent.getStringExtra(MainActivity.EXTRAS_DEVICE_NAME)
+                ,R.id.editTextName,this,"?");
+        //
+        findViewById(R.id.editTextName).setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View view, int i, KeyEvent keyEvent) {
+                if(i == KeyEvent.KEYCODE_ENTER){//выходим с результатом
+                    Intent intent = new Intent();
+                    if(view instanceof EditText){
+                        String name = ((EditText)view).getText().toString();
+                        if((name != null) && (name.length() >= 1)){
+                            if(name.length() > 32) name = name.substring(0,31);
+                            intent.putExtra(MainActivity.EXTRAS_DEVICE_NAME,name);
+                            setResult(RESULT_OK,intent);
+                            finish();
                         }
-                        setResult(RESULT_CANCELED,intent);
-                        finish();
                     }
-                    return false;
+                    setResult(RESULT_CANCELED,intent);
+                    finish();
                 }
-            });
-            // editText.setOnKeyListener(this);
-        }
-//        findViewById(R.id.editTextName).setOnClickListener(this);
-        ActionBar actionBar = getActionBar();//getSupportActionBar();??--это решалось в другом методе(getDelegate().getSupportActionBar();)
+                return false;
+            }
+        });//
+        ActionBar actionBar = getActionBar();//getSupportActionBar();//??--это решалось в другом методе(getDelegate().getSupportActionBar();)
         if (actionBar != null) {
-            Log.d(TEG,"actionBar != null--  Name=" + mDeviceName);
+            Log.d(TEG,"actionBar != null--  ");
             //вместо ЗНачка по умолчанию, назначаемого выше, подставляет свой
             // actionBar.setHomeAsUpIndicator(R.drawable.ic_navigate_before_black_24dp);
             //------------------------------
@@ -74,7 +68,7 @@ public class SettingName extends Activity {//} implements View.OnKeyListener{
             //actionBar.setLogo(null);
             // установка ИЗОБРАЖЕНИЕ на всь экран, УБИРАЕМ СВЕРХУ И СНИЗУ панели системные
 
-        } else Log.e(TEG,"actionBar == null--  Name=" + mDeviceName);
+        } else Log.e(TEG,"actionBar == null--" );
         //getParent()
     }
     @Override
@@ -83,7 +77,7 @@ public class SettingName extends Activity {//} implements View.OnKeyListener{
         Intent intent = new Intent();
         //  intent.putExtra(MainActivity.EXTRAS_DEVICE_NAME, device.getName());
         //  intent.putExtra(MainActivity.EXTRAS_DEVICE_ADDRESS, device.getAddress());
-        setResult(RESULT_OK, intent);
+        setResult(RESULT_CANCELED, intent);
         finish();
         return true;
     }

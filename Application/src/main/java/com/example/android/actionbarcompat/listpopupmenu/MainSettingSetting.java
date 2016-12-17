@@ -25,6 +25,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.portfolio.alexey.connector.Sensor;
+import com.portfolio.alexey.connector.Util;
 
 //public class MainSettingSetting extends AppCompatActivity implements View.OnClickListener{
 public class MainSettingSetting  extends Activity implements View.OnClickListener{
@@ -66,18 +67,11 @@ public class MainSettingSetting  extends Activity implements View.OnClickListene
             finish();
         }
         //-------------------------------------------
-        View view;
-        view = findViewById(R.id.textViewName);
-        view.setOnClickListener(this);
-        if(sensor != null){
-            if(view instanceof TextView) {
-               if(sensor.deviceLabel != null) ((TextView)view).setText(sensor.deviceLabel);
-                else ((TextView)view).setText("?");
-            }
-        }
-        //view = findViewById(R.id.textViewName).setOnClickListener(this);
+        findViewById(R.id.textViewName).setOnClickListener(this);
+        Util.setTextToTextView(sensor.deviceLabel,R.id.textViewName,this,"?");
         findViewById(R.id.imageButtonMarker).setOnClickListener(this);
-        if(sensor != null){
+
+        if(Util.isNoNull(sensor)){
             int im = 0x7 & sensor.markerColor;
             ((ImageView)findViewById(R.id.imageButtonMarker))
                     .setBackgroundResource(Marker.getIdImg(im));
@@ -91,12 +85,10 @@ public class MainSettingSetting  extends Activity implements View.OnClickListene
         findViewById(R.id.imageButtonDecor).setOnClickListener(this);
         //   findViewById(R.id.imageButtonMeasurementMode).setOnClickListener(this);
         //00000
-        view = findViewById(R.id.textViewMeasurementMode);
-        view.setOnClickListener(this);
-        if(sensor != null){
-            ((TextView)view).setText(sensor.getStringMeasurementMode());
-        }
-        changeMeasurementMode();
+        findViewById(R.id.textViewMeasurementMode).setOnClickListener(this);
+        Util.setTextToTextView(sensor.getStringMeasurementMode()
+                ,R.id.textViewMeasurementMode,this,"?");
+        udateMeasurementMode();
 
         findViewById(R.id.imageButtonName).setOnClickListener(this);
 
@@ -168,15 +160,12 @@ public class MainSettingSetting  extends Activity implements View.OnClickListene
         if(resultCode == RESULT_OK) {
             switch(requestCode){
                 case EDIT_NAME:
-                    name = data.getStringExtra("EXTRAs_DEVICE_NAME");
-                    str = "DEVICE_NAME= " + name;
-                    View edv = findViewById(R.id.textViewName);
-                    if(edv instanceof TextView){
-                        if((name != null) && (name.length() > 0)) ((TextView)edv).setText(name);
-                    }
-                    if(sensor != null){
-                        if(name != null)sensor.deviceLabel = name;
-                    }
+                    name = data.getStringExtra(MainActivity.EXTRAS_DEVICE_NAME);
+                    str = MainActivity.EXTRAS_DEVICE_NAME + name;
+                    if(name.length() > 64) name = name.substring(0,63);
+                    if(Util.isNoNull(sensor, name))sensor.deviceLabel = name;
+                    //
+                    Util.setTextToTextView(name,R.id.textViewName,this,"?");
                     break;
                 case GET_URL_RING:
                     uri = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
@@ -204,7 +193,7 @@ public class MainSettingSetting  extends Activity implements View.OnClickListene
     static private Marker marker = new Marker();
     static boolean flag = false;
     private int index = 0;
-    private void changeMeasurementMode(){
+    private void udateMeasurementMode(){
         View v,v2;
         if(sensor == null) return;
         if(sensor.getMeasurementMode() == 0){//медецинский
@@ -221,7 +210,7 @@ public class MainSettingSetting  extends Activity implements View.OnClickListene
     public void onClick(View view) {
         Log.w(TAG,"onClick= "+view);
         String action="";Intent intent;Vibrator vibrator;
-        Uri alert;
+        Uri alert; String str = "";
 
         switch (view.getId()){
             case android.R.id.home:
@@ -230,14 +219,10 @@ public class MainSettingSetting  extends Activity implements View.OnClickListene
                 break;
             case R.id.imageButtonName:
                 Log.v(TAG,"imageButtonName");
+                if(Util.isNoNull(sensor, sensor.deviceLabel)) str = sensor.deviceLabel;
                 intent = new Intent(this, SettingName.class);
-                View edv = findViewById(R.id.textViewName);
-                if(edv instanceof TextView){
-                    intent.putExtra("EXTRAs_DEVICE_NAME", ((TextView)edv).getText().toString());
-                    //     Log.v(TAG,"imageButtonName= " + ((TextView)edv).getText().toString());
-                    //startActivity(intent);//на подклшючение к устройству
-                    startActivityForResult(intent,MainActivity.ACTIVITY_SETTING_SETTING);
-                }
+                intent.putExtra(MainActivity.EXTRAS_DEVICE_NAME, str);
+                startActivityForResult(intent,EDIT_NAME);
                 break;
             case R.id.textViewName:
                 Log.v(TAG,"textViewName");
@@ -300,7 +285,7 @@ public class MainSettingSetting  extends Activity implements View.OnClickListene
                                 +sensor.getStringMeasurementMode() +
                         "   MeasurementMode= " + sensor.getMeasurementMode());
                     }
-                    changeMeasurementMode();
+                    udateMeasurementMode();
                 }
                 break;
             case R.id.imageButtonMelody:
