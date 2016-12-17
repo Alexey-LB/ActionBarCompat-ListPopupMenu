@@ -34,22 +34,6 @@ public class MainSettingSetting  extends Activity implements View.OnClickListene
     private  int mItem= 0;
     private Sensor sensor;
     final   String TAG = getClass().getSimpleName();
-//    private void getSttingInSensor(int idView, Object object ){
-//        View view;
-//        view = findViewById(idView);
-//        if((view == null) || (sensor == null)) return;
-//        //
-//        view.setOnClickListener(this);
-//        if((object instanceof String) && (view instanceof TextView)){
-//
-//        }
-//        if(sensor != null){
-//            if(view instanceof TextView) {
-//                if(sensor.deviceLabel != null) ((TextView)view).setText(sensor.deviceLabel);
-//                else ((TextView)view).setText("?");
-//            }
-//        }
-//    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -91,31 +75,30 @@ public class MainSettingSetting  extends Activity implements View.OnClickListene
         udateMeasurementMode();
 
         findViewById(R.id.imageButtonName).setOnClickListener(this);
-
-        ActionBar actionBar = getActionBar();//getSupportActionBar();??--это решалось в другом методе(getDelegate().getSupportActionBar();)
-        if (actionBar != null) {
-            Log.d(TAG,"actionBar != null--");
-            //вместо ЗНачка по умолчанию, назначаемого выше, подставляет свой
-            // actionBar.setHomeAsUpIndicator(R.drawable.ic_navigate_before_black_24dp);
-            //------------------------------
-          //  actionBar.
-            //разрешить копку доиой
-            actionBar.setHomeAsUpIndicator(R.drawable.ic_chevron_left_black_24dp);
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setHomeButtonEnabled(true);//устанавливает надпись и иконку как кнопку домой(не требуется
-           // actionBar.setDisplayUseLogoEnabled(true);
-        //    actionBar.setHomeButtonEnabled(true); метод - actionBar.setDisplayHomeAsUpEnabled(true);)
-            //чето не показыввет ее
-//-- срабатывают только если вместе, отменяют ИКОНКУ, если заменить- достаточно одного
-            actionBar.setIcon(null);//actionBar.setIcon(R.drawable.ic_language_black_24dp);
-            actionBar.setDisplayUseLogoEnabled(false);
-//------------------------------------------------------
-            //actionBar.setCustomView(null);
-            //actionBar.setLogo(null);
-
-
-        } else Log.e(TAG,"actionBar == null--");
-        //   SampleGattAttributes.attributes.get("dd");
+        Util.setActionBar(getActionBar(),TAG, "  B4/B5");
+//
+//        ActionBar actionBar = getActionBar();//getSupportActionBar();??--это решалось в другом методе(getDelegate().getSupportActionBar();)
+//        if (actionBar != null) {
+//            Log.d(TAG,"actionBar != null--");
+//            //вместо ЗНачка по умолчанию, назначаемого выше, подставляет свой
+//            // actionBar.setHomeAsUpIndicator(R.drawable.ic_navigate_before_black_24dp);
+//            //------------------------------
+//          //  actionBar.
+//            //разрешить копку доиой
+//            actionBar.setHomeAsUpIndicator(R.drawable.ic_chevron_left_black_24dp);
+//            actionBar.setDisplayHomeAsUpEnabled(true);
+//            actionBar.setHomeButtonEnabled(true);//устанавливает надпись и иконку как кнопку домой(не требуется
+//           // actionBar.setDisplayUseLogoEnabled(true);
+//        //    actionBar.setHomeButtonEnabled(true); метод - actionBar.setDisplayHomeAsUpEnabled(true);)
+//            //чето не показыввет ее
+////-- срабатывают только если вместе, отменяют ИКОНКУ, если заменить- достаточно одного
+//            actionBar.setIcon(null);//actionBar.setIcon(R.drawable.ic_language_black_24dp);
+//            actionBar.setDisplayUseLogoEnabled(false);
+////------------------------------------------------------
+//            //actionBar.setCustomView(null);
+//            //actionBar.setLogo(null);
+//        } else Log.e(TAG,"actionBar == null--");
+//        //   SampleGattAttributes.attributes.get("dd");
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -190,9 +173,6 @@ public class MainSettingSetting  extends Activity implements View.OnClickListene
     }
     private Uri urI = null;
 
-    static private Marker marker = new Marker();
-    static boolean flag = false;
-    private int index = 0;
     private void udateMeasurementMode(){
         View v,v2;
         if(sensor == null) return;
@@ -254,10 +234,6 @@ public class MainSettingSetting  extends Activity implements View.OnClickListene
 //                if(index > 2) index = 0;
 //                ((ImageView)view).setImageLevel(index);
 // ========================================
-
-                //   ((LevelListDrawable)view.getBackground()).setLevel(1);
-                // if(view.getBackground().getLevel() >= 2) view.getBackground().setLevel(0);
-                // else view.getBackground().setLevel(view.getBackground().getLevel() + 1);
 //пока временно решил сделать так, через фон
                 if(sensor != null){
                     sensor.markerColor = Marker.getNextItem(sensor.markerColor);
@@ -265,6 +241,7 @@ public class MainSettingSetting  extends Activity implements View.OnClickListene
                     Log.v(TAG,"imageButtonMarker= " + sensor.markerColor);
                 }
                 break;
+            //ПОИСК ТЕРМОmЕТРА!!!
             case R.id.imageButtonTermometer:
                 Log.v(TAG,"imageButtonTermometer");
                 if(sensor != null){
@@ -275,18 +252,25 @@ public class MainSettingSetting  extends Activity implements View.OnClickListene
                 break;
             //case R.id.imageButtonMeasurementMode:
             case R.id.textViewMeasurementMode:
-                Log.v(TAG,"imageButtonMeasurementMode");
-                if(view instanceof TextView){
-                    TextView v = (TextView)view;
-                    if(sensor != null){
-                        sensor.changeMeasurementMode();//меняем моду измерения
-                        v.setText(sensor.getStringMeasurementMode());
-                        Log.v(TAG,"imageButtonMeasurementMode = "
-                                +sensor.getStringMeasurementMode() +
-                        "   MeasurementMode= " + sensor.getMeasurementMode());
-                    }
-                    udateMeasurementMode();
+                if(sensor != null){
+                    sensor.changeMeasurementMode();//меняем моду измерения
+                    str = sensor.getStringMeasurementMode();
+                    Util.setTextToTextView(str, view,"!");
                 }
+                Log.v(TAG,"imageButtonMeasurementMode " + str);
+//                if(view instanceof TextView){
+//                    TextView v = (TextView)view;
+//                    if(sensor != null){
+//
+//                        v.setText(sensor.getStringMeasurementMode());
+//                        Log.v(TAG,"imageButtonMeasurementMode = "
+//                                +sensor.getStringMeasurementMode() +
+//                        "   MeasurementMode= " + sensor.getMeasurementMode());
+//                    }
+//
+//                }
+
+                udateMeasurementMode();
                 break;
             case R.id.imageButtonMelody:
                 Log.v(TAG,"imageButtonMelody");

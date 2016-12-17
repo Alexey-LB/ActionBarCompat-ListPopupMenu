@@ -76,7 +76,7 @@ public class Sensor {
     public String deviceLabel = "Label";
     public View deviceLabelView = null;
 
-    public String deviceName = "deviceNameString";
+    public String deviceName = "deviceName";
 
     private long mBluetoothDeviceAddressLong = 0;//64 bita
     //

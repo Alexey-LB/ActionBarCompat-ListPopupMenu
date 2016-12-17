@@ -60,7 +60,7 @@
             android:gravity="left|center_vertical"
             android:textColor="@color/colorText"
             android:lines="1"
-            android:textSize="24sp"
+            android:textSize="22sp"
             android:textStyle="normal|bold" />
 
         <TextView
@@ -70,6 +70,7 @@
             android:layout_width="wrap_content"
             android:layout_weight="0"
             android:layout_marginLeft="10dp"
+            android:layout_marginTop="5dp"
             android:textColor="@color/colorTextlight"
             android:textSize="@dimen/iten_text_size"
             android:textAlignment="gravity"
@@ -84,6 +85,7 @@
             android:layout_width="wrap_content"
             android:layout_weight="0"
             android:layout_marginLeft="5dp"
+            android:layout_marginTop="5dp"
             android:textColor="@color/colorTextlight"
             android:textSize="@dimen/iten_text_size"
             android:textAlignment="gravity"
@@ -93,11 +95,13 @@
             android:gravity="right|center_vertical" />
         <TextView
             android:text="hmkhkjhlkjvjhgkjhj5567788990"
+            android:inputType="textAutoComplete"
             android:id="@+id/textViewFindAdress"
             android:layout_height="match_parent"
             android:layout_width="wrap_content"
             android:layout_weight="100"
             android:layout_marginLeft="5dp"
+            android:layout_marginTop="5dp"
             android:textColor="@color/colorTextlight"
             android:textSize="@dimen/iten_text_size"
             android:paddingRight="5dp"

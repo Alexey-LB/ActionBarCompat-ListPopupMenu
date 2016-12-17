@@ -18,7 +18,7 @@ import com.portfolio.alexey.connector.Util;
 
 //public class SettingName extends AppCompatActivity {//} implements View.OnKeyListener{
 public class SettingName extends Activity {//} implements View.OnKeyListener{
-    final String TEG = getClass().getSimpleName();
+    final String TAG = getClass().getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,32 +48,12 @@ public class SettingName extends Activity {//} implements View.OnKeyListener{
                 return false;
             }
         });//
-        ActionBar actionBar = getActionBar();//getSupportActionBar();//??--это решалось в другом методе(getDelegate().getSupportActionBar();)
-        if (actionBar != null) {
-            Log.d(TEG,"actionBar != null--  ");
-            //вместо ЗНачка по умолчанию, назначаемого выше, подставляет свой
-            // actionBar.setHomeAsUpIndicator(R.drawable.ic_navigate_before_black_24dp);
-            //------------------------------
-            //разрешить копку доиой
-            actionBar.setHomeAsUpIndicator(R.drawable.ic_chevron_left_black_24dp);
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setHomeButtonEnabled(true);//устанавливает надпись и иконку как кнопку домой(не требуется
-            //-- срабатывают только если вместе, отменяют ИКОНКУ, если заменить- достаточно одного
-            actionBar.setIcon(null);//actionBar.setIcon(R.drawable.ic_language_black_24dp);
-            actionBar.setDisplayUseLogoEnabled(false);
-            //--- все ниже както не работет или для другого предназаначена
-            //actionBar.setIcon(null);
-            //actionBar.setCustomView(null);
-            //actionBar.setDisplayUseLogoEnabled(false);
-            //actionBar.setLogo(null);
-            // установка ИЗОБРАЖЕНИЕ на всь экран, УБИРАЕМ СВЕРХУ И СНИЗУ панели системные
-
-        } else Log.e(TEG,"actionBar == null--" );
+        Util.setActionBar(getActionBar(),TAG, "  BB1");
         //getParent()
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Log.w(TEG,"onOptionsItemSelected= "+ item);
+        Log.w(TAG,"onOptionsItemSelected= "+ item);
         Intent intent = new Intent();
         //  intent.putExtra(MainActivity.EXTRAS_DEVICE_NAME, device.getName());
         //  intent.putExtra(MainActivity.EXTRAS_DEVICE_ADDRESS, device.getAddress());
@@ -83,7 +63,7 @@ public class SettingName extends Activity {//} implements View.OnKeyListener{
     }
     @Override
     protected void onResume() {
-        ActionBar actionBar = getActionBar();//getSupportActionBar();??--это решалось в другом методе(getDelegate().getSupportActionBar();)
+       // ActionBar actionBar = getActionBar();//getSupportActionBar();??--это решалось в другом методе(getDelegate().getSupportActionBar();)
         super.onResume();
         // установка ИЗОБРАЖЕНИЕ на всь экран, УБИРАЕМ СВЕРХУ И СНИЗУ панели системные
         findViewById(R.id.editTextName).getRootView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);

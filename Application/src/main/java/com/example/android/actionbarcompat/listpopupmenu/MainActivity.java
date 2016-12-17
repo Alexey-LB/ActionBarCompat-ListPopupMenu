@@ -40,6 +40,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.SpinnerAdapter;
 
+import com.portfolio.alexey.connector.Util;
+
 /**
  * This sample shows you how to use {@link android.support.v7.widget.PopupMenu PopupMenu} from
  * ActionBarCompat to create a list, with each item having a dropdown menu.
@@ -96,41 +98,18 @@ public class MainActivity extends AppCompatActivity {// ActionBarActivity {
 // Complete the changes added above
         ft.commit();
         //инициализация фрейма
-
 //  popupListFragment= (PopupListFragment)getSupportFragmentManager()
 //                .findFragmentById(R.id.popUpListFragment);
 //        popupListFragment.parentActivity = this;
         //--------------
-       // getSupportActionBar();??--это решалось в другом методе(getDelegate().getSupportActionBar();)
-       //android.support.v7.app.ActionBar
         //!!! так НЕ работает!!
-        ActionBar ab = getActionBar();
+        //ActionBar ab = getActionBar();
   //ТАК СРАБОТАЛО!!!
-        android.support.v7.app.ActionBar gtab = getSupportActionBar();
-//установить картинку
-        gtab.setHomeAsUpIndicator(R.drawable.ic_chevron_left_black_24dp); //gtab.setIcon(R.drawable.ic_add);
-       //разрешить копку доиой
-        gtab.setDisplayHomeAsUpEnabled(true);
-        gtab.setHomeButtonEnabled(true);
-        gtab.setDisplayUseLogoEnabled(true);
-
-        System.out.println("ActionBar=" + ab + "  gtab="+ gtab);
-        //if(ab != null)ab.setIcon(R.drawable.alexey_photor_fo_visa);
-
-//        actionBar.setDisplayHomeAsUpEnabled(false);
-//        actionBar.setHomeButtonEnabled(false);
-//        actionBar.setDisplayUseLogoEnabled(false);
-//        actionBar.setDisplayShowTitleEnabled(false);
-//        actionBar.setDisplayShowHomeEnabled(false);
-     //   popupListFragment
-        //  ab.setTitle("Датчики");
-       // ab.setIcon(R.drawable.rounded_a);
-       // View.SYSTEM_UI_FLAG_FULLSCREEN
+        Util.setSupportV7appActionBar(getSupportActionBar(),TAG,"  B4/B5");
         //-------------ЗАПУСТИЛИ ервис ---------
 //!!        Intent gattServiceIntent = new Intent(this, BluetoothLeServiceNew.class);
 //!!        bindService(gattServiceIntent, mServiceConnectionM, BIND_AUTO_CREATE);
-
-        Log.e(TAG, "----onCreate END-----ActionBar=" + ab + "  gtab="+ gtab);
+        Log.e(TAG, "----onCreate END-----");
     }
     //инициализация фрейма
     public void init(){

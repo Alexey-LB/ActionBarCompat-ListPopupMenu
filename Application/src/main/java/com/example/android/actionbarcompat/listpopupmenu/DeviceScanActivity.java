@@ -46,6 +46,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.portfolio.alexey.connector.Util;
+
 import java.util.ArrayList;
 /**
  * Activity for scanning and displaying available Bluetooth LE devices.
@@ -65,22 +67,23 @@ public class DeviceScanActivity extends ListActivity {//AppCompatActivity {//Act
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.e(TAG,"START onCreate--");
-        ActionBar actionBar = getActionBar();//getSupportActionBar();??--это решалось в другом методе(getDelegate().getSupportActionBar();)
-//74:DA:EA:9F:4C:21-new
-        if (actionBar != null) {
-            actionBar.setTitle(R.string.title_devices);//getActionBar().setTitle(R.string.title_devices);
-            // Show the Up button in the action bar.
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            //вместо ЗНачка по умолчанию, назначаемого выше, подставляет свой
-            actionBar.setHomeAsUpIndicator(R.drawable.ic_chevron_left_black_24dp);
-            //------------------------------
-            //  actionBar.setHomeButtonEnabled(true); //устанавливает надпись и иконку как кнопку домой(не требуется метод - actionBar.setDisplayHomeAsUpEnabled(true);)
-            //--- все ниже както не работет или для другого предназаначена
-            //actionBar.setIcon(null);
-            //actionBar.setCustomView(null);
-            //actionBar.setDisplayUseLogoEnabled(false);
-            //actionBar.setLogo(null);
-        }
+        //74:DA:EA:9F:4C:21-new
+        Util.setActionBar(getActionBar(),TAG, "  BB3");
+//        ActionBar actionBar = getActionBar();//getSupportActionBar();??--это решалось в другом методе(getDelegate().getSupportActionBar();)
+//        if (actionBar != null) {
+//            actionBar.setTitle(R.string.title_devices);//getActionBar().setTitle(R.string.title_devices);
+//            // Show the Up button in the action bar.
+//            actionBar.setDisplayHomeAsUpEnabled(true);
+//            //вместо ЗНачка по умолчанию, назначаемого выше, подставляет свой
+//            actionBar.setHomeAsUpIndicator(R.drawable.ic_chevron_left_black_24dp);
+//            //------------------------------
+//            //  actionBar.setHomeButtonEnabled(true); //устанавливает надпись и иконку как кнопку домой(не требуется метод - actionBar.setDisplayHomeAsUpEnabled(true);)
+//            //--- все ниже както не работет или для другого предназаначена
+//            //actionBar.setIcon(null);
+//            //actionBar.setCustomView(null);
+//            //actionBar.setDisplayUseLogoEnabled(false);
+//            //actionBar.setLogo(null);
+//        }
         mHandler = new Handler();
         // Use this check to determine whether BLE is supported on the device.  Then you can
         // selectively disable BLE-related features.
