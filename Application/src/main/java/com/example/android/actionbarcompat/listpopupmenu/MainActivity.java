@@ -55,9 +55,14 @@ import android.widget.SpinnerAdapter;
 public class MainActivity extends AppCompatActivity {// ActionBarActivity {
     public  final static String TAG = "MAIN";
     public  final static String EXTRAS_DEVICE_NAME = "EXTRAS_DEVICE_NAME";
+    public  final static String EXTRAS_DEVICE_NAME_FILTR = "EXTRAS_DEVICE_NAME_FILTR";
     public  final static String EXTRAS_DEVICE_ADDRESS = "EXTRAS_DEVICE_ADDRESS";
     public  final static String EXTRAS_DEVICE_ITEM = "EXTRAS_DEVICE_ITEM";
     public  final static int MAINACTIVITY = 11111;
+    public final  static int ACTIVITY_SETTING_SETTING = 22222;
+    public final  static int ACTIVITY_SETTING_MAKER = 444444;
+    public final  static int ACTIVITY_FIND_DEVICE = 555555;
+
     public PopupListFragment popupListFragment;
   //  private PopupListFragment popupListFragment= new PopupListFragment();
     @Override
@@ -90,6 +95,7 @@ public class MainActivity extends AppCompatActivity {// ActionBarActivity {
         ft.replace(R.id.mainFragment, popupListFragment);
 // Complete the changes added above
         ft.commit();
+        //инициализация фрейма
 
 //  popupListFragment= (PopupListFragment)getSupportFragmentManager()
 //                .findFragmentById(R.id.popUpListFragment);
@@ -126,10 +132,11 @@ public class MainActivity extends AppCompatActivity {// ActionBarActivity {
 
         Log.e(TAG, "----onCreate END-----ActionBar=" + ab + "  gtab="+ gtab);
     }
+    //инициализация фрейма
     public void init(){
         Log.e(TAG, "----init() ----------");
         RunDataHub app = ((RunDataHub) getApplicationContext());
-        if(app.mBluetoothLeServiceM != null){
+        if((app != null) && (app.mBluetoothLeServiceM != null)){
             if(app.mBluetoothLeServiceM.initialize()) {
                 Log.e(TAG, "----init() ---------- OK OK");
 
@@ -210,11 +217,11 @@ final int iconActionEdit = 12345678;
     public boolean onCreateOptionsMenu(Menu menu){
  //       MenuInflater menuInflater= getMenuInflater();
  //       menuInflater.inflate(R.menu.poplist_menu,menu);
-
         // inflater.inflate(R.menu.myfragment_options, menu);
-        menu.add(Menu.NONE,iconActionEdit,Menu.NONE,"Edit")
-                .setIcon(R.drawable.ic_clear_black_24dp)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+       //пока отключил редактирование НЕ к чему, ДА программно ПОРОЖДАЯ- встает в нужном месте
+//        menu.add(Menu.NONE,iconActionEdit,Menu.NONE,"Edit")
+//                .setIcon(R.drawable.ic_clear_black_24dp)
+//                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         return super.onCreateOptionsMenu(menu);
     }
     @Override//сюда прилетают ответы при возвращении из других ОКОН активити
@@ -264,13 +271,13 @@ Log.i(TAG,"startActivity SCAN");
                 return false;//установили ФАЛШ, чтоб вызов попал в ФРАГМЕНТ, в которм будет обработан!!
             case iconActionEdit:
                 Log.i(TAG,"edit-");
-        //вызов активного окна для сканирования
-             //   onScanDevice(1);
-                //-------Setting --
-                final Intent intent = new Intent(this, MainSettingSetting.class);
-                intent.putExtra(MainActivity.EXTRAS_DEVICE_ITEM, 0);
-
-                startActivityForResult(intent,MAINACTIVITY);//
+//        //вызов активного окна для сканирования
+//             //   onScanDevice(1);
+//                //-------Setting --
+//                final Intent intent = new Intent(this, MainSettingSetting.class);
+//                intent.putExtra(MainActivity.EXTRAS_DEVICE_ITEM, 0);
+//
+//                startActivityForResult(intent,MAINACTIVITY);//
 
                 return true;
             case R.id.edit_a://.new_game_:

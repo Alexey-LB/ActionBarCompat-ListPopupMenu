@@ -295,29 +295,29 @@ public class PopupListFragment extends ListFragmentA  {
 //        this.getActivity().bindService(gattServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
 //        //-----------------------------
   //      ((MainActivity)getActivity()).
+        if(adapter == null)initList();
         Log.e(TAG,"Fragment --- onActivityCreated---END----");
     }
     // ЗАПУСТИЛИ ервис    public BluetoothLeServiceNew mBluetoothLeService = null;
-    public void initList(){
-        Log.e(TAG,"Activity to frag initList()---");
+    public void initList() {
+        Log.e(TAG, "Activity to frag initList()---");
         //            setListAdapter(pop);//создали адаптер для работы
         //--------ЭТО делать надо  1 раз только иначе падает!!
-  //      ArrayList<Sensor> item =  mBluetoothLeService.mbleDot;
-     //     ArrayList<Sensor> item =  parentActivity.mBluetoothLeServiceM.mbleDot;
-        ArrayList<Object> it  = new  ArrayList();
+        //      ArrayList<Sensor> item =  mBluetoothLeService.mbleDot;
+        //     ArrayList<Sensor> item =  parentActivity.mBluetoothLeServiceM.mbleDot;
+        ArrayList<Object> it = new ArrayList();
         RunDataHub app = ((RunDataHub) getActivity().getApplicationContext());
-        if(app.mBluetoothLeServiceM != null){
-            Log.e(TAG,"Activity to frag initList()--- mbleDot.size= " + app.mBluetoothLeServiceM.mbleDot.size());
+        if (app.mBluetoothLeServiceM != null) {
+            Log.e(TAG, "Activity to frag initList()--- mbleDot.size= " + app.mBluetoothLeServiceM.mbleDot.size());
             ArrayList<Sensor> item = app.mBluetoothLeServiceM.mbleDot;
-            it = (ArrayList)(Object)item;
+            it = (ArrayList) (Object) item;
+
+            PopupAdapter pop = new PopupAdapter(it);
+
+            setListAdapter(pop);//создали адаптер для работы
+            //final ArrayAdapter
+            adapter = (ArrayAdapter) getListAdapter();//int count = adapter.getCount();
         }
-   //     it.add(new Sensor());
-
-        PopupAdapter pop = new PopupAdapter(it);
-
-        setListAdapter(pop);//создали адаптер для работы
-        //final ArrayAdapter
-        adapter = (ArrayAdapter) getListAdapter();//int count = adapter.getCount();
 
     }
 // ЗАПУСТИЛИ ервис    public void upd(){

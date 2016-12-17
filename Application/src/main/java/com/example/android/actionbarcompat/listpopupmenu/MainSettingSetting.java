@@ -30,7 +30,7 @@ import com.portfolio.alexey.connector.Sensor;
 public class MainSettingSetting  extends Activity implements View.OnClickListener{
     private final int EDIT_NAME= 456;
     private final int GET_URL_RING= 567;
-    //private  int mItem= 0;
+    private  int mItem= 0;
     private Sensor sensor;
     final   String TAG = getClass().getSimpleName();
 //    private void getSttingInSensor(int idView, Object object ){
@@ -55,13 +55,13 @@ public class MainSettingSetting  extends Activity implements View.OnClickListene
         setContentView(R.layout.activity_main_setting);
         //--------------------------
         final Intent intent = getIntent();
-        int i = intent.getIntExtra(MainActivity.EXTRAS_DEVICE_ITEM,0);
+        mItem = intent.getIntExtra(MainActivity.EXTRAS_DEVICE_ITEM,0);
         RunDataHub app = ((RunDataHub) getApplicationContext());
         if((app.mBluetoothLeServiceM != null)
                 && (app.mBluetoothLeServiceM.mbleDot != null)
                 && (app.mBluetoothLeServiceM.mbleDot.size() > 0)){
-            sensor = app.mBluetoothLeServiceM.mbleDot.get(i);
-            Log.v(TAG,"sensor item= " + i);
+            sensor = app.mBluetoothLeServiceM.mbleDot.get(mItem);
+            Log.v(TAG,"sensor item= " + mItem);
         } else {
             finish();
         }
@@ -165,7 +165,7 @@ public class MainSettingSetting  extends Activity implements View.OnClickListene
     @Override//сюда прилетают ответы при возвращении из других ОКОН активити
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         String name,str = "?";Uri uri=null;
-        if(resultCode == RESULT_OK){
+        if(resultCode == RESULT_OK) {
             switch(requestCode){
                 case EDIT_NAME:
                     name = data.getStringExtra("EXTRAs_DEVICE_NAME");
@@ -182,6 +182,9 @@ public class MainSettingSetting  extends Activity implements View.OnClickListene
                     uri = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
                     urI = uri;
                     str = "Uri= " + uri;
+                    break;
+                case MainActivity.ACTIVITY_SETTING_SETTING:
+                    //обновить отображение
                     break;
             }
 
@@ -233,7 +236,7 @@ public class MainSettingSetting  extends Activity implements View.OnClickListene
                     intent.putExtra("EXTRAs_DEVICE_NAME", ((TextView)edv).getText().toString());
                     //     Log.v(TAG,"imageButtonName= " + ((TextView)edv).getText().toString());
                     //startActivity(intent);//на подклшючение к устройству
-                    startActivityForResult(intent,EDIT_NAME);
+                    startActivityForResult(intent,MainActivity.ACTIVITY_SETTING_SETTING);
                 }
                 break;
             case R.id.textViewName:
@@ -279,7 +282,11 @@ public class MainSettingSetting  extends Activity implements View.OnClickListene
                 break;
             case R.id.imageButtonTermometer:
                 Log.v(TAG,"imageButtonTermometer");
-
+                if(sensor != null){
+                    intent = new Intent(this, SettingMaker.class);
+                    intent.putExtra(MainActivity.EXTRAS_DEVICE_ITEM , mItem);
+                    startActivityForResult(intent,MainActivity.ACTIVITY_SETTING_SETTING);
+                }
                 break;
             //case R.id.imageButtonMeasurementMode:
             case R.id.textViewMeasurementMode:

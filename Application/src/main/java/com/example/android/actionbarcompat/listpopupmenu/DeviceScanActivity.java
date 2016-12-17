@@ -101,36 +101,7 @@ public class DeviceScanActivity extends ListActivity {//AppCompatActivity {//Act
         }
         //урали вверху системный бар
         if(getListView() != null ) getListView().getRootView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
-
-
-
-        //----------------------
-//        Intent gattServiceIntent = new Intent(this, BluetoothLeServiceNew.class);
-//        bindService(gattServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
     }
-//    private BluetoothLeServiceNew mBluetoothLeService;
-//    // Code to manage Service lifecycle.
-//    private final ServiceConnection mServiceConnection = new ServiceConnection() {
-//
-//        @Override
-//        public void onServiceConnected(ComponentName componentName, IBinder service) {
-//            //     mBluetoothLeService = ((BluetoothLeService.LocalBinder) service).getService();
-//            mBluetoothLeService = ((BluetoothLeServiceNew.LocalBinder) service).getService();
-//            if (!mBluetoothLeService.initialize()) {
-//                Log.e(TAG, "Unable to initialize Bluetooth");
-//                finish();
-//            }
-//            // Automatically connects to the device upon successful start-up initialization.
-//            //         mBluetoothLeService.connect(mDeviceAddress,true);
-//            Log.w(TAG, "---initialize ---onServiceConnected-----");
-//        }
-//
-//        @Override
-//        public void onServiceDisconnected(ComponentName componentName) {
-//            mBluetoothLeService = null;
-//            Log.v(TAG, "onServiceDisconnected");
-//        }
-//    };
     //вызывается при построениии и после вызова метода invalidateOptionsMenu();
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -204,20 +175,17 @@ public class DeviceScanActivity extends ListActivity {//AppCompatActivity {//Act
     @Override
     protected void onDestroy() {
         super.onDestroy();
-//        unbindService(mServiceConnection);
-//        mBluetoothLeService = null;
     }
 
     @Override//для лтист вюевера это короткий Клик, запускаем выбранное устройство на подключение
     protected void onListItemClick(ListView l, View v, int position, long id) {
         final BluetoothDevice device = mLeDeviceListAdapter.getDevice(position);
         if (device == null) return;
-
-
 //       final Intent intent = new Intent(this, DeviceControlActivityNew.class);
 //        intent.putExtra(DeviceControlActivityNew.EXTRAS_DEVICE_NAME, device.getName());
 //        intent.putExtra(DeviceControlActivityNew.EXTRAS_DEVICE_ADDRESS, device.getAddress());
         Intent intent = new Intent();
+
         intent.putExtra(MainActivity.EXTRAS_DEVICE_NAME, device.getName());
         intent.putExtra(MainActivity.EXTRAS_DEVICE_ADDRESS, device.getAddress());
         setResult(RESULT_OK, intent);
@@ -265,6 +233,7 @@ public class DeviceScanActivity extends ListActivity {//AppCompatActivity {//Act
         }
 
         public void addDevice(BluetoothDevice device) {
+            // TODO: 17.12.2016 контроль всех адресов ЧТО есть, вывод внизу с ЗАТЕМНЕНИЕМ, которые НЕ прошли по филтру 
             if(!mLeDevices.contains(device)) {
                 mLeDevices.add(device);
             }

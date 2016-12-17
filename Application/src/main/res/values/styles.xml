@@ -17,18 +17,20 @@
         <!-- Customize your theme here. -->
         <!--<item name="android:windowActionBar">false</item>-->
         <item name="android:windowActionBar">true</item>
-        <item name="android:actionBarSize">32dp</item>
+
         <!--<item name="android:windowDrawsSystemBarBackgrounds">false</item>-->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
+    <!--ШИРИНА бара, только для старого срабатывает!-->
+    <!--<item name="android:actionBarSize">32dp</item>-->
 
     <!--<style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">-->
     <style name="AppThemeM" parent="@android:style/Theme.Holo.Light">
         <!-- Customize your theme here. -->
         <item name="android:windowActionBar">true</item>
-        <item name="android:actionBarSize">32dp</item>
+
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>

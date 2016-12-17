@@ -21,7 +21,7 @@
     <!--можно указывать вес дочерних элементов в удобном виде, как в процентах. Такой способ широко -->
     <!--используется веб-мастерами при вёрстке.-->
 
-    <!--"ТЕРМОМЕТР"-->
+    <!--"Поиск"-->
     <!---->
     <LinearLayout
         android:orientation="horizontal"
@@ -31,8 +31,8 @@
         android:layout_marginBottom="@dimen/iten_vertical_gap_wight">
 
         <TextView
-            android:text="ТЕРМОМЕТР"
-            android:id="@+id/textViewGroupThermometer"
+            android:text=""
+            android:id="@+id/textViewGroupFind"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:lines="1"
@@ -51,8 +51,8 @@
         android:layout_marginBottom="@dimen/iten_vertical_gap_wight">
         <!--TERMOMETER-->
         <TextView
-            android:text="Термометр"
-            android:id="@+id/textViewLabelTermometer"
+            android:text="Поиск"
+            android:id="@+id/textViewLabelFind"
             android:layout_height="match_parent"
             android:layout_width="wrap_content"
             android:layout_weight="0"
@@ -60,21 +60,52 @@
             android:gravity="left|center_vertical"
             android:textColor="@color/colorText"
             android:lines="1"
-            android:textSize="@dimen/iten_text_size" />
+            android:textSize="24sp"
+            android:textStyle="normal|bold" />
 
         <TextView
-            android:id="@+id/textViewTermometer"
+            android:text="Relsib50"
+            android:id="@+id/textViewFindName"
             android:layout_height="match_parent"
-            android:layout_width="match_parent"
-            android:layout_marginLeft="7dp"
-            android:layout_weight="100"
+            android:layout_width="wrap_content"
+            android:layout_weight="0"
+            android:layout_marginLeft="10dp"
             android:textColor="@color/colorTextlight"
             android:textSize="@dimen/iten_text_size"
             android:textAlignment="gravity"
-            android:paddingRight="10dp"
+            android:paddingRight="5dp"
             android:lines="1"
             android:textStyle="normal|bold"
             android:gravity="right|center_vertical" />
+        <TextView
+            android:text="ID:"
+            android:id="@+id/textViewFindLabelId"
+            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_weight="0"
+            android:layout_marginLeft="5dp"
+            android:textColor="@color/colorTextlight"
+            android:textSize="@dimen/iten_text_size"
+            android:textAlignment="gravity"
+            android:paddingRight="0dp"
+            android:lines="1"
+            android:textStyle="normal|bold"
+            android:gravity="right|center_vertical" />
+        <TextView
+            android:text="hmkhkjhlkjvjhgkjhj5567788990"
+            android:id="@+id/textViewFindAdress"
+            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_weight="100"
+            android:layout_marginLeft="5dp"
+            android:textColor="@color/colorTextlight"
+            android:textSize="@dimen/iten_text_size"
+            android:paddingRight="5dp"
+            android:lines="1"
+            android:textStyle="normal|bold"
+        android:gravity="right|center_vertical|end"
+             />
+        <!--android:textAlignment="viewEnd"-->
 
         <ImageButton
             android:layout_width="wrap_content"
@@ -83,20 +114,45 @@
             android:background="@color/colorBackground"
             android:src="@drawable/ic_chevron_right_black_24dp"
             android:id="@+id/imageButtonFind"
-            android:layout_weight="0" />
+            android:layout_weight="0"
+            android:textAlignment="gravity"
+
+           android:gravity="right|center_vertical"
+            />
+        <!--android:paddingRight="10dp"-->
         <!--app:srcCompat="@drawable/ic_chevron_right_black_24dp"-->
     </LinearLayout>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:background="@color/colorBackgroundGrey"
+        android:layout_height="@dimen/iten_setting_wight"
+        android:layout_marginBottom="@dimen/iten_vertical_gap_wight">
 
+    <!--"ИНФОРМАЦИЯ"-->
+        <TextView
+            android:text="ИНФОРМАЦИЯ"
+            android:id="@+id/textViewGroupInformation"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:lines="1"
+            android:textColor="@color/colorTextlight"
+            android:layout_marginLeft="10dp"
+            android:gravity="left|bottom"
+            android:textSize="@dimen/iten_text_size"
+            android:paddingBottom="5dp" />
+    </LinearLayout>
+    <!--Номер модели-->
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:background="@color/colorBackground"
         android:layout_height="@dimen/iten_setting_wight"
         android:layout_marginBottom="@dimen/iten_vertical_gap_wight">
-        <!--measurement mode-->
+
         <TextView
-            android:text="Режим измерения"
-            android:id="@+id/textViewLabelMeasurementMode"
+            android:text="Номер модели"
+            android:id="@+id/textViewLabelModelNumber"
             android:layout_height="match_parent"
             android:layout_width="wrap_content"
             android:layout_weight="0"
@@ -107,8 +163,7 @@
             android:textSize="@dimen/iten_text_size" />
 
         <TextView
-            android:id="@+id/textViewMeasurementMode"
-            android:text="Медицинский"
+            android:id="@+id/textViewModelNumber"
             android:layout_height="match_parent"
             android:layout_width="match_parent"
             android:layout_marginLeft="7dp"
@@ -120,16 +175,143 @@
             android:lines="1"
             android:textStyle="normal|bold"
             android:gravity="right|center_vertical" />
+    </LinearLayout>
 
-        <!--<ImageButton-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:layout_marginRight="7dp"-->
-            <!--android:background="@color/colorBackground"-->
-            <!--android:src="@drawable/ic_chevron_right_black_24dp"-->
-            <!--android:id="@+id/imageButtonMeasurementMode"-->
-            <!--android:layout_weight="0" />-->
-        <!--app:srcCompat="@drawable/ic_chevron_right_black_24dp"-->
+    <!--Серийный номер-->
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:background="@color/colorBackground"
+        android:layout_height="@dimen/iten_setting_wight"
+        android:layout_marginBottom="@dimen/iten_vertical_gap_wight">
+
+        <TextView
+            android:text="Серийный номер"
+            android:id="@+id/textViewLabelSerialNumber"
+            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_weight="0"
+            android:layout_marginLeft="10dp"
+            android:gravity="left|center_vertical"
+            android:textColor="@color/colorText"
+            android:lines="1"
+            android:textSize="@dimen/iten_text_size" />
+
+        <TextView
+            android:id="@+id/textViewSerialNumber"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:layout_marginLeft="7dp"
+            android:layout_weight="100"
+            android:textColor="@color/colorTextlight"
+            android:textSize="@dimen/iten_text_size"
+            android:textAlignment="gravity"
+            android:paddingRight="10dp"
+            android:lines="1"
+            android:textStyle="normal|bold"
+            android:gravity="right|center_vertical" />
+    </LinearLayout>
+    <!--Версия прошивки-->
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:background="@color/colorBackground"
+        android:layout_height="@dimen/iten_setting_wight"
+        android:layout_marginBottom="@dimen/iten_vertical_gap_wight">
+
+        <TextView
+            android:text="Версия прошивки"
+            android:id="@+id/textViewLabelFirmwareRevision"
+            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_weight="0"
+            android:layout_marginLeft="10dp"
+            android:gravity="left|center_vertical"
+            android:textColor="@color/colorText"
+            android:lines="1"
+            android:textSize="@dimen/iten_text_size" />
+
+        <TextView
+            android:id="@+id/textViewFirmwareRevision"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:layout_marginLeft="7dp"
+            android:layout_weight="100"
+            android:textColor="@color/colorTextlight"
+            android:textSize="@dimen/iten_text_size"
+            android:textAlignment="gravity"
+            android:paddingRight="10dp"
+            android:lines="1"
+            android:textStyle="normal|bold"
+            android:gravity="right|center_vertical" />
+    </LinearLayout>
+    <!--Аппаратная версия-->
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:background="@color/colorBackground"
+        android:layout_height="@dimen/iten_setting_wight"
+        android:layout_marginBottom="@dimen/iten_vertical_gap_wight">
+
+        <TextView
+            android:text="Аппаратная версия"
+            android:id="@+id/textViewLabelHardwareRevision"
+            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_weight="0"
+            android:layout_marginLeft="10dp"
+            android:gravity="left|center_vertical"
+            android:textColor="@color/colorText"
+            android:lines="1"
+            android:textSize="@dimen/iten_text_size" />
+
+        <TextView
+            android:id="@+id/textViewHardwareRevision"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:layout_marginLeft="7dp"
+            android:layout_weight="100"
+            android:textColor="@color/colorTextlight"
+            android:textSize="@dimen/iten_text_size"
+            android:textAlignment="gravity"
+            android:paddingRight="10dp"
+            android:lines="1"
+            android:textStyle="normal|bold"
+            android:gravity="right|center_vertical" />
+    </LinearLayout>
+    <!--Версия ПО-->
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:background="@color/colorBackground"
+        android:layout_height="@dimen/iten_setting_wight"
+        android:layout_marginBottom="@dimen/iten_vertical_gap_wight">
+
+        <TextView
+            android:text="Версия ПО"
+            android:id="@+id/textViewLabelSoftwareRevision"
+            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_weight="0"
+            android:layout_marginLeft="10dp"
+            android:gravity="left|center_vertical"
+            android:textColor="@color/colorText"
+            android:lines="1"
+            android:textSize="@dimen/iten_text_size" />
+
+        <TextView
+            android:id="@+id/textViewSoftwareRevision"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:layout_marginLeft="7dp"
+            android:layout_weight="100"
+            android:textColor="@color/colorTextlight"
+            android:textSize="@dimen/iten_text_size"
+            android:textAlignment="gravity"
+            android:paddingRight="10dp"
+            android:lines="1"
+            android:textStyle="normal|bold"
+            android:gravity="right|center_vertical" />
     </LinearLayout>
 
 </LinearLayout>

@@ -10,28 +10,22 @@ import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Vibrator;
-import android.preference.ListPreference;
-import android.preference.Preference;
-import android.preference.PreferenceFragment;
-import android.preference.PreferenceManager;
-import android.preference.RingtonePreference;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
+
 
 import com.portfolio.alexey.connector.Sensor;
+import com.portfolio.alexey.connector.Util;
 
 //public class MainSettingSetting extends AppCompatActivity implements View.OnClickListener{
-public class SettingMaker extends AppCompatActivity implements View.OnClickListener{
+public class SettingMaker extends Activity implements View.OnClickListener{
     //private  int mItem= 0;
-    private Sensor sensor;
     final   String TAG = getClass().getSimpleName();
+    private  int mItem= 0;
+    private Sensor sensor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,26 +33,19 @@ public class SettingMaker extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_setting_maker);
         //--------------------------
         final Intent intent = getIntent();
-        int i = intent.getIntExtra(MainActivity.EXTRAS_DEVICE_ITEM,0);
+        mItem = intent.getIntExtra(MainActivity.EXTRAS_DEVICE_ITEM,0);
         RunDataHub app = ((RunDataHub) getApplicationContext());
         if((app.mBluetoothLeServiceM != null)
                 && (app.mBluetoothLeServiceM.mbleDot != null)
                 && (app.mBluetoothLeServiceM.mbleDot.size() > 0)){
-            sensor = app.mBluetoothLeServiceM.mbleDot.get(i);
-            Log.v(TAG,"sensor item= " + i);
+            sensor = app.mBluetoothLeServiceM.mbleDot.get(mItem);
+            Log.v(TAG,"sensor item= " + mItem);
         } else {
             finish();
         }
         //-------------------------------------------
-        View view;
-        view = findViewById(R.id.imageButtonFind);
-        view.setOnClickListener(this);
-        if(sensor != null){
-            if(view instanceof TextView) {
-               if(sensor.deviceLabel != null) ((TextView)view).setText(sensor.deviceLabel);
-                else ((TextView)view).setText("?");
-            }
-        }
+        updateTextString();
+        findViewById(R.id.imageButtonFind).setOnClickListener(this);
 
         ActionBar actionBar = getActionBar();//getSupportActionBar();??--это решалось в другом методе(getDelegate().getSupportActionBar();)
         if (actionBar != null) {
@@ -85,62 +72,58 @@ public class SettingMaker extends AppCompatActivity implements View.OnClickListe
         } else Log.e(TAG,"actionBar == null--");
         //   SampleGattAttributes.attributes.get("dd");
     }
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        Log.w(TAG,"onOptionsItemSelected= "+ item);
-        Intent intent = new Intent();
-      //  intent.putExtra(MainActivity.EXTRAS_DEVICE_NAME, device.getName());
-      //  intent.putExtra(MainActivity.EXTRAS_DEVICE_ADDRESS, device.getAddress());
-        setResult(RESULT_OK, intent);
-        finish();
-        return true;
+    private void updateTextString(){
+        if(sensor != null){
+            Util.setTextToTextView(sensor.deviceName,R.id.textViewFindName, this);
+//показывем только последних 5 цифр адреса
+            String str = sensor.mBluetoothDeviceAddress;
+            if(sensor.mBluetoothDeviceAddress != null){
+                int i = str.length() - 7;
+                if(i < 0) i = 0;
+                str = str.substring(i);
+            }
+            Util.setTextToTextView(str,R.id.textViewFindAdress, this);
+            Util.setTextToTextView(sensor.modelNumber,R.id.textViewModelNumber, this);
+            Util.setTextToTextView(sensor.serialNumber,R.id.textViewSerialNumber, this);
+            Util.setTextToTextView(sensor.firmwareRevision,R.id.textViewFirmwareRevision, this);
+            Util.setTextToTextView(sensor.hardwareRevision,R.id.textViewHardwareRevision, this);
+            Util.setTextToTextView(sensor.softwareRevision,R.id.textViewSoftwareRevision, this);
+        }
     }
+
     @Override
     protected void onResume() {
         super.onResume();
         // установка ИЗОБРАЖЕНИЕ на всь экран, УБИРАЕМ СВЕРХУ И СНИЗУ панели системные
-        findViewById(R.id.textViewName).getRootView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
+        findViewById(R.id.textViewFindName).getRootView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
 
     }
-
-
-    //    protected void onLck(ListView l, View v, int position, long id) {
-//        final BluetoothDevice device = mLeDeviceListAdapter.getDevice(position);
-//        if (device == null) return;
-//        final Intent intent = new Intent(this, DeviceControlActivity.class);
-//        intent.putExtra(DeviceControlActivity.EXTRAS_DEVICE_NAME, device.getName());
-//        intent.putExtra(DeviceControlActivity.EXTRAS_DEVICE_ADDRESS, device.getAddress());
-//        if (mScanning) {
-//            mBluetoothAdapter.stopLeScan(mLeScanCallback);
-//            mScanning = false;
-//        }
-//        startActivity(intent);//на подклшючение к устройству
-//    }
-//
+    private  String mName;
+    private  String mAdress;
     @Override//сюда прилетают ответы при возвращении из других ОКОН активити
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        String name,str = "?";Uri uri=null;
-        if(resultCode == RESULT_OK){
-            switch(requestCode){
-                case EDIT_NAME:
-                    name = data.getStringExtra("EXTRAs_DEVICE_NAME");
-                    str = "DEVICE_NAME= " + name;
-                    View edv = findViewById(R.id.textViewName);
-                    if(edv instanceof TextView){
-                        if((name != null) && (name.length() > 0)) ((TextView)edv).setText(name);
+        Uri uri=null;
+        if((resultCode == RESULT_OK) && (requestCode == MainActivity.ACTIVITY_SETTING_MAKER)){
+            mName = data.getStringExtra(MainActivity.EXTRAS_DEVICE_NAME);
+            mAdress = data.getStringExtra(MainActivity.EXTRAS_DEVICE_ADDRESS);
+//            Util.setTextToTextView(mName,R.id.textViewFindName, this);
+//            Util.setTextToTextView(mAdress,R.id.textViewFindAdress, this);
+            if(sensor != null){
+                if(mName != null)sensor.deviceName = mName;
+                if(mAdress != null){
+                    sensor.mBluetoothDeviceAddress = mAdress;
+                    //
+                    RunDataHub app = ((RunDataHub) getApplicationContext());
+                    if(app.mBluetoothLeServiceM != null){
+                        app.mBluetoothLeServiceM.connect(mAdress,true);
+                        Log.v(TAG,"sensor item= " + mItem + "  connectAdress= " + mAdress);
                     }
-                    if(sensor != null){
-                        if(name != null)sensor.deviceLabel = name;
-                    }
-                    break;
-                case GET_URL_RING:
-                    uri = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
-                    urI = uri;
-                    str = "Uri= " + uri;
-                    break;
+                }
             }
 
-            Log.v(TAG,"requestCode= "+ requestCode +"  resultCode= RESULT_OK    " +str);
+            updateTextString();
+            Log.v(TAG,"requestCode= "+ requestCode +"  resultCode= RESULT_OK    name= " +mName
+            +"   adress= "+ mAdress);
         } else{
             Log.e(TAG,"requestCode= "+ requestCode+"  resultCode= OBLOM");
         }
@@ -151,313 +134,39 @@ public class SettingMaker extends AppCompatActivity implements View.OnClickListe
 //    }
         super.onActivityResult(requestCode, resultCode, data);
     }
-    private Uri urI = null;
-
-    static private Marker marker = new Marker();
-    static boolean flag = false;
-    private int index = 0;
-    private void changeMeasurementMode(){
-        View v,v2;
-        if(sensor == null) return;
-        if(sensor.getMeasurementMode() == 0){//медецинский
-           v = findViewById(R.id.activity_main_setting_item2);
-            v2 = findViewById(R.id.activity_main_setting_item3);
-        }else{
-            v = findViewById(R.id.activity_main_setting_item3);
-            v2 = findViewById(R.id.activity_main_setting_item2);
-        }
-        if(v != null) v.setVisibility(View.VISIBLE);
-        if(v2 != null) v2.setVisibility(View.GONE);
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Log.w(TAG,"onOptionsItemSelected= "+ item);
+        Intent intent = new Intent();
+        intent.putExtra(MainActivity.EXTRAS_DEVICE_NAME, mName);
+        intent.putExtra(MainActivity.EXTRAS_DEVICE_ADDRESS, mAdress);
+        setResult(RESULT_OK, intent);
+        finish();
+        return true;
     }
     @Override
     public void onClick(View view) {
         Log.w(TAG,"onClick= "+view);
-        String action="";Intent intent;Vibrator vibrator;
-        Uri alert;
-
+        Intent intent;
         switch (view.getId()){
             case android.R.id.home:
                 Log.v(TAG,"home");
+//                intent = new Intent();
+//                intent.putExtra(MainActivity.EXTRAS_DEVICE_NAME, mName);
+//                intent.putExtra(MainActivity.EXTRAS_DEVICE_ADDRESS, mAdress);
+//                setResult(RESULT_OK, intent);
+//                finish();
+                break;
+            case R.id.imageButtonFind:
+                Log.v(TAG,"imageButtonFind");
 
-                break;
-            case R.id.imageButtonName:
-                Log.v(TAG,"imageButtonName");
-                intent = new Intent(this, SettingName.class);
-                View edv = findViewById(R.id.textViewName);
-                if(edv instanceof TextView){
-                    intent.putExtra("EXTRAs_DEVICE_NAME", ((TextView)edv).getText().toString());
-                    //     Log.v(TAG,"imageButtonName= " + ((TextView)edv).getText().toString());
-                    //startActivity(intent);//на подклшючение к устройству
-                    startActivityForResult(intent,EDIT_NAME);
-                }
-                break;
-            case R.id.textViewName:
-                Log.v(TAG,"textViewName");
-                //   intent = new      Intent(Intent.ACTION_EDIT);//ACTION_PROCESS_TEXT
-//                intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_RINGTONE);
-//                intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, "Select Ringtone");
-//
-//                urie = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-//                intent.putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI, urie);
-//                intent.putExtra(RingtoneManager.EXTRA_RINGTONE_DEFAULT_URI, urie);
-
-                //  startActivityForResult(intent, 77);
-                //if(view.isActivated())
-                // view.setActivated(!view.isActivated());
-//               view.setFocusable(flag);
-//                view.setFocusableInTouchMode(flag);
-//                view.refreshDrawableState();
-//                flag = !flag;
-//               // view.setEnabled(!view.isEnabled());
-//
-                break;
-
-
-
-            case R.id.imageButtonMarker:
-                Log.v(TAG,"imageButtonMarker");
-//======= ЭТО работает тОЛЬКО с ВЕКТОРАМИ и бит мап, с ШЕПАМИ НЕ работает!!===================================
-//               index++;
-//                if(index > 2) index = 0;
-//                ((ImageView)view).setImageLevel(index);
-// ========================================
-
-                //   ((LevelListDrawable)view.getBackground()).setLevel(1);
-                // if(view.getBackground().getLevel() >= 2) view.getBackground().setLevel(0);
-                // else view.getBackground().setLevel(view.getBackground().getLevel() + 1);
-//пока временно решил сделать так, через фон
-                if(sensor != null){
-                    sensor.markerColor = Marker.getNextItem(sensor.markerColor);
-                    ((ImageView)view).setBackgroundResource(Marker.getIdImg(sensor.markerColor));
-                    Log.v(TAG,"imageButtonMarker= " + sensor.markerColor);
-                }
-                break;
-            case R.id.imageButtonTermometer:
-                Log.v(TAG,"imageButtonTermometer");
-
-                break;
-            //case R.id.imageButtonMeasurementMode:
-            case R.id.textViewMeasurementMode:
-                Log.v(TAG,"imageButtonMeasurementMode");
-                if(view instanceof TextView){
-                    TextView v = (TextView)view;
-                    if(sensor != null){
-                        sensor.changeMeasurementMode();//меняем моду измерения
-                        v.setText(sensor.getStringMeasurementMode());
-                        Log.v(TAG,"imageButtonMeasurementMode = "
-                                +sensor.getStringMeasurementMode() +
-                        "   MeasurementMode= " + sensor.getMeasurementMode());
-                    }
-                    changeMeasurementMode();
-                }
-                break;
-            case R.id.imageButtonMelody:
-                Log.v(TAG,"imageButtonMelody");
-//работает
-//                intent = new Intent(Intent.ACTION_PICK);
-//                intent.setType("*/*");
-//                startActivityForResult(intent, 1);
-                //====================
-//                intent = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER);
-//                intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, "Select ringtone for notifications:");
-//                intent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_SILENT, false);
-//                intent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_DEFAULT, true);
-//                intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE,RingtoneManager.TYPE_NOTIFICATION);
-//                startActivityForResult(intent,77);
-
-                pickRingtone();
-                break;
-            case R.id.imageButtonVibration:
-                Log.v(TAG,"imageButtonVibration");
-                action = VIBRATOR_SERVICE;
-                //startActivity(new Intent(action));
-                // https://geektimes.ru/post/232885/
-                vibrator = (Vibrator) getSystemService (VIBRATOR_SERVICE);
-                try {
-                    vibrator.vibrate(400);
-                }catch (Exception e){
-                    Log.e(TAG, " vibrator ERR= " + e);
-                }
-                break;
-            case R.id.imageButtonTemperaturesAbove:
-                Log.v(TAG,"imageButtonTemperaturesAbove");
-// https://geektimes.ru/post/232885/
-                vibrator = (Vibrator) getSystemService (VIBRATOR_SERVICE);
-                try {
-                    vibrator.vibrate(400);
-                }catch (Exception e){
-                    Log.e(TAG, " vibrator ERR= " + e);
-                }
-                break;
-            case R.id.imageButtonTemperaturesBelow:
-                Log.v(TAG,"imageButtonTemperaturesBelow");
-                playerRingtone(0f, urI);
-                break;
-            case R.id.imageButtonDecor:
-                Log.v(TAG,"imageButtonDecor");
-                playerRingtone(1f,  urI);
+                intent = new Intent(this, DeviceScanActivity.class);
+                // фильтр поиска устройств
+                intent.putExtra(MainActivity.EXTRAS_DEVICE_NAME_FILTR, "");
+                startActivityForResult(intent, MainActivity.ACTIVITY_SETTING_MAKER);//на поиск к устройству
                 break;
             default:
         }
         return;
     }
-    //http://stackoverflow.com/questions/7671637/how-to-set-ringtone-with-ringtonemanager-action-ringtone-picker
-// http://www.ceveni.com/2009/07/ringtone-picker-in-android-with-intent.html
-    public void pickRingtone() {
-        // TODO Auto-generated method.   stub
-
-        Intent intent = new      Intent(RingtoneManager.ACTION_RINGTONE_PICKER);
-        intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_RINGTONE);
-        intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, "Select Ringtone");
-
-        // for existing ringtone
-        Uri urie;
-//        urie =     RingtoneManager.getActualDefaultRingtoneUri(
-//                getApplicationContext(), RingtoneManager.TYPE_RINGTONE);
-        urie = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-        intent.putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI, urie);
-        intent.putExtra(RingtoneManager.EXTRA_RINGTONE_DEFAULT_URI, urie);
-
-        startActivityForResult(intent, GET_URL_RING);
-    }
-    // https://geektimes.ru/post/232885/
-// Что бы звук не был тихим:
-// stackoverflow.com/questions/8278939/android-mediaplayer-volume-is-very-low-already-adjusted-volume
-    //пример: playerRingtone(0.8f, null); рингтонг 0.8 от макимума звука и мелодия по умолчанию
-    //пример: playerRingtone(0f, Uri); ГРОМКОСТ звука СИТЕМНОЙ настройки проигрывателя и мелодия по Uri
-    public void playerRingtone(Float setVolume, Uri uriRingtone ){
-        if(uriRingtone == null){// Сигнал по умолчанию
-            uriRingtone = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-        }
-        MediaPlayer mediaPlayer= new MediaPlayer();
-        if(setVolume == 0){//ГРОМКОСТЬ системных настроек
-            setVolume = 1f;
-        }else{
-            // (Завист только от setVolume)НА ПОЛНУЮ гмкость ВНЕ зависмости от УСТАНОВКИ в СИСТЕМЕ!!!
-//http://stackoverflow.com/questions/8278939/android-mediaplayer-volume-is-very-low-already-adjusted-volume
-            AudioManager amanager = (AudioManager) this.getSystemService(Context.AUDIO_SERVICE);
-            // int maxVolume = amanager.getStreamMaxVolume(AudioManager.STREAM_ALARM);
-            int maxVolume = amanager.getStreamVolume(AudioManager.STREAM_ALARM);
-            amanager.setStreamVolume(AudioManager.STREAM_ALARM, maxVolume, 0);
-            mediaPlayer.setAudioStreamType(AudioManager.STREAM_ALARM); // this is important.
-        }
-        //устанавливает ОТ максимума!!!
-        mediaPlayer.setVolume(setVolume, setVolume);
-        try {
-            mediaPlayer.setDataSource(getApplicationContext(), uriRingtone);
-            //  mediaPlayer.setLooping(looping);
-            mediaPlayer.prepare();
-            mediaPlayer.start();
-            mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                //после проигрывания попадает сюда
-                @Override
-                public void onCompletion(MediaPlayer mp) {
-                    //останавливается ПЛЕЕР и выбрасывается из памяти
-                    mp.release();//Это закончит, освободить, отпустить
-                }
-            });
-        } catch (Exception e) {
-            Toast.makeText(getApplicationContext(), "Error default media ", Toast.LENGTH_LONG).show();
-            Log.e(TAG, "  Ringtone ERR= " + e);
-        }
-
-    }
-
-    public static class NotificationPreferenceFragment extends PreferenceFragment {
-        @Override
-        public void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            addPreferencesFromResource(R.xml.pref_notification);
-            setHasOptionsMenu(true);
-
-            // Bind the summaries of EditText/List/Dialog/Ringtone preferences
-            // to their values. When their values change, their summaries are
-            // updated to reflect the new value, per the Android Design
-            // guidelines.
-            //"notifications_new_message_ringtone" - ключи полей в ХМЛ указаны
-            bindPreferenceSummaryToValue(findPreference("notifications_new_message_ringtone"));
-        }
-
-        @Override
-        public boolean onOptionsItemSelected(MenuItem item) {
-            int id = item.getItemId();
-            if (id == android.R.id.home) {
-                startActivity(new Intent(getActivity(), SettingMaker.class));
-                return true;
-            }
-            return super.onOptionsItemSelected(item);
-        }
-    }
-    /**
-     * Binds a preference's summary to its value. More specifically, when the
-     * preference's value is changed, its summary (line of text below the
-     * preference title) is updated to reflect the value. The summary is also
-     * immediately updated upon calling this method. The exact display format is
-     * dependent on the type of preference.
-     *
-     * @see #sBindPreferenceSummaryToValueListener
-     */
-    private static void bindPreferenceSummaryToValue(Preference preference) {
-        // Set the listener to watch for value changes.
-        preference.setOnPreferenceChangeListener(sBindPreferenceSummaryToValueListener);
-
-        // Trigger the listener immediately with the preference's
-        // current value.
-        sBindPreferenceSummaryToValueListener.onPreferenceChange(preference,
-                PreferenceManager
-                        .getDefaultSharedPreferences(preference.getContext())
-                        .getString(preference.getKey(), ""));
-    }
-    /**
-     * A preference value change listener that updates the preference's summary
-     * to reflect its new value.
-     */
-    private static Preference.OnPreferenceChangeListener sBindPreferenceSummaryToValueListener =
-            new Preference.OnPreferenceChangeListener() {
-                @Override
-                public boolean onPreferenceChange(Preference preference, Object value) {
-                    String stringValue = value.toString();
-
-                    if (preference instanceof ListPreference) {
-                        // For list preferences, look up the correct display value in
-                        // the preference's 'entries' list.
-                        ListPreference listPreference = (ListPreference) preference;
-                        int index = listPreference.findIndexOfValue(stringValue);
-
-                        // Set the summary to reflect the new value.
-                        preference.setSummary(
-                                index >= 0
-                                        ? listPreference.getEntries()[index]
-                                        : null);
-
-                    } else if (preference instanceof RingtonePreference) {
-                        // For ringtone preferences, look up the correct display value
-                        // using RingtoneManager.
-                        if (TextUtils.isEmpty(stringValue)) {
-                            // Empty values correspond to 'silent' (no ringtone).
-                            preference.setSummary("silent");
-
-                        } else {
-                            Ringtone ringtone = RingtoneManager.getRingtone(
-                                    preference.getContext(), Uri.parse(stringValue));
-
-                            if (ringtone == null) {
-                                // Clear the summary if there was a lookup error.
-                                preference.setSummary(null);
-                            } else {
-                                // Set the summary to reflect the new ringtone display
-                                // name.
-                                String name = ringtone.getTitle(preference.getContext());
-                                preference.setSummary(name);
-                            }
-                        }
-
-                    } else {
-                        // For all other preferences, set the summary to the value's
-                        // simple string representation.
-                        preference.setSummary(stringValue);
-                    }
-                    return true;
-                }
-            };
 }
