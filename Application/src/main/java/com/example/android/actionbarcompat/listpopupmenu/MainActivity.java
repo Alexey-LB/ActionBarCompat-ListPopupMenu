@@ -51,7 +51,10 @@ public class MainActivity extends AppCompatActivity {// ActionBarActivity {
     public  final static String EXTRAS_DEVICE_NAME_FILTR = "EXTRAS_DEVICE_NAME_FILTR";
     public  final static String EXTRAS_DEVICE_ADDRESS = "EXTRAS_DEVICE_ADDRESS";
     public  final static String EXTRAS_DEVICE_ITEM = "EXTRAS_DEVICE_ITEM";
+
+ //ОБЯЗАТЕЛЬНО !! ввести в практику передачу тила для порожденного окна!!
     public  final static String EXTRA_BAR_TITLE = "EXTRA_BAR_TITLE";
+
     public  final static int MAINACTIVITY = 11111;
     public final  static int ACTIVITY_SETTING_SETTING = 22222;
     public final  static int ACTIVITY_SETTING_MAKER = 444444;

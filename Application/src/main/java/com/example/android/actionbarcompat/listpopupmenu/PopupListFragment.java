@@ -386,34 +386,28 @@ public class PopupListFragment extends ListFragmentA  {
     @Override
     public void onPrepareOptionsMenu(Menu menu){}
     //
-    synchronized private void updateViewItem(Sensor sensor, View view){
+
+    synchronized private void updateViewItem(boolean allUpdate,Sensor sensor, View view){
         if(!Util.isNoNull(sensor,view)) return;
         String str;int bl,rssi;
-        // по умолчанию из метода toString -> заталкивается в R.id.text1, по этому мы сами это НЕ делаем
-        if(sensor.mConnectionState == BluetoothLeServiceNew.STATE_CONNECTED){
-            str = sensor.getStringIntermediateValue(false,true);
-            bl = sensor.battery_level;
-            rssi = sensor.rssi;
-        } else {
-            str = "Нет подключения";
-            bl = 0;
-            rssi = 0;
+        if(allUpdate){
+            Util.setDrawableToImageView(sensor.markerColor,R.id.marker, view);
+            Util.setTextToTextView(sensor.getStringMinTemperature(false,true),R.id.numbe_min, view);
+            Util.setTextToTextView(sensor.getStringMaxTemperature(false,true),R.id.numbe_max, view);
         }
+        // по умолчанию из метода toString -> заталкивается в R.id.text1, по этому мы сами это НЕ делаем
+        boolean b = sensor.mConnectionState == BluetoothLeServiceNew.STATE_CONNECTED;
         //присвоил текущее значение для отображения
-        Util.setTextToTextView(str,R.id.numbe_cur, view);
-        Util.setLevelToImageView(bl,R.id.battery, view);
- //       Util.setLevelToImageView(rssi,R.id.signal, view);
-
-
-        //    ((Sensor)adapter.getItem(position)).deviceLabelView = view.findViewById(R.id.imgTitle);
-  //      ((Sensor)adapter.getItem(position)).markerColorView = view.findViewById(R.id.marker);
-
+        Util.setTextToTextView(b? sensor.getStringIntermediateValue(false,true):
+                "Нет подкл.", R.id.numbe_cur, view);
+        Util.setLevelToImageView(b? sensor.battery_level: 0, R.id.battery, view);
+        Util.setLevelToImageView(b? sensor.rssi: 0, R.id.signal, view);
     }
     public void updateView(){
         if((adapter == null) || (adapter.getCount() == 0)) return;
         int i;
         for(i = 0; i < adapter.getCount();i++){
-            updateViewItem((Sensor)adapter.getItem(i), getListView().getChildAt(i));
+            updateViewItem(false,(Sensor)adapter.getItem(i), getListView().getChildAt(i));
         }
     }
     //
@@ -438,8 +432,8 @@ public class PopupListFragment extends ListFragmentA  {
         //сам заводится и работает
         mHandler.postDelayed(new Runnable() {
             public void run() {
-        //            Log.v(TAG,"mHandler --");
-      //          updateView();
+                   // Log.v(TAG,"mHandler --");
+                updateView();
                 // повторяем через каждые 300 миллисекунд
                 if(mHandlerWork) mHandler.postDelayed(this, 300);
             }
@@ -999,14 +993,14 @@ return null;//fbButton_;
                 // по умолчанию из метода toString -> заталкивается в R.id.text1, по этому мы сами это НЕ делаем
     // ((Sensor)adapter.getItem(position)).deviceLabelView = view.findViewById(R.id.text1);
 
-      //          updateViewItem((Sensor) adapter.getItem(position),view);
+               updateViewItem(true,(Sensor) adapter.getItem(position),view);
 
-     ((Sensor)adapter.getItem(position)).intermediateValueView = view.findViewById(R.id.numbe_cur);
-     ((Sensor)adapter.getItem(position)).rssiView = view.findViewById(R.id.signal);
-     ((Sensor)adapter.getItem(position)).battery_levelView = view.findViewById(R.id.battery);
+//     ((Sensor)adapter.getItem(position)).intermediateValueView = view.findViewById(R.id.numbe_cur);
+//     ((Sensor)adapter.getItem(position)).rssiView = view.findViewById(R.id.signal);
+//     ((Sensor)adapter.getItem(position)).battery_levelView = view.findViewById(R.id.battery);
 
   //    ((Sensor)adapter.getItem(position)).deviceLabelView = view.findViewById(R.id.imgTitle);
-       ((Sensor)adapter.getItem(position)).markerColorView = view.findViewById(R.id.marker);
+  //     ((Sensor)adapter.getItem(position)).markerColorView = view.findViewById(R.id.marker);
 
 
       //                  view.findViewById(R.id.numbe_min);

@@ -55,11 +55,7 @@ public class MainSettingSetting  extends Activity implements View.OnClickListene
         Util.setTextToTextView(sensor.deviceLabel,R.id.textViewName,this,"?");
         findViewById(R.id.imageButtonMarker).setOnClickListener(this);
 
-        if(Util.isNoNull(sensor)){
-            int im = 0x7 & sensor.markerColor;
-            ((ImageView)findViewById(R.id.imageButtonMarker))
-                    .setBackgroundResource(Marker.getIdImg(im));
-        }
+        Util.setDrawableToImageView(sensor.markerColor,R.id.imageButtonMarker, this);
         //
         findViewById(R.id.imageButtonTermometer).setOnClickListener(this);
         findViewById(R.id.imageButtonVibration).setOnClickListener(this);
@@ -228,9 +224,6 @@ public class MainSettingSetting  extends Activity implements View.OnClickListene
 //               // view.setEnabled(!view.isEnabled());
 //
                 break;
-
-
-
             case R.id.imageButtonMarker:
                 Log.v(TAG,"imageButtonMarker");
 //======= ЭТО работает тОЛЬКО с ВЕКТОРАМИ и бит мап, с ШЕПАМИ НЕ работает!!===================================
@@ -241,8 +234,8 @@ public class MainSettingSetting  extends Activity implements View.OnClickListene
 //пока временно решил сделать так, через фон
                 if(sensor != null){
                     sensor.markerColor = Marker.getNextItem(sensor.markerColor);
-                    ((ImageView)view).setBackgroundResource(Marker.getIdImg(sensor.markerColor));
-                    Log.v(TAG,"imageButtonMarker= " + sensor.markerColor);
+                    Util.setDrawableToImageView(sensor.markerColor,R.id.imageButtonMarker, this);
+                     Log.v(TAG,"imageButtonMarker= " + sensor.markerColor);
                 }
                 break;
             //ПОИСК ТЕРМОmЕТРА!!!

@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.android.actionbarcompat.listpopupmenu.Marker;
 import com.example.android.actionbarcompat.listpopupmenu.R;
 
 /**
@@ -156,6 +157,30 @@ public class Util {
     static public boolean setLevelToImageView(int level, int viewID, View viewRoot) {
         return setLevelToImageView(level,  viewRoot.findViewById(viewID));
     }
+    //--------------------------------------------------------------------------------
+    //заносит данные во вювер с на МИНУС работаем с уровнями и,
+    // А ТАКЖЕ- если там тоже самое- не записывает в Вювер ,эеономия времени ОТРИСОВКИ
+    static public boolean setDrawableToImageView(int level, View view) {
+        if (isNoNull(level, view) && (view instanceof ImageView)) {
+            ImageView iv = ((ImageView) view);
+            //если ранее не запоминали то обновляем
+            if((iv.getTag() == null) || ((Integer)iv.getTag() != level)){
+                iv.setBackgroundResource(Marker.getIdImg( level));
+                iv.setTag( level);//чтоб не перезаписывать
+            }
+            return true;
+        }
+        return false;
+    }
+    //ПОИСК глобадьный по АКТИВНОСТИ- берет ПЕРВЫЙ попашийся элемент!
+    static public boolean setDrawableToImageView(int level, int viewID, Activity activity) {
+        return setDrawableToImageView(level,  activity.findViewById(viewID));
+    }
+    ////ПОИСК ЛОКАЛЬНЫЙ внутри  viewRoot- берет ПЕРВЫЙ попашийся элемент!
+    static public boolean setDrawableToImageView(int level, int viewID, View viewRoot) {
+        return setDrawableToImageView(level,  viewRoot.findViewById(viewID));
+    }
+    //-------------------------------------------------------------------------------
     //заносит данные во вювер с контролем на НУЛЛ и длинну строки,
     // А ТАКЖЕ- если там тоже самое- не записывает в Вювер текст,эеономия времени ОТРИСОВКИ
     static public boolean setTextToTextView(String str, View view, String def){

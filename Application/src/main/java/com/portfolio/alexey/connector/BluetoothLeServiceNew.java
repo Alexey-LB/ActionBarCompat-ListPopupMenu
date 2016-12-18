@@ -303,7 +303,7 @@ public class BluetoothLeServiceNew extends Service {
             }
             //если нет никого то Пишем своего
             if(i == 0){
-                connect("74:DA:EA:9F:54:C9",true);
+               ;// connect("74:DA:EA:9F:54:C9",true);
                 //  connect("B4:99:4C:30:41:BA",true);
             }
         }else{
