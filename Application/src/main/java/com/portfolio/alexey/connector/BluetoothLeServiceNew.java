@@ -127,6 +127,7 @@ public class BluetoothLeServiceNew extends Service {
             if (newState == BluetoothProfile.STATE_CONNECTED) {
                 intentAction = ACTION_GATT_CONNECTED;
                 sensor.mConnectionState = STATE_CONNECTED;
+                sensor.loop_rssi = STATE_CONNECTED;//показываем что коннектимся
 
                 broadcastUpdate(intentAction, sensor);
                 Log.i(TAG, "Connected to GATT server.");
@@ -139,6 +140,8 @@ public class BluetoothLeServiceNew extends Service {
                 sensor.mConnectionState = STATE_DISCONNECTED;
                 Log.w(TAG, "Disconnected from GATT server.");
 
+                sensor.loop_rssi = STATE_DISCONNECTED;//показываем что отключились
+
                 broadcastUpdate(intentAction, sensor);
             }
         }
@@ -148,11 +151,12 @@ public class BluetoothLeServiceNew extends Service {
             //если у нас есть такое устройство
             final Sensor sensor = getBluetoothDevice(gatt.getDevice().getAddress());
             if(sensor == null) return;
+            sensor.loop_rssi = STATE_CONNECTING;//показываем что коннектимся
             //
             if (status == BluetoothGatt.GATT_SUCCESS) {
                 broadcastUpdate(ACTION_GATT_SERVICES_DISCOVERED, sensor);
+                sensor.mConnectionState = STATE_CONNECTING;
                 sensor.enableTXNotification();
-                sensor.loop_rssi = 0;
                 Log.i(TAG, "onServicesDiscovered == BluetoothGatt.GATT_SUCCESS");
             } else {
                 Log.w(TAG, "onServicesDiscovered received: " + status);

@@ -46,6 +46,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.portfolio.alexey.connector.Sensor;
 import com.portfolio.alexey.connector.Util;
 
 import java.util.ArrayList;
@@ -237,8 +238,26 @@ public class DeviceScanActivity extends ListActivity {//AppCompatActivity {//Act
             mInflator = DeviceScanActivity.this.getLayoutInflater();
         }
 
+        private Sensor getBluetoothDevice(final String adr, ArrayList<Sensor> mbleDot){
+            for(Sensor sensor: mbleDot){
+                if(sensor.mBluetoothDeviceAddress == null) continue;
+                if(adr.compareTo(sensor.mBluetoothDeviceAddress) == 0)return sensor;
+            }
+            return null;
+        }
+
         public void addDevice(BluetoothDevice device) {
             // TODO: 17.12.2016 контроль всех адресов ЧТО есть, вывод внизу с ЗАТЕМНЕНИЕМ, которые НЕ прошли по филтру 
+
+            RunDataHub app = ((RunDataHub) getApplicationContext());
+            if(Util.isNoNull(app.mBluetoothLeServiceM,app.mBluetoothLeServiceM.mbleDot)){
+                //смотрим, есть ли у нас уже зарегестрированный такой адрес!!
+                if(getBluetoothDevice(device.getAddress(),
+                        app.mBluetoothLeServiceM.mbleDot) != null) {
+                    Log.e(TAG, "ПОИСК- НАДЙден зарегестрированный УЖЕ термометр!!");
+                    return;
+                }
+            }
             if(!mLeDevices.contains(device)) {
                 mLeDevices.add(device);
             }

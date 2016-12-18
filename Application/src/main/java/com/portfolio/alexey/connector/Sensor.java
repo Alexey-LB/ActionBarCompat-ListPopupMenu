@@ -53,7 +53,7 @@ public class Sensor {
     // Состояние КЛАССА BluetoothDevice ОБЪЕКТ dot- мнеджер указывает на его сосояние
     public int mConnectionStateDOT = BluetoothProfile.STATE_DISCONNECTED;
     //--
-    public int rssi = 0;// уровень сигнала db
+    public int rssi = 4;// уровень сигнала db
 
     // Sample Characteristics.
     public int battery_level = 0;//%
@@ -115,16 +115,19 @@ public class Sensor {
         mBluetoothGatt.disconnect();
     }
     //
-    private Handler changeValue = new Handler();
+    private boolean mHandlerWork = false;
+    private Handler mHandler = new Handler();
     //---------------------------------------------------------------------------------
     private float getValueRandom(float min, float max){
         return (float)( Math.random() * (max-min) + min);
     }
+    //Пока отключил иммитатор -----mHandlerWork = false;
     private  void loop(){
-        changeValue.postDelayed(new Runnable() {
+        mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
-
+ //Пока отключил иммитатор ----
+if(true)return;
                 if (mBluetoothDeviceAddress == null) {
                     intermediateValue = getValueRandom(20f, 100f);
                     rssi = (int) getValueRandom(40f, 100f);
@@ -133,8 +136,8 @@ public class Sensor {
             //                + "  rssi= "+ rssi+ "  battery_level= " +battery_level);
                 }
             //    Log.v(TAG,"loop  ");
-               // if(mHandlerWork) mHandler.postDelayed(this, 300);
-                loop();
+                if(mHandlerWork)mHandler.postDelayed(this, 300);
+               // loop();
             }
         }, 1000);
     }

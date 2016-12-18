@@ -761,8 +761,8 @@ return null;//fbButton_;
     clearScrollX_View(true);//затираем на него ссылку? с ним закончили
                                 //
                                 if((obj instanceof Sensor)){
-                                    ((Sensor)obj).close();
-                                    Log.w(TAG,"Dell sensor -- close GATT --");
+                                    ((Sensor)obj).disconnect();
+                                    Log.w(TAG,"Dell sensor -- disconnect() GATT --");
                                 }
                                 adapter.remove(obj);// УДАЛИТЬ
                                 objectD = null;//чтоб сдвижки поом НЕ было с NULL  объектом
