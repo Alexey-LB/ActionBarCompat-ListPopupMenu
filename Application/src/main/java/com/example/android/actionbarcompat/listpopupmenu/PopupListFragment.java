@@ -16,30 +16,13 @@
 package com.example.android.actionbarcompat.listpopupmenu;
 
 import android.app.ActionBar;
-import android.app.Activity;
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.ListFragment;
-import android.app.usage.UsageEvents;
-import android.content.ComponentName;
 import android.content.Intent;
-import android.content.ServiceConnection;
-import android.content.res.Resources;
-import android.graphics.Color;
-import android.graphics.Point;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.IBinder;
-import android.renderscript.ScriptGroup;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.ActionMenuView;
-import android.text.Layout;
-import android.text.StaticLayout;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.Display;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -47,22 +30,13 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.animation.AccelerateInterpolator;
-import android.view.animation.AnticipateOvershootInterpolator;
-import android.view.animation.DecelerateInterpolator;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.OvershootInterpolator;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
-
 import java.util.ArrayList;
-import java.util.TreeMap;
-
 import com.portfolio.alexey.connector.BluetoothLeServiceNew;
 import com.portfolio.alexey.connector.Sensor;
 import com.portfolio.alexey.connector.Util;
@@ -301,6 +275,10 @@ public class PopupListFragment extends ListFragmentA  {
 //        //-----------------------------
   //      ((MainActivity)getActivity()).
         if(adapter == null)initList();
+        //------------------------------
+      //  getListView()
+
+
         Log.e(TAG,"Fragment --- onActivityCreated---END----");
     }
     // ЗАПУСТИЛИ ервис    public BluetoothLeServiceNew mBluetoothLeService = null;
@@ -928,19 +906,21 @@ return null;//fbButton_;
     @Override
     //synchronized
     public boolean onTouchA(View v, MotionEvent event) {
+        boolean rez = false;
 ////        System.out.println("oonTouchA:   X=" + event.getX() + "  event.getAction()="+event.getAction()
         if (event.getAction() == event.ACTION_MOVE){
-            return objectDataToView.controlObject(CLICK_MOVE,null,(int) event.getX());
+            rez = objectDataToView.controlObject(CLICK_MOVE,null,(int) event.getX());
+        } else {
+            if (event.getAction()== event.ACTION_UP){
+                rez = objectDataToView.controlObject(CLICK_UP,null,(int) event.getX());
+            } else {
+                if (event.getAction()==event.ACTION_DOWN){
+                    objectDataToView.controlObject(CLICK_DOWN,null,(int) event.getX());
+                    return false;
+                }
+            }
         }
-        if (event.getAction()== event.ACTION_UP){
-            return objectDataToView.controlObject(CLICK_UP,null,(int) event.getX());
-
-        }
-        if (event.getAction()==event.ACTION_DOWN){
-            objectDataToView.controlObject(CLICK_DOWN,null,(int) event.getX());
-            return false;
-        }
-        return false;
+       return rez;
     }
     /**
      *

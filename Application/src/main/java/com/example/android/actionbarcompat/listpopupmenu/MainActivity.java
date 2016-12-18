@@ -16,30 +16,20 @@
 
 package com.example.android.actionbarcompat.listpopupmenu;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.content.ComponentName;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.content.res.Resources;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.shapes.RectShape;
 import android.os.Bundle;
-//import android.support.v7.app.ActionBar;
-import android.os.Handler;
-import android.os.IBinder;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.SpinnerAdapter;
 
 import com.portfolio.alexey.connector.Util;
 
