@@ -741,16 +741,22 @@ return null;//fbButton_;
                     if((objectD == null) || (i != adapter.getPosition(objectD))//если объект для удаления отсутствует или не совпадает позиция текущая и ранее выбранного объекта
                             || ((positionScroll > 0) && (positionStartX < (DispleyWidthDp -maxScroll)))//мы не попали тычком на картинку удалить
                             ||  ((positionScroll < 0) && (positionStartX > maxScroll))) {//мы не попали тычком на картинку редактировать
-                        //то вызываем пункт меню!контроль указателя!
-                        if(i >= 0) Toast.makeText(getActivity(), "onClick GoTo N= " + i, Toast.LENGTH_SHORT).show();
-                        str = "CLICK_SHORT GoTo i= " + i;
-                        //--------------
-                        //-------Setting --
-                        final Intent intent = new Intent(getActivity(), MainSettingSetting.class);
-                        intent.putExtra(MainActivity.EXTRAS_DEVICE_ITEM, i);
+   //ВЫЗЫВАЕМ пункт, тоько если он НЕ В РАБОТЕ ПО УДАЛЕНИИЮ И ИЗМЕНЕНИЮ!! ---
+                        if(Math.abs(positionScroll) != maxScroll){
+                            //то вызываем пункт меню!контроль указателя!
+                            if(i >= 0) Toast.makeText(getActivity(), "onClick GoTo N= " + i, Toast.LENGTH_SHORT).show();
+                            str = "CLICK_SHORT GoTo i= " + i;
+                            //--------------
+                            //-------Setting --
+                            final Intent intent = new Intent(getActivity(), MainSettingSetting.class);
+                            intent.putExtra(MainActivity.EXTRAS_DEVICE_ITEM, i);
 
-                        startActivityForResult(intent,MainActivity.MAINACTIVITY);//
-                        //----------------
+                            startActivityForResult(intent,MainActivity.MAINACTIVITY);//
+                            //----------------
+                        }
+                        //сбрасывем ПОЗИЦИЮ, чтоб потом уже ВЫБИРАТЬ ПУНКТ МЕНЮ!!!
+                        /// если мы сдвигали то он НЕ 0!!
+                        positionScroll = 0;
                      }else{
                         if((i >= 0) && (objectD != null) && (i == adapter.getPosition(objectD))){
                             if ((positionScroll > 0) && (positionStartX > (DispleyWidthDp -maxScroll))){//удаления
@@ -768,7 +774,7 @@ return null;//fbButton_;
                                 str = "CLICK_SHORT i= " + i + "  Remove obj= " + obj;
                             } else {
                                 if ((positionScroll < 0) && (positionStartX < maxScroll)){//редактирование
-                                    //имедж редактировать
+  //имедж редактировать-----------------------------
   clearScrollX_View(true);//затираем на него ссылку? с ним закончили
                                     str = "CLICK_SHORT i= " + i + "  Edit obj= " + obj;
                                     if(i >= 0) Toast.makeText(getActivity(), "onClick Edit N= " + i, Toast.LENGTH_SHORT).show();
