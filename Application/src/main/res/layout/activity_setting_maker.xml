@@ -64,7 +64,6 @@
             android:textStyle="normal|bold" />
 
         <TextView
-            android:text="Relsib50"
             android:id="@+id/textViewFindName"
             android:layout_height="match_parent"
             android:layout_width="wrap_content"
@@ -94,7 +93,6 @@
             android:textStyle="normal|bold"
             android:gravity="right|center_vertical" />
         <TextView
-            android:text="hmkhkjhlkjvjhgkjhj5567788990"
             android:inputType="textAutoComplete"
             android:id="@+id/textViewFindAdress"
             android:layout_height="match_parent"

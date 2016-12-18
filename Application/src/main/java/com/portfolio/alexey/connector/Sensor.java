@@ -70,9 +70,9 @@ public class Sensor {
     public boolean changeConfig = true;//флаг указывающий на ИМЕНЕНИя и ОБЯЗАЕЛЬНО СОХРАНИТЬ  объект(изменились настройки)!!
     public boolean avtoConnect = true;
     public String mBluetoothDeviceAddress = null;//64 bita
-    public String deviceLabel = "Label";
+    public String deviceLabel = "";
 
-    public String deviceName = "deviceName";
+    public String deviceName = "";
 
     private long mBluetoothDeviceAddressLong = 0;//64 bita
     //
