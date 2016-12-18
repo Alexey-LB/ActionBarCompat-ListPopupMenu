@@ -94,7 +94,7 @@ public class RunDataHub extends Application {
             dataHub = null;
             dh.finalize();
         }
-        Log.e(TAG,"--------finalize()");
+        Log.e(TAG,"--------finalize()------------------------------");
     }
     //- Вызывается при изменении конфигурации устройства
     @Override

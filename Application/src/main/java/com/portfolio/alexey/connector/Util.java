@@ -9,6 +9,7 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -131,7 +132,30 @@ public class Util {
         Log.d(tag, "actionBar != null--");
         return true;
     }
-
+    //заносит данные во вювер с на МИНУС работаем с уровнями и,
+    // А ТАКЖЕ- если там тоже самое- не записывает в Вювер ,эеономия времени ОТРИСОВКИ
+    static public boolean setLevelToImageView(int level, View view) {
+        if (isNoNull(level, view) && (view instanceof ImageView)) {
+            //Отрицательное число уровеня- ломает вывод ИЗОБРАЖЕНИЯ по уровням
+            if (level < 0) level = ~level + 1;
+            ImageView iv = ((ImageView) view);
+            //--
+            if((iv.getTag() == null) || ((Integer)iv.getTag() != level)){
+                iv.setImageLevel(level);
+                iv.setTag(level);
+            }
+            return true;
+        }
+        return false;
+    }
+    //ПОИСК глобадьный по АКТИВНОСТИ- берет ПЕРВЫЙ попашийся элемент!
+    static public boolean setLevelToImageView(int level, int viewID, Activity activity) {
+        return setLevelToImageView(level,  activity.findViewById(viewID));
+    }
+    ////ПОИСК ЛОКАЛЬНЫЙ внутри  viewRoot- берет ПЕРВЫЙ попашийся элемент!
+    static public boolean setLevelToImageView(int level, int viewID, View viewRoot) {
+        return setLevelToImageView(level,  viewRoot.findViewById(viewID));
+    }
     //заносит данные во вювер с контролем на НУЛЛ и длинну строки,
     // А ТАКЖЕ- если там тоже самое- не записывает в Вювер текст,эеономия времени ОТРИСОВКИ
     static public boolean setTextToTextView(String str, View view, String def){
@@ -148,13 +172,24 @@ public class Util {
         }
         return false;
     }
-
+//ПОИСК глобадьный по АКТИВНОСТИ- берет ПЕРВЫЙ попашийся элемент!
     static public boolean setTextToTextView(String str, int viewID, Activity activity) {
-        return setTextToTextView(str, activity.findViewById(viewID),null);
+        return setTextToTextView(str,activity.findViewById(viewID),null);
     }
+
     static public boolean setTextToTextView(String str, int viewID, Activity activity, String def) {
         return setTextToTextView(str, activity.findViewById(viewID),def);
     }
+
+////ПОИСК ЛОКАЛЬНЫЙ внутри  viewRoot- берет ПЕРВЫЙ попашийся элемент!
+    static public boolean setTextToTextView(String str, int viewID, View viewRoot) {
+        return setTextToTextView(str,viewRoot.findViewById(viewID),null);
+    }
+
+    static public boolean setTextToTextView(String str, int viewID,  View viewRoot, String def) {
+        return setTextToTextView(str, viewRoot.findViewById(viewID),def);
+    }
+    ///-------------------------------------------
     static public boolean isNoNull(Object ob1) {
         return ((ob1 != null) );
     }

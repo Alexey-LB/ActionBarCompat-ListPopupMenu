@@ -28,6 +28,7 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.shapes.RectShape;
 import android.os.Bundle;
 //import android.support.v7.app.ActionBar;
+import android.os.Handler;
 import android.os.IBinder;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
@@ -65,6 +66,7 @@ public class MainActivity extends AppCompatActivity {// ActionBarActivity {
     public final  static int ACTIVITY_SETTING_SETTING = 22222;
     public final  static int ACTIVITY_SETTING_MAKER = 444444;
     public final  static int ACTIVITY_FIND_DEVICE = 555555;
+
 
     public PopupListFragment popupListFragment;
   //  private PopupListFragment popupListFragment= new PopupListFragment();
@@ -294,8 +296,10 @@ Log.i(TAG,"startActivity SCAN");
     protected void onDestroy() {
         super.onDestroy();
         if (isFinishing()) {
+            Log.e(TAG,"onDestroy() ==============isFinishing() =========== isFinishing() ======");
  //!!           mBluetoothLeServiceM = null;
         } else {
+            Log.e(TAG,"onDestroy() -----------WORK ------------- WORK -------------");
            ; //It's an orientation change.
         }
  //!!       unbindService(mServiceConnectionM);

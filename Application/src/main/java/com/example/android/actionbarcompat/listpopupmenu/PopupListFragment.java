@@ -16,6 +16,7 @@
 package com.example.android.actionbarcompat.listpopupmenu;
 
 import android.app.ActionBar;
+import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.ListFragment;
@@ -27,6 +28,7 @@ import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
 import android.renderscript.ScriptGroup;
 import android.support.design.widget.FloatingActionButton;
@@ -60,7 +62,10 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.TreeMap;
+
+import com.portfolio.alexey.connector.BluetoothLeServiceNew;
 import com.portfolio.alexey.connector.Sensor;
+import com.portfolio.alexey.connector.Util;
 
 import static android.content.Context.BIND_AUTO_CREATE;
 //Анимация Floating Action Button в Android
@@ -401,9 +406,46 @@ public class PopupListFragment extends ListFragmentA  {
        // menu.clear();
     }
     @Override
-public void onPrepareOptionsMenu(Menu menu){
+    public void onPrepareOptionsMenu(Menu menu){}
+    //
+    synchronized private void updateViewItem(Sensor sensor, View view){
+        if(!Util.isNoNull(sensor,view)) return;
+        String str;int bl,rssi;
+        // по умолчанию из метода toString -> заталкивается в R.id.text1, по этому мы сами это НЕ делаем
+        if(sensor.mConnectionState == BluetoothLeServiceNew.STATE_CONNECTED){
+            str = sensor.getStringIntermediateValue(false,true);
+            bl = sensor.battery_level;
+            rssi = sensor.rssi;
+        } else {
+            str = "Нет подключения";
+            bl = 0;
+            rssi = 0;
+        }
+        //присвоил текущее значение для отображения
+        Util.setTextToTextView(str,R.id.numbe_cur, view);
+        Util.setLevelToImageView(bl,R.id.battery, view);
+ //       Util.setLevelToImageView(rssi,R.id.signal, view);
 
-}
+
+        //    ((Sensor)adapter.getItem(position)).deviceLabelView = view.findViewById(R.id.imgTitle);
+  //      ((Sensor)adapter.getItem(position)).markerColorView = view.findViewById(R.id.marker);
+
+    }
+    public void updateView(){
+        if((adapter == null) || (adapter.getCount() == 0)) return;
+        int i;
+        for(i = 0; i < adapter.getCount();i++){
+            updateViewItem((Sensor)adapter.getItem(i), getListView().getChildAt(i));
+        }
+    }
+    //
+    private boolean mHandlerWork = true;
+    private Handler mHandler = new Handler();
+    @Override
+    public  void onPause() {
+        super.onPause();
+        mHandlerWork = false;
+    }
     @Override
     public  void onResume() {
         super.onResume();
@@ -413,8 +455,18 @@ public void onPrepareOptionsMenu(Menu menu){
         //убрать системный бар----------------
         //if(root.getSystemUiVisibility() != View.SYSTEM_UI_FLAG_FULLSCREEN)
         lw.getRootView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
+        //---
+        mHandlerWork = true;
+        //сам заводится и работает
+        mHandler.postDelayed(new Runnable() {
+            public void run() {
+        //            Log.v(TAG,"mHandler --");
+      //          updateView();
+                // повторяем через каждые 300 миллисекунд
+                if(mHandlerWork) mHandler.postDelayed(this, 300);
+            }
+        },500);
     }
-
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -956,9 +1008,13 @@ return null;//fbButton_;
                 //берем объект
 
 
+
                 //присвоил текущее значение для отображения
                 // по умолчанию из метода toString -> заталкивается в R.id.text1, по этому мы сами это НЕ делаем
     // ((Sensor)adapter.getItem(position)).deviceLabelView = view.findViewById(R.id.text1);
+
+      //          updateViewItem((Sensor) adapter.getItem(position),view);
+
      ((Sensor)adapter.getItem(position)).intermediateValueView = view.findViewById(R.id.numbe_cur);
      ((Sensor)adapter.getItem(position)).rssiView = view.findViewById(R.id.signal);
      ((Sensor)adapter.getItem(position)).battery_levelView = view.findViewById(R.id.battery);

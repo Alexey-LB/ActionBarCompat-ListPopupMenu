@@ -29,6 +29,6 @@ public class DataHubSingleton {
 
     @Override
     public void finalize(){
-        Log.e(TAG,"--------finalize()");
+        Log.e(TAG,"--------finalize()-----------------------");
     }
 }
