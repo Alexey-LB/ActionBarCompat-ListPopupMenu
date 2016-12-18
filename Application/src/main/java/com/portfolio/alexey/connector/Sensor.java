@@ -54,16 +54,13 @@ public class Sensor {
     public int mConnectionStateDOT = BluetoothProfile.STATE_DISCONNECTED;
     //--
     public int rssi = 0;// уровень сигнала db
-    public View rssiView = null;
 
     // Sample Characteristics.
     public int battery_level = 0;//%
-    public View battery_levelView = null;
     // "Health Thermometer"
     public float temperatureMeasurement = 0f;//C- у релсиба НЕ потдерживается
 
     public float intermediateValue = 0f;//C - работаем с этой темпратурой, точность0.1С, каждую секунду
-    public View intermediateValueView = null;
 
     public float minTemperature = -20f;//C для монитора температуры
     public float maxTemperature = +70f;//C для монитора температуры
@@ -74,7 +71,6 @@ public class Sensor {
     public boolean avtoConnect = true;
     public String mBluetoothDeviceAddress = null;//64 bita
     public String deviceLabel = "Label";
-    public View deviceLabelView = null;
 
     public String deviceName = "deviceName";
 
@@ -82,7 +78,6 @@ public class Sensor {
     //
     public int deviceItem = 0;
     public int markerColor = 0;
-    public View markerColorView = null;
 
     public int measurementMode = 0;//режим медецинский Или универсальный
 
@@ -121,64 +116,24 @@ public class Sensor {
     }
     //
     private Handler changeValue = new Handler();
-    private float getNewValue(float min, float max){
+    //---------------------------------------------------------------------------------
+    private float getValueRandom(float min, float max){
         return (float)( Math.random() * (max-min) + min);
     }
     private  void loop(){
         changeValue.postDelayed(new Runnable() {
             @Override
             public void run() {
-                final String val,rs,lb;
+
                 if (mBluetoothDeviceAddress == null) {
-                    intermediateValue = getNewValue(20f, 100f);
-                    rssi = (int) getNewValue(40f, 100f);
-                    battery_level = (int) getNewValue(0f, 100f);
+                    intermediateValue = getValueRandom(20f, 100f);
+                    rssi = (int) getValueRandom(40f, 100f);
+                    battery_level = (int) getValueRandom(0f, 100f);
+            //        Log.e(TAG,"loop Sensor intermediateValue = " + intermediateValue
+            //                + "  rssi= "+ rssi+ "  battery_level= " +battery_level);
                 }
-                //если имитация или КОННЕКТ
-                if((mBluetoothDeviceAddress == null)
-                    || (mConnectionState == BluetoothLeServiceNew.STATE_CONNECTED)){
-                    val = getStringIntermediateValue(false,true);
-                    rs = String.valueOf(rssi);
-                }else{//если коннекта НЕТ
-                    val = "-";
-                    rs = "0";
-                }
-                lb = deviceLabel;
-                if((deviceLabelView != null)&&(deviceLabelView instanceof TextView)) ((TextView)deviceLabelView).setText(lb);
-
-                if((intermediateValueView != null)&&(intermediateValueView instanceof TextView)) {
-                    ((TextView)intermediateValueView).setText(val);
-                   // Log.v(TAG,"intermediateValue= " + val);
-                }
-
-                if((battery_levelView != null)&&(battery_levelView  instanceof ImageView)){
-
-                    int i = battery_level;
-                    if(i < 0) i = i*(-1);
-                    ImageView iv = (ImageView)battery_levelView;
-                    iv.setImageLevel(i);
-
-                }
-
-                if((rssiView != null)&&(rssiView  instanceof ImageView)){
-                    ImageView iv = (ImageView)rssiView;
-                    int i = rssi;
-                    //Отрицательное число уровеня- ломает вывод ИЗОБРАЖЕНИЯ по уровням
-                    if(i < 0) i = i*(-1);
-
-                    iv.setImageLevel(i);
-                }
-                //
-                if((markerColorView != null)&&(markerColorView instanceof ImageView)
-                       ){
-                    //если ранее не запоминали то обновляем
-                    if((markerColorView.getTag() == null) ||
-                            ((Integer)markerColorView.getTag() != markerColor)){
-                        ImageView tv = ((ImageView)markerColorView);
-                        tv.setBackgroundResource(Marker.getIdImg( markerColor));
-                        markerColorView.setTag( markerColor);//чтоб не перезаписывать
-                    }
-                }
+            //    Log.v(TAG,"loop  ");
+               // if(mHandlerWork) mHandler.postDelayed(this, 300);
                 loop();
             }
         }, 1000);

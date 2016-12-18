@@ -396,7 +396,10 @@ public class PopupListFragment extends ListFragmentA  {
             Util.setTextToTextView(sensor.getStringMaxTemperature(false,true),R.id.numbe_max, view);
         }
         // по умолчанию из метода toString -> заталкивается в R.id.text1, по этому мы сами это НЕ делаем
-        boolean b = sensor.mConnectionState == BluetoothLeServiceNew.STATE_CONNECTED;
+
+        boolean b = (sensor.mConnectionState == BluetoothLeServiceNew.STATE_CONNECTED)
+                || (sensor.mBluetoothDeviceAddress == null);//режим ИММИТАЦИИ- отладки
+
         //присвоил текущее значение для отображения
         Util.setTextToTextView(b? sensor.getStringIntermediateValue(false,true):
                 "Нет подкл.", R.id.numbe_cur, view);
