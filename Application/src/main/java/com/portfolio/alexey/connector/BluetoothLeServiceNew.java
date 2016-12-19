@@ -176,11 +176,13 @@ public class BluetoothLeServiceNew extends Service {
             final Sensor sensor = getBluetoothDevice(gatt.getDevice().getAddress());
             if(sensor == null) return;
             //
-    sensor.onCharacteristicRead();
+
             if (status == BluetoothGatt.GATT_SUCCESS) {
  // broadcastUpdate(ACTION_DATA_AVAILABLE, sensor, characteristic);
                 Log.i(TAG, "   adress= " + sensor.mBluetoothDeviceAddress);
+
       sensor.setValue(characteristic);
+  //              sensor.onCharacteristicRead();//постоянно запрашивает характеристику- и обламывает остальное!!
             }
         }
 
@@ -194,12 +196,15 @@ public class BluetoothLeServiceNew extends Service {
             if(sensor == null) return;
     sensor.goToConnect = false;//подключение закончилочсь УДАЧНО!!
             sensor.setValue(characteristic);
+
+            //постоянно запрашивает характеристику- и обламывает остальное!! убираем
+            //       sensor.onCharacteristicRead();
             // на каждый 16 запрашиваем RSSI (запрос каждые примерно 16 секунды)
-    if(sensor.readRSSIandBatteryLevel() == false){
+
+   // if(sensor.readRSSIandBatteryLevel() == false){}
+
         //ЗАПРАШИВАТЬ (или записыват) ЗА 1 РАЗ можно только 1 характеристику
         // или свойства - иначе НЕ отвечает
-        sensor.onCharacteristicRead();
-    }
             //
  // broadcastUpdate(ACTION_DATA_AVAILABLE, sensor, characteristic);
             Log.i(TAG, "   adress= " + sensor.mBluetoothDeviceAddress);
@@ -280,13 +285,84 @@ public class BluetoothLeServiceNew extends Service {
        Log.e(TAG,"Service------get BluetoothAdapter = OK----");
        //---// Читаем сеттинги из фалов НА флеши------------------
        settingGetFileGoToConnect();
+       //myThread.setPriority(10);
+       myThread.setDaemon(true);// Указывает на то чтоб убивать когда будет прибито ПРИЛОЖЕНИЕ его породившее
+       myThread.start();
         Log.e(TAG,"Servise------init-- init-- OK");
         return true;
     }
+    private int loopI = 0;
+    Thread myThread = new Thread( // создаём новый поток
+            new Runnable() { // описываем объект Runnable в конструкторе
+                public void run() {
+                    int itemSensor= 0 , timerConnectSensor = 0;
+                    Sensor sensor; boolean onStart = true;
+                    // вызываем метод воспроизведения
+                    while (true){
+                        //------Здесь цикл обработки и потдержания работы коннекта----------------
+                        if((mbleDot != null) && (mbleDot.size() > 0)){
+                            //--запускаем на соннект
+                            if(itemSensor >= mbleDot.size()) onStart = false;
+                            if(onStart){
+                                sensor = mbleDot.get(itemSensor);
+                                if(sensor != null){
+                                    if((sensor.goToConnect == false)
+                                            && (sensor.mConnectionState < STATE_CONNECTED) //если 1 раз запускаем соннект
+                                            &&(sensor.mBluetoothDeviceAddress != null)
+                                            &&(sensor.mBluetoothDeviceAddress.length() == 17)){
+                                        // запускаем на соннект
+                                        connect(sensor.mBluetoothDeviceAddress, true);
+                                        Log.w("-ServisThread>","--GO connect sensor= "+itemSensor+ "  adress= " + sensor.mBluetoothDeviceAddress);
+                                    } else{
+                                        //здесь ждем нормального подключения и делаем повтор если облом!но только 1 раз
+                                        timerConnectSensor++;
+                                        if(((sensor.mConnectionState >= STATE_CONNECTED) && (sensor.goToConnect == false))
+                                                || timerConnectSensor > 60){
+                                            timerConnectSensor = 0;
+
+                                           if(sensor.mConnectionState >= STATE_CONNECTED) Log.i("-ServisThread>"
+                                                   , "--OK connect sensor= "+itemSensor+ "  adress= " + sensor.mBluetoothDeviceAddress);
+                                           else  Log.e("-ServisThread>","--ERROR connect sensor= "+itemSensor+ "  adress= "
+                                                   + sensor.mBluetoothDeviceAddress);
+                                            itemSensor++;
+                                        }
+//                                        else{
+//                                            //если за 30 секунд не подключились повтор
+//                                            if(timerConnectSensor > 30) {
+//                                                timerConnectSensor = 0;
+//                                                sensor.goToConnect = false;
+//                                                Log.i("-ServisThread>","--ERROR connect (rep.) sensor= "+itemSensor+ "  adress= " + sensor.mBluetoothDeviceAddress);
+//                                            }
+//
+//                                        }
+                                    }
+                                } else {
+                                    onStart = false;
+                                }
+
+                            }else {
+
+                            }
+                        }
+
+                        //--
+                       if((loopI & 0xF) == 0) Log.w("-DEmonN:", "--"+loopI);
+                        /////////////////////////----------------------------------
+                        try {
+                            myThread.sleep(1000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+    );
     @Override
     public void onCreate() {
         super.onCreate();//---------
         Log.e(TAG,"Service------START -- onCreate()--------------");
+
+
     }
     // это будет именем файла настроек
     public static final String APP_PREFERENCES = "mySettings";
@@ -308,12 +384,12 @@ public class BluetoothLeServiceNew extends Service {
                     Sensor sensor = new Sensor(mSettingsDevace);
                     mbleDot.add(sensor);
                     Log.i(TAG,"onCreate: get sensor from flash= "+i +"   adress= " +sensor.mBluetoothDeviceAddress);
-                    //--запускаем на соннект
-                    if((sensor.mBluetoothDeviceAddress != null) &&(sensor.mBluetoothDeviceAddress.length() == 17)){
-                        // запускаем на соннект
-                        connect(sensor.mBluetoothDeviceAddress, true);
-                        Log.w(TAG,"connect sensor= "+i+ "  adress= " + sensor.mBluetoothDeviceAddress);
-                    }
+//                    //--запускаем на соннект
+//                    if((sensor.mBluetoothDeviceAddress != null) &&(sensor.mBluetoothDeviceAddress.length() == 17)){
+//                        // запускаем на соннект
+//                        connect(sensor.mBluetoothDeviceAddress, true);
+//                        Log.w(TAG,"connect sensor= "+i+ "  adress= " + sensor.mBluetoothDeviceAddress);
+//                    }
                 }
             }
             //если нет никого то Пишем своего

@@ -614,8 +614,8 @@ if(true)return;
             //           Log.w(TAG, "enableRXNotification: loop_rssi -- ");
         }
         //каждые 2 минуты уровень батареи
-       // if(((loop_rssi & 0x7F) == 0) || ((loop_rssi & 0xFFFFFFC3) == 0)){//Чаше чем 1 раз в 4 секунды НЕ надо, захлебывается
-        if(((loop_rssi & 0x3) == 3)){
+        if(((loop_rssi & 0x7F) == 3) || ((loop_rssi & 0xFFFFFFC3) == 3)){//Чаше чем 1 раз в 4 секунды НЕ надо, захлебывается
+       // if(((loop_rssi & 0x3) == 3)){
             BluetoothGattCharacteristic characteristic;
             BluetoothGattService service;
             //читать уровень батареи

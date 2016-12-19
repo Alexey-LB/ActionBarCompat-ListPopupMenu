@@ -101,7 +101,7 @@ public class MainActivity extends AppCompatActivity {// ActionBarActivity {
         //!!! так НЕ работает!!
         //ActionBar ab = getActionBar();
   //ТАК СРАБОТАЛО!!!
-        Util.setSupportV7appActionBar(getSupportActionBar(),TAG,"  B4/B5");
+        Util.setSupportV7appActionBar(getSupportActionBar(),TAG,"  B4/B5 v2.1");
         //-------------ЗАПУСТИЛИ ервис ---------
 //!!        Intent gattServiceIntent = new Intent(this, BluetoothLeServiceNew.class);
 //!!        bindService(gattServiceIntent, mServiceConnectionM, BIND_AUTO_CREATE);
