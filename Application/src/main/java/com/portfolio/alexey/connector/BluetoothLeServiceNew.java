@@ -126,23 +126,26 @@ public class BluetoothLeServiceNew extends Service {
             String intentAction;
             if (newState == BluetoothProfile.STATE_CONNECTED) {
                 intentAction = ACTION_GATT_CONNECTED;
-                sensor.mConnectionState = STATE_CONNECTED;
-                sensor.loop_rssi = STATE_CONNECTED;//показываем что коннектимся
-
-                broadcastUpdate(intentAction, sensor);
-                Log.i(TAG, "Connected to GATT server.");
+                // состояние промежуточное-МЫ подключились- но ЕЩЕ НЕ СЧИТАЛИ СЕРВИСЫ доступные на этом устройстве
+                sensor.mConnectionState = STATE_CONNECTING;
+                //для отображения состояния подключения волны расходятся от значка--
+                sensor.rssi = STATE_CONNECTING;//показываем что коннектимся
+//Запускаем считывание СЕРВИСОВ и характеристик (discovery)
+ // broadcastUpdate(intentAction, sensor);
                 // Attempts to discover services after successful connection.
                 Log.v(TAG, "Attempting to start service discovery:" +
                         sensor.mBluetoothGatt.discoverServices());
 
+                Log.i(TAG, "Connected to GATT server  adress= " + sensor.mBluetoothDeviceAddress);
+
             } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
-                intentAction = ACTION_GATT_DISCONNECTED;
+                // просто отключение-оБлом
                 sensor.mConnectionState = STATE_DISCONNECTED;
-                Log.w(TAG, "Disconnected from GATT server.");
+                Log.w(TAG, "Disconnected from GATT server   adress= " + sensor.mBluetoothDeviceAddress);
 
-                sensor.loop_rssi = STATE_DISCONNECTED;//показываем что отключились
-
-                broadcastUpdate(intentAction, sensor);
+                sensor.rssi = STATE_DISCONNECTED;//показываем что отключились
+   //             intentAction = ACTION_GATT_DISCONNECTED;
+  // broadcastUpdate(intentAction, sensor);
             }
         }
 
@@ -151,13 +154,15 @@ public class BluetoothLeServiceNew extends Service {
             //если у нас есть такое устройство
             final Sensor sensor = getBluetoothDevice(gatt.getDevice().getAddress());
             if(sensor == null) return;
-            sensor.loop_rssi = STATE_CONNECTING;//показываем что коннектимся
+
             //
             if (status == BluetoothGatt.GATT_SUCCESS) {
-                broadcastUpdate(ACTION_GATT_SERVICES_DISCOVERED, sensor);
-                sensor.mConnectionState = STATE_CONNECTING;
+ // broadcastUpdate(ACTION_GATT_SERVICES_DISCOVERED, sensor);
+                // закончили ЧТЕНИЕ СЕРВИСОВ и характеристик, готовы к работе
+                sensor.rssi = STATE_CONNECTED;//показываем что готовы к работе
+                sensor.mConnectionState = STATE_CONNECTED;
                 sensor.enableTXNotification();
-                Log.i(TAG, "onServicesDiscovered == BluetoothGatt.GATT_SUCCESS");
+                Log.i(TAG, "onServicesDiscovered == BluetoothGatt.GATT_SUCCESS  adress= " + sensor.mBluetoothDeviceAddress);
             } else {
                 Log.w(TAG, "onServicesDiscovered received: " + status);
             }
@@ -166,32 +171,36 @@ public class BluetoothLeServiceNew extends Service {
         @Override
         public void onCharacteristicRead(BluetoothGatt gatt,
                                          BluetoothGattCharacteristic characteristic, int status) {
-            Log.i(TAG, "onCharacteristicRead--------------------");
+            Log.v(TAG, "onCharacteristicRead--------------------");
             //если у нас есть такое устройство
             final Sensor sensor = getBluetoothDevice(gatt.getDevice().getAddress());
             if(sensor == null) return;
             //
-            sensor.onCharacteristicRead();
+    sensor.onCharacteristicRead();
             if (status == BluetoothGatt.GATT_SUCCESS) {
-                broadcastUpdate(ACTION_DATA_AVAILABLE, sensor, characteristic);
-                Log.i(TAG, "onCharacteristicRead");
-                sensor.setValue(characteristic);
+ // broadcastUpdate(ACTION_DATA_AVAILABLE, sensor, characteristic);
+                Log.i(TAG, "   adress= " + sensor.mBluetoothDeviceAddress);
+      sensor.setValue(characteristic);
             }
         }
 
         @Override
         public void onCharacteristicChanged(BluetoothGatt gatt,
                                             BluetoothGattCharacteristic characteristic) {
+            Log.v(TAG, "onCharacteristicChanged--------------------");
             //если у нас есть такое устройство
+
             final Sensor sensor = getBluetoothDevice(gatt.getDevice().getAddress());
             if(sensor == null) return;
+    sensor.goToConnect = false;//подключение закончилочсь УДАЧНО!!
+ sensor.enableTXNotification();
             sensor.setValue(characteristic);
             // на каждый 16 запрашиваем RSSI (запрос каждые примерно 16 секунды)
-            sensor.readRSSIandBatteryLevel();
+    sensor.readRSSIandBatteryLevel();
             //
-            broadcastUpdate(ACTION_DATA_AVAILABLE, sensor, characteristic);
-            Log.i(TAG, "onCharacteristicChanged");
-            sensor.onCharacteristicRead();
+ // broadcastUpdate(ACTION_DATA_AVAILABLE, sensor, characteristic);
+            Log.i(TAG, "   adress= " + sensor.mBluetoothDeviceAddress);
+   sensor.onCharacteristicRead();
         }
         //
         @Override
@@ -401,7 +410,7 @@ public class BluetoothLeServiceNew extends Service {
                 && sensor.mBluetoothGatt != null) {
             Log.w(TAG, "Trying to use an existing mBluetoothGatt for connection.");
             if (sensor.mBluetoothGatt.connect()) {
-                sensor.mConnectionState = STATE_CONNECTING;
+
                 return true;
             } else {
                 return false;
@@ -418,8 +427,8 @@ public class BluetoothLeServiceNew extends Service {
         // mBluetoothGatt = device.connectGatt(this, false, mGattCallback);
         sensor.mBluetoothGatt = device.connectGatt(this, avtoConnect, mGattCallback);
         Log.v(TAG, "Trying to create a new connection.");
-        sensor.mBluetoothDeviceAddress = address;
-        sensor.mConnectionState = STATE_CONNECTING;
+  //      sensor.mBluetoothDeviceAddress = address;
+  //      sensor.mConnectionState = STATE_CONNECTING;
         sensor.goToConnect = true;//указали, что коннект заказан!
         return true;
     }

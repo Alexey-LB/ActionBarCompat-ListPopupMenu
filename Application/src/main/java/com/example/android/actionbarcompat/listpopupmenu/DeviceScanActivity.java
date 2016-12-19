@@ -254,7 +254,7 @@ public class DeviceScanActivity extends ListActivity {//AppCompatActivity {//Act
                 //смотрим, есть ли у нас уже зарегестрированный такой адрес!!
                 if(getBluetoothDevice(device.getAddress(),
                         app.mBluetoothLeServiceM.mbleDot) != null) {
-                    Log.e(TAG, "ПОИСК- НАДЙден зарегестрированный УЖЕ термометр!!");
+                    Log.e(TAG, "ПОИСК- НАЙден зарегестрированный УЖЕ термометр!!");
                     return;
                 }
             }

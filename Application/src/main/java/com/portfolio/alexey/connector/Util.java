@@ -7,6 +7,7 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.support.constraint.solver.ArrayLinkedVariables;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -15,12 +16,43 @@ import android.widget.Toast;
 
 import com.example.android.actionbarcompat.listpopupmenu.Marker;
 import com.example.android.actionbarcompat.listpopupmenu.R;
+import com.example.android.actionbarcompat.listpopupmenu.RunDataHub;
+
+import java.util.ArrayList;
 
 /**
  * Created by lesa on 17.12.2016.
  */
 
 public class Util {
+    //
+    static public ArrayList<Sensor> getListSensor(Context context){
+        BluetoothLeServiceNew bleS = getAppBleService(context);
+        if(bleS != null)  return bleS.mbleDot;
+        return null;
+    }
+    //
+    static public ArrayList<Sensor> getListSensor(Activity activity){
+        BluetoothLeServiceNew bleS = getAppBleService(activity);
+        if(bleS != null) return bleS.mbleDot;
+        return null;
+    }
+    //
+    static public BluetoothLeServiceNew getAppBleService(Context context){
+        RunDataHub app = (RunDataHub)context;
+        if(isNoNull(app,app.mBluetoothLeServiceM)){
+            return app.mBluetoothLeServiceM;
+        }
+        return null;
+    }
+    //
+    static public BluetoothLeServiceNew getAppBleService(Activity activity){
+        RunDataHub app = (RunDataHub) activity.getApplicationContext();
+        if(isNoNull(app,app.mBluetoothLeServiceM)){
+            return app.mBluetoothLeServiceM;
+        }
+        return null;
+    }
     // https://geektimes.ru/post/232885/
 // Что бы звук не был тихим:
 // stackoverflow.com/questions/8278939/android-mediaplayer-volume-is-very-low-already-adjusted-volume

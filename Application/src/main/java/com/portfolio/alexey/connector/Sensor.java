@@ -47,7 +47,7 @@ public class Sensor {
 
     private Context mContext;
     public BluetoothGatt mBluetoothGatt;
-    public BluetoothDevice mBlue;
+    public BluetoothDevice mBluetoothDevice;
     //  состояние ОБЪЕКТА КЛАССА BluetoothDeviceAlexey
     public int mConnectionState = 0;//STATE_DISCONNECTING;//специально , для изменеия при инициализации, чтоб распространить НА ИЗМЕНЕНИЕ!
     // Состояние КЛАССА BluetoothDevice ОБЪЕКТ dot- мнеджер указывает на его сосояние
@@ -199,6 +199,8 @@ if(true)return;
         onMaxVibration = mSettings.getBoolean("onMaxVibration", onMaxVibration);
         onEndVibration = mSettings.getBoolean("onEndVibration", onEndVibration);
 
+// TODO: 17.12.2016 в случае чтения непонятного типа(например булеан,
+// а чтиаем стринг- выбрасывает из программы- обработаь !!прерывания
         minMelody = mSettings.getString("minMelody", minMelody);
         maxMelody = mSettings.getString("maxMelody", maxMelody);
         endMelody = mSettings.getString("endMelody", endMelody);
@@ -234,46 +236,46 @@ if(true)return;
         editor.putString("maxMelody", maxMelody);
         editor.putString("endMelody", endMelody);
     }
-    public Sensor (SharedPreferences mSettings, int i){
-
-        if(mSettings == null){
-            deviceLabel = deviceLabelStringDefault + " " + indexDevace++;
-            //выходим по скольку все по умолчанию устанавливается
-            return;
-        }
-        markerColor = 0x7 & indexDevace;
-        changeConfig = false;//установки считаны из ФЛЕШИ- не изменены!!
-        //if (mSettings.contains("COUNTER"))
-        mBluetoothDeviceAddress = mSettings.getString("mBluetoothDeviceAddress", mBluetoothDeviceAddress);
-        avtoConnect = mSettings.getBoolean("avtoConnect", avtoConnect);
-        deviceLabel = mSettings.getString("deviceLabel", deviceLabel);//имя назначаемое пользоватлем
-        deviceName = mSettings.getString("deviceName", deviceName);
-        deviceItem = mSettings.getInt("deviceItem", deviceItem);
-        markerColor = mSettings.getInt("markerColor", markerColor);
-        //
-        measurementMode = mSettings.getInt("measurementMode", measurementMode);//режим медецинский Или универсальный
-        fonColor = mSettings.getInt("fonColor", fonColor);
-        fonImg = mSettings.getInt("fonImg", fonImg);
-        //"Device Information Service":-character--
-        softwareRevision = mSettings.getString("softwareRevision", softwareRevision);
-        firmwareRevision = mSettings.getString("firmwareRevision", firmwareRevision);
-        hardwareRevision = mSettings.getString("hardwareRevision", hardwareRevision);
-        serialNumber = mSettings.getString("serialNumber", serialNumber);
-        modelNumber = mSettings.getString("modelNumber",modelNumber);
-        manufacturerName = mSettings.getString("manufacturerName", manufacturerName);
-        //
-        onFahrenheit = mSettings.getBoolean("onFahrenheit", onFahrenheit);
-        onMinVibration = mSettings.getBoolean("onMinVibration", onMinVibration);
-        onMaxVibration = mSettings.getBoolean("onMaxVibration", onMaxVibration);
-        onEndVibration = mSettings.getBoolean("onEndVibration", onEndVibration);
-
-// TODO: 17.12.2016 в случае чтения непонятного типа(например булеан,
-// а чтиаем стринг- выбрасывает из программы- обработаь !!прерывания
-        minMelody = mSettings.getString("minMelody", minMelody);
-        maxMelody = mSettings.getString("maxMelody", maxMelody);
-        endMelody = mSettings.getString("endMelody", endMelody);
-        loop();
-    }
+//    public Sensor (SharedPreferences mSettings, int i){
+//
+//        if(mSettings == null){
+//            deviceLabel = deviceLabelStringDefault + " " + indexDevace++;
+//            //выходим по скольку все по умолчанию устанавливается
+//            return;
+//        }
+//        markerColor = 0x7 & indexDevace;
+//        changeConfig = false;//установки считаны из ФЛЕШИ- не изменены!!
+//        //if (mSettings.contains("COUNTER"))
+//        mBluetoothDeviceAddress = mSettings.getString("mBluetoothDeviceAddress", mBluetoothDeviceAddress);
+//        avtoConnect = mSettings.getBoolean("avtoConnect", avtoConnect);
+//        deviceLabel = mSettings.getString("deviceLabel", deviceLabel);//имя назначаемое пользоватлем
+//        deviceName = mSettings.getString("deviceName", deviceName);
+//        deviceItem = mSettings.getInt("deviceItem", deviceItem);
+//        markerColor = mSettings.getInt("markerColor", markerColor);
+//        //
+//        measurementMode = mSettings.getInt("measurementMode", measurementMode);//режим медецинский Или универсальный
+//        fonColor = mSettings.getInt("fonColor", fonColor);
+//        fonImg = mSettings.getInt("fonImg", fonImg);
+//        //"Device Information Service":-character--
+//        softwareRevision = mSettings.getString("softwareRevision", softwareRevision);
+//        firmwareRevision = mSettings.getString("firmwareRevision", firmwareRevision);
+//        hardwareRevision = mSettings.getString("hardwareRevision", hardwareRevision);
+//        serialNumber = mSettings.getString("serialNumber", serialNumber);
+//        modelNumber = mSettings.getString("modelNumber",modelNumber);
+//        manufacturerName = mSettings.getString("manufacturerName", manufacturerName);
+//        //
+//        onFahrenheit = mSettings.getBoolean("onFahrenheit", onFahrenheit);
+//        onMinVibration = mSettings.getBoolean("onMinVibration", onMinVibration);
+//        onMaxVibration = mSettings.getBoolean("onMaxVibration", onMaxVibration);
+//        onEndVibration = mSettings.getBoolean("onEndVibration", onEndVibration);
+//
+//// TODO: 17.12.2016 в случае чтения непонятного типа(например булеан,
+//// а чтиаем стринг- выбрасывает из программы- обработаь !!прерывания
+//        minMelody = mSettings.getString("minMelody", minMelody);
+//        maxMelody = mSettings.getString("maxMelody", maxMelody);
+//        endMelody = mSettings.getString("endMelody", endMelody);
+//        loop();
+//    }
 
     // TODO: 09.12.2016 МЛАДШИЙ разряд датчика температуры-to 0.0625°C, а выдает 0.1 точность, ГДЕ теряется? надо выдавать все, чтоб НЕ РЫСКАЛО
     // в будующем сделать порог  0.0625°C, чтоб показания не прыгали!
@@ -593,7 +595,7 @@ if(true)return;
         return true;
     }
 
-    public  int loop_rssi  = 0;
+    private   int loop_rssi  = 0;
     public void readRSSIandBatteryLevel(){
         if(mBluetoothGatt == null) return;
         // ЭТО для отладки--!!!

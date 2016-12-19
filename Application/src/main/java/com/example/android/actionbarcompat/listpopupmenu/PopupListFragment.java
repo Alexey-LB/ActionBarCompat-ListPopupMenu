@@ -16,6 +16,9 @@
 package com.example.android.actionbarcompat.listpopupmenu;
 
 import android.app.ActionBar;
+import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothGatt;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -397,21 +400,40 @@ public class PopupListFragment extends ListFragmentA  {
         }
         // по умолчанию из метода toString -> заталкивается в R.id.text1, по этому мы сами это НЕ делаем
 
-        boolean b = (sensor.mConnectionState == BluetoothLeServiceNew.STATE_CONNECTED)
-                || (sensor.mBluetoothDeviceAddress == null);//режим ИММИТАЦИИ- отладки
+        boolean b = (sensor.mConnectionState == BluetoothLeServiceNew.STATE_CONNECTED);
+           //     || (sensor.mBluetoothDeviceAddress == null);//режим ИММИТАЦИИ- отладки
 
+//b = true;
         //присвоил текущее значение для отображения
         Util.setTextToTextView(b? sensor.getStringIntermediateValue(false,true):
                 "Нет подкл.", R.id.numbe_cur, view);
         Util.setLevelToImageView(b? sensor.battery_level: 0, R.id.battery, view);
-        Util.setLevelToImageView(b? sensor.rssi: 0, R.id.signal, view);
+        Util.setLevelToImageView(sensor.rssi, R.id.signal, view);
     }
+    private int lloop = 0;
+
     public void updateView(){
+        lloop++;
         if((adapter == null) || (adapter.getCount() == 0)) return;
-        int i;
+        int i; String str = "Sensor>";
         for(i = 0; i < adapter.getCount();i++){
             updateViewItem(false,(Sensor)adapter.getItem(i), getListView().getChildAt(i));
+            Sensor sensor = (Sensor)adapter.getItem(i);
+            if(sensor != null) {
+                int con = 0;
+//                BluetoothGatt bleGatt = sensor.mBluetoothGatt;
+//                BluetoothDevice bd = sensor.mBluetoothGatt.getDevice();
+//                ;
+//                if(Util.isNoNull(bleGatt,bd))
+//                    con = bleGatt.getConnectionState(bd);
+
+                if((lloop & 0x7) == 0) str = str + String.format("  (%d/%d)%d[%d]%2.1f",sensor.mConnectionState
+                        ,sensor.rssi ,con
+                        ,i,sensor.intermediateValue);
+            }
+
         }
+        if((lloop & 0x7) == 0)Log.e(TAG,str);
     }
     //
     private boolean mHandlerWork = true;
@@ -530,27 +552,36 @@ return null;//fbButton_;
 //        myContainer.addView(fbButton_);
         //       fbButton = (View)myContainer;
     }
-    // добавить объект данные которого отображаются на листе
+//    // добавить объект данные которого отображаются на листе
     public boolean addNoInitObject(){
-        Log.i(TAG," addd------------");
-        if(maxChidren <= adapter.getCount()) return false;
-       // adapter.add(new Cheeses(index_object++));
-        //без адреса включается иммитатор
-        adapter.add(new Sensor());
+        Log.i(TAG," addNoInitObject (Sensor) go to addObject");
+        return addObject(new Sensor());
+    }
+    // добавить объект данные которого отображаются на листе
+    public boolean addObject(Object object){
+        Log.i(TAG," addObject------");
+        ArrayList<Sensor> mbleDot = Util.getListSensor(getActivity());
+        if(mbleDot != null){
+            mbleDot.add((Sensor) object);
+            //adapter.notifyDataSetInvalidated();
+            adapter.notifyDataSetChanged();
+        }
         objectDataToView.moveButton();//позиционируем
         return true;
     }
     // добавить объект данные которого отображаются на листе
-    public boolean addObject(Object object){
-        Log.i(TAG," addd------------");
-        if(maxChidren <= adapter.getCount()) return false;
-        // adapter.add(new Cheeses(index_object++));
-        //без адреса включается иммитатор
-       // adapter.add(object);
- //       mBluetoothLeService.mbleDot.add((Sensor) object);
-        RunDataHub app = ((RunDataHub) getActivity().getApplicationContext());
-        if(app.mBluetoothLeServiceM != null){
-            app.mBluetoothLeServiceM.mbleDot.add((Sensor) object);
+    public boolean DellObject(Object object){
+        Log.w(TAG," DellObject------");
+        ArrayList<Sensor> mbleDot = Util.getListSensor(getActivity());
+        if(mbleDot != null){
+
+            if((object instanceof Sensor)){
+                ((Sensor)object).disconnect();
+                Log.w(TAG,"Dell sensor -- disconnect() GATT --");
+            }
+            mbleDot.remove(object);
+            //adapter.notifyDataSetInvalidated();
+            adapter.notifyDataSetChanged();
         }
         objectDataToView.moveButton();//позиционируем
         return true;
@@ -759,12 +790,7 @@ return null;//fbButton_;
                             if ((positionScroll > 0) && (positionStartX > (DispleyWidthDp -maxScroll))){//удаления
         // УДАЛИТЬ--------------------------------
     clearScrollX_View(true);//затираем на него ссылку? с ним закончили
-                                //
-                                if((obj instanceof Sensor)){
-                                    ((Sensor)obj).disconnect();
-                                    Log.w(TAG,"Dell sensor -- disconnect() GATT --");
-                                }
-                                adapter.remove(obj);// УДАЛИТЬ
+                                 DellObject(obj);// УДАЛИТЬ
                                 objectD = null;//чтоб сдвижки поом НЕ было с NULL  объектом
                                 moveButton();
                                 if(i >= 0) Toast.makeText(getActivity(), "onClick Dell N= " + i, Toast.LENGTH_SHORT).show();
@@ -834,6 +860,7 @@ return null;//fbButton_;
                         //второй раз долго держим? сбрасываем  этот объект в начало
                         clearScrollX_View();//затираем на него ссылку? с ним закончили
                     }
+
                     if(addNoInitObject()) {//добавить объект
                         moveButton();
                     }
