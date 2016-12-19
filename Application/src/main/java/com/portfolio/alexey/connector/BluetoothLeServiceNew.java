@@ -195,11 +195,14 @@ public class BluetoothLeServiceNew extends Service {
     sensor.goToConnect = false;//подключение закончилочсь УДАЧНО!!
             sensor.setValue(characteristic);
             // на каждый 16 запрашиваем RSSI (запрос каждые примерно 16 секунды)
-    sensor.readRSSIandBatteryLevel();
+    if(sensor.readRSSIandBatteryLevel() == false){
+        //ЗАПРАШИВАТЬ (или записыват) ЗА 1 РАЗ можно только 1 характеристику
+        // или свойства - иначе НЕ отвечает
+        sensor.onCharacteristicRead();
+    }
             //
  // broadcastUpdate(ACTION_DATA_AVAILABLE, sensor, characteristic);
             Log.i(TAG, "   adress= " + sensor.mBluetoothDeviceAddress);
-   sensor.onCharacteristicRead();
         }
         //
         @Override

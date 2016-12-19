@@ -489,7 +489,10 @@ if(true)return;
      * сделано так, что Запрашивает по одному (если запрашиваемый парметр отсутствует) и выходит
      */
     public void onCharacteristicRead() {
+
         if(flagRead) return;// если все прочитали, а читаем по одномУ!!иНАЧЕ не получается-= не буферирует запросы!
+        Log.w(TAG, "SetRead: onCharacteristicRead Maker ---");
+
         BluetoothGattService service;
         BluetoothGattCharacteristic characteristic;
         //СМОТРИМ наличие СЕРВИСА (внутри сервеса характеристики с описателями их)
@@ -598,8 +601,8 @@ if(true)return;
     }
 
     private   int loop_rssi  = 0;
-    public void readRSSIandBatteryLevel(){
-        if(mBluetoothGatt == null) return;
+    public boolean readRSSIandBatteryLevel(){
+        if(mBluetoothGatt == null) return false;
         // ЭТО для отладки--!!!
         //todo(loop_rssi++ & 0xFFFFFFC0) == 0)- В ТЕЧЕНИИ первой МИНУТЫ запросы будут идти КАЖДУЮ секунду!!!
 
@@ -607,6 +610,7 @@ if(true)return;
         loop_rssi++;
         if(((loop_rssi & 0x0F) == 1) || ((loop_rssi & 0xFFFFFFC1) == 1)) {
             mBluetoothGatt.readRemoteRssi();
+            return true;
             //           Log.w(TAG, "enableRXNotification: loop_rssi -- ");
         }
         //каждые 2 минуты уровень батареи
@@ -618,12 +622,14 @@ if(true)return;
             service = mBluetoothGatt.getService(PartGatt.UUID_BATTERY_SERVICE);
             if (service == null) {
                 Log.e(TAG, "SetRead: BATTERY Service not found!");
-                return;//сервиса нет в этом устройстве
+                return false;//сервиса нет в этом устройстве
             }//читать уровень батареи
             characteristic = service.getCharacteristic(PartGatt.UUID_BATTERY_LEVEL);
             mBluetoothGatt.readCharacteristic(characteristic);
             Log.e(TAG, "R: BATTERY Service -- ");
+            return true;
         }
+        return false;
     }
 
     //-------------------------------
