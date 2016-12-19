@@ -428,7 +428,7 @@ public class PopupListFragment extends ListFragmentA  {
 //                    con = bleGatt.getConnectionState(bd);
 
                 if((lloop & 0x7) == 0) str = str + String.format("  (%d/%d)%d[%d]%2.1f",sensor.mConnectionState
-                        ,sensor.rssi ,con
+                        ,sensor.rssi ,sensor.battery_level
                         ,i,sensor.intermediateValue);
             }
 

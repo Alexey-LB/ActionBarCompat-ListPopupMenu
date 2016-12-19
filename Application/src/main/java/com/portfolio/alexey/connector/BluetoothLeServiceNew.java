@@ -171,7 +171,7 @@ public class BluetoothLeServiceNew extends Service {
         @Override
         public void onCharacteristicRead(BluetoothGatt gatt,
                                          BluetoothGattCharacteristic characteristic, int status) {
-            Log.v(TAG, "onCharacteristicRead--------------------");
+            Log.w(TAG, "onCharacteristicRead--------------------");
             //если у нас есть такое устройство
             final Sensor sensor = getBluetoothDevice(gatt.getDevice().getAddress());
             if(sensor == null) return;
@@ -193,7 +193,6 @@ public class BluetoothLeServiceNew extends Service {
             final Sensor sensor = getBluetoothDevice(gatt.getDevice().getAddress());
             if(sensor == null) return;
     sensor.goToConnect = false;//подключение закончилочсь УДАЧНО!!
- sensor.enableTXNotification();
             sensor.setValue(characteristic);
             // на каждый 16 запрашиваем RSSI (запрос каждые примерно 16 секунды)
     sensor.readRSSIandBatteryLevel();

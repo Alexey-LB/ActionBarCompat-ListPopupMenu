@@ -98,6 +98,10 @@ public class SettingMaker extends Activity implements View.OnClickListener{
             if(sensor != null){
                 if(mName != null)sensor.deviceName = mName;
                 if(mAdress != null){
+                    // TODO: 19.12.2016 МОЖЕТ задержку сдесь сделать? если былл коннект
+                    // со старым устройством //если был коннект- отключаем нафиг
+                    if(sensor.mBluetoothGatt != null) sensor.disconnect();
+
                     sensor.mBluetoothDeviceAddress = mAdress;
                     //
                     RunDataHub app = ((RunDataHub) getApplicationContext());
