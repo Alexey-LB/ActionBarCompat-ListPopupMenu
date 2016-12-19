@@ -353,7 +353,6 @@ public class BluetoothLeServiceNew extends Service {
                 }
                 SharedPreferences.Editor settingsDevaceEditor = settingsDevace.edit();
                 sensor.putConfig(settingsDevaceEditor);
-                settingsDevaceEditor.apply();
             }
             editor.apply();
             Log.i(TAG,"getSharedPreferences, Write OK, size= " + i);

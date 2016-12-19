@@ -235,6 +235,8 @@ if(true)return;
         editor.putString("minMelody", minMelody);
         editor.putString("maxMelody", maxMelody);
         editor.putString("endMelody", endMelody);
+        //записать на флеш
+        editor.apply();
     }
 //    public Sensor (SharedPreferences mSettings, int i){
 //

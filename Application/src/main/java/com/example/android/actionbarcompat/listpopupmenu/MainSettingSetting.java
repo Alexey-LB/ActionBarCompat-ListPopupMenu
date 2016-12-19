@@ -46,6 +46,9 @@ public class MainSettingSetting  extends Activity implements View.OnClickListene
                 && (app.mBluetoothLeServiceM.mbleDot != null)
                 && (app.mBluetoothLeServiceM.mbleDot.size() > 0)){
             sensor = app.mBluetoothLeServiceM.mbleDot.get(mItem);
+   //УСТАНАВИЛ флаг изменения, чтоб потом записать в ФАЙЛ на флеш,
+   // ЕСЛИ сюда зашли, значит надо сохранятся!!пока так
+    sensor.changeConfig = true;//установки считаны из ФЛЕШИ- не изменены!!
             Log.v(TAG,"sensor item= " + mItem);
         } else {
             finish();
