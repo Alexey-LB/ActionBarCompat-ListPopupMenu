@@ -22,6 +22,7 @@ import android.app.FragmentManager;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
@@ -68,6 +69,20 @@ public class MainActivity extends AppCompatActivity {// ActionBarActivity {
         super.onCreate(savedInstanceState);
         //setContentView(R.layout.sample_main);
         setContentView(R.layout.sample_main);
+        //на 2 секунды показываем заставку релсиба --------------
+        getSupportActionBar().hide();
+        findViewById(R.id.mainFragment).setVisibility(View.GONE);
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                // findViewById(R.id.mainFragment);
+                findViewById(R.id.home).setBackgroundResource(R.color.cardview_light_background);
+                findViewById(R.id.mainFragment).setVisibility(View.VISIBLE);
+                getSupportActionBar().show();
+            }
+        }, 3000);
+        //-------------------------------------------------------
         RunDataHub app = ((RunDataHub) getApplicationContext());
         if(app != null){
             app.mainActivity = this;

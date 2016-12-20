@@ -9,7 +9,7 @@
     android:id="@+id/item_parent"
     android:theme="@android:style/TextAppearance.Inverse"
     android:elevation="1dp"
-    android:background="@android:drawable/screen_background_light">
+    android:background="@color/cardview_light_background">
     <!--
     https://developer.android.com/guide/topics/ui/menus.html
 

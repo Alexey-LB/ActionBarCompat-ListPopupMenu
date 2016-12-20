@@ -111,11 +111,11 @@ public class Util {
 
     //android.support.v7.app.ActionBar
     // getSupportActionBar();??--это решалось в другом методе(getDelegate().getSupportActionBar();)
-    static public boolean setSupportV7appActionBar(
+    static public android.support.v7.app.ActionBar setSupportV7appActionBar(
             android.support.v7.app.ActionBar actionBar,String  tag,String  title) {
         if(actionBar == null){
             Log.e(tag, "actionBar == null--");
-            return false;
+            return actionBar;
         }
       //  android.support.v7.app.ActionBar actionBar = getSupportActionBar();
 //установить картинку
@@ -133,7 +133,7 @@ public class Util {
         actionBar.setDisplayShowTitleEnabled(true);
         //
         Log.d(tag, "actionBar != null--");
-        return true;
+        return actionBar;
     }
 
 
