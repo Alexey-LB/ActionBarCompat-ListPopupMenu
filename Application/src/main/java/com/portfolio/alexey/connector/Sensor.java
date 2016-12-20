@@ -608,13 +608,13 @@ if(true)return;
 
         //каждые 16 сек смотрим уровень сигнала
         loop_rssi++;
-        if(((loop_rssi & 0x0F) == 1) || ((loop_rssi & 0xFFFFFFC1) == 1)) {
+        if(((loop_rssi & 0x0F) == 1) || ((loop_rssi & 0xFFFFFFF3) == 1)) {
             mBluetoothGatt.readRemoteRssi();
             return true;
             //           Log.w(TAG, "enableRXNotification: loop_rssi -- ");
         }
         //каждые 2 минуты уровень батареи
-        if(((loop_rssi & 0x7F) == 3) || ((loop_rssi & 0xFFFFFFC3) == 3)){//Чаше чем 1 раз в 4 секунды НЕ надо, захлебывается
+        if(((loop_rssi & 0x7F) == 3) || ((loop_rssi & 0xFFFFFFF3) == 3)){//Чаше чем 1 раз в 4 секунды НЕ надо, захлебывается
        // if(((loop_rssi & 0x3) == 3)){
             BluetoothGattCharacteristic characteristic;
             BluetoothGattService service;

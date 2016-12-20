@@ -182,7 +182,7 @@ public class BluetoothLeServiceNew extends Service {
                 Log.i(TAG, "   adress= " + sensor.mBluetoothDeviceAddress);
 
       sensor.setValue(characteristic);
-  //              sensor.onCharacteristicRead();//постоянно запрашивает характеристику- и обламывает остальное!!
+                sensor.onCharacteristicRead();//постоянно запрашивает характеристику- и обламывает остальное!!
             }
         }
 
@@ -201,7 +201,9 @@ public class BluetoothLeServiceNew extends Service {
             //       sensor.onCharacteristicRead();
             // на каждый 16 запрашиваем RSSI (запрос каждые примерно 16 секунды)
 
-   // if(sensor.readRSSIandBatteryLevel() == false){}
+    if(sensor.readRSSIandBatteryLevel() == false){
+        sensor.onCharacteristicRead();
+    }
 
         //ЗАПРАШИВАТЬ (или записыват) ЗА 1 РАЗ можно только 1 характеристику
         // или свойства - иначе НЕ отвечает
@@ -287,7 +289,7 @@ public class BluetoothLeServiceNew extends Service {
        settingGetFileGoToConnect();
        //myThread.setPriority(10);
        myThread.setDaemon(true);// Указывает на то чтоб убивать когда будет прибито ПРИЛОЖЕНИЕ его породившее
-       myThread.start();
+    //   myThread.start();
         Log.e(TAG,"Servise------init-- init-- OK");
         return true;
     }
@@ -384,12 +386,12 @@ public class BluetoothLeServiceNew extends Service {
                     Sensor sensor = new Sensor(mSettingsDevace);
                     mbleDot.add(sensor);
                     Log.i(TAG,"onCreate: get sensor from flash= "+i +"   adress= " +sensor.mBluetoothDeviceAddress);
-//                    //--запускаем на соннект
-//                    if((sensor.mBluetoothDeviceAddress != null) &&(sensor.mBluetoothDeviceAddress.length() == 17)){
-//                        // запускаем на соннект
-//                        connect(sensor.mBluetoothDeviceAddress, true);
-//                        Log.w(TAG,"connect sensor= "+i+ "  adress= " + sensor.mBluetoothDeviceAddress);
-//                    }
+                    //--запускаем на соннект
+                    if((sensor.mBluetoothDeviceAddress != null) &&(sensor.mBluetoothDeviceAddress.length() == 17)){
+                        // запускаем на соннект
+                        connect(sensor.mBluetoothDeviceAddress, true);
+                        Log.w(TAG,"connect sensor= "+i+ "  adress= " + sensor.mBluetoothDeviceAddress);
+                    }
                 }
             }
             //если нет никого то Пишем своего
