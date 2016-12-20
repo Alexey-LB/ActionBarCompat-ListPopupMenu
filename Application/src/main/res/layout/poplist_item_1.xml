@@ -52,20 +52,22 @@
                 android:background="@drawable/marker_white"
                 android:layout_marginLeft="12dp"
                 android:layout_height="24dp"
-                android:layout_width="24dp" />
+                android:layout_width="24dp"
+                android:layout_weight="0"
+                android:layout_gravity="left|start" />
             <!--android:background="@drawable/marker_white"-->
             <TextView
+                android:id="@android:id/text1"
                 android:text="Температура 1"
-                android:layout_weight="1.25"
                 android:textColor="?attr/colorPrimaryDark"
                 android:layout_height="match_parent"
-                android:id="@android:id/text1"
-
+                android:layout_weight="2"
                 android:maxLines="1"
                 android:gravity="center_vertical|center_horizontal"
                 android:textSize="18sp"
                 android:textStyle="normal|bold"
-                android:layout_width="wrap_content" />
+                android:layout_gravity="right|end"
+                android:layout_width="match_parent" />
             <!--android:background="@drawable/rounded_a"
                             android:paddingLeft="20dp"
                             android:paddingRight="20dp"
@@ -77,29 +79,26 @@
             <!--android:background="@drawable/ic_sgnal_bluetooth_level"-->
             <!--android:src="@drawable/ic_sgnal_bluetooth_level"-->
             <ImageView
-
-                android:layout_width="35dp"
-                android:layout_weight="0.25"
-
                 android:src="@drawable/ic_sgnal_bluetooth_level"
-
+                android:layout_width="44dp"
+                android:layout_weight="0"
                 android:layout_height="match_parent"
                 android:id="@+id/signal"
                 android:gravity="center_vertical|center_horizontal"
-                 />
+                android:layout_gravity="right" />
             <!--app:srcCompat="@drawable/ic_sgnal_bluetooth_level"-->
             <!--android:text="Batt"-->
             <!--android:textColor="@color/cardview_dark_background"-->
             <!--android:src="@drawable/ic_battatery_level"-->
             <ImageView
-                android:src="@drawable/ic_battatery_level"
-
-                android:layout_weight="0.25"
-                android:layout_width="34dp"
-
-                android:layout_height="match_parent"
                 android:id="@+id/battery"
-                android:gravity="center_vertical|center_horizontal" />
+                android:src="@drawable/ic_battatery_level"
+                android:layout_width="44dp"
+                android:layout_weight="0"
+                android:layout_height="match_parent"
+
+                android:gravity="center_vertical|fill_vertical"
+                android:layout_gravity="right|end" />
 
         </LinearLayout>
 
