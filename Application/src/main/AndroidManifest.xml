@@ -87,9 +87,8 @@ http://www.fandroid.info/nastrojka-paneli-dejstvij-actionbar/
             </intent-filter>
         </activity>
 
-        <activity android:name=".SettingMaker"
-            android:theme="@style/AppThemeM"/>
-
+        <activity android:name=".SettingMaker" android:theme="@style/AppThemeM"/>
+        <activity android:name=".SettingMinMax" android:theme="@style/AppThemeM"/>
         <service android:name="com.portfolio.alexey.connector.BluetoothLeServiceNew" android:enabled="true"/>
 
     </application>

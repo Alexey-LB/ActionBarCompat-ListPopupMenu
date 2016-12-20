@@ -70,8 +70,13 @@ public class MainActivity extends AppCompatActivity {// ActionBarActivity {
         //setContentView(R.layout.sample_main);
         setContentView(R.layout.sample_main);
         //на 2 секунды показываем заставку релсиба --------------
+        View view = findViewById(R.id.mainFragment);
+        //убираем системнвый бар
+        view.getRootView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
+        // сворачиваем фрагмент
+        view.setVisibility(View.GONE);
+        //прячем наш бар на время
         getSupportActionBar().hide();
-        findViewById(R.id.mainFragment).setVisibility(View.GONE);
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override

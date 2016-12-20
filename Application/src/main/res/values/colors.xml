@@ -9,7 +9,7 @@
 
     <color name="colorBackgroundGrey">#FFE8E8E8</color>
     <color name="colorBackground">@android:color/background_light</color>
-    <color name="colorTextlight">#FF606060</color>
+    <color name="colorTextlight">#606060</color>
     <color name="colorText" >@android:color/black</color>
 
     <color name="common_google_signin_btn_text_dark_default">@android:color/white</color>

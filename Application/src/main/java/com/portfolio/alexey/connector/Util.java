@@ -41,6 +41,22 @@ public class Util {
     public  final static String EXTRAS_INT_2 = "EXTRAS_INT_2";
     public  final static String EXTRAS_INT_3 = "EXTRAS_INT_3";
     //
+    static public Sensor getSensor(int item,Context context){
+        BluetoothLeServiceNew bleS = getAppBleService(context);
+        if(isNoNull(bleS,bleS.mbleDot) && (bleS.mbleDot.size() > item)){
+            return bleS.mbleDot.get(item);
+        }
+        return null;
+    }
+    //
+    static public Sensor getSensor(int item,Activity activity){
+        BluetoothLeServiceNew bleS = getAppBleService(activity);
+        if(isNoNull(bleS,bleS.mbleDot) && (bleS.mbleDot.size() > item)){
+            return bleS.mbleDot.get(item);
+        }
+        return null;
+    }
+    //
     static public ArrayList<Sensor> getListSensor(Context context){
         BluetoothLeServiceNew bleS = getAppBleService(context);
         if(bleS != null)  return bleS.mbleDot;

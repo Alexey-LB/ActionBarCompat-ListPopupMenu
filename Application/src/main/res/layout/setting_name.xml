@@ -23,6 +23,7 @@
 
     <!--NAME-->
     <LinearLayout
+        android:id="@+id/LinearLayoutName"
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:background="@color/colorBackground"
@@ -47,7 +48,7 @@
             android:layout_weight="0"
             android:layout_marginLeft="10dp"
             android:gravity="left|center_vertical"
-            android:textColor="@color/colorText"
+            android:textColor="@color/colorTextlight"
             android:lines="1"
             android:textSize="@dimen/iten_text_size" />
 
@@ -58,13 +59,12 @@
             android:id="@+id/editTextName"
             android:inputType="textAutoComplete"
 
-            android:text="TextView1"
             android:hint="Введите имя..."
             android:layout_height="match_parent"
             android:layout_width="match_parent"
             android:layout_marginLeft="7dp"
             android:layout_weight="100"
-            android:textColor="@color/colorTextlight"
+            android:textColor="@color/colorText"
             android:textSize="@dimen/iten_text_size"
             android:textAlignment="gravity"
             android:paddingRight="10dp"
@@ -90,6 +90,36 @@
             <!--android:id="@+id/imageButtonName"-->
             <!--android:layout_weight="0" />-->
         <!--app:srcCompat="@drawable/ic_chevron_right_black_24dp"-->
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/LinearLayoutNambe"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/cardview_light_background">
+
+        <TextView
+            android:text="Порог"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:id="@+id/textViewNambe"
+            android:layout_weight="0"
+            android:textSize="@dimen/iten_text_size"
+            android:gravity="left|center_vertical"
+            android:layout_marginLeft="10dp" />
+
+        <EditText
+            android:id="@+id/editTextNambe"
+            android:hint="Введите число"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="numberSigned|numberDecimal"
+            android:ems="10"
+            android:layout_weight="1"
+            android:textColor="@color/colorText"
+            android:textSize="@dimen/iten_text_size" />
+
     </LinearLayout>
 
 

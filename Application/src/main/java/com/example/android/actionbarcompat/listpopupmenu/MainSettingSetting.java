@@ -48,18 +48,11 @@ public class MainSettingSetting  extends Activity implements View.OnClickListene
         //--------------------------
         final Intent intent = getIntent();
         mItem = intent.getIntExtra(MainActivity.EXTRAS_DEVICE_ITEM,0);
-        RunDataHub app = ((RunDataHub) getApplicationContext());
-        if((app.mBluetoothLeServiceM != null)
-                && (app.mBluetoothLeServiceM.mbleDot != null)
-                && (app.mBluetoothLeServiceM.mbleDot.size() > 0)){
-            sensor = app.mBluetoothLeServiceM.mbleDot.get(mItem);
-   //УСТАНАВИЛ флаг изменения, чтоб потом записать в ФАЙЛ на флеш,
-   // ЕСЛИ сюда зашли, значит надо сохранятся!!пока так
-    sensor.changeConfig = true;//установки считаны из ФЛЕШИ- не изменены!!
-            Log.v(TAG,"sensor item= " + mItem);
-        } else {
-            finish();
-        }
+        sensor = Util.getSensor(mItem,this);
+        if(sensor == null) finish();
+        //УСТАНАВИЛ флаг изменения, чтоб потом записать в ФАЙЛ на флеш,
+        // ЕСЛИ сюда зашли, значит надо сохранятся!!пока так
+        sensor.changeConfig = true;//установки считаны из ФЛЕШИ- не изменены!!
         //-------------------------------------------
         findViewById(R.id.textViewName).setOnClickListener(this);
         Util.setTextToTextView(sensor.deviceLabel,R.id.textViewName,this,"?");
@@ -318,12 +311,13 @@ public class MainSettingSetting  extends Activity implements View.OnClickListene
                 break;
             case R.id.imageButtonTemperaturesAbove:
                 Log.v(TAG,"imageButtonTemperaturesAbove");
-                Util.playerVibrator(400,this);
+ // Util.playerVibrator(400,this);
 
                 intent = new Intent(this, SettingMinMax.class);
                 intent.putExtra(Util.EXTRAS_ITEM, mItem);
-                intent.putExtra(Util.EXTRAS_BAR_TITLE, "   BC1 Max");
-                intent.putExtra(Util.EXTRAS_FLOAT_1, sensor != null?sensor.maxTemperature: 70f);
+                intent.putExtra(Util.EXTRAS_BAR_TITLE, "   BC1    Max");
+                // все изменения будет писать сразу в сенсор
+              //  intent.putExtra(Util.EXTRAS_FLOAT_1, sensor != null?sensor.maxTemperature: 70f);
                 startActivityForResult(intent,ACTIVITY_SETTING_MAX);
                 break;
             case R.id.imageButtonTemperaturesBelow:
@@ -331,7 +325,8 @@ public class MainSettingSetting  extends Activity implements View.OnClickListene
                 intent = new Intent(this, SettingMinMax.class);
                 intent.putExtra(Util.EXTRAS_ITEM, mItem);
                 intent.putExtra(Util.EXTRAS_BAR_TITLE, "   BC2 Min");
-                intent.putExtra(Util.EXTRAS_FLOAT_1, sensor != null?sensor.minTemperature:-20f);
+                // все изменения будет писать сразу в сенсор
+               // intent.putExtra(Util.EXTRAS_FLOAT_1, sensor != null?sensor.minTemperature:-20f);
                 startActivityForResult(intent,ACTIVITY_SETTING_MIN);
 
 //                if(sensor != null){

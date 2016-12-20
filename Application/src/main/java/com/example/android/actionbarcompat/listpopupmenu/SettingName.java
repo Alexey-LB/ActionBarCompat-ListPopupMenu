@@ -7,11 +7,13 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
+import android.renderscript.ScriptGroup;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.portfolio.alexey.connector.Util;
 
@@ -19,14 +21,57 @@ import com.portfolio.alexey.connector.Util;
 //public class SettingName extends AppCompatActivity {//} implements View.OnKeyListener{
 public class SettingName extends Activity {//} implements View.OnKeyListener{
     final String TAG = getClass().getSimpleName();
+    public  final static int VALUE_TYPE_INT = 10;
+    public  final static int VALUE_TYPE_FLOAT = 20;
+    public  final static int VALUE_TYPE_STRING = 30;
+
+    public  final static String EXTRAS_TYPE = "EXTRAS_TYPE";
+
+    public  final static String EXTRAS_STRING = "EXTRAS_STRING";
+    public  final static String EXTRAS_FLOAT = "EXTRAS_FLOAT";
+    public  final static String EXTRAS_FLOAT_MIN = "EXTRAS_FLOAT_MIN";
+    public  final static String EXTRAS_FLOAT_MAX = "EXTRAS_FLOAT_MAX";
+
+    public  final static String EXTRAS_INT = "EXTRAS_INT";
+    public  final static String EXTRAS_INT_MIN = "EXTRAS_INT_MIN";
+    public  final static String EXTRAS_INT_MAX = "EXTRAS_INT_MAX";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.setting_name);
         final Intent intent = getIntent();
-        Util.setTextToTextView(intent.getStringExtra(MainActivity.EXTRAS_DEVICE_NAME)
-                ,R.id.editTextName,this,"?");
+//        TextView tv;
+//        tv.se
+//        android:inputType="numberSigned|numberDecimal"
+//        android:ems="10"
+//        tv.setEms();
+//        tv.setInputType(andr);
+//        //выбор с чем работаем стока-дата-число и тд
+//        int type, idEditText;float value;
+
+// //       type = VALUE_TYPE_STRING;
+//        if(intent.hasExtra(EXTRAS_TYPE))type = intent.getIntExtra(EXTRAS_TYPE,VALUE_TYPE_STRING);
+//        switch(type){
+//            case VALUE_TYPE_INT:
+//                break;
+//            case VALUE_TYPE_FLOAT:
+//                value = intent.getFloatExtra(EXTRAS_FLOAT,0f);
+//
+//                Util.setTextToTextView(String.format("%2.1f",value)
+//                        ,R.id.editTextNambe,this,"");
+//                break;
+//            case VALUE_TYPE_STRING:
+//                default:
+//
+//        }
+        String valueEXTRAS;
+        if(intent.hasExtra(Util.EXTRAS_FLOAT_1)){
+            valueEXTRAS = Util.EXTRAS_FLOAT_1;
+        } else{
+            valueEXTRAS = MainActivity.EXTRAS_DEVICE_NAME;
+        }
+        Util.setTextToTextView(valueEXTRAS,R.id.editTextName,this,"");
         //
         findViewById(R.id.editTextName).setOnKeyListener(new View.OnKeyListener() {
             @Override
@@ -48,7 +93,7 @@ public class SettingName extends Activity {//} implements View.OnKeyListener{
                 return false;
             }
         });//
-        Util.setActionBar(getActionBar(),TAG, "  BB1");
+        Util.setActionBar(getActionBar(),TAG, intent.getStringExtra(Util.EXTRAS_BAR_TITLE));
         //getParent()
     }
     @Override
