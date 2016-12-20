@@ -290,17 +290,30 @@ if(true)return;
         }else str = String.format("%2.1f",f);
         return str;
     }
+
     public final String getStringIntermediateValue( boolean fahrenheit, boolean addType){
         return getStringValue( intermediateValue, fahrenheit, addType);
+    }
+    public final String getStringIntermediateValue( boolean addType){
+        return getStringValue( intermediateValue, onFahrenheit, addType);
     }
     public String getStringMinTemperature( boolean fahrenheit, boolean addType){
         return getStringValue( minTemperature, fahrenheit, addType);
     }
+    public String getStringMinTemperature( boolean addType){
+        return getStringValue( minTemperature, onFahrenheit, addType);
+    }
     public String getStringMaxTemperature( boolean fahrenheit, boolean addType){
         return getStringValue( maxTemperature, fahrenheit, addType);
     }
+    public String getStringMaxTemperature( boolean addType){
+        return getStringValue( maxTemperature, onFahrenheit, addType);
+    }
     public String getStringEndTemperature( boolean fahrenheit, boolean addType){
         return getStringValue( endTemperature, fahrenheit, addType);
+    }
+    public String getStringEndTemperature( boolean addType){
+        return getStringValue( endTemperature, onFahrenheit, addType);
     }
     //режим медецинский Или универсальный
     public String getStringMeasurementMode(){

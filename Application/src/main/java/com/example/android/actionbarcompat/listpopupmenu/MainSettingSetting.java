@@ -29,8 +29,15 @@ import com.portfolio.alexey.connector.Util;
 
 //public class MainSettingSetting extends AppCompatActivity implements View.OnClickListener{
 public class MainSettingSetting  extends Activity implements View.OnClickListener{
-    private final int EDIT_NAME= 456;
-    private final int GET_URL_RING= 567;
+  //  private final int EDIT_NAME= 456;
+  //  private final int GET_URL_RING= 567;
+    public final  static int ACTIVITY_SETTING = 3456781;
+    public final  static int ACTIVITY_SETTING_DEVICE = 3456782;
+    public final  static int ACTIVITY_SETTING_MAX = 3456783;
+    public final  static int ACTIVITY_SETTING_MIN = 3456784;
+    public final  static int ACTIVITY_SETTING_EDIT = 3456785;
+    public final  static int ACTIVITY_SETTING_URL_MELODI = 3456786;
+
     private  int mItem= 0;
     private Sensor sensor;
     final   String TAG = getClass().getSimpleName();
@@ -56,6 +63,11 @@ public class MainSettingSetting  extends Activity implements View.OnClickListene
         //-------------------------------------------
         findViewById(R.id.textViewName).setOnClickListener(this);
         Util.setTextToTextView(sensor.deviceLabel,R.id.textViewName,this,"?");
+
+        Util.setTextToTextView(sensor.getStringMinTemperature(true)
+                ,R.id.textViewTemperaturesAbove,this,"-");
+        Util.setTextToTextView(sensor.getStringMaxTemperature(true)
+                ,R.id.textViewTemperaturesBelow,this,"-");
         findViewById(R.id.imageButtonMarker).setOnClickListener(this);
 
         Util.setDrawableToImageView(sensor.markerColor,R.id.imageButtonMarker, this);
@@ -138,10 +150,10 @@ public class MainSettingSetting  extends Activity implements View.OnClickListene
 //
     @Override//сюда прилетают ответы при возвращении из других ОКОН активити
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        String name,str = "?";Uri uri=null;
+        String name,str = "?";Uri uri=null;float fl;
         if(resultCode == RESULT_OK) {
             switch(requestCode){
-                case EDIT_NAME:
+                case ACTIVITY_SETTING_EDIT:
                     name = data.getStringExtra(MainActivity.EXTRAS_DEVICE_NAME);
                     str = MainActivity.EXTRAS_DEVICE_NAME + name;
                     if(name.length() > 64) name = name.substring(0,63);
@@ -149,7 +161,7 @@ public class MainSettingSetting  extends Activity implements View.OnClickListene
                     //
                     Util.setTextToTextView(name,R.id.textViewName,this,"?");
                     break;
-                case GET_URL_RING:
+                case ACTIVITY_SETTING_URL_MELODI:
                     uri = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
                     //если без звука= то нулл!
                     if(Util.isNoNull(sensor)){
@@ -160,8 +172,24 @@ public class MainSettingSetting  extends Activity implements View.OnClickListene
                     }
                     str = str + "   Uri= " + uri;
                     break;
-                case MainActivity.ACTIVITY_SETTING_SETTING:
+                case ACTIVITY_SETTING_DEVICE:
                     //обновить отображение
+                    break;
+                case ACTIVITY_SETTING_MAX:
+                    if(sensor != null){
+                        sensor.maxTemperature = data.getFloatExtra(Util.EXTRAS_FLOAT_1, 70f);
+                    }
+                    //обновить отображение
+                    Util.setTextToTextView(sensor.getStringMaxTemperature(true)
+                            ,R.id.textViewTemperaturesBelow,this,"-");
+                    break;
+                case ACTIVITY_SETTING_MIN:
+                    if(sensor != null){
+                        sensor.minTemperature = data.getFloatExtra(Util.EXTRAS_FLOAT_1, -20f);
+                    }
+                    //обновить отображение
+                    Util.setTextToTextView(sensor.getStringMinTemperature(true)
+                            ,R.id.textViewTemperaturesAbove,this,"-");
                     break;
             }
 
@@ -205,7 +233,7 @@ public class MainSettingSetting  extends Activity implements View.OnClickListene
                 if(Util.isNoNull(sensor, sensor.deviceLabel)) str = sensor.deviceLabel;
                 intent = new Intent(this, SettingName.class);
                 intent.putExtra(MainActivity.EXTRAS_DEVICE_NAME, str);
-                startActivityForResult(intent,EDIT_NAME);
+                startActivityForResult(intent,ACTIVITY_SETTING_EDIT);
                 break;
             case R.id.textViewName:
                 Log.v(TAG,"textViewName");
@@ -247,7 +275,7 @@ public class MainSettingSetting  extends Activity implements View.OnClickListene
                 if(sensor != null){
                     intent = new Intent(this, SettingMaker.class);
                     intent.putExtra(MainActivity.EXTRAS_DEVICE_ITEM , mItem);
-                    startActivityForResult(intent,MainActivity.ACTIVITY_SETTING_SETTING);
+                    startActivityForResult(intent,ACTIVITY_SETTING_DEVICE);
                 }
                 break;
             //case R.id.imageButtonMeasurementMode:
@@ -278,30 +306,37 @@ public class MainSettingSetting  extends Activity implements View.OnClickListene
             case R.id.imageButtonVibration:
                 Log.v(TAG,"imageButtonVibration");
                 action = VIBRATOR_SERVICE;
+                Util.playerVibrator(400,this);
                 //startActivity(new Intent(action));
-                // https://geektimes.ru/post/232885/
-                vibrator = (Vibrator) getSystemService (VIBRATOR_SERVICE);
-                try {
-                    vibrator.vibrate(400);
-                }catch (Exception e){
-                    Log.e(TAG, " vibrator ERR= " + e);
-                }
+//                // https://geektimes.ru/post/232885/
+//                vibrator = (Vibrator) getSystemService (VIBRATOR_SERVICE);
+//                try {
+//                    vibrator.vibrate(400);
+//                }catch (Exception e){
+//                    Log.e(TAG, " vibrator ERR= " + e);
+//                }
                 break;
             case R.id.imageButtonTemperaturesAbove:
                 Log.v(TAG,"imageButtonTemperaturesAbove");
-// https://geektimes.ru/post/232885/
-                vibrator = (Vibrator) getSystemService (VIBRATOR_SERVICE);
-                try {
-                    vibrator.vibrate(400);
-                }catch (Exception e){
-                    Log.e(TAG, " vibrator ERR= " + e);
-                }
+                Util.playerVibrator(400,this);
+
+                intent = new Intent(this, SettingMinMax.class);
+                intent.putExtra(Util.EXTRAS_ITEM, mItem);
+                intent.putExtra(Util.EXTRAS_BAR_TITLE, "   BC1 Max");
+                intent.putExtra(Util.EXTRAS_FLOAT_1, sensor != null?sensor.maxTemperature: 70f);
+                startActivityForResult(intent,ACTIVITY_SETTING_MAX);
                 break;
             case R.id.imageButtonTemperaturesBelow:
                 Log.v(TAG,"imageButtonTemperaturesBelow");
-                if(sensor != null){
-                    Util.playerRingtone(0f, sensor.endMelody , this,TAG);
-                } else Util.playerRingtone(0f, (Uri) null , this,TAG);
+                intent = new Intent(this, SettingMinMax.class);
+                intent.putExtra(Util.EXTRAS_ITEM, mItem);
+                intent.putExtra(Util.EXTRAS_BAR_TITLE, "   BC2 Min");
+                intent.putExtra(Util.EXTRAS_FLOAT_1, sensor != null?sensor.minTemperature:-20f);
+                startActivityForResult(intent,ACTIVITY_SETTING_MIN);
+
+//                if(sensor != null){
+//                    Util.playerRingtone(0f, sensor.endMelody , this,TAG);
+//                } else Util.playerRingtone(0f, (Uri) null , this,TAG);
                 break;
             case R.id.imageButtonDecor:
                 Log.v(TAG,"imageButtonDecor");
@@ -313,6 +348,8 @@ public class MainSettingSetting  extends Activity implements View.OnClickListene
         }
         return;
     }
+
+
     //http://stackoverflow.com/questions/7671637/how-to-set-ringtone-with-ringtonemanager-action-ringtone-picker
 // http://www.ceveni.com/2009/07/ringtone-picker-in-android-with-intent.html
     public void pickRingtone() {
@@ -341,7 +378,7 @@ public class MainSettingSetting  extends Activity implements View.OnClickListene
         intent.putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI, urie);
         intent.putExtra(RingtoneManager.EXTRA_RINGTONE_DEFAULT_URI, urie);
 
-        startActivityForResult(intent, GET_URL_RING);
+        startActivityForResult(intent, ACTIVITY_SETTING_URL_MELODI);
     }
 
     public static class NotificationPreferenceFragment extends PreferenceFragment {

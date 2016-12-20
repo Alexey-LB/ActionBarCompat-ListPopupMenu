@@ -7,6 +7,7 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.Vibrator;
 import android.support.constraint.solver.ArrayLinkedVariables;
 import android.util.Log;
 import android.view.View;
@@ -20,11 +21,25 @@ import com.example.android.actionbarcompat.listpopupmenu.RunDataHub;
 
 import java.util.ArrayList;
 
+import static android.content.Context.VIBRATOR_SERVICE;
+
 /**
  * Created by lesa on 17.12.2016.
  */
 
 public class Util {
+    public  final static String EXTRAS_NAME = "EXTRAS_NAME";
+    public  final static String EXTRAS_NAME_FILTR = "EXTRAS_NAME_FILTR";
+    public  final static String EXTRAS_ADDRESS = "EXTRAS_ADDRESS";
+    public  final static String EXTRAS_ITEM = "EXTRAS_ITEM";
+    public  final static String EXTRAS_BAR_TITLE = "EXTRAS_BAR_TITLE";
+    public  final static String EXTRAS_FLOAT_1 = "EXTRAS_FLOAT_1";
+    public  final static String EXTRAS_FLOAT_2 = "EXTRAS_FLOAT_2";
+    public  final static String EXTRAS_FLOAT_3 = "EXTRAS_FLOAT_3";
+
+    public  final static String EXTRAS_INT_1 = "EXTRAS_INT_1";
+    public  final static String EXTRAS_INT_2 = "EXTRAS_INT_2";
+    public  final static String EXTRAS_INT_3 = "EXTRAS_INT_3";
     //
     static public ArrayList<Sensor> getListSensor(Context context){
         BluetoothLeServiceNew bleS = getAppBleService(context);
@@ -53,6 +68,16 @@ public class Util {
         }
         return null;
     }
+    //// https://geektimes.ru/post/232885/-------------------------------------------
+    static public void playerVibrator(int milsec, Activity activity){
+        Vibrator  vibrator = (Vibrator) activity.getSystemService (VIBRATOR_SERVICE);
+        try {
+            vibrator.vibrate(milsec);
+        }catch (Exception e){
+           ;// Log.e(TAG, " vibrator ERR= " + e);
+        }
+    }
+    //----------------------------------------------------------------------------
     // https://geektimes.ru/post/232885/
 // Что бы звук не был тихим:
 // stackoverflow.com/questions/8278939/android-mediaplayer-volume-is-very-low-already-adjusted-volume
