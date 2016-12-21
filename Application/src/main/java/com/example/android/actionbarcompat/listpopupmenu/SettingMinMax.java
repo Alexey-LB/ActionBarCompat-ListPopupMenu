@@ -90,17 +90,17 @@ public class SettingMinMax extends Activity implements View.OnClickListener{
         findViewById(R.id.activity_main_min_max).getRootView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
 
     }
-    private final float max = 70f;
-    private final float min = -20f;
+    private  float max = 70f;
+    private  float min = -20f;
     @Override//сюда прилетают ответы при возвращении из других ОКОН активити
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        String str ="";Uri uri;float value;
+        String str ="";Uri uri;Float value;
          if((resultCode == RESULT_OK) && (sensor != null)){
              switch (requestCode){
                  case ACTIVITY_SETTING_MIN_MAX_VALUE:
-                     str = data.getStringExtra(MainActivity.EXTRAS_DEVICE_NAME);
-                     if((str != null) && (str.length() > 0))value = Float.valueOf(str);
-                     else break;
+                     str = data.getStringExtra(SettingName.EXTRAS_VALUE);
+                     value = Util.parseFloat(str);
+                     if(value == null) break;
                      if (value > max) value = max;
                      if (value < min) value = min;
                      //
@@ -155,12 +155,19 @@ public class SettingMinMax extends Activity implements View.OnClickListener{
                 Log.v(TAG,"imageButtonValue");
                  float value;
                 if(maxValue) value = sensor.maxTemperature;
-                else value = sensor.maxTemperature;
-
+                else value = sensor.minTemperature;
+                //----НАСТРОЙКА И ЗАПУСК окна ввода ЧИСЛА -----------
                 intent = new Intent(this, SettingName.class);
-                intent.putExtra(Util.EXTRAS_FLOAT_1, String.format("%2.1f",value));
+                intent.putExtra(SettingName.EXTRAS_VALUE, String.format(" %2.1f",value));
+                intent.putExtra(SettingName.EXTRAS_TYPE, SettingName.VALUE_TYPE_FLOAT);
+                intent.putExtra(Util.EXTRAS_LABEL, "Уровень");
+                intent.putExtra(SettingName.EXTRAS_HINT,"Введите число");
+                intent.putExtra(SettingName.EXTRAS_FLOAT_MAX,max);
+                intent.putExtra(SettingName.EXTRAS_FLOAT_MIN,min);
                 intent.putExtra(Util.EXTRAS_BAR_TITLE, "   BC3");
+
                 startActivityForResult(intent,ACTIVITY_SETTING_MIN_MAX_VALUE);
+                //-----------------------------------
                 break;
             case R.id.imageButtonMelody:
                 Log.v(TAG,"imageButtonMelody");

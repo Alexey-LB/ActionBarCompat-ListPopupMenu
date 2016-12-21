@@ -79,9 +79,11 @@ http://www.fandroid.info/nastrojka-paneli-dejstvij-actionbar/
             </intent-filter>
         </activity>
         <!--android:windowSoftInputMode="stateAlwaysVisible" -  задал клавиатуру видимой всегда в этой активности-->
+
         <activity android:name=".SettingName"
             android:theme="@style/AppThemeM"
-            android:windowSoftInputMode="stateAlwaysVisible">
+            >
+            <!--android:windowSoftInputMode="stateAlwaysVisible"-->
             <intent-filter>
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>

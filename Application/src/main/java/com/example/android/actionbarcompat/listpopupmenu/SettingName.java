@@ -8,11 +8,14 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import android.renderscript.ScriptGroup;
+import android.text.InputType;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.portfolio.alexey.connector.Util;
@@ -27,83 +30,142 @@ public class SettingName extends Activity {//} implements View.OnKeyListener{
 
     public  final static String EXTRAS_TYPE = "EXTRAS_TYPE";
 
-    public  final static String EXTRAS_STRING = "EXTRAS_STRING";
-    public  final static String EXTRAS_FLOAT = "EXTRAS_FLOAT";
+    public  final static String EXTRAS_VALUE = "EXTRAS_VALUE";
+    public  final static String EXTRAS_HINT = "EXTRAS_HINT";
+
     public  final static String EXTRAS_FLOAT_MIN = "EXTRAS_FLOAT_MIN";
     public  final static String EXTRAS_FLOAT_MAX = "EXTRAS_FLOAT_MAX";
 
-    public  final static String EXTRAS_INT = "EXTRAS_INT";
+
     public  final static String EXTRAS_INT_MIN = "EXTRAS_INT_MIN";
     public  final static String EXTRAS_INT_MAX = "EXTRAS_INT_MAX";
-
+    public Float max = 70f;//диапазон работы SeekBar
+    public Float min = -20f;
+    public Float accuracy = 0.1f;//точность представления- для  SeekBar
+    public int offset = 0;//смещение 0- для  SeekBar (у бара минимум 0, - нет!!)
+    private SeekBar sb;
+    private TextView tv;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.setting_name);
+        String extras; int type;Float fl;
         final Intent intent = getIntent();
-//        TextView tv;
-//        tv.se
-//        android:inputType="numberSigned|numberDecimal"
-//        android:ems="10"
-//        tv.setEms();
-//        tv.setInputType(andr);
-//        //выбор с чем работаем стока-дата-число и тд
-//        int type, idEditText;float value;
 
-// //       type = VALUE_TYPE_STRING;
-//        if(intent.hasExtra(EXTRAS_TYPE))type = intent.getIntExtra(EXTRAS_TYPE,VALUE_TYPE_STRING);
-//        switch(type){
-//            case VALUE_TYPE_INT:
-//                break;
-//            case VALUE_TYPE_FLOAT:
-//                value = intent.getFloatExtra(EXTRAS_FLOAT,0f);
-//
-//                Util.setTextToTextView(String.format("%2.1f",value)
-//                        ,R.id.editTextNambe,this,"");
-//                break;
-//            case VALUE_TYPE_STRING:
-//                default:
-//
-//        }
-        String valueEXTRAS;
-        if(intent.hasExtra(Util.EXTRAS_FLOAT_1)){
-            valueEXTRAS = Util.EXTRAS_FLOAT_1;
-        } else{
-            valueEXTRAS = MainActivity.EXTRAS_DEVICE_NAME;
+        //Метка поля, указываетчто вводим
+        Util.setTextToTextView(intent.getStringExtra(Util.EXTRAS_LABEL)
+                ,R.id.textViewLabelName,this,"");
+
+        //установка напрямую численного значения
+        sb = (SeekBar)findViewById(R.id.seekBar);
+        //поле ввода, по умолчанию ДОСТУПНЫ ВСЕ СИМВОЛЫ
+        tv= (TextView)findViewById(R.id.editTextName);
+
+        // посказка, если ввод пустой!
+        tv.setHint(intent.getStringExtra(EXTRAS_HINT));
+
+        Util.setTextToTextView(intent.getStringExtra(EXTRAS_VALUE)
+                ,R.id.editTextName,this,"");
+
+        //определяем че читаем и настраиваем ввод значения
+        // СТРОКА или ЧИСЛО!! по умолчанию строка
+        type = intent.getIntExtra(EXTRAS_TYPE,VALUE_TYPE_STRING);
+
+        switch(type){
+            case VALUE_TYPE_INT:
+                tv.setInputType(InputType.TYPE_CLASS_NUMBER
+                        | InputType.TYPE_NUMBER_FLAG_SIGNED);
+                sb.setVisibility(View.VISIBLE);
+                fl = Util.parseFloat(intent.getStringExtra(EXTRAS_VALUE));
+                setSettingSeekBar(fl);
+                /// всегда скрыват клавиатуру при вводе числа (есть сикБАР)!!
+                getWindow().setSoftInputMode(
+                        WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+                break;
+            case VALUE_TYPE_FLOAT :
+                tv.setInputType(InputType.TYPE_CLASS_NUMBER
+                        | InputType.TYPE_NUMBER_FLAG_DECIMAL
+                        | InputType.TYPE_NUMBER_FLAG_SIGNED);
+                sb.setVisibility(View.VISIBLE);
+                fl = Util.parseFloat(intent.getStringExtra(EXTRAS_VALUE));
+                max = intent.getFloatExtra(EXTRAS_FLOAT_MAX,70f);
+                min = intent.getFloatExtra(EXTRAS_FLOAT_MIN,-20f);
+                setSettingSeekBar(fl);
+                /// всегда скрыват клавиатуру при вводе числа (есть сикБАР)!!
+                getWindow().setSoftInputMode(
+                        WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+                break;
+            case VALUE_TYPE_STRING:
+                sb.setVisibility(View.GONE);
+               // tv.setShowSoftInputOnFocus(true);
+                /// всегда показывать клавиатуру при вводе имени!!
+                getWindow().setSoftInputMode(
+                        WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+
+                break;
+            default:
         }
-        Util.setTextToTextView(valueEXTRAS,R.id.editTextName,this,"");
         //
-        findViewById(R.id.editTextName).setOnKeyListener(new View.OnKeyListener() {
+        tv.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View view, int i, KeyEvent keyEvent) {
                 if(i == KeyEvent.KEYCODE_ENTER){//выходим с результатом
-                    Intent intent = new Intent();
-                    if(view instanceof EditText){
-                        String name = ((EditText)view).getText().toString();
-                        if((name != null) && (name.length() >= 1)){
-                            if(name.length() > 32) name = name.substring(0,31);
-                            intent.putExtra(MainActivity.EXTRAS_DEVICE_NAME,name);
-                            setResult(RESULT_OK,intent);
-                            finish();
-                        }
-                    }
-                    setResult(RESULT_CANCELED,intent);
-                    finish();
+                    onFinish(view);
                 }
                 return false;
             }
         });//
+        sb.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                updateTextString(getValueString(progress));
+            }
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {}
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {}
+        });//
         Util.setActionBar(getActionBar(),TAG, intent.getStringExtra(Util.EXTRAS_BAR_TITLE));
         //getParent()
+    }
+
+    private void onFinish(View view){
+        Intent intent = new Intent();
+        if(view instanceof EditText){
+            String str = ((EditText)view).getText().toString();
+            if((str != null) && (str.length() >= 1)){
+                if(str.length() > 32) str = str.substring(0,31);
+                intent.putExtra(MainActivity.EXTRAS_DEVICE_NAME,str);
+                intent.putExtra(EXTRAS_VALUE,str);
+                setResult(RESULT_OK,intent);
+                finish();
+            }
+        }
+        setResult(RESULT_CANCELED,intent);
+        finish();
+    }
+    private void setSettingSeekBar(Float fl){
+        int set = (int)((Math.abs(max) + Math.abs(min)) / accuracy);
+        offset = (int)(Math.abs(min) / accuracy);
+        sb.setMax(set);
+        if(fl != null){
+            //с учетом смещения
+            sb.setProgress((int)(fl*10) + offset);
+        }
+    }
+    private String getValueString(int progress){
+        int i = progress - offset;
+        return String.format("%d.%d",i/10,Math.abs(i%10));
+    }
+
+    private void updateTextString(final String value){
+        Util.setTextToTextView(value,R.id.editTextName,this,"");
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         Log.w(TAG,"onOptionsItemSelected= "+ item);
-        Intent intent = new Intent();
-        //  intent.putExtra(MainActivity.EXTRAS_DEVICE_NAME, device.getName());
-        //  intent.putExtra(MainActivity.EXTRAS_DEVICE_ADDRESS, device.getAddress());
-        setResult(RESULT_CANCELED, intent);
-        finish();
+
+        onFinish(tv);
         return true;
     }
     @Override

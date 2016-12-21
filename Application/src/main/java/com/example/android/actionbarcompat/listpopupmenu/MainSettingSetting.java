@@ -147,8 +147,8 @@ public class MainSettingSetting  extends Activity implements View.OnClickListene
         if(resultCode == RESULT_OK) {
             switch(requestCode){
                 case ACTIVITY_SETTING_EDIT:
-                    name = data.getStringExtra(MainActivity.EXTRAS_DEVICE_NAME);
-                    str = MainActivity.EXTRAS_DEVICE_NAME + name;
+                    name = data.getStringExtra(SettingName.EXTRAS_VALUE);
+                    str = SettingName.EXTRAS_VALUE + name;
                     if(name.length() > 64) name = name.substring(0,63);
                     if(Util.isNoNull(sensor, name))sensor.deviceLabel = name;
                     //
@@ -225,7 +225,12 @@ public class MainSettingSetting  extends Activity implements View.OnClickListene
                 Log.v(TAG,"imageButtonName");
                 if(Util.isNoNull(sensor, sensor.deviceLabel)) str = sensor.deviceLabel;
                 intent = new Intent(this, SettingName.class);
-                intent.putExtra(MainActivity.EXTRAS_DEVICE_NAME, str);
+                intent.putExtra(SettingName.EXTRAS_VALUE, str);
+                intent.putExtra(SettingName.EXTRAS_TYPE, SettingName.VALUE_TYPE_STRING);
+                intent.putExtra(Util.EXTRAS_LABEL, "Имя");
+                intent.putExtra(SettingName.EXTRAS_HINT,"Введите имя");
+                intent.putExtra(Util.EXTRAS_BAR_TITLE, "   BB1");
+
                 startActivityForResult(intent,ACTIVITY_SETTING_EDIT);
                 break;
             case R.id.textViewName:

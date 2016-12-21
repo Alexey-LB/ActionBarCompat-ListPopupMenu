@@ -6,9 +6,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:weightSum = "100"
-    android:background="@color/colorTextlight"
+    android:layout_height="match_parent"
+    android:weightSum = "0"
+    android:background="@color/colorBackground"
     android:visibility="visible"
     >
      <!--ОТСТУПЫ - НЕ работает!? почемуто, хотел добапввить разделители-->
@@ -29,7 +29,8 @@
         android:background="@color/colorBackground"
         android:layout_height="@dimen/iten_setting_wight"
         android:divider="@android:color/background_dark"
-        android:layout_marginBottom="@dimen/iten_vertical_gap_wight">
+        android:layout_marginBottom="@dimen/iten_vertical_gap_wight"
+        android:layout_gravity="top|center_horizontal">
         <!--Например, если есть три текстовых поля, и двум из них объявлен вес со значением 1, -->
         <!--в то время как другому не даётся никакого веса (0), -->
         <!--третье текстовое поле без веса не будет расширяться и займёт область, определяемую размером текста, -->
@@ -43,7 +44,7 @@
         <TextView
             android:text="Имя"
             android:id="@+id/textViewLabelName"
-            android:layout_height="match_parent"
+            android:layout_height="@dimen/iten_setting_wight"
             android:layout_width="wrap_content"
             android:layout_weight="0"
             android:layout_marginLeft="10dp"
@@ -55,13 +56,18 @@
 
         <!--android:ems="10"
         android:inputType="textPersonName"-->
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/iten_setting_wight"
+            android:layout_weight="100" />
+
         <EditText
             android:id="@+id/editTextName"
             android:inputType="textAutoComplete"
 
             android:hint="Введите имя..."
-            android:layout_height="match_parent"
-            android:layout_width="match_parent"
+            android:layout_height="@dimen/iten_setting_wight"
+            android:layout_width="wrap_content"
             android:layout_marginLeft="7dp"
             android:layout_weight="100"
             android:textColor="@color/colorText"
@@ -79,7 +85,7 @@
             android:maxLines="1"
             android:selectAllOnFocus="true"
             android:title="Ввод имени измерителя"
-            />
+            android:layout_gravity="right|center_vertical|end" />
         <!--"@dimen/iten_setting_wight"-->
         <!--<ImageButton-->
             <!--android:layout_width="wrap_content"-->
@@ -92,35 +98,13 @@
         <!--app:srcCompat="@drawable/ic_chevron_right_black_24dp"-->
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/LinearLayoutNambe"
-        android:orientation="horizontal"
+    <SeekBar
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/cardview_light_background">
-
-        <TextView
-            android:text="Порог"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:id="@+id/textViewNambe"
-            android:layout_weight="0"
-            android:textSize="@dimen/iten_text_size"
-            android:gravity="left|center_vertical"
-            android:layout_marginLeft="10dp" />
-
-        <EditText
-            android:id="@+id/editTextNambe"
-            android:hint="Введите число"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="numberSigned|numberDecimal"
-            android:ems="10"
-            android:layout_weight="1"
-            android:textColor="@color/colorText"
-            android:textSize="@dimen/iten_text_size" />
-
-    </LinearLayout>
+        android:layout_height="wrap_content"
+        android:id="@+id/seekBar"
+        android:background="@color/colorBackground"
+        android:layout_marginTop="40dp"
+        android:layout_gravity="top|center_horizontal" />
 
 
     <!--<AutoCompleteTextView-->

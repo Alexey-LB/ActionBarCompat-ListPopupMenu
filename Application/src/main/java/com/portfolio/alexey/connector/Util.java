@@ -28,10 +28,13 @@ import static android.content.Context.VIBRATOR_SERVICE;
  */
 
 public class Util {
+    static final String TAG = "Util";
     public  final static String EXTRAS_NAME = "EXTRAS_NAME";
     public  final static String EXTRAS_NAME_FILTR = "EXTRAS_NAME_FILTR";
     public  final static String EXTRAS_ADDRESS = "EXTRAS_ADDRESS";
     public  final static String EXTRAS_ITEM = "EXTRAS_ITEM";
+    public  final static String EXTRAS_LABEL = "EXTRAS_";
+
     public  final static String EXTRAS_BAR_TITLE = "EXTRAS_BAR_TITLE";
     public  final static String EXTRAS_FLOAT_1 = "EXTRAS_FLOAT_1";
     public  final static String EXTRAS_FLOAT_2 = "EXTRAS_FLOAT_2";
@@ -40,6 +43,32 @@ public class Util {
     public  final static String EXTRAS_INT_1 = "EXTRAS_INT_1";
     public  final static String EXTRAS_INT_2 = "EXTRAS_INT_2";
     public  final static String EXTRAS_INT_3 = "EXTRAS_INT_3";
+
+    //ввод ФЛОАТ из строки В ЛЮБОЙ ЛОКАЛИ!!!(обрабатывает 10 разделитель ТОЧКУ или ЗАПЯТУЮ!!)
+    // при обломе НУЛЛ возвращяет
+    static public Float parseFloat(String str) {
+        Float value = null;
+        if ((str == null) || (str.length() == 0)) return value;
+        //
+        try {
+            value = Float.parseFloat(str);
+        } catch (Exception e) {
+            Log.e(TAG, "parseFloat> Float.valueOf(str) ERR= " + e);
+            //НЕ cовпадение локалей, проблема - 10 разделитель "." или ","
+            // просто меняем на обратное
+            //Log.i(TAG, "parseFloat> str= " + str);
+            if (str.contains(",")) str = str.replace(",", ".");
+            else str = str.replace(".", ",");
+            //
+            //   Log.v(TAG, " str= " + str.replace(",",".") +" / " +str.replace(".",","));
+            try {
+                value = Float.parseFloat(str);
+            } catch (Exception e1) {
+                Log.e(TAG, "parseFloat> Float.valueOf(str) ERR= " + e1);
+            }
+        }
+        return value;
+    }
     //
     static public Sensor getSensor(int item,Context context){
         BluetoothLeServiceNew bleS = getAppBleService(context);
