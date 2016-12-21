@@ -8,7 +8,7 @@
     android:layout_height="match_parent"
     tools:context="com.example.android.actionbarcompat.listpopupmenu.MainSettingSetting"
     android:weightSum = "100"
-    >
+    android:background="@color/colorTextlight">
      <!--ОТСТУПЫ - НЕ работает!? почемуто, хотел добапввить разделители-->
     <!--android:divider="@color/colorAccent"-->
     <!--android:dividerPadding="15dp"-->

@@ -39,7 +39,7 @@ public class MainSettingSetting  extends Activity implements View.OnClickListene
     public final  static int ACTIVITY_SETTING_MIN = 3456784;
     public final  static int ACTIVITY_SETTING_EDIT = 3456785;
     public final  static int ACTIVITY_SETTING_URL_MELODI = 3456786;
-
+    public final  static int ACTIVITY_SETTING_DECOR = 3456787;
     private  int mItem= 0;
     private Sensor sensor;
     final   String TAG = getClass().getSimpleName();
@@ -265,9 +265,13 @@ public class MainSettingSetting  extends Activity implements View.OnClickListene
                 break;
             case R.id.imageButtonDecor:
                 Log.v(TAG,"imageButtonDecor");
-                  if(sensor != null){
-                    Util.playerRingtone(1f, sensor.endMelody , this,TAG);
-                } else Util.playerRingtone(1f, (Uri)null , this,TAG);
+                //----НАСТРОЙКА И ЗАПУСК окна ввода ЧИСЛА -----------
+                intent = new Intent(this, SettingFon.class);
+                intent.putExtra(Util.EXTRAS_BAR_TITLE, "   BA1");
+                startActivityForResult(intent,ACTIVITY_SETTING_DECOR);
+//                  if(sensor != null){
+//                    Util.playerRingtone(1f, sensor.endMelody , this,TAG);
+//                } else Util.playerRingtone(1f, (Uri)null , this,TAG);
                 break;
             default:
         }

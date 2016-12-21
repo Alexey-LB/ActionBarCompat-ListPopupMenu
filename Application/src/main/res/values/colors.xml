@@ -8,7 +8,7 @@
     <color name="disable_thumb_grey">#1c000000</color>
     <color name="disable_thumb_green">#46dbbf</color>
 
-    <color name="cardview_dark_background">#FF424242</color>
+    <color name="cardview_dark_background">#424242</color>
     <color name="cardview_light_background">#ffffff</color>
     <color name="cardview_shadow_end_color">#03000000</color>
 

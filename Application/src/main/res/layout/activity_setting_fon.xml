@@ -44,7 +44,7 @@
             android:paddingBottom="5dp" />
     </LinearLayout>
 
-    <!--ЗВУК / вибрация, ВКЛ/выкл-->
+    <!--COLOR-->
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
@@ -53,45 +53,8 @@
         android:background="@color/colorBackground">
 
         <TextView
-            android:text="Включен"
-            android:id="@+id/textViewLabelNotification"
-            android:layout_height="match_parent"
-            android:layout_width="wrap_content"
-            android:layout_weight="0"
-            android:layout_marginLeft="10dp"
-            android:gravity="left|center_vertical"
-            android:lines="1"
-            android:textColor="@color/colorTextlight"
-            android:textSize="@dimen/iten_text_size"
-             />
-
-        <Space
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="10" />
-
-        <Switch
-            android:id="@+id/switchNotification"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="0"
-            android:layout_marginRight="20dp"
-            android:layout_gravity="right|center_vertical"
-            android:switchTextAppearance="@style/TextAppearance.AppCompat" />
-
-    </LinearLayout>
-
-    <!--Значение-->
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/iten_setting_wight"
-        android:layout_marginBottom="@dimen/iten_vertical_gap_wight"
-        android:background="@color/colorBackground">
-
-        <TextView
-            android:text="Значение"
-            android:id="@+id/textViewLabelValue"
+            android:text="Цвет"
+            android:id="@+id/textViewLabelColor"
             android:layout_height="match_parent"
             android:layout_width="wrap_content"
             android:layout_weight="0"
@@ -102,7 +65,7 @@
             android:textSize="@dimen/iten_text_size"/>
 
         <TextView
-              android:id="@+id/textViewValue"
+              android:id="@+id/textViewColor"
             android:layout_height="match_parent"
             android:layout_width="wrap_content"
             android:layout_weight="100"
@@ -117,7 +80,7 @@
             />
 
         <ImageButton
-            android:id="@+id/imageButtonValue"
+            android:id="@+id/imageButtonColor"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginRight="7dp"
@@ -130,7 +93,7 @@
         <!--android:paddingRight="10dp"-->
         <!--app:srcCompat="@drawable/ic_chevron_right_black_24dp"-->
     </LinearLayout>
-    <!--Мелодия-->
+    <!--Imeg-->
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
@@ -139,8 +102,8 @@
         android:background="@color/colorBackground">
 
         <TextView
-            android:text="Мелодия"
-            android:id="@+id/textViewLabelMelody"
+            android:text="Изображение"
+            android:id="@+id/textViewLabelImeg"
             android:layout_height="match_parent"
             android:layout_width="wrap_content"
             android:layout_weight="0"
@@ -151,8 +114,7 @@
             android:textSize="@dimen/iten_text_size"/>
         <!--android:inputType="textAutoComplete"-->
         <TextView
-            android:text="..."
-            android:id="@+id/textViewMelody"
+            android:id="@+id/textViewImeg"
             android:layout_height="match_parent"
             android:layout_width="wrap_content"
             android:layout_weight="100"
@@ -168,7 +130,7 @@
         <!--android:textAlignment="viewEnd"-->
 
         <ImageButton
-            android:id="@+id/imageButtonMelody"
+            android:id="@+id/imageButtonImeg"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginRight="7dp"
@@ -181,7 +143,8 @@
         <!--android:paddingRight="10dp"-->
         <!--app:srcCompat="@drawable/ic_chevron_right_black_24dp"-->
     </LinearLayout>
-    <!--Серийный номер-->
+
+    <!--АЛЬБОМ-->
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
@@ -190,8 +153,8 @@
         android:background="@color/colorBackground">
 
         <TextView
-            android:text="Вибрация"
-            android:id="@+id/textViewLabelVibration"
+            android:text="Коллекция телефона"
+            android:id="@+id/textViewLabelСollection"
             android:layout_height="match_parent"
             android:layout_width="wrap_content"
             android:layout_weight="0"
@@ -200,24 +163,87 @@
             android:lines="1"
             android:textColor="@color/colorTextlight"
             android:textSize="@dimen/iten_text_size"/>
-
-        <Space
+        <!--android:inputType="textAutoComplete"-->
+        <TextView
+            android:id="@+id/textViewСollection"
+            android:layout_height="match_parent"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="10" />
+            android:layout_weight="100"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="5dp"
+            android:paddingRight="5dp"
+            android:lines="1"
+            android:textStyle="normal|bold"
+            android:gravity="right|center_vertical|end"
+            android:textColor="@color/colorText"
+            android:textSize="@dimen/iten_text_size"
+            />
+        <!--android:textAlignment="viewEnd"-->
 
-        <Switch
+        <ImageButton
+            android:id="@+id/imageButtonСollection"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/switchVibration"
+            android:layout_height="match_parent"
+            android:layout_marginRight="7dp"
+            android:src="@drawable/ic_chevron_right_black_24dp"
             android:layout_weight="0"
-            android:layout_marginRight="20dp"
-            android:layout_gravity="right|center_vertical"
-            android:switchTextAppearance="@style/TextAppearance.AppCompat" />
-
+            android:textAlignment="gravity"
+            android:background="@color/colorBackground"
+            android:gravity="right|center_vertical"
+            />
+        <!--android:paddingRight="10dp"-->
+        <!--app:srcCompat="@drawable/ic_chevron_right_black_24dp"-->
     </LinearLayout>
-    <!--Версия прошивки-->
-    <!--Аппаратная версия-->
-    <!--Версия ПО-->
+
+    <!--Камера-->
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/iten_setting_wight"
+        android:layout_marginBottom="@dimen/iten_vertical_gap_wight"
+        android:background="@color/colorBackground">
+
+        <TextView
+            android:text="Фото"
+            android:id="@+id/textViewLabelPhoto"
+            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_weight="0"
+            android:layout_marginLeft="10dp"
+            android:gravity="left|center_vertical"
+            android:lines="1"
+            android:textColor="@color/colorTextlight"
+            android:textSize="@dimen/iten_text_size"/>
+        <!--android:inputType="textAutoComplete"-->
+        <TextView
+            android:id="@+id/textViewPhoto"
+            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_weight="100"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="5dp"
+            android:paddingRight="5dp"
+            android:lines="1"
+            android:textStyle="normal|bold"
+            android:gravity="right|center_vertical|end"
+            android:textColor="@color/colorText"
+            android:textSize="@dimen/iten_text_size"
+            />
+        <!--android:textAlignment="viewEnd"-->
+
+        <ImageButton
+            android:id="@+id/imageButtonPhoto"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginRight="7dp"
+            android:src="@drawable/ic_chevron_right_black_24dp"
+            android:layout_weight="0"
+            android:textAlignment="gravity"
+            android:background="@color/colorBackground"
+            android:gravity="right|center_vertical"
+            />
+        <!--android:paddingRight="10dp"-->
+        <!--app:srcCompat="@drawable/ic_chevron_right_black_24dp"-->
+    </LinearLayout>
 
 </LinearLayout>

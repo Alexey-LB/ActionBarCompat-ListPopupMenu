@@ -40,7 +40,7 @@
             android:layout_marginLeft="10dp"
             android:gravity="left|bottom"
             android:textSize="@dimen/iten_text_size"
-            android:paddingBottom="5dp" />
+            android:layout_marginBottom="5dp" />
     </LinearLayout>
 
     <LinearLayout

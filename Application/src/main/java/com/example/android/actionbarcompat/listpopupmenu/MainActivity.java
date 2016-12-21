@@ -85,21 +85,10 @@ public class MainActivity extends AppCompatActivity {// ActionBarActivity {
                 Handler handler = new Handler();
                 handler.postDelayed(new Runnable() {
                     @Override
-                    public void run() {
-                        RunDataHub app = ((RunDataHub) getApplicationContext());
-                        //сбрасываем первый пуск
-                        if(app != null) app.resetStartApp();
-                        // findViewById(R.id.mainFragment);
-                        // // установка ИЗОБРАЖЕНИЕ на всь экран, УБИРАЕМ СВЕРХУ И СНИЗУ панели системные
-                        findViewById(R.id.mainFragment).getRootView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
-                        // убираем заставку
-                        findViewById(R.id.home).setBackgroundResource(R.color.cardview_light_background);
-                        //показываем фрагмент
-                        findViewById(R.id.mainFragment).setVisibility(View.VISIBLE);
-                        //включаем тулбар
-                        getSupportActionBar().show();
-                    }
+                    public void run() {setWork();}
                 }, 3000);
+            }else {
+                setWork();
             }
         }
         //  программное создоние и подключения слоя
@@ -134,6 +123,22 @@ public class MainActivity extends AppCompatActivity {// ActionBarActivity {
 //!!        Intent gattServiceIntent = new Intent(this, BluetoothLeServiceNew.class);
 //!!        bindService(gattServiceIntent, mServiceConnectionM, BIND_AUTO_CREATE);
         Log.e(TAG, "----onCreate END-----");
+    }
+    private void setWork(){
+        {
+            RunDataHub app = ((RunDataHub) getApplicationContext());
+            //сбрасываем первый пуск
+            if(app != null) app.resetStartApp();
+            // findViewById(R.id.mainFragment);
+            // // установка ИЗОБРАЖЕНИЕ на всь экран, УБИРАЕМ СВЕРХУ И СНИЗУ панели системные
+            findViewById(R.id.mainFragment).getRootView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
+            // убираем заставку
+            findViewById(R.id.home).setBackgroundResource(R.color.cardview_light_background);
+            //показываем фрагмент
+            findViewById(R.id.mainFragment).setVisibility(View.VISIBLE);
+            //включаем тулбар
+            getSupportActionBar().show();
+        }
     }
     //инициализация фрейма
     public void init(){
