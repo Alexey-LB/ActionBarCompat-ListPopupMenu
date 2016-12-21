@@ -33,16 +33,21 @@ public class Util {
     public  final static String EXTRAS_NAME_FILTR = "EXTRAS_NAME_FILTR";
     public  final static String EXTRAS_ADDRESS = "EXTRAS_ADDRESS";
     public  final static String EXTRAS_ITEM = "EXTRAS_ITEM";
-    public  final static String EXTRAS_LABEL = "EXTRAS_";
+    public  final static String EXTRAS_LABEL = "EXTRAS_LABEL";
+    public  final static String EXTRAS_MAX = "EXTRAS_MAX";
 
     public  final static String EXTRAS_BAR_TITLE = "EXTRAS_BAR_TITLE";
-    public  final static String EXTRAS_FLOAT_1 = "EXTRAS_FLOAT_1";
-    public  final static String EXTRAS_FLOAT_2 = "EXTRAS_FLOAT_2";
-    public  final static String EXTRAS_FLOAT_3 = "EXTRAS_FLOAT_3";
+    public  final static String EXTRAS_FLOAT_MIN = "EXTRAS_FLOAT_MIN";
+    public  final static String EXTRAS_FLOAT_MAX = "EXTRAS_FLOAT_MAX";
 
-    public  final static String EXTRAS_INT_1 = "EXTRAS_INT_1";
-    public  final static String EXTRAS_INT_2 = "EXTRAS_INT_2";
-    public  final static String EXTRAS_INT_3 = "EXTRAS_INT_3";
+   // public  final static String EXTRAS_FLOAT_1 = "EXTRAS_FLOAT_1";
+
+//    public  final static String EXTRAS_FLOAT_2 = "EXTRAS_FLOAT_2";
+//    public  final static String EXTRAS_FLOAT_3 = "EXTRAS_FLOAT_3";
+//
+//    public  final static String EXTRAS_INT_1 = "EXTRAS_INT_1";
+//    public  final static String EXTRAS_INT_2 = "EXTRAS_INT_2";
+//    public  final static String EXTRAS_INT_3 = "EXTRAS_INT_3";
 
     //ввод ФЛОАТ из строки В ЛЮБОЙ ЛОКАЛИ!!!(обрабатывает 10 разделитель ТОЧКУ или ЗАПЯТУЮ!!)
     // при обломе НУЛЛ возвращяет

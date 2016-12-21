@@ -52,7 +52,7 @@
 
         <TextView
             android:text="Включен"
-            android:id="@+id/textViewLabelOn"
+            android:id="@+id/textViewLabelNotification"
             android:layout_height="match_parent"
             android:layout_width="wrap_content"
             android:layout_weight="0"
@@ -69,7 +69,7 @@
             android:layout_weight="10" />
 
         <Switch
-            android:id="@+id/switchOn"
+            android:id="@+id/switchNotification"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0"

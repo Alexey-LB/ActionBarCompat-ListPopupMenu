@@ -21,13 +21,18 @@ public class SettingMinMax extends Activity implements View.OnClickListener{
     final   String TAG = getClass().getSimpleName();
     final int ACTIVITY_SETTING_MIN_MAX_VALUE = 67890;
     final int ACTIVITY_SETTING_URL_MELODI = 67891;
+    public  final static String EXTRAS_MAX = "EXTRAS_MAX";
+
+    public  final static String EXTRAS_FLOAT_VALUE = "EXTRAS_FLOAT_VALUE";
+
     private  int mItem= 0;
     private Sensor sensor;
     //private float fl=0;
     private boolean mHandlerWork = true;
     private Handler mHandler = new Handler();
     private boolean maxValue = false;
-
+    private  float max = 70f;
+    private  float min = -20f;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,12 +47,15 @@ public class SettingMinMax extends Activity implements View.OnClickListener{
         //
         sensor = Util.getSensor(mItem,this);
         if(sensor == null) finish();
-
+        //устанавливаем пределы
+        max = sensor.maxInputDeviceTemperature;
+        min = sensor.minInputDeviceTemperature;
+        if(intent.hasExtra(EXTRAS_MAX)) maxValue = true;
         //-------------------------------------------
         updateTextString();
         findViewById(R.id.imageButtonMelody).setOnClickListener(this);
         findViewById(R.id.imageButtonValue).setOnClickListener(this);
-        findViewById(R.id.switchOn).setOnClickListener(this);;
+        findViewById(R.id.switchNotification).setOnClickListener(this);
         findViewById(R.id.switchVibration).setOnClickListener(this);
         Util.setActionBar(getActionBar(),TAG, title);
     }
@@ -60,11 +68,17 @@ public class SettingMinMax extends Activity implements View.OnClickListener{
                     ,R.id.textViewValue, this);
             ((Switch)findViewById(R.id.switchVibration))
                     .setChecked(sensor.onMaxVibration);
+
+        ((Switch)findViewById(R.id.switchNotification))
+        .setChecked(sensor.onMaxNotification);
         }else{
             Util.setTextToTextView(sensor.getStringMinTemperature(true)
                     ,R.id.textViewValue, this);
             ((Switch)findViewById(R.id.switchVibration))
                     .setChecked(sensor.onMinVibration);
+
+            ((Switch)findViewById(R.id.switchNotification))
+                    .setChecked(sensor.onMinNotification);
         }
     }
     @Override
@@ -90,8 +104,7 @@ public class SettingMinMax extends Activity implements View.OnClickListener{
         findViewById(R.id.activity_main_min_max).getRootView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
 
     }
-    private  float max = 70f;
-    private  float min = -20f;
+
     @Override//сюда прилетают ответы при возвращении из других ОКОН активити
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         String str ="";Uri uri;Float value;
@@ -171,12 +184,22 @@ public class SettingMinMax extends Activity implements View.OnClickListener{
                 break;
             case R.id.imageButtonMelody:
                 Log.v(TAG,"imageButtonMelody");
-                InputBox.pickRingtone(ACTIVITY_SETTING_URL_MELODI, "    BC4"
-                        , sensor.minMelody,TAG, this);
+                if(maxValue) {
+                    InputBox.pickRingtone(ACTIVITY_SETTING_URL_MELODI, "    BC4"
+                            , sensor.maxMelody,TAG, this);
+                } else{
+                    InputBox.pickRingtone(ACTIVITY_SETTING_URL_MELODI, "    BC4"
+                            , sensor.minMelody,TAG, this);
+                }
                 break;
-            case R.id.switchOn:
-
-
+            case R.id.switchNotification:
+                if(maxValue) {
+                    sensor.onMaxNotification = ((Switch)findViewById(R.id.switchNotification))
+                            .isChecked();
+                }  else {
+                    sensor.onMinNotification = ((Switch)findViewById(R.id.switchNotification))
+                            .isChecked();
+                }
                 break;
             case R.id.switchVibration:
                 if(maxValue) {

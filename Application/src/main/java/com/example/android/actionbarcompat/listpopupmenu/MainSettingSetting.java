@@ -24,6 +24,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.portfolio.alexey.connector.InputBox;
 import com.portfolio.alexey.connector.Sensor;
 import com.portfolio.alexey.connector.Util;
 
@@ -55,15 +56,7 @@ public class MainSettingSetting  extends Activity implements View.OnClickListene
         sensor.changeConfig = true;//установки считаны из ФЛЕШИ- не изменены!!
         //-------------------------------------------
         findViewById(R.id.textViewName).setOnClickListener(this);
-        Util.setTextToTextView(sensor.deviceLabel,R.id.textViewName,this,"?");
-
-        Util.setTextToTextView(sensor.getStringMinTemperature(true)
-                ,R.id.textViewTemperaturesAbove,this,"-");
-        Util.setTextToTextView(sensor.getStringMaxTemperature(true)
-                ,R.id.textViewTemperaturesBelow,this,"-");
         findViewById(R.id.imageButtonMarker).setOnClickListener(this);
-
-        Util.setDrawableToImageView(sensor.markerColor,R.id.imageButtonMarker, this);
         //
         findViewById(R.id.imageButtonTermometer).setOnClickListener(this);
         findViewById(R.id.imageButtonVibration).setOnClickListener(this);
@@ -71,38 +64,40 @@ public class MainSettingSetting  extends Activity implements View.OnClickListene
         findViewById(R.id.imageButtonTemperaturesBelow).setOnClickListener(this);
         findViewById(R.id.imageButtonMelody).setOnClickListener(this);
         findViewById(R.id.imageButtonDecor).setOnClickListener(this);
-        //   findViewById(R.id.imageButtonMeasurementMode).setOnClickListener(this);
         //00000
         findViewById(R.id.textViewMeasurementMode).setOnClickListener(this);
-        Util.setTextToTextView(sensor.getStringMeasurementMode()
-                ,R.id.textViewMeasurementMode,this,"?");
-        udateMeasurementMode();
-
         findViewById(R.id.imageButtonName).setOnClickListener(this);
+
         Util.setActionBar(getActionBar(),TAG, "  B4/B5");
-//
-//        ActionBar actionBar = getActionBar();//getSupportActionBar();??--это решалось в другом методе(getDelegate().getSupportActionBar();)
-//        if (actionBar != null) {
-//            Log.d(TAG,"actionBar != null--");
-//            //вместо ЗНачка по умолчанию, назначаемого выше, подставляет свой
-//            // actionBar.setHomeAsUpIndicator(R.drawable.ic_navigate_before_black_24dp);
-//            //------------------------------
-//          //  actionBar.
-//            //разрешить копку доиой
-//            actionBar.setHomeAsUpIndicator(R.drawable.ic_chevron_left_black_24dp);
-//            actionBar.setDisplayHomeAsUpEnabled(true);
-//            actionBar.setHomeButtonEnabled(true);//устанавливает надпись и иконку как кнопку домой(не требуется
-//           // actionBar.setDisplayUseLogoEnabled(true);
-//        //    actionBar.setHomeButtonEnabled(true); метод - actionBar.setDisplayHomeAsUpEnabled(true);)
-//            //чето не показыввет ее
-////-- срабатывают только если вместе, отменяют ИКОНКУ, если заменить- достаточно одного
-//            actionBar.setIcon(null);//actionBar.setIcon(R.drawable.ic_language_black_24dp);
-//            actionBar.setDisplayUseLogoEnabled(false);
-////------------------------------------------------------
-//            //actionBar.setCustomView(null);
-//            //actionBar.setLogo(null);
-//        } else Log.e(TAG,"actionBar == null--");
-//        //   SampleGattAttributes.attributes.get("dd");
+
+        updateTextString();
+    }
+    private void updateTextString(){
+        Util.setTextToTextView(sensor.deviceLabel,R.id.textViewName,this,"?");
+
+        Util.setTextToTextView(sensor.getStringMaxTemperature(true)
+                ,R.id.textViewTemperaturesAbove,this,"-");
+        Util.setTextToTextView(sensor.getStringMinTemperature(true)
+                ,R.id.textViewTemperaturesBelow,this,"-");
+        Util.setDrawableToImageView(sensor.markerColor,R.id.imageButtonMarker, this);
+        udateMeasurementMode();
+    }
+    private void udateMeasurementMode(){
+        View v,v2;
+        if(sensor == null) return;
+
+        Util.setTextToTextView(sensor.getStringMeasurementMode(),
+                findViewById(R.id.textViewMeasurementMode),"!");
+
+        if(sensor.getMeasurementMode() == 0){//медецинский
+            v = findViewById(R.id.activity_main_setting_item2);
+            v2 = findViewById(R.id.activity_main_setting_item3);
+        }else{
+            v = findViewById(R.id.activity_main_setting_item3);
+            v2 = findViewById(R.id.activity_main_setting_item2);
+        }
+        if(v != null) v.setVisibility(View.VISIBLE);
+        if(v2 != null) v2.setVisibility(View.GONE);
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -124,23 +119,8 @@ public class MainSettingSetting  extends Activity implements View.OnClickListene
         super.onResume();
         // установка ИЗОБРАЖЕНИЕ на всь экран, УБИРАЕМ СВЕРХУ И СНИЗУ панели системные
         findViewById(R.id.textViewName).getRootView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
-
     }
 
-
-    //    protected void onLck(ListView l, View v, int position, long id) {
-//        final BluetoothDevice device = mLeDeviceListAdapter.getDevice(position);
-//        if (device == null) return;
-//        final Intent intent = new Intent(this, DeviceControlActivity.class);
-//        intent.putExtra(DeviceControlActivity.EXTRAS_DEVICE_NAME, device.getName());
-//        intent.putExtra(DeviceControlActivity.EXTRAS_DEVICE_ADDRESS, device.getAddress());
-//        if (mScanning) {
-//            mBluetoothAdapter.stopLeScan(mLeScanCallback);
-//            mScanning = false;
-//        }
-//        startActivity(intent);//на подклшючение к устройству
-//    }
-//
     @Override//сюда прилетают ответы при возвращении из других ОКОН активити
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         String name,str = "?";Uri uri=null;float fl;
@@ -169,23 +149,19 @@ public class MainSettingSetting  extends Activity implements View.OnClickListene
                     //обновить отображение
                     break;
                 case ACTIVITY_SETTING_MAX:
-                    if(sensor != null){
-                        sensor.maxTemperature = data.getFloatExtra(Util.EXTRAS_FLOAT_1, 70f);
-                    }
+                    //все уже записано в сенсор
                     //обновить отображение
                     Util.setTextToTextView(sensor.getStringMaxTemperature(true)
-                            ,R.id.textViewTemperaturesBelow,this,"-");
-                    break;
-                case ACTIVITY_SETTING_MIN:
-                    if(sensor != null){
-                        sensor.minTemperature = data.getFloatExtra(Util.EXTRAS_FLOAT_1, -20f);
-                    }
-                    //обновить отображение
-                    Util.setTextToTextView(sensor.getStringMinTemperature(true)
                             ,R.id.textViewTemperaturesAbove,this,"-");
                     break;
+                case ACTIVITY_SETTING_MIN:
+                    //все уже записано в сенсор
+                    //обновить отображение
+                    Util.setTextToTextView(sensor.getStringMinTemperature(true)
+                            ,R.id.textViewTemperaturesBelow,this,"-");
+                    break;
             }
-
+            updateTextString();
             Log.v(TAG,"requestCode= "+ requestCode +"  resultCode= RESULT_OK    " +str);
         } else{
             Log.e(TAG,"requestCode= "+ requestCode+"  resultCode= OBLOM");
@@ -197,33 +173,20 @@ public class MainSettingSetting  extends Activity implements View.OnClickListene
 //    }
         super.onActivityResult(requestCode, resultCode, data);
     }
-    private void udateMeasurementMode(){
-        View v,v2;
-        if(sensor == null) return;
-        if(sensor.getMeasurementMode() == 0){//медецинский
-           v = findViewById(R.id.activity_main_setting_item2);
-            v2 = findViewById(R.id.activity_main_setting_item3);
-        }else{
-            v = findViewById(R.id.activity_main_setting_item3);
-            v2 = findViewById(R.id.activity_main_setting_item2);
-        }
-        if(v != null) v.setVisibility(View.VISIBLE);
-        if(v2 != null) v2.setVisibility(View.GONE);
-    }
+
     @Override
     public void onClick(View view) {
         Log.w(TAG,"onClick= "+view);
-        String action="";Intent intent;Vibrator vibrator;
-        Uri alert; String str = "";
-
+        Intent intent;String str = "";
+        if(sensor == null) return;
+        //
         switch (view.getId()){
             case android.R.id.home:
                 Log.v(TAG,"home");
-
                 break;
             case R.id.imageButtonName:
                 Log.v(TAG,"imageButtonName");
-                if(Util.isNoNull(sensor, sensor.deviceLabel)) str = sensor.deviceLabel;
+                if(Util.isNoNull(sensor.deviceLabel)) str = sensor.deviceLabel;
                 intent = new Intent(this, SettingName.class);
                 intent.putExtra(SettingName.EXTRAS_VALUE, str);
                 intent.putExtra(SettingName.EXTRAS_TYPE, SettingName.VALUE_TYPE_STRING);
@@ -235,23 +198,6 @@ public class MainSettingSetting  extends Activity implements View.OnClickListene
                 break;
             case R.id.textViewName:
                 Log.v(TAG,"textViewName");
-                //   intent = new      Intent(Intent.ACTION_EDIT);//ACTION_PROCESS_TEXT
-//                intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_RINGTONE);
-//                intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, "Select Ringtone");
-//
-//                urie = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-//                intent.putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI, urie);
-//                intent.putExtra(RingtoneManager.EXTRA_RINGTONE_DEFAULT_URI, urie);
-
-                //  startActivityForResult(intent, 77);
-                //if(view.isActivated())
-                // view.setActivated(!view.isActivated());
-//               view.setFocusable(flag);
-//                view.setFocusableInTouchMode(flag);
-//                view.refreshDrawableState();
-//                flag = !flag;
-//               // view.setEnabled(!view.isEnabled());
-//
                 break;
             case R.id.imageButtonMarker:
                 Log.v(TAG,"imageButtonMarker");
@@ -261,68 +207,41 @@ public class MainSettingSetting  extends Activity implements View.OnClickListene
 //                ((ImageView)view).setImageLevel(index);
 // ========================================
 //пока временно решил сделать так, через фон
-                if(sensor != null){
-                    sensor.markerColor = Marker.getNextItem(sensor.markerColor);
-                    Util.setDrawableToImageView(sensor.markerColor,R.id.imageButtonMarker, this);
-                     Log.v(TAG,"imageButtonMarker= " + sensor.markerColor);
-                }
+                sensor.markerColor = Marker.getNextItem(sensor.markerColor);
+                Util.setDrawableToImageView(sensor.markerColor,R.id.imageButtonMarker, this);
+                Log.v(TAG,"imageButtonMarker= " + sensor.markerColor);
                 break;
             //ПОИСК ТЕРМОmЕТРА!!!
             case R.id.imageButtonTermometer:
                 Log.v(TAG,"imageButtonTermometer");
-                if(sensor != null){
-                    intent = new Intent(this, SettingMaker.class);
-                    intent.putExtra(MainActivity.EXTRAS_DEVICE_ITEM , mItem);
-                    startActivityForResult(intent,ACTIVITY_SETTING_DEVICE);
-                }
+                intent = new Intent(this, SettingMaker.class);
+                intent.putExtra(MainActivity.EXTRAS_DEVICE_ITEM , mItem);
+                startActivityForResult(intent,ACTIVITY_SETTING_DEVICE);
                 break;
             //case R.id.imageButtonMeasurementMode:
             case R.id.textViewMeasurementMode:
-                if(sensor != null){
-                    sensor.changeMeasurementMode();//меняем моду измерения
-                    str = sensor.getStringMeasurementMode();
-                    Util.setTextToTextView(str, view,"!");
-                }
-                udateMeasurementMode();
+                sensor.changeMeasurementMode();//меняем моду измерения
                 break;
             case R.id.imageButtonMelody:
                 Log.v(TAG,"imageButtonMelody");
-//работает
-//                intent = new Intent(Intent.ACTION_PICK);
-//                intent.setType("*/*");
-//                startActivityForResult(intent, 1);
-                //====================
-//                intent = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER);
-//                intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, "Select ringtone for notifications:");
-//                intent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_SILENT, false);
-//                intent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_DEFAULT, true);
-//                intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE,RingtoneManager.TYPE_NOTIFICATION);
-//                startActivityForResult(intent,77);
-
-                pickRingtone();
+                InputBox.pickRingtone(ACTIVITY_SETTING_URL_MELODI, "  BB4"
+                        ,sensor.endMelody,TAG, this);
+                //pickRingtone();
                 break;
             case R.id.imageButtonVibration:
                 Log.v(TAG,"imageButtonVibration");
-                action = VIBRATOR_SERVICE;
                 Util.playerVibrator(400,this);
-                //startActivity(new Intent(action));
-//                // https://geektimes.ru/post/232885/
-//                vibrator = (Vibrator) getSystemService (VIBRATOR_SERVICE);
-//                try {
-//                    vibrator.vibrate(400);
-//                }catch (Exception e){
-//                    Log.e(TAG, " vibrator ERR= " + e);
-//                }
                 break;
             case R.id.imageButtonTemperaturesAbove:
                 Log.v(TAG,"imageButtonTemperaturesAbove");
- // Util.playerVibrator(400,this);
+                // Util.playerVibrator(400,this);
 
                 intent = new Intent(this, SettingMinMax.class);
                 intent.putExtra(Util.EXTRAS_ITEM, mItem);
                 intent.putExtra(Util.EXTRAS_BAR_TITLE, "   BC1    Max");
                 // все изменения будет писать сразу в сенсор
-              //  intent.putExtra(Util.EXTRAS_FLOAT_1, sensor != null?sensor.maxTemperature: 70f);
+                //указали флаг установки максимума, все остальное делется НАПРЯМУЮ с данными
+                intent.putExtra(SettingMinMax.EXTRAS_MAX, SettingMinMax.EXTRAS_MAX);
                 startActivityForResult(intent,ACTIVITY_SETTING_MAX);
                 break;
             case R.id.imageButtonTemperaturesBelow:
@@ -331,12 +250,11 @@ public class MainSettingSetting  extends Activity implements View.OnClickListene
                 intent.putExtra(Util.EXTRAS_ITEM, mItem);
                 intent.putExtra(Util.EXTRAS_BAR_TITLE, "   BC2 Min");
                 // все изменения будет писать сразу в сенсор
-               // intent.putExtra(Util.EXTRAS_FLOAT_1, sensor != null?sensor.minTemperature:-20f);
+                // по умолчанию устанавливаем минимум, все остальное делется НАПРЯМУЮ с данными
                 startActivityForResult(intent,ACTIVITY_SETTING_MIN);
 
-//                if(sensor != null){
-//                    Util.playerRingtone(0f, sensor.endMelody , this,TAG);
-//                } else Util.playerRingtone(0f, (Uri) null , this,TAG);
+//              Util.playerRingtone(0f, sensor.endMelody , this,TAG);
+//              Util.playerRingtone(0f, (Uri) null , this,TAG);
                 break;
             case R.id.imageButtonDecor:
                 Log.v(TAG,"imageButtonDecor");
@@ -346,39 +264,8 @@ public class MainSettingSetting  extends Activity implements View.OnClickListene
                 break;
             default:
         }
+        updateTextString();
         return;
-    }
-
-
-    //http://stackoverflow.com/questions/7671637/how-to-set-ringtone-with-ringtonemanager-action-ringtone-picker
-// http://www.ceveni.com/2009/07/ringtone-picker-in-android-with-intent.html
-    public void pickRingtone() {
-        // TODO Auto-generated method.   stub
-
-        Intent intent = new      Intent(RingtoneManager.ACTION_RINGTONE_PICKER);
-        intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_RINGTONE);
-        intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, "  BB4");
-
-        // for existing ringtone
-        Uri urie;
-//        urie =     RingtoneManager.getActualDefaultRingtoneUri(
-//                getApplicationContext(), RingtoneManager.TYPE_RINGTONE);
-        if(Util.isNoNull(sensor)){
-            // TODO: 17.12.2016 обработать в случае ошибок парсера
-            if(sensor.endMelody != null) {
-                urie = Uri.parse(sensor.endMelody);
-                Log.v(TAG,"goto change melody carent= "+ urie.toString());
-            } else {
-                urie = null;//тоесть БЕЗ звука!!
-                Log.v(TAG,"Звука нет urie == null");
-            }
-
-        } else urie = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-
-        intent.putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI, urie);
-        intent.putExtra(RingtoneManager.EXTRA_RINGTONE_DEFAULT_URI, urie);
-
-        startActivityForResult(intent, ACTIVITY_SETTING_URL_MELODI);
     }
 
     public static class NotificationPreferenceFragment extends PreferenceFragment {

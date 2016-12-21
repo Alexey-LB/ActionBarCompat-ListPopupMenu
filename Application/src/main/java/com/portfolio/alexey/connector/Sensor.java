@@ -46,6 +46,9 @@ public class Sensor {
     private static final String deviceLabelStringDefault = "Термометр";//по умолчанию назначаем имя + номер
 
     private Context mContext;
+    public float maxInputDeviceTemperature = 70f;
+    public float minInputDeviceTemperature = -20f;
+
     public BluetoothGatt mBluetoothGatt;
     public BluetoothDevice mBluetoothDevice;
     //  состояние ОБЪЕКТА КЛАССА BluetoothDeviceAlexey
@@ -98,6 +101,10 @@ public class Sensor {
     public boolean onMinVibration = false;
     public boolean onMaxVibration = false;
     public boolean onEndVibration = false;
+    //
+    public boolean onMinNotification = false;
+    public boolean onMaxNotification = false;
+    public boolean onEndNotification = false;
     //
     public String minMelody;
     public String  maxMelody;
@@ -194,10 +201,17 @@ if(true)return;
         modelNumber = mSettings.getString("modelNumber",modelNumber);
         manufacturerName = mSettings.getString("manufacturerName", manufacturerName);
         //
+        minTemperature = mSettings.getFloat("minTemperature", minTemperature);
+        maxTemperature = mSettings.getFloat("maxTemperature", maxTemperature);
+        //
         onFahrenheit = mSettings.getBoolean("onFahrenheit", onFahrenheit);
         onMinVibration = mSettings.getBoolean("onMinVibration", onMinVibration);
         onMaxVibration = mSettings.getBoolean("onMaxVibration", onMaxVibration);
         onEndVibration = mSettings.getBoolean("onEndVibration", onEndVibration);
+
+        onMinNotification = mSettings.getBoolean("onMinNotification", onMinNotification);
+        onMaxNotification = mSettings.getBoolean("onMaxNotification", onMaxNotification);
+        onEndNotification = mSettings.getBoolean("onEndNotification", onEndNotification);
 
 // TODO: 17.12.2016 в случае чтения непонятного типа(например булеан,
 // а чтиаем стринг- выбрасывает из программы- обработаь !!прерывания
@@ -227,10 +241,17 @@ if(true)return;
         editor.putString("modelNumber",modelNumber);
         editor.putString("manufacturerName", manufacturerName);
         //
+        editor.putFloat("minTemperature", minTemperature);
+        editor.putFloat("maxTemperature", maxTemperature);
+        //
         editor.putBoolean("onFahrenheit", onFahrenheit);
         editor.putBoolean("onMinVibration", onMinVibration);
         editor.putBoolean("onMaxVibration", onMaxVibration);
         editor.putBoolean("onEndVibration", onEndVibration);
+        //
+        editor.putBoolean("onMinNotification", onMinNotification);
+        editor.putBoolean("onMaxNotification", onMaxNotification);
+        editor.putBoolean("onEndNotification", onEndNotification);
 
         editor.putString("minMelody", minMelody);
         editor.putString("maxMelody", maxMelody);
