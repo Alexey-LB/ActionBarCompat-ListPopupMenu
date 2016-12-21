@@ -93,7 +93,8 @@
         android:layout_width="match_parent"
         android:background="@color/colorBackground"
         android:layout_height="@dimen/iten_setting_wight"
-        android:layout_marginBottom="@dimen/iten_vertical_gap_wight">
+        android:layout_marginBottom="@dimen/iten_vertical_gap_wight"
+        android:layout_gravity="center_vertical|fill_vertical|center_horizontal|fill_horizontal">
         <!--temperatures below-->
         <TextView
             android:text="Вибрация"
@@ -120,18 +121,26 @@
             android:lines="1"
             android:textStyle="normal|bold"
             android:gravity="right|center_vertical" />
+        <!---->
+        <Switch
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/switchVibration"
+            android:layout_weight="0"
+    />
+
+        <!--ВИСНИТ но потом проверить, именно такой переключатель нужен!!-->
+        <!--там описана разница в кодах как для 4.1 и 5.1 делать-->
+        <!--http://stackoverflow.com/questions/11253512/change-on-color-of-a-switch-->
+        <!--<android.support.v7.widget.SwitchCompat-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:id="@+id/switchVibration"-->
+            <!--android:layout_alignParentRight="true"-->
+            <!--android:checked="false"-->
+            <!--android:theme="@style/SCBSwitch" />-->
+
         <!--SWITCH-->
-        <ImageButton
-            android:layout_width="48dp"
-            android:layout_height="match_parent"
-            android:layout_marginRight="7dp"
-            android:layout_marginLeft="7dp"
-            android:layout_marginTop="14dp"
-            android:layout_marginBottom="14dp"
-            android:background="@drawable/rectangle_corners_10dp"
-            android:src="@drawable/ic_access_alarm"
-            android:id="@+id/imageButtonVibration"
-            android:layout_weight="0" />
         <!--app:srcCompat="@drawable/ic_chevron_right_black_24dp"-->
     </LinearLayout>
 

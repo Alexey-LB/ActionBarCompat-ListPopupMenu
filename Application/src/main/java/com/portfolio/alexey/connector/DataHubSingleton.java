@@ -17,6 +17,7 @@ import static android.content.Context.BIND_AUTO_CREATE;
 public class DataHubSingleton {
     public final   String TAG = getClass().getSimpleName();
     private static DataHubSingleton instance;
+    private static boolean startApp = true;
 
     private DataHubSingleton(){
 
@@ -26,6 +27,9 @@ public class DataHubSingleton {
             instance = new DataHubSingleton();
         }return instance;
     }
+
+    public boolean getStartApp(){return startApp;}
+    public void resetStartApp(){startApp = false;}
 
     @Override
     public void finalize(){

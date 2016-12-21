@@ -1,17 +1,14 @@
 <resources>
 
-    <!-- Base application theme. -->
-    <!--<style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">-->
-    <!--<style name="AppThemeN" parent="@android:style/Theme.Holo.Light">-->
-        <!--&lt;!&ndash; Customize your theme here. &ndash;&gt;-->
-        <!--&lt;!&ndash;<item name="android:windowActionBar">false</item>&ndash;&gt;-->
-        <!--&lt;!&ndash;<item name="android:windowActionBar">true</item>&ndash;&gt;-->
-        <!--<item name="android:actionBarSize">32dp</item>-->
-        <!--&lt;!&ndash;<item name="android:windowDrawsSystemBarBackgrounds">false</item>&ndash;&gt;-->
-        <!--<item name="colorPrimary">@color/colorPrimary</item>-->
-        <!--<item name="colorPrimaryDark">@color/colorPrimaryDark</item>-->
-        <!--<item name="colorAccent">@color/colorAccent</item>-->
-    <!--</style>-->
+    <style name="SCBSwitch" parent="Theme.AppCompat.Light">
+        <!-- active thumb & track color (30% transparency) -->
+        <item name="colorControlActivated">#46bdbf</item>
+        <!-- inactive thumb color -->
+        <item name="colorSwitchThumbNormal">#f1f1f1</item>
+        <!-- inactive track color (30% transparency) -->
+        <item name="android:colorForeground">#42221f1f</item>
+    </style>
+
 
     <style name="AppThemeN" parent="@style/Theme.AppCompat.Light">
         <!-- Customize your theme here. -->

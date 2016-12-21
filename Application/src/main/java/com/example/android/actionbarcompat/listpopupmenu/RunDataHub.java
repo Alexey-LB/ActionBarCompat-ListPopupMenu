@@ -20,6 +20,10 @@ public class RunDataHub extends Application {
     public final   String TAG = getClass().getSimpleName();
     private static DataHubSingleton dataHub;
     public MainActivity mainActivity;
+    //КОНТРОЛЬначальным, ПЕРВЫМ запуском, без повтора при переворачивании телефона
+    public boolean getStartApp(){return dataHub.getStartApp();}
+    public void resetStartApp(){dataHub.resetStartApp();}
+
     @Override
     public void onCreate() {
         super.onCreate();

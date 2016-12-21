@@ -21,6 +21,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -59,7 +60,7 @@ public class MainSettingSetting  extends Activity implements View.OnClickListene
         findViewById(R.id.imageButtonMarker).setOnClickListener(this);
         //
         findViewById(R.id.imageButtonTermometer).setOnClickListener(this);
-        findViewById(R.id.imageButtonVibration).setOnClickListener(this);
+        findViewById(R.id.switchVibration).setOnClickListener(this);
         findViewById(R.id.imageButtonTemperaturesAbove).setOnClickListener(this);
         findViewById(R.id.imageButtonTemperaturesBelow).setOnClickListener(this);
         findViewById(R.id.imageButtonMelody).setOnClickListener(this);
@@ -80,6 +81,10 @@ public class MainSettingSetting  extends Activity implements View.OnClickListene
         Util.setTextToTextView(sensor.getStringMinTemperature(true)
                 ,R.id.textViewTemperaturesBelow,this,"-");
         Util.setDrawableToImageView(sensor.markerColor,R.id.imageButtonMarker, this);
+
+//        ((Switch)findViewById(R.id.switchVibration))
+//                .setChecked(sensor.onEndVibration);
+
         udateMeasurementMode();
     }
     private void udateMeasurementMode(){
@@ -228,9 +233,11 @@ public class MainSettingSetting  extends Activity implements View.OnClickListene
                         ,sensor.endMelody,TAG, this);
                 //pickRingtone();
                 break;
-            case R.id.imageButtonVibration:
+            case R.id.switchVibration:
                 Log.v(TAG,"imageButtonVibration");
-                Util.playerVibrator(400,this);
+                sensor.onEndVibration = ((Switch)findViewById(R.id.switchVibration))
+                        .isChecked();
+                if(sensor.onEndVibration)Util.playerVibrator(400,this);
                 break;
             case R.id.imageButtonTemperaturesAbove:
                 Log.v(TAG,"imageButtonTemperaturesAbove");

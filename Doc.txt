@@ -1,5 +1,20 @@
 alexey.l.andr0id@gmail.com -моя почта под которой зарегестрирован ГИТ ХАБ
 
+Переключател по этой ссылке описан
+    !!там описана разница в кодах как для 4.1 и 5.1 делать
+    http://stackoverflow.com/questions/11253512/change-on-color-of-a-switch
+    http://stackoverflow.com/questions/27562050/how-to-apply-a-custom-style-to-switchcompat
+
+    https://android.googlesource.com/platform/frameworks/support/+/421d8baa4a524e1384bcf033360bccaf8d55081d/v7/appcompat/src/android/support/v7/widget/SwitchCompat.java
+
+        <!--ВИСНИТ но потом проверить, именно такой переключатель нужен!!-->
+        <!--<android.support.v7.widget.SwitchCompat-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:id="@+id/switchVibration"-->
+            <!--android:layout_alignParentRight="true"-->
+            <!--android:checked="false"-->
+            <!--android:theme="@style/SCBSwitch" />-->
 
 
 2016.12.20 9-00

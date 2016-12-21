@@ -71,29 +71,37 @@ public class MainActivity extends AppCompatActivity {// ActionBarActivity {
         setContentView(R.layout.sample_main);
         //на 2 секунды показываем заставку релсиба --------------
         View view = findViewById(R.id.mainFragment);
-        //убираем системнвый бар
-        view.getRootView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
-        // сворачиваем фрагмент
-        view.setVisibility(View.GONE);
-        //прячем наш бар на время
-        getSupportActionBar().hide();
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                // findViewById(R.id.mainFragment);
-                findViewById(R.id.home).setBackgroundResource(R.color.cardview_light_background);
-                findViewById(R.id.mainFragment).setVisibility(View.VISIBLE);
-                getSupportActionBar().show();
-            }
-        }, 3000);
         //-------------------------------------------------------
         RunDataHub app = ((RunDataHub) getApplicationContext());
         if(app != null){
             app.mainActivity = this;
             Log.e(TAG,"--app != null");
+            //первый запуск
+            if(app.getStartApp()){
+                // сворачиваем фрагмент
+                view.setVisibility(View.GONE);
+                //прячем наш бар на время
+                getSupportActionBar().hide();
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        RunDataHub app = ((RunDataHub) getApplicationContext());
+                        //сбрасываем первый пуск
+                        if(app != null) app.resetStartApp();
+                        // findViewById(R.id.mainFragment);
+                        // // установка ИЗОБРАЖЕНИЕ на всь экран, УБИРАЕМ СВЕРХУ И СНИЗУ панели системные
+                        findViewById(R.id.mainFragment).getRootView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
+                        // убираем заставку
+                        findViewById(R.id.home).setBackgroundResource(R.color.cardview_light_background);
+                        //показываем фрагмент
+                        findViewById(R.id.mainFragment).setVisibility(View.VISIBLE);
+                        //включаем тулбар
+                        getSupportActionBar().show();
+                    }
+                }, 3000);
+            }
         }
-
         //  программное создоние и подключения слоя
       //  https://github.com/codepath/android_guides/wiki/creating-and-using-fragments
         //http://developer.alexanderklimov.ru/android/theory/layout.php
@@ -144,10 +152,14 @@ public class MainActivity extends AppCompatActivity {// ActionBarActivity {
     @Override
     protected void onResume() {
         super.onResume();
-
         Log.e(TAG, "----onResume() ----------");
+        RunDataHub app = ((RunDataHub) getApplicationContext());
+        //а первый запуск показываем заставку несколько секунд, там и потом убираем системный бар
+        // в случа нуля и если мы не первый раз уже просыпаемся то тогда надо убират
         // установка ИЗОБРАЖЕНИЕ на всь экран, УБИРАЕМ СВЕРХУ И СНИЗУ панели системные
-        findViewById(R.id.mainFragment).getRootView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
+        if((app == null) || (app.getStartApp() == false)){
+            findViewById(R.id.mainFragment).getRootView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
+        }
     }
 //!!!    public BluetoothLeServiceNew mBluetoothLeServiceM;
 //
