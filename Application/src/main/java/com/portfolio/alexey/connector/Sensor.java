@@ -257,7 +257,7 @@ if(true)return;
         editor.putString("maxMelody", maxMelody);
         editor.putString("endMelody", endMelody);
         //записать на флеш
-        editor.apply();
+        editor.apply();//
     }
 //    public Sensor (SharedPreferences mSettings, int i){
 //
