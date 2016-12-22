@@ -47,29 +47,21 @@ import com.portfolio.alexey.connector.Util;
 import static android.content.Context.BIND_AUTO_CREATE;
 //Анимация Floating Action Button в Android
 //        https://geektimes.ru/company/nixsolutions/blog/276128/
-//
-//
 //        Design
 //        Downloads!
 //        https://developer.android.com/design/downloads/index.html
-//
 //        Design
 //        Action Bar
 //        https://developer.android.com/design/patterns/actionbar.html
-//
 //        Настройка ActionBar — панели действий
 //        http://www.fandroid.info/nastrojka-paneli-dejstvij-actionbar/
-//
 //        Android Design Support Library — поддержка компонентов Material Design в приложениях с Android 2.1 до Android 5+ (с примерами)
 //        http://www.fandroid.info/android-design-support-library-podderzhka-komponentov-material-design-v-prilozheniyah-s-android-2-1-do-android-5-s-primerami/
-//
 //        Настройка ActionBar вкладки на Android 4
 //        http://ru.androids.help/q11418
 //        https://www.youtube.com/watch?v=NYVcfa6Bke4
-//
 //        Меню ..
 //        https://developer.android.com/guide/topics/ui/menus.html#context-menu
-//
 //        Menu Resource
 //        https://developer.android.com/guide/topics/resources/menu-resource.html
 
@@ -92,8 +84,6 @@ import static android.content.Context.BIND_AUTO_CREATE;
 // http://ru-code-android.livejournal.com/5392.html
 //-- ФЛОАТ кнопка
 //http://www.fandroid.info/android-design-support-library-podderzhka-komponentov-material-design-v-prilozheniyah-s-android-2-1-do-android-5-s-primerami/
-
-
 /**
  * This ListFragment displays a list of cheeses, with a clickable viewScroll on each item whichs displays
  * a {@link android.support.v7.widget.PopupMenu PopupMenu} when clicked, allowing the user to
@@ -101,14 +91,8 @@ import static android.content.Context.BIND_AUTO_CREATE;
  */
 //public class PopupListFragment extends ListFragmentA implements OnClickListener  {//если встраивать обработку нажатия
 public class PopupListFragment extends ListFragmentA  {
-    private static final String TAG = "PopListFA";
+    private static final String TAG = "PopListFr";
     private Menu menuFragment;
-    //private boolean dellItem= false;// убрал- НЕ понравилось заказчику
-
-    public  MainActivity parentActivity;
-
-    private static int index_object = 0;
-    private final int ofset_y = 60;
 
     //private FloatingActionButton fbButton;
     private View fbButton = null;
@@ -165,31 +149,21 @@ public class PopupListFragment extends ListFragmentA  {
     public void onActivityCreated(Bundle savedInstanceState) {
         Log.e(TAG,"Fragment --- onActivityCreated-----STaRT--");
         super.onActivityCreated(savedInstanceState);
-
         ListView lw = getListView();
         View root;
         if(lw == null ){
-            System.out.println("onActivityCreated ERROR: ListView=null");
+            Log.e(TAG,"onActivityCreated ERROR: ListView=null");
             return;
         }
         root =  lw.getRootView();
         if(lw == null ){
-            System.out.println("onActivityCreated ERROR: View root=null");
+            Log.e(TAG,"onActivityCreated ERROR: View root=null");
             return;
         }
-
         //убрать системный бар----------------
         //if(root.getSystemUiVisibility() != View.SYSTEM_UI_FLAG_FULLSCREEN)
         root.setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
 //========================
-
-
-      //  android.app.
-                ActionBar ab = getActivity().getActionBar();
-        System.out.println("-----ActionBar=" + ab);
-//        if(ab != null){
-//            ab.setIcon(R.drawable.alexey_photor_fo_visa);
-//        }
         //---------
         //это для ГРАФИКИ - точного представления соотношений РИСУНКА!!но НЕ для меню!!
         densityX = getResources().getDisplayMetrics().xdpi/160f;
@@ -205,35 +179,7 @@ public class PopupListFragment extends ListFragmentA  {
         ////расстояние в dp  между ЭЛЕМЕНТАИ списка в попЛист, переводим в пикселы
         lw.setDividerHeight(getPixels(dividerHeight));//РАССТОЯНИЕ МЕЖДУ элементами списка!!
         //
-    // при создании заталкиваем перечень названий в лист? с котоого потом и разворачиваем рор лист
-        // We want to allow modifications to the list so copy the dummy data array into an ArrayList
-
-//        for (int i = 0, z = Cheeses.CHEESES.length ; i < z ; i++) {
-//            items.add(Cheeses.CHEESES[i]);
-//        }
-        //переходим на вариант объекта
-//        for (int i = 0, z = Cheeses.CHEESES.length ; i < z ; i++) {
-//            items.add(new Cheeses(i));
-//        }
-      //  items.add("еуые++");
-        // Set the ListAdapter
-        // в адаптере навести все ссылки на отображение данных Объекта-
-
-//        ArrayList<Sensor> item =  mBluetoothLeService.mbleDot;
-//        ArrayList<Object> it = (ArrayList)(Object)item;
-//                PopupAdapter pop = new PopupAdapter(it);
- //------------------
-        // ArrayList<Object> items = new ArrayList<Object>();
-//        PopupAdapter pop = new PopupAdapter(items);
-//        setListAdapter(pop);//создали адаптер для работы
-//        //final ArrayAdapter
-//        adapter = (ArrayAdapter) getListAdapter();//int count = adapter.getCount();
- //-----------
-        //View v = (View)adapter.get(count -1);
-       // ViewGroup vg = ((ViewGroup) v.getParent().getParent());
-        //getActionBar();
-        //setMenuVisibility(false);
-        Log.d(TAG,"  getActivity().getActionBar()=" + getActivity().getActionBar());
+         Log.d(TAG,"  getActivity().getActionBar()=" + getActivity().getActionBar());
         //
         //-------------Установка плавающей копки --------------------------------
         fbButton = View.inflate(getContext(),R.layout.poplist_item_3,null);//породил ИЗ ХМЛ, просто рисунок!!
@@ -241,22 +187,16 @@ public class PopupListFragment extends ListFragmentA  {
 
         //Log.e(teg,"  fbButton.getHeight()=" + fbButton.getHeight());
         //бросаем на экран
-  ((ViewGroup)lw.getParent()).addView(fbButton);
-   //----------ListFragmentA строка 98 там создается скролинг !----------------
-        View mProgressContainer = root.findViewById(ListFragmentA.INTERNAL_PROGRESS_CONTAINER_ID);//
-        View mListContainer = root.findViewById(ListFragmentA.INTERNAL_LIST_CONTAINER_ID);
-        View rawListView = root.findViewById(android.R.id.list);
-        Log.i(TAG,"mProgressContainer=" + mProgressContainer
-                +"\nmListContainer=" + mListContainer
-                +"\nrawListView=" + rawListView
-        );
- // ((ViewGroup)rawListView ).addView(fbButton);
-        //======================================
-        //Log.e(teg,"  fbButton.getHeight()=" + fbButton.getHeight());
-
-     //   ((ViewGroup)lw.getParent()).addView(fbButton2);
-       // ((ViewGroup)root).addView(fbButton);
-  objectDataToView.moveButton();//позиционируем
+        ((ViewGroup)lw.getParent()).addView(fbButton);
+//        //----------ListFragmentA строка 98 там создается скролинг !----------------
+//        View mProgressContainer = root.findViewById(ListFragmentA.INTERNAL_PROGRESS_CONTAINER_ID);//
+//        View mListContainer = root.findViewById(ListFragmentA.INTERNAL_LIST_CONTAINER_ID);
+//        View rawListView = root.findViewById(android.R.id.list);
+//        Log.i(TAG,"mProgressContainer=" + mProgressContainer
+//                +"\nmListContainer=" + mListContainer
+//                +"\nrawListView=" + rawListView
+//        );
+        objectDataToView.moveButton();//позиционируем
         //слушательна кнопку: Если она в КОНТЕЙНЕРЕ, то ише ее там по ИД, иначе вешаем на все
         View vie = fbButton.findViewById(R.id.floatingActionButton);
         if(vie == null) vie = fbButton;//просто кнопка БЕЗ контейнера
@@ -271,17 +211,9 @@ public class PopupListFragment extends ListFragmentA  {
         setHasOptionsMenu(true);
         //этот метод должен вроде сохранять отображение фрагмента при повороте ТЕЛЕфона НО!!
         // http://developer.alexanderklimov.ru/android/theory/fragments.php
-        setRetainInstance(true);
-// ЗАПУСТИЛИ ервис       //-------------ЗАПУСТИЛИ ервис ---------
-//        Intent gattServiceIntent = new Intent(this.getActivity(), BluetoothLeServiceNew.class);
-//        this.getActivity().bindService(gattServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
-//        //-----------------------------
-  //      ((MainActivity)getActivity()).
-        if(adapter == null)initList();
+        //setRetainInstance(true);
+        if(adapter == null) initList();
         //------------------------------
-      //  getListView()
-
-
         Log.e(TAG,"Fragment --- onActivityCreated---END----");
     }
     // ЗАПУСТИЛИ ервис    public BluetoothLeServiceNew mBluetoothLeService = null;
@@ -297,77 +229,14 @@ public class PopupListFragment extends ListFragmentA  {
             Log.e(TAG, "Activity to frag initList()--- mbleDot.size= " + app.mBluetoothLeServiceM.mbleDot.size());
             ArrayList<Sensor> item = app.mBluetoothLeServiceM.mbleDot;
             it = (ArrayList) (Object) item;
-
-            PopupAdapter pop = new PopupAdapter(it);
-
-            setListAdapter(pop);//создали адаптер для работы
-            //final ArrayAdapter
-            adapter = (ArrayAdapter) getListAdapter();//int count = adapter.getCount();
+        } else {
+            it = new ArrayList();
         }
-
+        PopupAdapter pop = new PopupAdapter(it);
+        setListAdapter(pop);//создали адаптер для работы
+        //final ArrayAdapter
+        adapter = (ArrayAdapter) getListAdapter();//int count = adapter.getCount();
     }
-// ЗАПУСТИЛИ ервис    public void upd(){
-//       this.getActivity().runOnUiThread(new Runnable() {
-//            @Override
-//            public void run() {
-//                Log.w(TAG,"PopupAdapter= ");
-//
-//                ArrayList<Sensor> item =  mBluetoothLeService.mbleDot;
-//                ArrayList<Object> it = (ArrayList)(Object)item;
-//                PopupAdapter pop = new PopupAdapter(it);
-//
-//                setListAdapter(pop);//создали адаптер для работы
-//                //mLeDeviceListAdapter.notifyDataSetChanged();
-//            }
-//        });
-//    }
-//// ЗАПУСТИЛИ ервис    // Code to manage Service lifecycle.
-//    private final ServiceConnection mServiceConnection = new ServiceConnection() {
-//
-//        @Override
-//        public void onServiceConnected(ComponentName componentName, IBinder service) {
-//            //     mBluetoothLeService = ((BluetoothLeService.LocalBinder) service).getService();
-//            mBluetoothLeService = ((BluetoothLeServiceNew.LocalBinder) service).getService();
-//            if (!mBluetoothLeService.initialize()) {
-//                Log.e(TAG, "Unable to initialize Bluetooth");
-//             }
-//            if(mBluetoothLeService == null)Log.w(TAG,"mBluetoothLeService= null");
-//            if(mBluetoothLeService.mbleDot == null)Log.w(TAG,"mBluetoothLeService.mbleDot= null");
-//     //       parentActivity
-//   //         mBluetoothLeService.mbleDot.add(new Sensor());
-//   //         mBluetoothLeService.mbleDot.add(new Sensor());
-//    //        mBluetoothLeService.connect("74:DA:EA:9F:54:C9",true);
-//Log.w(TAG,"mBluetoothLeService.mbleDot= " + mBluetoothLeService.mbleDot +
-//"   size= " +  mBluetoothLeService.mbleDot.size());
-//
-//       //--------------------
-////            ArrayList<Object> items = new ArrayList<Object>();
-////            PopupAdapter pop = new PopupAdapter(items);
-//////            setListAdapter(pop);//создали адаптер для работы
-////            //--------ЭТО делать надо  1 раз только иначе падает!!
-////            ArrayList<Sensor> item =  mBluetoothLeService.mbleDot;
-////          //  ArrayList<Sensor> item =  parentActivity.mBluetoothLeServiceM.mbleDot;
-////            ArrayList<Object> it = (ArrayList)(Object)item;
-////            PopupAdapter pop = new PopupAdapter(it);
-////
-////            setListAdapter(pop);//создали адаптер для работы
-////            //final ArrayAdapter
-////            adapter = (ArrayAdapter) getListAdapter();//int count = adapter.getCount();
-//            //addObject(new Sensor());
-//       //-----------
-//            // upd();
-//
-//            // Automatically connects to the device upon successful start-up initialization.
-//            //         mBluetoothLeService.connect(mDeviceAddress,true);
-//            Log.w(TAG, "---initialize ---onServiceConnected-----");
-//        }
-//
-//        @Override
-//        public void onServiceDisconnected(ComponentName componentName) {
-//            mBluetoothLeService = null;
-//            Log.v(TAG, "onServiceDisconnected");
-//        }
-//    };
     ///--------------------------------------------------------------------------------------
 
     final int iconActionAdd = 23456789;
@@ -414,7 +283,7 @@ public class PopupListFragment extends ListFragmentA  {
 
     public void updateView(){
         lloop++;
-        if((adapter == null) || (adapter.getCount() == 0)) return;
+        if((adapter == null) || (adapter.getCount() == 0) || ( mHandlerWork = false)) return;
         int i; String str = "Sensor>";
         for(i = 0; i < adapter.getCount();i++){
             updateViewItem(false,(Sensor)adapter.getItem(i), getListView().getChildAt(i));
@@ -510,7 +379,10 @@ public class PopupListFragment extends ListFragmentA  {
 //                return true;
             case iconActionAdd:
                 Log.i(TAG,"ADD+");
+
+
                 addNoInitObject();
+
 
               //  if(menuFragment != null)menuFragment.clear();
                 return true;
@@ -1016,177 +888,13 @@ return null;//fbButton_;
             if(adapter.getItem(position) != null){
               //  ((Cheeses)adapter.getItem(position)).textValue = view.findViewById(R.id.numbe_cur);
                 //берем объект
-
-
-
                 //присвоил текущее значение для отображения
                 // по умолчанию из метода toString -> заталкивается в R.id.text1, по этому мы сами это НЕ делаем
-    // ((Sensor)adapter.getItem(position)).deviceLabelView = view.findViewById(R.id.text1);
-
+                // ((Sensor)adapter.getItem(position)).deviceLabelView = view.findViewById(R.id.text1);
                updateViewItem(true,(Sensor) adapter.getItem(position),view);
-
-//     ((Sensor)adapter.getItem(position)).intermediateValueView = view.findViewById(R.id.numbe_cur);
-//     ((Sensor)adapter.getItem(position)).rssiView = view.findViewById(R.id.signal);
-//     ((Sensor)adapter.getItem(position)).battery_levelView = view.findViewById(R.id.battery);
-
-  //    ((Sensor)adapter.getItem(position)).deviceLabelView = view.findViewById(R.id.imgTitle);
-  //     ((Sensor)adapter.getItem(position)).markerColorView = view.findViewById(R.id.marker);
-
-
-      //                  view.findViewById(R.id.numbe_min);
-      //          ((Sensor)adapter.getItem(position)).markerColorView = view.findViewById(R.id.numbe_max);
-//                TreeMap<Integer,Object> map = ((Cheeses)adapter.getItem(position)).value;
-//
-//                //загоняем в мап что есть на Вюверах, таким образм, потом сравнивая что есть, то и выводим!
-//                map.put(R.id.numbe_min,view.findViewById(R.id.numbe_min));
-//                map.put(R.id.numbe_min, view.findViewById(R.id.numbe_min));
-//                map.put(R.id.numbe_cur, view.findViewById(R.id.numbe_cur));
-//                map.put(R.id.numbe_max, view.findViewById(R.id.numbe_max));
-//                map.put(R.id.imgTitle, view.findViewById(R.id.imgTitle));
-//                map.put(R.id.signal, view.findViewById(R.id.signal));
-//                map.put(R.id.battery, view.findViewById(R.id.battery));
-                //       map.put(R.id.text1, view.findViewById(R.id.text1));
             }
-//            getActivity().runOnUiThread(new Runnable() {
-//
-//                @Override
-//                public void run() {
-//                    ;
-//                }
-//            });
-
-            //--------Устанвливаем КОРОТКИЙ клик на View vie - потом и делаем его НЕВИДИМЫМ, чтоб НЕ реагировал
-            //это пункт Удаление Объекта? данные которого представлены во вювере!
-    //        view.findViewById(R.id.img_edit).setVisibility(View.INVISIBLE);
-  ;
-
-  //          setonClick_edit_dell_goTo(view.findViewById(R.id.img_dell), position);
-            //группавое удаление обекта? при нажатии он выдвигается, можно нажать на все, потом всех по очереди удалить
-  //          setonClick_edit_dell_goTo(view.findViewById(R.id.img_edit), position);
-            //переход на настройки объекта
-  //          setonClick_edit_dell_goTo(view.findViewById(R.id.img_goto), position);
-            //
-            //  TextView vw = (TextView) view.findViewById(R.id.textViewName);
-//
-//            System.out.println("0 container.getChildCount() =" + container.getChildCount()  +"  /"+position +
-//            "   adapter.getCount()=" +adapter.getCount() + "  inst=" + (convertView instanceof ViewGroup)
-//            + "  .."+ convertView);//+"    getChildCount()" +((ViewGroup) convertView).getChildCount()
+//          getActivity().runOnUiThread(new Runnable() { @Override  public void run() {;}});
             return view;
         }
     }
-    /**
-     * переход на настройки объекта
-     * @param v
-     * @param obj
-     */
-//    public void onClickWorks(View v, Object obj){
-//        switch (v.getId()){
-//            case img_edit:
-//                System.out.println( "img_edit---= " + adapter.getPosition(obj) + "    obj= " + obj);
-//                break;
-//            case img_dell:
-//                System.out.println( "img_dell---= " + adapter.getPosition(obj) + "    obj= " + obj);
-//                break;
-//            case img_goto:
-//                System.out.println( "img_goto---= " + adapter.getPosition(obj) + "    obj= " + obj);
-//                break;
-//            default:
-//                System.out.println( "onClickWorks---= img_??" + adapter.getPosition(obj) + "    obj= " + obj);
-//        }
-////    }
-//
-//    /**
-//     * --------Устанвливаем КОРОТКИЙ клик на View vie - потом и делаем его НЕВИДИМЫМ, чтоб НЕ реагировал
-//     * на выбор КОНТЕЙЕНЕРА, видимость- только после ДОЛГОГО НАЖАТИЯ - он становится видимым и реагирует на кликк
-//     * на выход передает ОБЪЕКТ данные которого и отображаются!!
-//     * @param vie-вювер по которому кликнули
-//     * @param position- объект с которым он связа- отображает его состояние
-//     */
-//    private void setonClick_edit_dell_goTo(View vie, int position){
-//        //входной контроль здесь
-//        // контроль по установке слушателя, если он уже был установлен
-//        if(vie == null) {
-//            System.out.println("PopupListFragment.setonClick_edit_dell_goTo() ERROR: NO-findViewById");
-//            return;
-//        }
-//        if(vie.hasOnClickListeners() || (position < 0) || (position >= adapter.getCount())) return;
-//        //
-//        final Object objectA =  adapter.getItem(position);
-//        if(objectA == null) return;
-//
-//        //установим невидимое состояние, при этом он НЕ будет реагировать на клики мышкой!!
-//      //  vie.setVisibility(View.INVISIBLE);
-//        vie.setVisibility(View.VISIBLE);
-//        vie.setOnClickListener(new OnClickListener() {
-//            //
-//            private final Object obj = objectA;
-//            @Override
-//            public void onClick(View v) {
-//                //onClickWorks(v,obj);
-//                objectDataToView.controlObject(v.getId(),obj,0);
-//            }
-//        });
-//        System.out.println("setonClick_edit_dell OK pos=" + adapter.getPosition(objectA));
-//    }
-//    //ничего не срабатывает
-//    @Override
-//    public boolean onDragA(View v, DragEvent event){
-//        Toast.makeText(getActivity(), "onDragA: " + event, Toast.LENGTH_SHORT).show();
-//        return true;
-//    }
-    //    //запуск дополнительного меню? убрать
-//    @Override
-//    public void onClick(final View viewScroll) {
-//        // We need to post a Runnable to show the popup to make sure that the PopupMenu is
-//        // correctly positioned. The reason being that the viewScroll may change position before the
-//        // PopupMenu is shown.
-//        //тыкаемся на рисунок
-//        viewScroll.post(new Runnable() {
-//            @Override
-//            public void run() {
-//                showPopupMenu(viewScroll);
-//            }
-//        });
-//    }
-//    // BEGIN_INCLUDE(show_popup) Если ткунились в картинку- отображение меню-
-//    private void showPopupMenu(View viewScroll) {
-//  //      viewScroll.setLongClickable(true);
-////        viewScroll.setOnLongClickListener(new Runnable() {
-////            @Override
-////            public void run() {
-////                ;//Toast.makeText(getActivity(), "setOnLongClickListener ", Toast.LENGTH_SHORT).show();
-////            }
-////        });
-//
-//        final PopupAdapter adapter = (PopupAdapter) getListAdapter();
-//
-//        // Retrieve the clicked item from viewScroll's tag
-//        final String item = (String) viewScroll.getTag();
-//
-//        Toast.makeText(getActivity(), "Item Clicked: " + item, Toast.LENGTH_SHORT).show();
-//
-//        // Create a PopupMenu, giving it the clicked viewScroll for an anchor
-//        PopupMenu popup = new PopupMenu(getActivity(), viewScroll);
-//
-//        // Inflate our menu resource into the PopupMenu's Menu
-//        popup.getMenuInflater().inflate(R.menu.popup, popup.getMenu());
-//
-//        // Set a listener so we are notified if a menu item is clicked
-//        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-//            @Override
-//            public boolean onMenuItemClick(MenuItem menuItem) {
-//                switch (menuItem.getItemId()) {
-//                    case R.id.menu_remove:
-//                        // Remove the item from the adapter
-//                        adapter.remove(item);
-//                        return true;
-//                }
-//                return false;
-//            }
-//        });
-//
-//        // Finally show the PopupMenu
-//        popup.show();
-//    }
-//    // END_INCLUDE(show_popup)
 }

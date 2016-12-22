@@ -6,7 +6,7 @@
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/item_parent"
+    android:id="@+id/frame_headband"
     android:theme="@android:style/TextAppearance.Inverse"
     android:elevation="1dp"
     android:background="@drawable/home">

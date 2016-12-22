@@ -224,6 +224,7 @@ public class Util {
         //
         actionBar.setTitle(title);
         actionBar.setDisplayShowTitleEnabled(true);
+        actionBar.show();
         //
         Log.d(tag, "actionBar != null--");
         return actionBar;

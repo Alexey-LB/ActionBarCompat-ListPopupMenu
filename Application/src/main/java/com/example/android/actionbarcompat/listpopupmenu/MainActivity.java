@@ -68,161 +68,18 @@ public class MainActivity extends AppCompatActivity {// ActionBarActivity {
     private  final   int mainIdFragment = R.id.mainFragment;
 
     public PopupListFragment popupListFragment;
-  //  private PopupListFragment popupListFragment= new PopupListFragment();
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        //setContentView(R.layout.sample_main);
-        setContentView(R.layout.sample_main);
-
-        FragmentHeadBand headBandFragment = new  FragmentHeadBand();
-
-        //на 2 секунды показываем заставку релсиба --------------
-        //-------------------------------------------------------
-        RunDataHub app = ((RunDataHub) getApplicationContext());
-        if(app != null){
-            app.mainActivity = this;
-            Log.e(TAG,"--app != null");
-            //первый запуск
-            if(app.getStartApp()){
-                // сворачиваем фрагмент
-                findViewById(R.id.mainFragment).setVisibility(View.GONE);
-                //прячем наш бар на время
-                getSupportActionBar().hide();
-                Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {setWork();}
-                }, 3000);
-            }else {
-                setWork();
-            }
-        }
-        //  программное создоние и подключения слоя
-      //  https://github.com/codepath/android_guides/wiki/creating-and-using-fragments
-        //http://developer.alexanderklimov.ru/android/theory/layout.php
-//Экземпляр фрагмента связан с активностью. Активность может вызывать методы фрагмента
-// через ссылку на объект фрагмента. Доступ к фрагменту можно получить через
-// методы findFragmentById() или findFragmentByTag().
-// Фрагмент в свою очередь может получить доступ к своей активности через
-// метод Fragment.getActivity().
-//--
-//взаимодействие АКТИВНОсТИ и фрагмента, вызов явно метода из фрагмента, по ссылке на него!
-        //там же взаимодействи обратное, работа с АкшионБар и КНОПКА НАЗАД!
-        // http://developer.alexanderklimov.ru/android/theory/fragments.php
-        popupListFragment = new PopupListFragment();
-        Util.changeFragment(mainIdFragment, popupListFragment
-                , getSupportFragmentManager());
-
-//
-//        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-//        // Begin the transaction
-//        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-//// Replace the contents of the container with the new fragment
-//
-//        ft.replace(R.id.mainFragment, popupListFragment);
-//
-//    //    ft.replace(R.id.mainFragment, headBandFragment);
-//
-//// Complete the changes added above
-//        ft.commit();
-        //инициализация фрейма
-//  popupListFragment= (PopupListFragment)getSupportFragmentManager()
-//                .findFragmentById(R.id.popUpListFragment);
-//        popupListFragment.parentActivity = this;
-        //--------------
-        //!!! так НЕ работает!!
-        //ActionBar ab = getActionBar();
-  //ТАК СРАБОТАЛО!!!
-        Util.setSupportV7appActionBar(getSupportActionBar(),TAG,"  B4/B5 v2.2");
-        //-------------ЗАПУСТИЛИ ервис ---------
-//!!        Intent gattServiceIntent = new Intent(this, BluetoothLeServiceNew.class);
-//!!        bindService(gattServiceIntent, mServiceConnectionM, BIND_AUTO_CREATE);
-        Log.e(TAG, "----onCreate END-----");
-    }
-    private void setWork(){
-        {
-            RunDataHub app = ((RunDataHub) getApplicationContext());
-            //сбрасываем первый пуск
-            if(app != null) app.resetStartApp();
-            // findViewById(R.id.mainFragment);
-            // // установка ИЗОБРАЖЕНИЕ на всь экран, УБИРАЕМ СВЕРХУ И СНИЗУ панели системные
-            findViewById(R.id.mainFragment).getRootView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
-            // убираем заставку
-            findViewById(R.id.home).setBackgroundResource(R.color.cardview_light_background);
-            //показываем фрагмент
-            findViewById(R.id.mainFragment).setVisibility(View.VISIBLE);
-            //включаем тулбар
-            getSupportActionBar().show();
-        }
-    }
-    //инициализация фрейма
-    public void init(){
-        Log.e(TAG, "----init() ----------");
-        RunDataHub app = ((RunDataHub) getApplicationContext());
-        if((app != null) && (app.mBluetoothLeServiceM != null)){
-            if(app.mBluetoothLeServiceM.initialize()) {
-                Log.e(TAG, "----init() ---------- OK OK");
-
-            } else{
-                Log.e(TAG, "----init() ---------- ERROR!");
-            }
-        }
-        popupListFragment.initList();
-    }
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Log.e(TAG, "----onResume() ----------");
-        RunDataHub app = ((RunDataHub) getApplicationContext());
-        //а первый запуск показываем заставку несколько секунд, там и потом убираем системный бар
-        // в случа нуля и если мы не первый раз уже просыпаемся то тогда надо убират
-        // установка ИЗОБРАЖЕНИЕ на всь экран, УБИРАЕМ СВЕРХУ И СНИЗУ панели системные
-        if((app == null) || (app.getStartApp() == false)){
-            findViewById(R.id.mainFragment).getRootView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
-        }
-    }
-//!!!    public BluetoothLeServiceNew mBluetoothLeServiceM;
-//
-//    // Code to manage Service lifecycle.
-//    private final ServiceConnection mServiceConnectionM = new ServiceConnection() {
-//
-//        @Override
-//        public void onServiceConnected(ComponentName componentName, IBinder service) {
-//            //     mBluetoothLeService = ((BluetoothLeService.LocalBinder) service).getService();
-//            mBluetoothLeServiceM = ((BluetoothLeServiceNew.LocalBinder) service).getService();
-//            if (!mBluetoothLeServiceM.initialize()) {
-//                Log.e(TAG, "Unable to initialize Bluetooth");
-//                finish();
-//            }
-//           if(popupListFragment != null) popupListFragment.initList();
-//            // Automatically connects to the device upon successful start-up initialization.
-//            //         mBluetoothLeService.connect(mDeviceAddress,true);
-//            Log.w(TAG, "---initialize ---onServiceConnected-----");
-//        }
-//
-//        @Override
-//        public void onServiceDisconnected(ComponentName componentName) {
-//            mBluetoothLeServiceM = null;
-//            Log.v(TAG, "onServiceDisconnected");
-//        }
-//    };
     //----------
 //    Анимация Floating Action Button в Android
 //    https://geektimes.ru/company/nixsolutions/blog/276128/
-//
-//
 //    Design
 //    Downloads!
 //    https://developer.android.com/design/downloads/index.html
-//
 //    Design
 //    Action Bar
 //    https://developer.android.com/design/patterns/actionbar.html
-//
 //    Настройка ActionBar — панели действий
 //    http://www.fandroid.info/nastrojka-paneli-dejstvij-actionbar/
-//
+    //
 //    Android Design Support Library — поддержка компонентов Material Design в приложениях с Android 2.1 до Android 5+ (с примерами)
 //    http://www.fandroid.info/android-design-support-library-podderzhka-komponentov-material-design-v-prilozheniyah-s-android-2-1-do-android-5-s-primerami/
 //
@@ -237,6 +94,96 @@ public class MainActivity extends AppCompatActivity {// ActionBarActivity {
 //    https://developer.android.com/guide/topics/resources/menu-resource.html
     //Android Design Support Library — поддержка компонентов Material Design в приложениях с Android 2.1 до Android 5+ (с примерами)
     // http://www.fandroid.info/android-design-support-library-podderzhka-komponentov-material-design-v-prilozheniyah-s-android-2-1-do-android-5-s-primerami/
+
+    //  программное создоние и подключения слоя
+    //  https://github.com/codepath/android_guides/wiki/creating-and-using-fragments
+    //http://developer.alexanderklimov.ru/android/theory/layout.php
+    //Экземпляр фрагмента связан с активностью. Активность может вызывать методы фрагмента
+    // через ссылку на объект фрагмента. Доступ к фрагменту можно получить через
+    // методы findFragmentById() или findFragmentByTag().
+    // Фрагмент в свою очередь может получить доступ к своей активности через
+    // метод Fragment.getActivity().
+    //--
+    //взаимодействие АКТИВНОсТИ и фрагмента, вызов явно метода из фрагмента, по ссылке на него!
+    //там же взаимодействи обратное, работа с АкшионБар и КНОПКА НАЗАД!
+    // http://developer.alexanderklimov.ru/android/theory/fragments.php
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        //setContentView(R.layout.sample_main);
+        setContentView(R.layout.sample_main);
+        //на 2 секунды показываем заставку релсиба --------------
+        //-------------------------------------------------------
+        RunDataHub app = ((RunDataHub) getApplicationContext());
+        if(app == null)finish();
+        //------------------------------
+        app.mainActivity = this;
+        Log.e(TAG,"--app != null");
+        //
+        if(app.getStartApp()){// "ЭТО первый запуск
+            //прячем наш бар на время
+            getSupportActionBar().hide();
+             //заставка релсиба --------------
+            Util.changeFragment(mainIdFragment, new  FragmentHeadBand()
+                    , getSupportFragmentManager());
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    //сбрасываем первый пуск
+                    // гасим сразу, чтоб не дергалось изображение
+                    findViewById(mainIdFragment).setVisibility(View.GONE);
+                    ((RunDataHub) getApplicationContext()).resetStartApp();
+                    setWork();
+                }
+            }, 3000);
+        }else {
+            setWork();
+        }
+        Log.e(TAG, "----onCreate END-----");
+    }
+    private void setWork(){
+       // // установка ИЗОБРАЖЕНИЕ на всь экран, УБИРАЕМ СВЕРХУ И СНИЗУ панели системные
+        findViewById(mainIdFragment).getRootView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
+        //настраиваем и включаем тулбар
+        Util.setSupportV7appActionBar(getSupportActionBar(),TAG,"  B4/B5 v2.2");
+
+        Util.changeFragment(mainIdFragment, new PopupListFragment()
+                , getSupportFragmentManager());
+
+//        popupListFragment = new PopupListFragment();
+//        Util.changeFragment(mainIdFragment, popupListFragment
+//                , getSupportFragmentManager());
+        //ОБЯЗАТЕЛЬНО, ВВерху выключаем!!! видимость, здесь надо включить!!
+        findViewById(mainIdFragment).setVisibility(View.VISIBLE);
+    }
+    //инициализация фрейма
+    public void init(){
+        Log.e(TAG, "----init() ----------");
+        RunDataHub app = ((RunDataHub) getApplicationContext());
+        if((app != null) && (app.mBluetoothLeServiceM != null)){
+            if(app.mBluetoothLeServiceM.initialize()) {
+                Log.e(TAG, "----init() ---------- OK OK");
+
+            } else{
+                Log.e(TAG, "----init() ---------- ERROR!");
+            }
+        }
+ //!!       popupListFragment.initList();
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.e(TAG, "----onResume() ----------");
+        RunDataHub app = ((RunDataHub) getApplicationContext());
+        //а первый запуск показываем заставку несколько секунд, там и потом убираем системный бар
+        // в случа нуля и если мы не первый раз уже просыпаемся то тогда надо убират
+        // установка ИЗОБРАЖЕНИЕ на всь экран, УБИРАЕМ СВЕРХУ И СНИЗУ панели системные
+        if((app == null) || (app.getStartApp() == false)){
+            findViewById(R.id.mainFragment).getRootView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
+        }
+    }
 
 //Develop API Guides User Interface Меню
     // https://developer.android.com/guide/topics/ui/menus.html#context-menu
@@ -280,7 +227,7 @@ final int iconActionEdit = 12345678;
         final Intent intent = new Intent(this, DeviceScanActivity.class);
           intent.putExtra(MainActivity.EXTRAS_DEVICE_ITEM, i);
         //  intent.putExtra(MainActivity.EXTRAS_DEVICE_ADDRESS, device.getAddress());
-Log.i(TAG,"startActivity SCAN");
+        Log.i(TAG,"startActivity SCAN");
         startActivityForResult(intent,MAINACTIVITY);//на подклшючение к устройству
     }
     @Override
@@ -291,6 +238,8 @@ Log.i(TAG,"startActivity SCAN");
         switch (item.getItemId()) {
             case android.R.id.home:
                 Log.i(TAG,"android.R.id.home--");
+    // Добавить вызов ЗАСТАВКИ!!релсиба
+
 //
 //                RunDataHub app = ((RunDataHub) getApplicationContext());
 //                if(app.mBluetoothLeServiceM != null){
@@ -348,6 +297,5 @@ Log.i(TAG,"startActivity SCAN");
             Log.e(TAG,"onDestroy() -----------WORK ------------- WORK -------------");
            ; //It's an orientation change.
         }
- //!!       unbindService(mServiceConnectionM);
     }
 }

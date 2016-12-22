@@ -7,16 +7,17 @@
         <item name="colorSwitchThumbNormal">#f1f1f1</item>
         <!-- inactive track color (30% transparency) -->
         <item name="android:colorForeground">#42221f1f</item>
-
-        <item name="android:windowFullscreen">false</item>
     </style>
 
+    <!--<item name="android:windowFullscreen">false</item>-->
+    <!--<item name="android:windowFullscreen">false</item>-->
 
     <style name="AppThemeN" parent="@style/Theme.AppCompat.Light">
         <!-- Customize your theme here. -->
         <!--<item name="android:windowActionBar">false</item>-->
+
         <item name="android:windowActionBar">true</item>
-        <item name="android:windowFullscreen">false</item>
+
         <!--<item name="android:windowDrawsSystemBarBackgrounds">false</item>-->
         <!--цвет фона-->
         <item name="colorPrimary">@color/colorPrimary</item>
@@ -25,15 +26,17 @@
         <!--цвет переключателя-->
         <item name="colorAccent">@color/colorAccent</item>
     </style>
+
     <!--ШИРИНА бара, только для старого срабатывает!-->
     <!--<item name="android:actionBarSize">32dp</item>-->
 
     <!--<style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">-->
+    <!--<item name="android:windowFullscreen">false</item>-->
+
+
     <style name="AppThemeM" parent="@android:style/Theme.Holo.Light">
         <!-- Customize your theme here. -->
         <item name="android:windowActionBar">true</item>
-
-        <item name="android:windowFullscreen">false</item>
 
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
