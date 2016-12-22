@@ -147,7 +147,7 @@ public class MainActivity extends AppCompatActivity {// ActionBarActivity {
        // // установка ИЗОБРАЖЕНИЕ на всь экран, УБИРАЕМ СВЕРХУ И СНИЗУ панели системные
         findViewById(mainIdFragment).getRootView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
         //настраиваем и включаем тулбар
-        Util.setSupportV7appActionBar(getSupportActionBar(),TAG,"  B4/B5 v2.2");
+        Util.setSupportV7appActionBar(getSupportActionBar(),TAG,"  B4/B5 v2.3");
 
         Util.changeFragment(mainIdFragment, new PopupListFragment()
                 , getSupportFragmentManager());
