@@ -19,6 +19,7 @@ import android.widget.TextView;
 import com.example.android.actionbarcompat.listpopupmenu.Marker;
 import com.example.android.actionbarcompat.listpopupmenu.R;
 
+import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.UUID;
@@ -63,12 +64,23 @@ public class Sensor {
     // "Health Thermometer"
     public float temperatureMeasurement = 0f;//C- у релсиба НЕ потдерживается
 
-    public float intermediateValue = 0f;//C - работаем с этой темпратурой, точность0.1С, каждую секунду
+    public float intermediateValue = Float.NaN;//C - работаем с этой темпратурой, точность0.1С, каждую секунду
+    // для сброса к текущей температуре ОТДЕЛЬНАЯ кнопка
+    public float minValue = Float.NaN;//минимальное значение текущей измеряемой температуры
+    public float maxValue = Float.NaN;//максимальное значение текущей измеряемой температуры
+    public float predictedTemperature = Float.NaN;//C для градусника ПРЕСКАЗАНИЯ
+//медицинский режим - 1 значение:текущее, второе:МАКСИМАЛЬНОЕ, 3 значение прогнозируемо
+//МОНИТОР режим      1 значение:минимальное, второе:текущее, 3 значение макисмальное
+    public int measurementMode = 0;//0 режим медецинский Или универсальный
+    //
+    public boolean onFahrenheit = false;
+    //
+    public long time = 0;//время НАЧАЛА работы сенсора
 
-    public float minTemperature = -20f;//C для монитора температуры
-    public float maxTemperature = +70f;//C для монитора температуры
-    public float endTemperature = 0f;//C для градусника
-    public float predictedTemperature = 0f;//C для градусника ПРЕСКАЗАНИЯ
+    public float minTemperature = -20f;//C ПРЕДЕЛ для АЛЕРТА для монитора температуры
+    public float maxTemperature = +70f;//C ПРЕДЕЛ для АЛЕРТА ддля монитора температуры
+    public float endTemperature = 0f;//C ПРОГНОЗИРИРОВАНИЕ температуры для медецинского градусника
+
     //
     public boolean changeConfig = true;//флаг указывающий на ИМЕНЕНИя и ОБЯЗАЕЛЬНО СОХРАНИТЬ  объект(изменились настройки)!!
     public boolean avtoConnect = true;
@@ -82,8 +94,6 @@ public class Sensor {
     public int deviceItem = 0;
     public int markerColor = 0;
 
-    public int measurementMode = 0;//режим медецинский Или универсальный
-
     //"Device Information Service":-character--
     public String softwareRevision ;
     public String firmwareRevision ;
@@ -95,8 +105,6 @@ public class Sensor {
     //
     public int fonColor = 0;
     public int fonImg = 0;
-    //
-    public boolean onFahrenheit = false;
     //
     public boolean onMinVibration = false;
     public boolean onMaxVibration = false;
@@ -120,6 +128,12 @@ public class Sensor {
     public void disconnect(){
         if (mBluetoothGatt == null) return;
         mBluetoothGatt.disconnect();
+    }
+    //// для сброса к текущей температуре ОТДЕЛЬНАЯ кнопка
+    public void resetMinMaxValueTemperature(){
+        intermediateValue = Float.NaN;//C - работаем с этой темпратурой, точность0.1С, каждую секунду
+        minValue = Float.NaN;//минимальное значение текущей измеряемой температуры
+        maxValue = Float.NaN;//максимальное значение текущей измеряемой температуры
     }
     //
     private boolean mHandlerWork = false;
@@ -161,182 +175,98 @@ if(true)return;
     public String getAddress(){
         return mBluetoothDeviceAddress;
     }
-    public Sensor (){
-
+    //
+    private void initSensor (){
         deviceLabel = deviceLabelStringDefault + " " + indexDevace++;
         markerColor = 0x7 & indexDevace;
-        Log.v(TAG,"markerColor= " + markerColor);
+        //----------------------
+        time = System.currentTimeMillis();
         loop();
+    }
+
+    public Sensor (){
+        initSensor();
     }
     public Sensor (final String adress){
-
+        initSensor();
         mBluetoothDeviceAddress = adress;
-        deviceLabel = deviceLabelStringDefault + " " + indexDevace++;
-        markerColor = 0x7 & indexDevace;
-        loop();
     }
     public Sensor (SharedPreferences mSettings){
-        if(mSettings == null){
-            deviceLabel = deviceLabelStringDefault + " " + indexDevace++;
-            return;
-        }
-        markerColor = 0x7 & indexDevace;
-        changeConfig = false;//установки считаны из ФЛЕШИ- не изменены!!
-        //if (mSettings.contains("COUNTER"))
-        mBluetoothDeviceAddress = mSettings.getString("mBluetoothDeviceAddress", mBluetoothDeviceAddress);
-        avtoConnect = mSettings.getBoolean("avtoConnect", avtoConnect);
-        deviceLabel = mSettings.getString("deviceLabel", deviceLabel);//имя назначаемое пользоватлем
-        deviceName = mSettings.getString("deviceName", deviceName);
-        deviceItem = mSettings.getInt("deviceItem", deviceItem);
-        markerColor = mSettings.getInt("markerColor", markerColor);
-        //
-        measurementMode = mSettings.getInt("measurementMode", measurementMode);//режим медецинский Или универсальный
-        fonColor = mSettings.getInt("fonColor", fonColor);
-        fonImg = mSettings.getInt("fonImg", fonImg);
-        //"Device Information Service":-character--
-        softwareRevision = mSettings.getString("softwareRevision", softwareRevision);
-        firmwareRevision = mSettings.getString("firmwareRevision", firmwareRevision);
-        hardwareRevision = mSettings.getString("hardwareRevision", hardwareRevision);
-        serialNumber = mSettings.getString("serialNumber", serialNumber);
-        modelNumber = mSettings.getString("modelNumber",modelNumber);
-        manufacturerName = mSettings.getString("manufacturerName", manufacturerName);
-        //
-        minTemperature = mSettings.getFloat("minTemperature", minTemperature);
-        maxTemperature = mSettings.getFloat("maxTemperature", maxTemperature);
-        //
-        onFahrenheit = mSettings.getBoolean("onFahrenheit", onFahrenheit);
-        onMinVibration = mSettings.getBoolean("onMinVibration", onMinVibration);
-        onMaxVibration = mSettings.getBoolean("onMaxVibration", onMaxVibration);
-        onEndVibration = mSettings.getBoolean("onEndVibration", onEndVibration);
-
-        onMinNotification = mSettings.getBoolean("onMinNotification", onMinNotification);
-        onMaxNotification = mSettings.getBoolean("onMaxNotification", onMaxNotification);
-        onEndNotification = mSettings.getBoolean("onEndNotification", onEndNotification);
-
-// TODO: 17.12.2016 в случае чтения непонятного типа(например булеан,
-// а чтиаем стринг- выбрасывает из программы- обработаь !!прерывания
-        minMelody = mSettings.getString("minMelody", minMelody);
-        maxMelody = mSettings.getString("maxMelody", maxMelody);
-        endMelody = mSettings.getString("endMelody", endMelody);
-        loop();
+        initSensor();
+        if(mSettings != null)getConfig( mSettings);
     }
-    public void putConfig(SharedPreferences.Editor editor){
-        if(editor == null) return;
-        if(changeConfig == false) return;//ничего не меняли и сохранять НЕ надо!!
-        editor.putString("mBluetoothDeviceAddress", mBluetoothDeviceAddress);
-        editor.putBoolean("avtoConnect", avtoConnect);
-        editor.putString("deviceLabel", deviceLabel);//имя назначаемое пользоватлем
-        editor.putString("deviceName", deviceName);
-        editor.putInt("deviceItem", deviceItem);
-        editor.putInt("markerColor", markerColor);
-        //
-        editor.putInt("measurementMode", measurementMode);//режим медецинский Или универсальный
-        editor.putInt("fonColor", fonColor);
-        editor.putInt("fonImg", fonImg);
-        //"Device Information Service":-character--
-        editor.putString("softwareRevision", softwareRevision);
-        editor.putString("firmwareRevision", firmwareRevision);
-        editor.putString("hardwareRevision", hardwareRevision);
-        editor.putString("serialNumber", serialNumber);
-        editor.putString("modelNumber",modelNumber);
-        editor.putString("manufacturerName", manufacturerName);
-        //
-        editor.putFloat("minTemperature", minTemperature);
-        editor.putFloat("maxTemperature", maxTemperature);
-        //
-        editor.putBoolean("onFahrenheit", onFahrenheit);
-        editor.putBoolean("onMinVibration", onMinVibration);
-        editor.putBoolean("onMaxVibration", onMaxVibration);
-        editor.putBoolean("onEndVibration", onEndVibration);
-        //
-        editor.putBoolean("onMinNotification", onMinNotification);
-        editor.putBoolean("onMaxNotification", onMaxNotification);
-        editor.putBoolean("onEndNotification", onEndNotification);
-
-        editor.putString("minMelody", minMelody);
-        editor.putString("maxMelody", maxMelody);
-        editor.putString("endMelody", endMelody);
-        //записать на флеш
-        editor.apply();//
-    }
-//    public Sensor (SharedPreferences mSettings, int i){
-//
-//        if(mSettings == null){
-//            deviceLabel = deviceLabelStringDefault + " " + indexDevace++;
-//            //выходим по скольку все по умолчанию устанавливается
-//            return;
-//        }
-//        markerColor = 0x7 & indexDevace;
-//        changeConfig = false;//установки считаны из ФЛЕШИ- не изменены!!
-//        //if (mSettings.contains("COUNTER"))
-//        mBluetoothDeviceAddress = mSettings.getString("mBluetoothDeviceAddress", mBluetoothDeviceAddress);
-//        avtoConnect = mSettings.getBoolean("avtoConnect", avtoConnect);
-//        deviceLabel = mSettings.getString("deviceLabel", deviceLabel);//имя назначаемое пользоватлем
-//        deviceName = mSettings.getString("deviceName", deviceName);
-//        deviceItem = mSettings.getInt("deviceItem", deviceItem);
-//        markerColor = mSettings.getInt("markerColor", markerColor);
-//        //
-//        measurementMode = mSettings.getInt("measurementMode", measurementMode);//режим медецинский Или универсальный
-//        fonColor = mSettings.getInt("fonColor", fonColor);
-//        fonImg = mSettings.getInt("fonImg", fonImg);
-//        //"Device Information Service":-character--
-//        softwareRevision = mSettings.getString("softwareRevision", softwareRevision);
-//        firmwareRevision = mSettings.getString("firmwareRevision", firmwareRevision);
-//        hardwareRevision = mSettings.getString("hardwareRevision", hardwareRevision);
-//        serialNumber = mSettings.getString("serialNumber", serialNumber);
-//        modelNumber = mSettings.getString("modelNumber",modelNumber);
-//        manufacturerName = mSettings.getString("manufacturerName", manufacturerName);
-//        //
-//        onFahrenheit = mSettings.getBoolean("onFahrenheit", onFahrenheit);
-//        onMinVibration = mSettings.getBoolean("onMinVibration", onMinVibration);
-//        onMaxVibration = mSettings.getBoolean("onMaxVibration", onMaxVibration);
-//        onEndVibration = mSettings.getBoolean("onEndVibration", onEndVibration);
-//
-//// TODO: 17.12.2016 в случае чтения непонятного типа(например булеан,
-//// а чтиаем стринг- выбрасывает из программы- обработаь !!прерывания
-//        minMelody = mSettings.getString("minMelody", minMelody);
-//        maxMelody = mSettings.getString("maxMelody", maxMelody);
-//        endMelody = mSettings.getString("endMelody", endMelody);
-//        loop();
-//    }
 
     // TODO: 09.12.2016 МЛАДШИЙ разряд датчика температуры-to 0.0625°C, а выдает 0.1 точность, ГДЕ теряется? надо выдавать все, чтоб НЕ РЫСКАЛО
     // в будующем сделать порог  0.0625°C, чтоб показания не прыгали!
-    public String getStringValue( float inp, boolean fahrenheit, boolean addType){
+    public static  String getStringValue( float inp, boolean fahrenheit, boolean addType){
         final String str; float f= inp;
+        if(Float.isNaN(inp)) return "--";
         if(fahrenheit) f = (f *9/5) + 32;// перевод в ФАРЕНГЕЙТА
         if(addType){
-            if(fahrenheit) str = String.format("%2.1f °F",f);
-            else str = String.format("%2.1f °C",f);
-        }else str = String.format("%2.1f",f);
-        return str;
+            if(fahrenheit) str = "%2.1f °F";
+            else str = "%2.1f °C";
+        }else str = "%2.1f";
+        return String.format(Locale.getDefault(),str,f);
     }
-
-    public final String getStringIntermediateValue( boolean fahrenheit, boolean addType){
-        return getStringValue( intermediateValue, fahrenheit, addType);
+    public String getStringValue( float inp, boolean addType){
+        final String str; float f= inp;
+        if(Float.isNaN(inp))  return "-";
+        if(onFahrenheit) f = (f *9/5) + 32;// перевод в ФАРЕНГЕЙТА
+        if(addType){
+            if(onFahrenheit) str = "%2.1f °F";
+            else str = "%2.1f °C";
+        }else str = "%2.1f";
+        return String.format(Locale.getDefault(),str,f);
     }
+    //медицинский режим - 1 значение:текущее, второе:МАКСИМАЛЬНОЕ, 3 значение прогнозируемо
+    //МОНИТОР режим      1 значение:минимальное, второе:текущее, 3 значение макисмальное
+    public final String getString_1_ValueTemperature(boolean addType){
+        if(measurementMode == 0){//режим 0 - медецинский Или 1 - универсальный
+            return getStringValue( intermediateValue, addType);
+        }
+        return getStringValue(minValue , addType);
+    }
+    public String getString_2_ValueTemperature(boolean addType){
+        if(measurementMode == 0){//режим 0 - медецинский Или 1 - универсальный
+            return getStringValue( maxValue, addType);
+        }
+        return getStringValue(intermediateValue , addType);
+    }
+    public String getString_3_ValueTemperature(boolean addType){
+        if(measurementMode == 0){//режим 0 - медецинский Или 1 - универсальный
+            return getStringValue( predictedTemperature, addType);//прогнозируемая температура
+        }
+        return getStringValue(maxValue, addType);
+    }
+    //текущая температура
     public final String getStringIntermediateValue( boolean addType){
         return getStringValue( intermediateValue, onFahrenheit, addType);
     }
-    public String getStringMinTemperature( boolean fahrenheit, boolean addType){
-        return getStringValue( minTemperature, fahrenheit, addType);
+    //текущая минимальная температура
+    public String getStringMinValue( boolean addType){
+        return getStringValue( minValue, onFahrenheit, addType);
     }
+    //текущая МАхсимальная температура
+    public String getStringMaxValue( boolean addType){
+        return getStringValue( maxValue, onFahrenheit, addType);
+    }
+    //ПРЕДЕЛ срабатывания оповещения
     public String getStringMinTemperature( boolean addType){
         return getStringValue( minTemperature, onFahrenheit, addType);
     }
-    public String getStringMaxTemperature( boolean fahrenheit, boolean addType){
-        return getStringValue( maxTemperature, fahrenheit, addType);
-    }
+    //ПРЕДЕЛ срабатывания оповещения
     public String getStringMaxTemperature( boolean addType){
         return getStringValue( maxTemperature, onFahrenheit, addType);
     }
-    public String getStringEndTemperature( boolean fahrenheit, boolean addType){
-        return getStringValue( endTemperature, fahrenheit, addType);
-    }
+//
     public String getStringEndTemperature( boolean addType){
         return getStringValue( endTemperature, onFahrenheit, addType);
     }
-    //режим медецинский Или универсальный
+//      C для градусника ПРЕСКАЗАНИЯ
+//    public String getStringPredictedTemperature(boolean addType){
+//        return getStringValue( predictedTemperature, onFahrenheit, addType);
+//    }
+    //режим 0 - медецинский Или 1 - универсальный
     public String getStringMeasurementMode(){
         if(measurementMode == 0) return "Медицинский";
         return "Универсальный";
@@ -350,12 +280,9 @@ if(true)return;
     public int getMeasurementMode(){
         return measurementMode & 0x1;
     }
-    //C для градусника ПРЕСКАЗАНИЯ
-    public String getStringPredictedTemperature( boolean fahrenheit, boolean addType){
-        return getStringValue( predictedTemperature, fahrenheit, addType);
-    }
+
     // TODO: 09.12.2016 перенести все это во внешний класс PartGatt, он должен все определять со значениями и отдавать в виде объект
-    public String setValue(BluetoothGattCharacteristic characteristic){
+    public boolean setValue(BluetoothGattCharacteristic characteristic,boolean logON){
         // TODO: 09.12.2016         // ПЕРЕДЕЛАТь для 16 рарядов, использовать свитчь -для нас ЗНАЧИМЫ старшие разряды характеристики для определение че это такое
         int charact = PartGatt.getCharacteristicInt(characteristic);//важны только 16 разрядов для определения сервиса и характеристики стандартного
         final String logStr,str;
@@ -363,12 +290,18 @@ if(true)return;
         int format = -1;
         if ((PartGatt.UUID_INTERMEDIATE_TEMPERATURE.equals(characteristic.getUuid()))) {
             intermediateValue = characteristic.getFloatValue(BluetoothGattCharacteristic.FORMAT_FLOAT, 1);
-            str = String.format("%.2f", intermediateValue);
-            Log.v(TAG, "TEMPERATURE: " + str + "  Properties= " + flag);
+            //если сброисили значения, то присваиваем текущие при первом заходе
+            if((Float.isNaN(maxValue))
+                    || (intermediateValue > maxValue)) maxValue = intermediateValue;
+            if((Float.isNaN(minValue))
+                    || (intermediateValue < minValue)) minValue = intermediateValue;
+            if(logON) {
+                str = String.format("%.2f", intermediateValue);
+                Log.v(TAG, "TEMPERATURE: " + str + "  Properties= " + flag);
+            }
             //
-           return str;
+           return true;
         }
-
 //        // carried out as per profile specifications:
 //        // http://developer.bluetooth.org/gatt/characteristics/Pages/CharacteristicViewer.aspx?u=org.bluetooth.characteristic.heart_rate_measurement.xml
         if ((PartGatt.UUID_HEART_RATE_MEASUREMENT.equals(characteristic.getUuid()))) {
@@ -382,13 +315,11 @@ if(true)return;
             final int heartRate = characteristic.getIntValue(format, 1);
 //            final int heartRR1 = characteristic.getIntValue(BluetoothGattCharacteristic.FORMAT_UINT16, 2);
 //            final int heartRR2 = characteristic.getIntValue(BluetoothGattCharacteristic.FORMAT_UINT16, 4);
-            Log.v(TAG, String.format("Received heart rate: %d  // ", heartRate,logStr));
+            if(logON) Log.v(TAG, String.format("Received heart rate: %d  // ", heartRate,logStr));
             intermediateValue = (float)heartRate;
             // intent.putExtra(EXTRA_DATA, String.valueOf(heartRate) +" / "+ String.valueOf(heartRR1) +"/"+ String.valueOf(heartRR1));
             // sendsendBroadcastPutExtra(action,String.valueOf(heartRate) +" / "+ String.valueOf(heartRR1) +"/"+ String.valueOf(heartRR1));
-            //
-
-            return getStringIntermediateValue( false, false);
+            return true;
         }
         //----------Health Thermometer-------------------
 //
@@ -399,7 +330,7 @@ if(true)return;
 //            Log.d(TAG, String.format("TEMPERATURE: %f", temp));
 //            // intent.putExtra(EXTRA_DATA, String.valueOf(temp));
 //            sendsendBroadcastPutExtra(action,String.valueOf(temp));
-//            return;
+//            return true;
 //        }
         //-
 
@@ -408,7 +339,7 @@ if(true)return;
 //            final int temp = characteristic.getIntValue(BluetoothGattCharacteristic.FORMAT_UINT8, 0);
 //            str = String.format("%d", temp);
 //            Log.d(TAG, "PNP_ID: " + str + "  Properties= " + flag);
-//            return str;
+//            return true;
 //        }
         //Здесь надо разбиратся -- чето НЕ пОНЯТНО формат вывода// https://www.bluetooth.com/specifications/gatt/viewer?attributeXmlFile=org.bluetooth.characteristic.ieee_11073-20601_regulatory_certification_data_list.xml
 //        if ((PartGatt.UUID_IEEE_11073_20601_REGULATORY_CERTIFICATION_DATA_LIST.equals(characteristic.getUuid()))) {//reg-cert-data-list
@@ -416,28 +347,28 @@ if(true)return;
 //            Log.d(TAG, String.format("IEEE_11073_20601_REGULATORY_CERTIFICATION_DATA_LIST: %d   Properties=%02X", temp,flag));
 //            str = String.format("%d", temp);
 //            Log.d(TAG, "IEEE_11073_20601_REGULATORY_CERTIFICATION_DATA_LIST: " + str + "  Properties= " + flag);
-//            return str;
+//            return true;
 //        }
 //        if ((PartGatt.UUID_SYSTEM_ID.equals(characteristic.getUuid()))) {////(​0x09 ?​0x0A ?)uint40/(0x07)uint24
 //            final int temp = characteristic.getIntValue(BluetoothGattCharacteristic.FORMAT_UINT32, 0);
 //            str = String.format("%d", temp);
 //            Log.d(TAG, "UUID_SYSTEM_ID: " + str + "  Properties= " + flag);
-//            return str;
+//            return true;
 //        }
         if ((PartGatt.UUID_MANUFACTURER_NAME_STRING.equals(characteristic.getUuid()))) {//string
             manufacturerName = characteristic.getStringValue(0);
-            Log.d(TAG, "MANUFACTURER_NAME_STRING: " + manufacturerName + "  Properties= " + flag);
-            return manufacturerName;
+            if(logON) Log.d(TAG, "MANUFACTURER_NAME_STRING: " + manufacturerName + "  Properties= " + flag);
+            return true;
         }
         if ((PartGatt.UUID_MODEL_NUMBER_STRING.equals(characteristic.getUuid()))) {//string
             modelNumber = characteristic.getStringValue(0);
-            Log.d(TAG, "MODEL_NUMBER_STRING: " + modelNumber + "  Properties= " + flag);
-            return modelNumber;
+            if(logON) Log.d(TAG, "MODEL_NUMBER_STRING: " + modelNumber + "  Properties= " + flag);
+            return true;
         }
         if ((PartGatt.UUID_SERIAL_NUMBER_STRING.equals(characteristic.getUuid()))) {//string
             serialNumber = characteristic.getStringValue(0);
-            Log.d(TAG, "SERIAL_NUMBER_STRING: " + serialNumber + "  Properties= " + flag);
-            return serialNumber;
+            if(logON) Log.d(TAG, "SERIAL_NUMBER_STRING: " + serialNumber + "  Properties= " + flag);
+            return true;
         }
         if ((PartGatt.UUID_SOFTWARE_REVISION_STRING.equals(characteristic.getUuid()))) {//string
 //            byte[] value = characteristic.getStringValue(0);
@@ -445,18 +376,18 @@ if(true)return;
 //            String temp = new String.(characteristic.getValue(),0);
 //            str = temp.substring(0,temp.length() - 1);
             softwareRevision = characteristic.getStringValue(0);
-            Log.d(TAG, "SOFTWARE_REVISION_STRING: " + softwareRevision + "  Properties= " + flag);
-            return softwareRevision;
+            if(logON) Log.d(TAG, "SOFTWARE_REVISION_STRING: " + softwareRevision + "  Properties= " + flag);
+            return true;
         }
         if ((PartGatt.UUID_FIRMWARE_REVISION_STRING.equals(characteristic.getUuid()))) {//string
             firmwareRevision = characteristic.getStringValue(0);
-            Log.d(TAG, "FIRMWARE_REVISION_STRING: " + firmwareRevision + "  Properties= " + flag);
-            return firmwareRevision;
+            if(logON) Log.d(TAG, "FIRMWARE_REVISION_STRING: " + firmwareRevision + "  Properties= " + flag);
+            return true;
         }
         if ((PartGatt.UUID_HARDWARE_REVISION_STRING.equals(characteristic.getUuid()))) {//string
             hardwareRevision = characteristic.getStringValue(0);
-            Log.d(TAG, "HARDWARE_REVISION_STRING: " + hardwareRevision  + "  Properties= " + flag);
-            return hardwareRevision;
+            if(logON) Log.d(TAG, "HARDWARE_REVISION_STRING: " + hardwareRevision  + "  Properties= " + flag);
+            return true;
         }
         //---------------------------------------------------------
         //https://www.bluetooth.com/specifications/gatt/viewer?attributeXmlFile=org.bluetooth.service.battery_service.xml
@@ -473,22 +404,27 @@ if(true)return;
                 logStr = String.format("format UINT8(getProperties=%d)",flag);
             }
             battery_level = characteristic.getIntValue(format, 0);
-            str = String.format("%d", battery_level);
-            Log.d(TAG, "BATTERY_LEVEL(%%): " + str + "  Properties= " + logStr);
-            return str;
+            if(logON) {
+                str = String.format("%d", battery_level);
+                Log.d(TAG, "BATTERY_LEVEL(%%): " + str + "  Properties= " + logStr);
+            }
+            return true;
         }
         //------------ Не поняли что это
-        logStr = String.format("    Properties=%08X",flag);
         // For all other profiles, writes the data formatted in HEX.
         final byte[] data = characteristic.getValue();
         if (data != null && data.length > 0) {
             final StringBuilder stringBuilder = new StringBuilder(data.length);
             for (byte byteChar : data)    stringBuilder.append(String.format("%02X ", byteChar));
             // intent.putExtra(EXTRA_DATA, new String(data) + "\n" + stringBuilder.toString());
-            Log.v("service","length= " + data.length+ "  characteristic= " + stringBuilder.toString() + logStr);
-            return str = new String(data) + "\n" + stringBuilder.toString();
+            if(logON){
+                logStr = String.format("    Properties=%08X",flag);
+                Log.v("service","length= " + data.length+ "  characteristic= "
+                        + stringBuilder.toString() + logStr);
+            }
+            return true;
         }
-        return null;
+        return false;
     }
     //устройство Зарегестрировано
     public boolean isExistAdress(){
@@ -667,4 +603,83 @@ if(true)return;
     }
 
     //-------------------------------
+    public void getConfig(SharedPreferences mSettings){
+        changeConfig = false;//установки считаны из ФЛЕШИ- не изменены!!
+        //if (mSettings.contains("COUNTER"))
+        mBluetoothDeviceAddress = mSettings.getString("mBluetoothDeviceAddress", mBluetoothDeviceAddress);
+        avtoConnect = mSettings.getBoolean("avtoConnect", avtoConnect);
+        deviceLabel = mSettings.getString("deviceLabel", deviceLabel);//имя назначаемое пользоватлем
+        deviceName = mSettings.getString("deviceName", deviceName);
+        deviceItem = mSettings.getInt("deviceItem", deviceItem);
+        markerColor = mSettings.getInt("markerColor", markerColor);
+        //
+        measurementMode = mSettings.getInt("measurementMode", measurementMode);//режим медецинский Или универсальный
+        fonColor = mSettings.getInt("fonColor", fonColor);
+        fonImg = mSettings.getInt("fonImg", fonImg);
+        //"Device Information Service":-character--
+        softwareRevision = mSettings.getString("softwareRevision", softwareRevision);
+        firmwareRevision = mSettings.getString("firmwareRevision", firmwareRevision);
+        hardwareRevision = mSettings.getString("hardwareRevision", hardwareRevision);
+        serialNumber = mSettings.getString("serialNumber", serialNumber);
+        modelNumber = mSettings.getString("modelNumber",modelNumber);
+        manufacturerName = mSettings.getString("manufacturerName", manufacturerName);
+        //
+        minTemperature = mSettings.getFloat("minTemperature", minTemperature);
+        maxTemperature = mSettings.getFloat("maxTemperature", maxTemperature);
+        //
+        onFahrenheit = mSettings.getBoolean("onFahrenheit", onFahrenheit);
+        onMinVibration = mSettings.getBoolean("onMinVibration", onMinVibration);
+        onMaxVibration = mSettings.getBoolean("onMaxVibration", onMaxVibration);
+        onEndVibration = mSettings.getBoolean("onEndVibration", onEndVibration);
+
+        onMinNotification = mSettings.getBoolean("onMinNotification", onMinNotification);
+        onMaxNotification = mSettings.getBoolean("onMaxNotification", onMaxNotification);
+        onEndNotification = mSettings.getBoolean("onEndNotification", onEndNotification);
+
+// TODO: 17.12.2016 в случае чтения непонятного типа(например булеан,
+// а чтиаем стринг- выбрасывает из программы- обработаь !!прерывания
+        minMelody = mSettings.getString("minMelody", minMelody);
+        maxMelody = mSettings.getString("maxMelody", maxMelody);
+        endMelody = mSettings.getString("endMelody", endMelody);
+    }
+
+    public void putConfig(SharedPreferences.Editor editor){
+        if(editor == null) return;
+        if(changeConfig == false) return;//ничего не меняли и сохранять НЕ надо!!
+        editor.putString("mBluetoothDeviceAddress", mBluetoothDeviceAddress);
+        editor.putBoolean("avtoConnect", avtoConnect);
+        editor.putString("deviceLabel", deviceLabel);//имя назначаемое пользоватлем
+        editor.putString("deviceName", deviceName);
+        editor.putInt("deviceItem", deviceItem);
+        editor.putInt("markerColor", markerColor);
+        //
+        editor.putInt("measurementMode", measurementMode);//режим медецинский Или универсальный
+        editor.putInt("fonColor", fonColor);
+        editor.putInt("fonImg", fonImg);
+        //"Device Information Service":-character--
+        editor.putString("softwareRevision", softwareRevision);
+        editor.putString("firmwareRevision", firmwareRevision);
+        editor.putString("hardwareRevision", hardwareRevision);
+        editor.putString("serialNumber", serialNumber);
+        editor.putString("modelNumber",modelNumber);
+        editor.putString("manufacturerName", manufacturerName);
+        //
+        editor.putFloat("minTemperature", minTemperature);
+        editor.putFloat("maxTemperature", maxTemperature);
+        //
+        editor.putBoolean("onFahrenheit", onFahrenheit);
+        editor.putBoolean("onMinVibration", onMinVibration);
+        editor.putBoolean("onMaxVibration", onMaxVibration);
+        editor.putBoolean("onEndVibration", onEndVibration);
+        //
+        editor.putBoolean("onMinNotification", onMinNotification);
+        editor.putBoolean("onMaxNotification", onMaxNotification);
+        editor.putBoolean("onEndNotification", onEndNotification);
+
+        editor.putString("minMelody", minMelody);
+        editor.putString("maxMelody", maxMelody);
+        editor.putString("endMelody", endMelody);
+        //записать на флеш
+        editor.apply();//
+    }
 }

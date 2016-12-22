@@ -260,23 +260,20 @@ public class PopupListFragment extends ListFragmentA  {
     public void onPrepareOptionsMenu(Menu menu){}
     //
 
-    synchronized private void updateViewItem(boolean allUpdate,Sensor sensor, View view){
+    synchronized private void updateViewItem(Sensor sensor, View view){
         if(!Util.isNoNull(sensor,view)) return;
         String str;int bl,rssi;
-        if(allUpdate){
-            Util.setDrawableToImageView(sensor.markerColor,R.id.marker, view);
-            Util.setTextToTextView(sensor.getStringMinTemperature(false,true),R.id.numbe_min, view);
-            Util.setTextToTextView(sensor.getStringMaxTemperature(false,true),R.id.numbe_max, view);
-        }
-        // по умолчанию из метода toString -> заталкивается в R.id.text1, по этому мы сами это НЕ делаем
-
         boolean b = (sensor.mConnectionState == BluetoothLeServiceNew.STATE_CONNECTED);
-           //     || (sensor.mBluetoothDeviceAddress == null);//режим ИММИТАЦИИ- отладки
+        //     || (sensor.mBluetoothDeviceAddress == null);//режим ИММИТАЦИИ- отладки
+        //
+        // по умолчанию из метода toString -> заталкивается в R.id.text1, по этому мы сами это НЕ делаем
+        Util.setDrawableToImageView(sensor.markerColor,R.id.marker, view);
 
-//b = true;
-        //присвоил текущее значение для отображения
-        Util.setTextToTextView(b? sensor.getStringIntermediateValue(false,true):
-                "Нет подкл.", R.id.numbe_cur, view);
+        Util.setTextToTextView(sensor.getString_1_ValueTemperature(true),R.id.numbe_min, view);
+        Util.setTextToTextView(b? sensor.getString_2_ValueTemperature(true):"Нет подкл."
+                , R.id.numbe_cur, view);
+        Util.setTextToTextView(sensor.getString_3_ValueTemperature(true),R.id.numbe_max, view);
+
         Util.setLevelToImageView(b? sensor.battery_level: 0, R.id.battery, view);
         Util.setLevelToImageView(sensor.rssi, R.id.signal, view);
     }
@@ -287,7 +284,7 @@ public class PopupListFragment extends ListFragmentA  {
         if((adapter == null) || (adapter.getCount() == 0) || ( mHandlerWork == false)) return;
         int i; String str = "Sensor>";
         for(i = 0; i < adapter.getCount();i++){
-            updateViewItem(false,(Sensor)adapter.getItem(i), getListView().getChildAt(i));
+            updateViewItem((Sensor)adapter.getItem(i), getListView().getChildAt(i));
             Sensor sensor = (Sensor)adapter.getItem(i);
             if(sensor != null) {
                 int con = 0;
@@ -668,6 +665,7 @@ return null;//fbButton_;
                                 if ((positionScroll < 0) && (positionStartX < maxScroll)){//редактирование
   //имедж редактировать-----------------------------
   clearScrollX_View(true);//затираем на него ссылку? с ним закончили
+                                    if(obj instanceof Sensor) ((Sensor)obj).resetMinMaxValueTemperature();
                                     str = "CLICK_SHORT i= " + i + "  Edit obj= " + obj;
                                     if(i >= 0) Toast.makeText(getActivity(), "onClick Edit N= " + i, Toast.LENGTH_SHORT).show();
                                 }else str = "CLICK_SHORT i= " + i + "  no Work obj= " + obj;
@@ -888,7 +886,7 @@ return null;//fbButton_;
                 //присвоил текущее значение для отображения
                 // по умолчанию из метода toString -> заталкивается в R.id.text1, по этому мы сами это НЕ делаем
                 // ((Sensor)adapter.getItem(position)).deviceLabelView = view.findViewById(R.id.text1);
-               updateViewItem(true,(Sensor) adapter.getItem(position),view);
+               updateViewItem((Sensor) adapter.getItem(position),view);
             }
 //          getActivity().runOnUiThread(new Runnable() { @Override  public void run() {;}});
             return view;

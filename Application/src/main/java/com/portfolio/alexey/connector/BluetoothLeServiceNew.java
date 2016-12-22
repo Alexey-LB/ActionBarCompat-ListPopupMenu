@@ -133,10 +133,10 @@ public class BluetoothLeServiceNew extends Service {
 //Запускаем считывание СЕРВИСОВ и характеристик (discovery)
  // broadcastUpdate(intentAction, sensor);
                 // Attempts to discover services after successful connection.
-                Log.v(TAG, "Attempting to start service discovery:" +
-                        sensor.mBluetoothGatt.discoverServices());
+                boolean ds = sensor.mBluetoothGatt.discoverServices();
 
-                Log.i(TAG, "Connected to GATT server  adress= " + sensor.mBluetoothDeviceAddress);
+                Log.v(TAG, "Attempting to start service discovery:" + ds
+                        +"  adress= "+sensor.mBluetoothDeviceAddress);
 
             } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
                 // просто отключение-оБлом
@@ -162,7 +162,7 @@ public class BluetoothLeServiceNew extends Service {
                 sensor.rssi = STATE_CONNECTED;//показываем что готовы к работе
                 sensor.mConnectionState = STATE_CONNECTED;
                 sensor.enableTXNotification();
-                Log.i(TAG, "onServicesDiscovered == BluetoothGatt.GATT_SUCCESS  adress= " + sensor.mBluetoothDeviceAddress);
+                Log.i(TAG, "onServicesDiscovered == GATT_SUCCESS  adress= " + sensor.mBluetoothDeviceAddress);
             } else {
                 Log.w(TAG, "onServicesDiscovered received: " + status);
             }
@@ -179,9 +179,9 @@ public class BluetoothLeServiceNew extends Service {
 
             if (status == BluetoothGatt.GATT_SUCCESS) {
  // broadcastUpdate(ACTION_DATA_AVAILABLE, sensor, characteristic);
-                Log.i(TAG, "   adress= " + sensor.mBluetoothDeviceAddress);
+            //    Log.i(TAG, "   adress= " + sensor.mBluetoothDeviceAddress);
 
-      sensor.setValue(characteristic);
+      sensor.setValue(characteristic, false);
                 sensor.onCharacteristicRead();//постоянно запрашивает характеристику- и обламывает остальное!!
             }
         }
@@ -195,7 +195,7 @@ public class BluetoothLeServiceNew extends Service {
             final Sensor sensor = getBluetoothDevice(gatt.getDevice().getAddress());
             if(sensor == null) return;
     sensor.goToConnect = false;//подключение закончилочсь УДАЧНО!!
-            sensor.setValue(characteristic);
+            sensor.setValue(characteristic, false);
 
             //постоянно запрашивает характеристику- и обламывает остальное!! убираем
             //       sensor.onCharacteristicRead();
@@ -209,7 +209,7 @@ public class BluetoothLeServiceNew extends Service {
         // или свойства - иначе НЕ отвечает
             //
  // broadcastUpdate(ACTION_DATA_AVAILABLE, sensor, characteristic);
-            Log.i(TAG, "   adress= " + sensor.mBluetoothDeviceAddress);
+     //       Log.i(TAG, "   adress= " + sensor.mBluetoothDeviceAddress);
         }
         //
         @Override
@@ -220,7 +220,7 @@ public class BluetoothLeServiceNew extends Service {
             if(sensor == null) return;
             //
             sensor.rssi = rssi;
-            Log.i(TAG, "onReadRemoteRssi= " + rssi);
+          //  Log.i(TAG, "onReadRemoteRssi= " + rssi);
             //sensor.mBluetoothGatt.readRemoteRssi();
 
         }
@@ -236,7 +236,7 @@ public class BluetoothLeServiceNew extends Service {
         final Intent intent = new Intent(action);
 // TODO: 09.12.2016        intent.putExtra(EXTRA_DATA, PartGatt.getValue(characteristic));
         //    intent.putExtra(EXTRA_DATA, PartGatt.getValue(characteristic));
-        intent.putExtra(EXTRA_DATA, sensor.getStringIntermediateValue(false,true));
+     //   intent.putExtra(EXTRA_DATA, sensor.getStringIntermediateValue(false,true));
         intent.putExtra(EXTRA_ADRESS, sensor.mBluetoothDeviceAddress);
         sendBroadcast(intent);
         return;

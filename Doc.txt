@@ -48,3 +48,130 @@ alexey.l.andr0id@gmail.com -моя почта под которой зареге
 убрал чтение всех характеристик пока, заметил, что как только прерываю первый сенсор, начинет подключение второй сенсор!
 А пока первый молотит, второй почемуто НЕ подключается! может времени много на обработку обратного вызова идет?
 
+D/MAIN: actionBar != null--
+E/PopListFr: Fragment --- onActivityCreated-----STaRT--
+D/PopListFr:   getActivity().getActionBar()=null
+D/dalvikvm: GC_FOR_ALLOC freed 324K, 5% free 7694K/8072K, paused 18ms, total 18ms
+E/PopListFr: Activity to frag initList()---
+E/PopListFr: Activity to frag initList()--- mbleDot.size= 2
+E/PopListFr: Fragment --- onActivityCreated---END----
+D/PopListFr: position0  viewandroid.widget.FrameLayout{41c70350 V.E..... ......ID 0,0-0,0 #7f0d0106 app:id/item_parent}  convertView=null  container= android.widget.ListView{41fb3338 VFED.VCL ......ID 0,0-320,424 #102000a android:id/list}
+D/PopListFr: position1  viewandroid.widget.FrameLayout{41fa4f98 V.E..... ......ID 0,0-0,0 #7f0d0106 app:id/item_parent}  convertView=null  container= android.widget.ListView{41fb3338 VFED.VCL ......ID 0,0-320,424 #102000a android:id/list}
+I/Choreographer: Skipped 34 frames!  The application may be doing too much work on its main thread.
+E/PopListFr: Sensor>  (1/1)0[0]NaN  (0/4)0[1]NaN
+E/PopListFr: Sensor>  (1/1)0[0]NaN  (0/4)0[1]NaN
+D/BluetoothGatt: onSearchComplete() = Device=74:DA:EA:9F:54:C9 Status=129
+W/BluetoothLeServiceNew: onServicesDiscovered received: 129
+D/BluetoothGatt: onClientConnectionState() - status=133 clientIf=5 device=74:DA:EA:9F:54:C9
+W/BluetoothLeServiceNew: Disconnected from GATT server   adress= 74:DA:EA:9F:54:C9
+E/PopListFr: Sensor>  (0/0)0[0]NaN  (0/4)0[1]NaN
+D/BluetoothGatt: onClientConnectionState() - status=0 clientIf=5 device=74:DA:EA:9F:54:C9
+D/BluetoothGatt: discoverServices() - device: 74:DA:EA:9F:54:C9
+V/BluetoothLeServiceNew: Attempting to start service discovery:true  adress= 74:DA:EA:9F:54:C9
+E/PopListFr: Sensor>  (1/1)0[0]NaN  (0/4)0[1]NaN
+E/PopListFr: Sensor>  (1/1)0[0]NaN  (0/4)0[1]NaN
+D/BluetoothGatt: onSearchComplete() = Device=74:DA:EA:9F:54:C9 Status=129
+W/BluetoothLeServiceNew: onServicesDiscovered received: 129
+D/BluetoothGatt: onClientConnectionState() - status=133 clientIf=5 device=74:DA:EA:9F:54:C9
+W/BluetoothLeServiceNew: Disconnected from GATT server   adress= 74:DA:EA:9F:54:C9
+E/PopListFr: Sensor>  (0/0)0[0]NaN  (0/4)0[1]NaN
+D/BluetoothGatt: onClientConnectionState() - status=0 clientIf=5 device=74:DA:EA:9F:54:C9
+D/BluetoothGatt: discoverServices() - device: 74:DA:EA:9F:54:C9
+V/BluetoothLeServiceNew: Attempting to start service discovery:true  adress= 74:DA:EA:9F:54:C9
+E/PopListFr: Sensor>  (1/1)0[0]NaN  (0/4)0[1]NaN
+E/PopListFr: Sensor>  (1/1)0[0]NaN  (0/4)0[1]NaN
+D/BluetoothGatt: onSearchComplete() = Device=74:DA:EA:9F:54:C9 Status=129
+W/BluetoothLeServiceNew: onServicesDiscovered received: 129
+D/BluetoothGatt: onClientConnectionState() - status=133 clientIf=5 device=74:DA:EA:9F:54:C9
+W/BluetoothLeServiceNew: Disconnected from GATT server   adress= 74:DA:EA:9F:54:C9
+E/PopListFr: Sensor>  (0/0)0[0]NaN  (0/4)0[1]NaN
+D/BluetoothGatt: onClientConnectionState() - status=0 clientIf=5 device=74:DA:EA:9F:54:C9
+D/BluetoothGatt: discoverServices() - device: 74:DA:EA:9F:54:C9
+V/BluetoothLeServiceNew: Attempting to start service discovery:true  adress= 74:DA:EA:9F:54:C9
+E/PopListFr: Sensor>  (1/1)0[0]NaN  (0/4)0[1]NaN
+E/PopListFr: Sensor>  (1/1)0[0]NaN  (0/4)0[1]NaN
+D/BluetoothGatt: onSearchComplete() = Device=74:DA:EA:9F:54:C9 Status=129
+W/BluetoothLeServiceNew: onServicesDiscovered received: 129
+D/BluetoothGatt: onClientConnectionState() - status=133 clientIf=5 device=74:DA:EA:9F:54:C9
+W/BluetoothLeServiceNew: Disconnected from GATT server   adress= 74:DA:EA:9F:54:C9
+E/PopListFr: Sensor>  (0/0)0[0]NaN  (0/4)0[1]NaN
+E/PopListFr: Sensor>  (0/0)0[0]NaN  (0/4)0[1]NaN
+D/BluetoothGatt: onClientConnectionState() - status=0 clientIf=5 device=74:DA:EA:9F:54:C9
+D/BluetoothGatt: discoverServices() - device: 74:DA:EA:9F:54:C9
+V/BluetoothLeServiceNew: Attempting to start service discovery:true  adress= 74:DA:EA:9F:54:C9
+E/PopListFr: Sensor>  (1/1)0[0]NaN  (0/4)0[1]NaN
+E/PopListFr: Sensor>  (1/1)0[0]NaN  (0/4)0[1]NaN
+D/BluetoothGatt: onSearchComplete() = Device=74:DA:EA:9F:54:C9 Status=129
+W/BluetoothLeServiceNew: onServicesDiscovered received: 129
+D/BluetoothGatt: onClientConnectionState() - status=133 clientIf=5 device=74:DA:EA:9F:54:C9
+W/BluetoothLeServiceNew: Disconnected from GATT server   adress= 74:DA:EA:9F:54:C9
+E/PopListFr: Sensor>  (0/0)0[0]NaN  (0/4)0[1]NaN
+E/PopListFr: Sensor>  (0/0)0[0]NaN  (0/4)0[1]NaN
+D/BluetoothGatt: onClientConnectionState() - status=0 clientIf=5 device=74:DA:EA:9F:54:C9
+D/BluetoothGatt: discoverServices() - device: 74:DA:EA:9F:54:C9
+V/BluetoothLeServiceNew: Attempting to start service discovery:true  adress= 74:DA:EA:9F:54:C9
+E/PopListFr: Sensor>  (1/1)0[0]NaN  (0/4)0[1]NaN
+E/PopListFr: Sensor>  (1/1)0[0]NaN  (0/4)0[1]NaN
+D/BluetoothGatt: onSearchComplete() = Device=74:DA:EA:9F:54:C9 Status=129
+W/BluetoothLeServiceNew: onServicesDiscovered received: 129
+D/BluetoothGatt: onClientConnectionState() - status=133 clientIf=5 device=74:DA:EA:9F:54:C9
+W/BluetoothLeServiceNew: Disconnected from GATT server   adress= 74:DA:EA:9F:54:C9
+E/PopListFr: Sensor>  (0/0)0[0]NaN  (0/4)0[1]NaN
+
+E/PopListFr: Sensor>  (0/0)0[0]NaN  (0/4)0[1]NaN
+D/BluetoothGatt: onClientConnectionState() - status=0 clientIf=5 device=74:DA:EA:9F:54:C9
+D/BluetoothGatt: discoverServices() - device: 74:DA:EA:9F:54:C9
+V/BluetoothLeServiceNew: Attempting to start service discovery:true  adress= 74:DA:EA:9F:54:C9
+E/PopListFr: Sensor>  (1/1)0[0]NaN  (0/4)0[1]NaN
+
+E/PopListFr: Sensor>  (1/1)0[0]NaN  (0/4)0[1]NaN
+D/BluetoothGatt: onSearchComplete() = Device=74:DA:EA:9F:54:C9 Status=129
+W/BluetoothLeServiceNew: onServicesDiscovered received: 129
+D/BluetoothGatt: onClientConnectionState() - status=133 clientIf=5 device=74:DA:EA:9F:54:C9
+W/BluetoothLeServiceNew: Disconnected from GATT server   adress= 74:DA:EA:9F:54:C9
+E/PopListFr: Sensor>  (0/0)0[0]NaN  (0/4)0[1]NaN
+D/BluetoothGatt: onClientConnectionState() - status=0 clientIf=6 device=74:DA:EA:9F:4C:21
+D/BluetoothGatt: discoverServices() - device: 74:DA:EA:9F:4C:21
+V/BluetoothLeServiceNew: Attempting to start service discovery:true  adress= 74:DA:EA:9F:4C:21
+E/PopListFr: Sensor>  (0/0)0[0]NaN  (1/1)0[1]NaN
+
+E/PopListFr: Sensor>  (0/0)0[0]NaN  (1/1)0[1]NaN
+D/BluetoothGatt: onSearchComplete() = Device=74:DA:EA:9F:4C:21 Status=129
+W/BluetoothLeServiceNew: onServicesDiscovered received: 129
+D/BluetoothGatt: onClientConnectionState() - status=133 clientIf=6 device=74:DA:EA:9F:4C:21
+W/BluetoothLeServiceNew: Disconnected from GATT server   adress= 74:DA:EA:9F:4C:21
+E/PopListFr: Sensor>  (0/0)0[0]NaN  (0/0)0[1]NaN
+
+E/PopListFr: Sensor>  (0/0)0[0]NaN  (0/0)0[1]NaN
+D/BluetoothGatt: onClientConnectionState() - status=0 clientIf=6 device=74:DA:EA:9F:4C:21
+D/BluetoothGatt: discoverServices() - device: 74:DA:EA:9F:4C:21
+V/BluetoothLeServiceNew: Attempting to start service discovery:true  adress= 74:DA:EA:9F:4C:21
+E/PopListFr: Sensor>  (0/0)0[0]NaN  (1/1)0[1]NaN
+
+D/BluetoothGatt: onSearchComplete() = Device=74:DA:EA:9F:4C:21 Status=129
+W/BluetoothLeServiceNew: onServicesDiscovered received: 129
+D/BluetoothGatt: onClientConnectionState() - status=133 clientIf=6 device=74:DA:EA:9F:4C:21
+W/BluetoothLeServiceNew: Disconnected from GATT server   adress= 74:DA:EA:9F:4C:21
+D/BluetoothGatt: onClientConnectionState() - status=0 clientIf=6 device=74:DA:EA:9F:4C:21
+D/BluetoothGatt: discoverServices() - device: 74:DA:EA:9F:4C:21
+V/BluetoothLeServiceNew: Attempting to start service discovery:true  adress= 74:DA:EA:9F:4C:21
+
+E/PopListFr: Sensor>  (0/0)0[0]NaN  (1/1)0[1]NaN
+E/PopListFr: Sensor>  (0/0)0[0]NaN  (1/1)0[1]NaN
+D/BluetoothGatt: onSearchComplete() = Device=74:DA:EA:9F:4C:21 Status=129
+W/BluetoothLeServiceNew: onServicesDiscovered received: 129
+D/BluetoothGatt: onClientConnectionState() - status=133 clientIf=6 device=74:DA:EA:9F:4C:21
+W/BluetoothLeServiceNew: Disconnected from GATT server   adress= 74:DA:EA:9F:4C:21
+E/PopListFr: Sensor>  (0/0)0[0]NaN  (0/0)0[1]NaN
+
+D/BluetoothGatt: onClientConnectionState() - status=0 clientIf=6 device=74:DA:EA:9F:4C:21
+D/BluetoothGatt: discoverServices() - device: 74:DA:EA:9F:4C:21
+V/BluetoothLeServiceNew: Attempting to start service discovery:true  adress= 74:DA:EA:9F:4C:21
+
+D/BluetoothGatt: onSearchComplete() = Device=74:DA:EA:9F:4C:21 Status=129
+W/BluetoothLeServiceNew: onServicesDiscovered received: 129
+D/BluetoothGatt: onClientConnectionState() - status=133 clientIf=6 device=74:DA:EA:9F:4C:21
+W/BluetoothLeServiceNew: Disconnected from GATT server   adress= 74:DA:EA:9F:4C:21
+E/PopListFr: Sensor>  (0/0)0[0]NaN  (0/0)0[1]NaN
+E/PopListFr: Sensor>  (0/0)0[0]NaN  (0/0)0[1]NaN
+E/PopListFr: Sensor>  (0/0)0[0]NaN  (0/0)0[1]NaN
