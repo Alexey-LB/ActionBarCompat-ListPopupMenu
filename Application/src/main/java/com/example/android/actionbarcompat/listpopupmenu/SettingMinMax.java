@@ -61,7 +61,7 @@ public class SettingMinMax extends Activity implements View.OnClickListener{
     }
 
     private void updateTextString(){
-        if((sensor == null) || ( mHandlerWork == false)) return;
+        if((sensor == null) || (mHandlerWork == false)) return;
         //
         if(maxValue){
             Util.setTextToTextView(sensor.getStringMaxTemperature(true)
@@ -89,8 +89,8 @@ public class SettingMinMax extends Activity implements View.OnClickListener{
     @Override
     protected void onResume() {
         super.onResume();
-        //здесь НЕ надо динамически обновлять значения
-        mHandlerWork = false;
+        //
+        mHandlerWork = true;
         //сам заводится и работает
         mHandler.postDelayed(new Runnable() {
             public void run() {

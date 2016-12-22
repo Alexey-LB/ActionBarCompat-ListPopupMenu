@@ -366,6 +366,7 @@ public class PopupListFragment extends ListFragmentA  {
                 if(app.mBluetoothLeServiceM != null){
                     app.mBluetoothLeServiceM.settingPutFile();
                 }
+
  //               adapter.notifyDataSetChanged();
                 return true;
 //            case iconActionEdit:
@@ -421,7 +422,8 @@ return null;//fbButton_;
 //    // добавить объект данные которого отображаются на листе
     public boolean addNoInitObject(){
         Log.i(TAG," addNoInitObject (Sensor) go to addObject");
-        return addObject(new Sensor());
+        RunDataHub app = ((RunDataHub) getActivity().getApplicationContext());
+        return addObject(new Sensor(app));
     }
     // добавить объект данные которого отображаются на листе
     public boolean addObject(Object object){
@@ -676,6 +678,13 @@ return null;//fbButton_;
   clearScrollX_View(true);//затираем на него ссылку? с ним закончили
                     break;
                  case CLICK_LONG: rez = true;//закончили обработки здесь, если нажати длинное (блокируем срабатывания короткого)
+  //временно, сбрасываем НОТИФИКАЦИЮ
+  if((obj != null) && (obj instanceof Sensor)){
+      Log.i(TAG,"resetNotificationVibrationLevelMinMax");
+      ((Sensor)obj).resetNotificationVibrationLevelMinMax();
+  }
+
+
                      if((objectD != null) && (adapter.getPosition(objectD) >= 0)){
                          //второй раз долго держим? сбрасываем  этот объект в начало
                          clearScrollX_View();//затираем на него ссылку? с ним закончили

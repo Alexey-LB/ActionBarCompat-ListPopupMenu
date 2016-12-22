@@ -1,4 +1,5 @@
 package com.portfolio.alexey.connector;
+import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothGatt;
@@ -18,12 +19,14 @@ import android.widget.TextView;
 
 import com.example.android.actionbarcompat.listpopupmenu.Marker;
 import com.example.android.actionbarcompat.listpopupmenu.R;
+import com.example.android.actionbarcompat.listpopupmenu.RunDataHub;
 
 import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.UUID;
 
+import static android.R.attr.tag;
 import static android.R.attr.value;
 //import static android.bluetooth.BluetoothAdapter.STATE_DISCONNECTED;
 
@@ -45,7 +48,7 @@ public class Sensor {
 
     private static int indexDevace = 0;//для нумерации названий
     private static final String deviceLabelStringDefault = "Термометр";//по умолчанию назначаем имя + номер
-
+    public RunDataHub app;
     private Context mContext;
     public float maxInputDeviceTemperature = 70f;
     public float minInputDeviceTemperature = -20f;
@@ -106,10 +109,16 @@ public class Sensor {
     public int fonColor = 0;
     public int fonImg = 0;
     //
+    public boolean onMinVibrationReset = false;
+    public boolean onMaxVibrationReset = false;
+
     public boolean onMinVibration = false;
     public boolean onMaxVibration = false;
     public boolean onEndVibration = false;
     //
+    public boolean onMinNotificationReset = false;
+    public boolean onMaxNotificationReset = false;
+
     public boolean onMinNotification = false;
     public boolean onMaxNotification = false;
     public boolean onEndNotification = false;
@@ -142,23 +151,68 @@ public class Sensor {
     private float getValueRandom(float min, float max){
         return (float)( Math.random() * (max-min) + min);
     }
+    public void resetNotificationVibrationLevelMinMax(){
+        onMaxNotificationReset = true;
+        onMaxVibrationReset = true;
+        onMinNotificationReset = true;
+        onMinVibrationReset = true;
+    }
+
+    private void controlLevelMinMax(){
+        if(measurementMode == 0) return;//режим 0 - медецинский Или 1 - универсальный
+//        Log.i(TAG,"loop--");
+        if(intermediateValue >= maxTemperature){
+            Log.e(TAG,"max- " + onMaxNotification + " / " + onMaxNotificationReset);
+            if(onMaxNotification && !onMaxNotificationReset) {
+                Log.e(TAG,"maxMelody");
+                Util.playerRingtone(0f, maxMelody, app.mainActivity,TAG);
+            }
+            if(onMaxVibration && !onMaxVibrationReset) {
+                Log.e(TAG,"maxVibrator");
+                Util.playerVibrator(300, app.mainActivity);
+            }
+        }else{
+            if(intermediateValue <= minTemperature){
+                if(onMinNotification && !onMinNotificationReset){
+                    Log.e(TAG,"minMelody");
+                    Util.playerRingtone(0f, minMelody, app.mainActivity,TAG);
+                }
+                if(onMinVibration && !onMinVibrationReset) {
+                    Log.e(TAG,"minVibrator");
+                    Util.playerVibrator(300, app.mainActivity);
+                }
+            } else{
+                //сбрасываем флаги --
+                if(intermediateValue < maxTemperature){
+                    onMaxNotificationReset = false;
+                    onMaxVibrationReset = false;
+                }
+                if(intermediateValue > minTemperature){
+                    onMinNotificationReset = false;
+                    onMinVibrationReset = false;
+                }
+            }
+        }
+
+    }
+
     //Пока отключил иммитатор -----mHandlerWork = false;
     private  void loop(){
+        mHandlerWork = true;
         mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
- //Пока отключил иммитатор ----
-if(true)return;
-                if (mBluetoothDeviceAddress == null) {
+                controlLevelMinMax();
+                //Пока отключил иммитатор ----
+                if ((false) && (mBluetoothDeviceAddress == null))  {
                     intermediateValue = getValueRandom(20f, 100f);
                     rssi = (int) getValueRandom(40f, 100f);
                     battery_level = (int) getValueRandom(0f, 100f);
             //        Log.e(TAG,"loop Sensor intermediateValue = " + intermediateValue
             //                + "  rssi= "+ rssi+ "  battery_level= " +battery_level);
                 }
-            //    Log.v(TAG,"loop  ");
-                if(mHandlerWork)mHandler.postDelayed(this, 300);
-               // loop();
+             //   Log.v(TAG,"loop  --");
+                if(mHandlerWork)mHandler.postDelayed(this, 1000);// loop();
             }
         }, 1000);
     }
@@ -176,7 +230,8 @@ if(true)return;
         return mBluetoothDeviceAddress;
     }
     //
-    private void initSensor (){
+    private void initSensor (RunDataHub app_){
+        app = app_;
         deviceLabel = deviceLabelStringDefault + " " + indexDevace++;
         markerColor = 0x7 & indexDevace;
         //----------------------
@@ -184,15 +239,15 @@ if(true)return;
         loop();
     }
 
-    public Sensor (){
-        initSensor();
+    public Sensor (RunDataHub app_){
+        initSensor(app_);
     }
-    public Sensor (final String adress){
-        initSensor();
+    public Sensor (final String adress,RunDataHub app_){
+        initSensor(app_);
         mBluetoothDeviceAddress = adress;
     }
-    public Sensor (SharedPreferences mSettings){
-        initSensor();
+    public Sensor (SharedPreferences mSettings, RunDataHub app_){
+        initSensor(app_);
         if(mSettings != null)getConfig( mSettings);
     }
 

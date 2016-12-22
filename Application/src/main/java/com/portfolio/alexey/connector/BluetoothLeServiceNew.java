@@ -17,6 +17,8 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.util.Log;
 
+import com.example.android.actionbarcompat.listpopupmenu.RunDataHub;
+
 import java.util.ArrayList;
 import java.util.List;
 /**
@@ -383,7 +385,10 @@ public class BluetoothLeServiceNew extends Service {
                     //читаем УСТРОЙСТВО в файле отдельном
                     SharedPreferences mSettingsDevace =
                             getSharedPreferences(devAdr, Context.MODE_PRIVATE);
-                    Sensor sensor = new Sensor(mSettingsDevace);
+                    //getApplication().
+
+                    RunDataHub app = ((RunDataHub)getApplicationContext())   ;
+                    Sensor sensor = new Sensor(mSettingsDevace, app);
                     mbleDot.add(sensor);
                     Log.i(TAG,"onCreate: get sensor from flash= "+i +"   adress= " +sensor.mBluetoothDeviceAddress);
                     //--запускаем на соннект
@@ -474,7 +479,9 @@ public class BluetoothLeServiceNew extends Service {
         //если у нас есть такое устройство
         final Sensor sensor;
         if(getBluetoothDevice(address) == null) {
-            sensor = new Sensor(address);
+
+            RunDataHub app = ((RunDataHub)getApplicationContext())   ;
+            sensor = new Sensor(address,app);
             mbleDot.add(sensor);
             Log.w(TAG, " connect: NEW sensor");
         }else{

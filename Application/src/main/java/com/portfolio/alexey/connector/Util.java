@@ -137,7 +137,7 @@ public class Util {
         return null;
     }
     //// https://geektimes.ru/post/232885/-------------------------------------------
-    static public void playerVibrator(int milsec, Activity activity){
+    static synchronized public void playerVibrator(int milsec, Activity activity){
         Vibrator  vibrator = (Vibrator) activity.getSystemService (VIBRATOR_SERVICE);
         try {
             vibrator.vibrate(milsec);
@@ -151,7 +151,7 @@ public class Util {
 // stackoverflow.com/questions/8278939/android-mediaplayer-volume-is-very-low-already-adjusted-volume
     //пример: playerRingtone(0.8f, null); рингтонг 0.8 от макимума звука и мелодия по умолчанию
     //пример: playerRingtone(0f, Uri); ГРОМКОСТ звука СИТЕМНОЙ настройки проигрывателя и мелодия по Uri
-    static public void playerRingtone(Float setVolume, String uriRingtone , Activity activity,String  tag){
+    static synchronized  public void playerRingtone(Float setVolume, String uriRingtone , Activity activity,String  tag){
         Uri uri= null;
         if(uriRingtone != null){
             // TODO: 17.12.2016 обработать возможные ИСКЛЮЧЕНИЯ парсера
