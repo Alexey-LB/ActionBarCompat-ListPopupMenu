@@ -212,7 +212,8 @@ public class PopupListFragment extends ListFragmentA  {
         //этот метод должен вроде сохранять отображение фрагмента при повороте ТЕЛЕфона НО!!
         // http://developer.alexanderklimov.ru/android/theory/fragments.php
         //setRetainInstance(true);
-        if(adapter == null) initList();
+        //if(adapter == null)
+            initList();
         //------------------------------
         Log.e(TAG,"Fragment --- onActivityCreated---END----");
     }
@@ -379,11 +380,7 @@ public class PopupListFragment extends ListFragmentA  {
 //                return true;
             case iconActionAdd:
                 Log.i(TAG,"ADD+");
-
-
                 addNoInitObject();
-
-
               //  if(menuFragment != null)menuFragment.clear();
                 return true;
             default:

@@ -23,6 +23,10 @@
     <!-- ActionBarCompat provides an implementation of Popup Menu from API v7 onwards -->
     <!-- Min/target SDK versions (<uses-sdk>) managed by build.gradle -->
     <!-- PackageManager.hasSystemFeature(FEATURE_BLUETOOTH_LE) -->
+    <!--в андроиде выше 6 версии необходимо ПРОГРАММНО подтверждать через пользователя разрешения!-->
+    <!--http://stackoverflow.com/questions/15310742/if-i-have-access-fine-location-already-can-i-omit-access-coarse-location-->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+
     <uses-feature android:name="android.hardware.bluetooth_le" android:required="true"/>
     <uses-permission android:name="android.permission.BLUETOOTH"/>
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>

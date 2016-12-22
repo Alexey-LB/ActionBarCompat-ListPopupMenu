@@ -46,7 +46,7 @@ public class SettingMaker extends Activity implements View.OnClickListener{
     }
 
     private void updateTextString(){
-        if(sensor != null){
+        if((sensor == null)  || ( mHandlerWork == false))return;
             Util.setTextToTextView(sensor.deviceName,R.id.textViewFindName, this);
 //показывем только последних 5 цифр адреса
             String str = sensor.mBluetoothDeviceAddress;
@@ -62,7 +62,6 @@ public class SettingMaker extends Activity implements View.OnClickListener{
             Util.setTextToTextView(sensor.firmwareRevision,R.id.textViewFirmwareRevision, this);
             Util.setTextToTextView(sensor.hardwareRevision,R.id.textViewHardwareRevision, this);
             Util.setTextToTextView(sensor.softwareRevision,R.id.textViewSoftwareRevision, this);
-        }
     }
     @Override
     protected void onPause() {
