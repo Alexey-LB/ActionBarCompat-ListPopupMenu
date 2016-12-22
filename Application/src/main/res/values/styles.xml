@@ -7,6 +7,8 @@
         <item name="colorSwitchThumbNormal">#f1f1f1</item>
         <!-- inactive track color (30% transparency) -->
         <item name="android:colorForeground">#42221f1f</item>
+
+        <item name="android:windowFullscreen">false</item>
     </style>
 
 
@@ -14,10 +16,13 @@
         <!-- Customize your theme here. -->
         <!--<item name="android:windowActionBar">false</item>-->
         <item name="android:windowActionBar">true</item>
-
+        <item name="android:windowFullscreen">false</item>
         <!--<item name="android:windowDrawsSystemBarBackgrounds">false</item>-->
+        <!--цвет фона-->
         <item name="colorPrimary">@color/colorPrimary</item>
+        <!--цвет шрифта вывода -->
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <!--цвет переключателя-->
         <item name="colorAccent">@color/colorAccent</item>
     </style>
     <!--ШИРИНА бара, только для старого срабатывает!-->
@@ -28,9 +33,19 @@
         <!-- Customize your theme here. -->
         <item name="android:windowActionBar">true</item>
 
+        <item name="android:windowFullscreen">false</item>
+
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <!--пример использования без акшин бара-->
+    <style name="MyTheme" parent="Theme.AppCompat">
+
+    </style>
+    <style name="MyTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
 </resources>

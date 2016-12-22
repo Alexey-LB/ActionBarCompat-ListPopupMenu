@@ -56,17 +56,20 @@ http://www.fandroid.info/nastrojka-paneli-dejstvij-actionbar/
 когда targetSdkVersion или minSdkVersion атрибут установлен в "11" или больше.
 
         android:theme="@style/Theme.AppCompat" -->
-
-        <activity android:name=".MainActivity">
+        <!--СПЛИТ бар- не работает почемуто ниже его свойство-->
+        <!--android:uiOptions="splitActionBarWhenNarrow"-->
+        <activity android:name=".MainActivity"
+            android:theme="@style/AppThemeN"
+            >
             <!-- Launcher Intent filter -->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
+        <!--android:theme="@android:style/Theme.Holo.Light"-->
         <activity android:name=".DeviceScanActivity"
-            android:theme="@android:style/Theme.Holo.Light">
+            android:theme="@style/AppThemeM">
             <intent-filter>
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>

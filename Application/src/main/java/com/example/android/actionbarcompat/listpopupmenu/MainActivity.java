@@ -17,15 +17,19 @@
 package com.example.android.actionbarcompat.listpopupmenu;
 
 import android.app.Activity;
-import android.app.Fragment;
-import android.app.FragmentManager;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Handler;
+//import android.app.FragmentManager;
+//import android.app.Fragment;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
+
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -61,6 +65,7 @@ public class MainActivity extends AppCompatActivity {// ActionBarActivity {
     public final  static int ACTIVITY_SETTING_MAKER = 444444;
     public final  static int ACTIVITY_FIND_DEVICE = 555555;
 
+    private  final   int mainIdFragment = R.id.mainFragment;
 
     public PopupListFragment popupListFragment;
   //  private PopupListFragment popupListFragment= new PopupListFragment();
@@ -69,8 +74,10 @@ public class MainActivity extends AppCompatActivity {// ActionBarActivity {
         super.onCreate(savedInstanceState);
         //setContentView(R.layout.sample_main);
         setContentView(R.layout.sample_main);
+
+        FragmentHeadBand headBandFragment = new  FragmentHeadBand();
+
         //на 2 секунды показываем заставку релсиба --------------
-        View view = findViewById(R.id.mainFragment);
         //-------------------------------------------------------
         RunDataHub app = ((RunDataHub) getApplicationContext());
         if(app != null){
@@ -79,7 +86,7 @@ public class MainActivity extends AppCompatActivity {// ActionBarActivity {
             //первый запуск
             if(app.getStartApp()){
                 // сворачиваем фрагмент
-                view.setVisibility(View.GONE);
+                findViewById(R.id.mainFragment).setVisibility(View.GONE);
                 //прячем наш бар на время
                 getSupportActionBar().hide();
                 Handler handler = new Handler();
@@ -103,13 +110,22 @@ public class MainActivity extends AppCompatActivity {// ActionBarActivity {
 //взаимодействие АКТИВНОсТИ и фрагмента, вызов явно метода из фрагмента, по ссылке на него!
         //там же взаимодействи обратное, работа с АкшионБар и КНОПКА НАЗАД!
         // http://developer.alexanderklimov.ru/android/theory/fragments.php
-         popupListFragment = new PopupListFragment();
-        // Begin the transaction
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-// Replace the contents of the container with the new fragment
-        ft.replace(R.id.mainFragment, popupListFragment);
-// Complete the changes added above
-        ft.commit();
+        popupListFragment = new PopupListFragment();
+        Util.changeFragment(mainIdFragment, popupListFragment
+                , getSupportFragmentManager());
+
+//
+//        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+//        // Begin the transaction
+//        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+//// Replace the contents of the container with the new fragment
+//
+//        ft.replace(R.id.mainFragment, popupListFragment);
+//
+//    //    ft.replace(R.id.mainFragment, headBandFragment);
+//
+//// Complete the changes added above
+//        ft.commit();
         //инициализация фрейма
 //  popupListFragment= (PopupListFragment)getSupportFragmentManager()
 //                .findFragmentById(R.id.popUpListFragment);
@@ -297,12 +313,12 @@ Log.i(TAG,"startActivity SCAN");
                 if(v != null){
                     v.setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
                 }
-                FragmentManager fm= getFragmentManager();
-
-                Fragment f =  fm.findFragmentById(R.layout.list_item);
-
-                LayoutInflater lf = getLayoutInflater();
-                Resources r =getResources();
+//                FragmentManager fm= getSupportFragmentManager();
+//
+//                Fragment f =  fm.findFragmentById(R.layout.list_item);
+//
+//                LayoutInflater lf = getLayoutInflater();
+//                Resources r =getResources();
 
                 System.out.println("Menu-edit_a  v=" + v);
                 ;

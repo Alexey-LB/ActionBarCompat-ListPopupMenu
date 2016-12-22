@@ -9,11 +9,18 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Vibrator;
 import android.support.constraint.solver.ArrayLinkedVariables;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 
 import com.example.android.actionbarcompat.listpopupmenu.Marker;
 import com.example.android.actionbarcompat.listpopupmenu.R;
@@ -49,6 +56,17 @@ public class Util {
 //    public  final static String EXTRAS_INT_2 = "EXTRAS_INT_2";
 //    public  final static String EXTRAS_INT_3 = "EXTRAS_INT_3";
 
+    //замена одного фрагмента другим, используем библиотеку потдержки старых устройств (4.4)
+    // http://developer.alexanderklimov.ru/android/theory/fragments.php
+    static public void changeFragment(int distIdFragment, android.support.v4.app.Fragment srcFragment
+            , android.support.v4.app.FragmentManager fm) {
+        // Begin the transaction// FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        FragmentTransaction ft = fm.beginTransaction();
+        // Replace the contents of the container with the new fragment
+        ft.replace(distIdFragment, srcFragment);
+        // Complete the changes added above
+        ft.commit();
+    }
     //ввод ФЛОАТ из строки В ЛЮБОЙ ЛОКАЛИ!!!(обрабатывает 10 разделитель ТОЧКУ или ЗАПЯТУЮ!!)
     // при обломе НУЛЛ возвращяет
     static public Float parseFloat(String str) {
