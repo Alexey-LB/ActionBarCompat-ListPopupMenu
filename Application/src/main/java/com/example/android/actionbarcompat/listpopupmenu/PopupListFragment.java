@@ -284,7 +284,7 @@ public class PopupListFragment extends ListFragmentA  {
 
     public void updateView(){
         lloop++;
-        if((adapter == null) || (adapter.getCount() == 0) || ( mHandlerWork = false)) return;
+        if((adapter == null) || (adapter.getCount() == 0) || ( mHandlerWork == false)) return;
         int i; String str = "Sensor>";
         for(i = 0; i < adapter.getCount();i++){
             updateViewItem(false,(Sensor)adapter.getItem(i), getListView().getChildAt(i));

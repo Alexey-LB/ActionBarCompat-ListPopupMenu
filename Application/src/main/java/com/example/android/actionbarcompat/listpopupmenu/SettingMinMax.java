@@ -61,7 +61,7 @@ public class SettingMinMax extends Activity implements View.OnClickListener{
     }
 
     private void updateTextString(){
-        if((sensor == null) || ( mHandlerWork = false)) return;
+        if((sensor == null) || ( mHandlerWork == false)) return;
         //
         if(maxValue){
             Util.setTextToTextView(sensor.getStringMaxTemperature(true)
