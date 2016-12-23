@@ -184,6 +184,8 @@ public class MainSettingSetting  extends Activity implements View.OnClickListene
         Log.w(TAG,"onClick= "+view);
         Intent intent;String str = "";
         if(sensor == null) return;
+        //УСТАНОВИЛИ, что меняли настройки, необходимо при сохранении ЗАПИСИ во флеш
+        sensor.changeConfig = true;
         //
         switch (view.getId()){
             case android.R.id.home:

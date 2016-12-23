@@ -640,7 +640,7 @@ return null;//fbButton_;
    //ВЫЗЫВАЕМ пункт, тоько если он НЕ В РАБОТЕ ПО УДАЛЕНИИЮ И ИЗМЕНЕНИЮ!! ---
                         if(Math.abs(positionScroll) != maxScroll){
                             //то вызываем пункт меню!контроль указателя!
-                            if(i >= 0) Toast.makeText(getActivity(), "onClick GoTo N= " + i, Toast.LENGTH_SHORT).show();
+    //                        if(i >= 0) Toast.makeText(getActivity(), "onClick GoTo N= " + i, Toast.LENGTH_SHORT).show();
                             str = "CLICK_SHORT GoTo i= " + i;
                             //--------------
                             //-------Setting --
@@ -661,7 +661,7 @@ return null;//fbButton_;
                                  DellObject(obj);// УДАЛИТЬ
                                 objectD = null;//чтоб сдвижки поом НЕ было с NULL  объектом
                                 moveButton();
-                                if(i >= 0) Toast.makeText(getActivity(), "onClick Dell N= " + i, Toast.LENGTH_SHORT).show();
+     //                           if(i >= 0) Toast.makeText(getActivity(), "onClick Dell N= " + i, Toast.LENGTH_SHORT).show();
                                 str = "CLICK_SHORT i= " + i + "  Remove obj= " + obj;
                             } else {
                                 if ((positionScroll < 0) && (positionStartX < maxScroll)){//редактирование
@@ -669,7 +669,7 @@ return null;//fbButton_;
   clearScrollX_View(true);//затираем на него ссылку? с ним закончили
                                     if(obj instanceof Sensor) ((Sensor)obj).resetMinMaxValueTemperature();
                                     str = "CLICK_SHORT i= " + i + "  Edit obj= " + obj;
-                                    if(i >= 0) Toast.makeText(getActivity(), "onClick Edit N= " + i, Toast.LENGTH_SHORT).show();
+           //                         if(i >= 0) Toast.makeText(getActivity(), "onClick Edit N= " + i, Toast.LENGTH_SHORT).show();
                                 }else str = "CLICK_SHORT i= " + i + "  no Work obj= " + obj;
                                 //str = "CLICK_SHORT i= " + i + (positionScroll > 0 ? "  Del":"  Edit");
                             }

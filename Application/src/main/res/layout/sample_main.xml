@@ -1,65 +1,90 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/FrameLayoutMain"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="@color/colorBackground"
-    android:id="@+id/home">
-    <!--xmlns:android="http://schemas.android.com/apk/res/android"-->
-<!--<fragment-->
-
-    <!--android:id="@+id/popUpListFragment"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent"-->
-    <!--android:theme="@android:style/Widget.Holo.Light.ListPopupWindow"-->
-    <!--android:name="com.example.android.actionbarcompat.listpopupmenu.PopupListFragment"-->
-    <!--/>-->
-    <FrameLayout
-        android:id="@+id/mainFragment"
+    android:layout_weight="10"
+    >
+        <!--xmlns:android="http://schemas.android.com/apk/res/android"-->
+        <!--xmlns:tools="http://schemas.android.com/tools"-->
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="10"
-        >
-    </FrameLayout>
+        android:orientation="vertical"
+        android:background="@color/colorBackground"
+        android:id="@+id/home">
+        <!--xmlns:android="http://schemas.android.com/apk/res/android"-->
+    <!--<fragment-->
 
-    <LinearLayout
-        android:id="@+id/LinearLayoutFahrenheit"
-        android:orientation="horizontal"
-        android:layout_weight="0"
-        android:gravity="bottom|center_horizontal"
-        android:layout_gravity="bottom|center_horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="44dp">
+        <!--android:id="@+id/popUpListFragment"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:theme="@android:style/Widget.Holo.Light.ListPopupWindow"-->
+        <!--android:name="com.example.android.actionbarcompat.listpopupmenu.PopupListFragment"-->
+        <!--/>-->
+        <FrameLayout
+            android:id="@+id/mainFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="10"
+            >
+        </FrameLayout>
 
-        <TextView
-            android:text="°C"
-            android:id="@+id/textViewC"
+        <LinearLayout
+            android:id="@+id/LinearLayoutFahrenheit"
+            android:orientation="horizontal"
             android:layout_weight="0"
-            android:gravity="center_vertical|center_horizontal"
-            android:layout_height="32dp"
-            android:background="@drawable/rectangle_corners_left_5dp"
-            android:layout_gravity="center_vertical|center_horizontal"
-            android:textSize="18sp"
-            android:textStyle="normal|bold"
-            android:textColor="@color/colorTextlight"
-            android:layout_width="128dp" />
+            android:gravity="bottom|center_horizontal"
+            android:layout_gravity="bottom|center_horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="44dp">
 
-        <TextView
-            android:text="°F"
-            android:id="@+id/textViewF"
-            android:layout_weight="0"
-            android:gravity="center_vertical|center_horizontal"
-            android:layout_height="32dp"
-            android:background="@drawable/rectangle_line_corners_right_5dp"
-            android:layout_gravity="center_vertical|center_horizontal"
-            android:textSize="18sp"
-            android:textStyle="normal|bold"
-            android:textColor="@color/colorTextlight"
-            android:layout_width="128dp" />
+            <TextView
+                android:text="°C"
+                android:id="@+id/textViewC"
+                android:layout_weight="0"
+                android:gravity="center_vertical|center_horizontal"
+                android:layout_height="32dp"
+                android:background="@drawable/rectangle_corners_left_5dp"
+                android:layout_gravity="center_vertical|center_horizontal"
+                android:textSize="18sp"
+                android:textStyle="normal|bold"
+                android:textColor="@color/colorTextlight"
+                android:layout_width="128dp" />
+
+            <TextView
+                android:text="°F"
+                android:id="@+id/textViewF"
+                android:layout_weight="0"
+                android:gravity="center_vertical|center_horizontal"
+                android:layout_height="32dp"
+                android:background="@drawable/rectangle_line_corners_right_5dp"
+                android:layout_gravity="center_vertical|center_horizontal"
+                android:textSize="18sp"
+                android:textStyle="normal|bold"
+                android:textColor="@color/colorTextlight"
+                android:layout_width="128dp" />
+        </LinearLayout>
+
     </LinearLayout>
+    <!--ЗАСТАВКА РЕЛСИБА -->
+    <FrameLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
 
-</LinearLayout>
+        android:id="@+id/frameHeadband"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:theme="@android:style/TextAppearance.Inverse"
+        android:elevation="1dp"
+        android:background="@drawable/home">
+
+    </FrameLayout>
+</FrameLayout>
     <!-- <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
     <!-- android:layout_height="wrap_content"-->
     <!-- android:layout_width="match_parent"-->

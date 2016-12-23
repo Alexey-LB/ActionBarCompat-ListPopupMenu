@@ -130,20 +130,21 @@ public class MainActivity extends AppCompatActivity {// ActionBarActivity {
             //прячем наш бар на время
             getSupportActionBar().hide();
             findViewById(R.id.LinearLayoutFahrenheit).setVisibility(View.GONE);
-             //заставка релсиба --------------
 //            DisplayMetrics dm = getResources().getDisplayMetrics();
 //            //  получаем в dp
 //            int height = dm.heightPixels / dm.density;
-//            findViewById(mainIdFragment).setLayoutParams(ConstraintLayout.LayoutParams.VERTICAL,height);
-            Util.changeFragment(mainIdFragment, new  FragmentHeadBand()
-                    , getSupportFragmentManager());
+            //заставка релсиба --------------
+            //внедрил в основной ХМЛ, на постоянно, только сворачиваю изображение
+//            Util.changeFragment(mainIdFragment, new FragmentHeadBand(), getSupportFragmentManager());
             Handler handler = new Handler();
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     //сбрасываем первый пуск
                     // гасим сразу, чтоб не дергалось изображение
-                    findViewById(mainIdFragment).setVisibility(View.GONE);
+             //       findViewById(mainIdFragment).setVisibility(View.GONE);
+                    findViewById(R.id.frameHeadband).setVisibility(View.GONE);
+                    //внедрил в основной ХМЛ, на постоянно, только сворачиваю изображение
                     findViewById(R.id.LinearLayoutFahrenheit).setVisibility(View.VISIBLE);
                     ((RunDataHub) getApplicationContext()).resetStartApp();
                     setWork();
