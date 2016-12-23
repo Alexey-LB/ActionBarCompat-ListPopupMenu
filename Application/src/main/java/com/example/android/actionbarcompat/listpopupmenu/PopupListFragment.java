@@ -888,7 +888,7 @@ return null;//fbButton_;
        //     if(convertView != null )convertView.setScrollY((int)(rr *20f));
        //     rr = rr *(-1f);
 
-            Log.d(TAG,"position"+position+"  view"+ view+"  convertView=" + convertView +"  container= " +container);
+          //  Log.d(TAG,"position"+position+"  view"+ view+"  convertView=" + convertView +"  container= " +container);
             if(adapter.getItem(position) != null){
               //  ((Cheeses)adapter.getItem(position)).textValue = view.findViewById(R.id.numbe_cur);
                 //берем объект

@@ -59,7 +59,7 @@
             <TextView
                 android:id="@android:id/text1"
                 android:text="Температура 1"
-                android:textColor="?attr/colorPrimaryDark"
+                android:textColor="@color/colorTextlight"
                 android:layout_height="match_parent"
                 android:layout_weight="2"
                 android:maxLines="1"
@@ -117,7 +117,7 @@
                 android:layout_width="95dp"
                 android:maxLines="1"
                 android:layout_height="match_parent"
-                android:textColor="?attr/colorPrimaryDark"
+                android:textColor="@color/colorTextlight"
 
                 android:gravity="center_vertical|center_horizontal"
 
@@ -155,7 +155,7 @@
                 android:layout_weight="1"
                 android:id="@+id/numbe_max"
                 android:maxLines="1"
-                android:textColor="?attr/colorPrimaryDark"
+                android:textColor="@color/colorTextlight"
                 android:layout_width="95dp"
                 android:layout_height="match_parent"
                 android:gravity="center_vertical|center_horizontal"

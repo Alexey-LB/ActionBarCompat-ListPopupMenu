@@ -152,7 +152,7 @@ public class SettingMinMax extends Activity implements View.OnClickListener{
     @Override
     public void onClick(View view) {
         Log.w(TAG,"onClick= "+view);
-        Intent intent;
+        Intent intent;boolean on;
         if(sensor == null)  return;
         //
         switch (view.getId()){
@@ -193,22 +193,18 @@ public class SettingMinMax extends Activity implements View.OnClickListener{
                 }
                 break;
             case R.id.switchNotification:
-                if(maxValue) {
-                    sensor.onMaxNotification = ((Switch)findViewById(R.id.switchNotification))
-                            .isChecked();
-                }  else {
-                    sensor.onMinNotification = ((Switch)findViewById(R.id.switchNotification))
-                            .isChecked();
-                }
+                on = ((Switch)findViewById(R.id.switchNotification)).isChecked();
+                if(maxValue) sensor.onMaxNotification = on;
+                else sensor.onMinNotification  = on;
+                if(on)Util.playerRingtone(0f, maxValue?sensor.maxMelody:sensor.minMelody
+                        , this,TAG);
                 break;
             case R.id.switchVibration:
-                if(maxValue) {
-                    sensor.onMaxVibration = ((Switch)findViewById(R.id.switchVibration))
-                            .isChecked();
-                }  else {
-                    sensor.onMinVibration = ((Switch)findViewById(R.id.switchVibration))
-                            .isChecked();
-                }
+                on = ((Switch)findViewById(R.id.switchVibration)).isChecked();
+                if(maxValue) sensor.onMaxVibration = on;
+                else sensor.onMinVibration = on;
+                //
+                if(on)Util.playerVibrator(400,this);
                 break;
             default:
         }
