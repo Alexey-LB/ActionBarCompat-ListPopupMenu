@@ -184,7 +184,7 @@ public class MainActivity extends AppCompatActivity {// ActionBarActivity {
         if(app == null)return;
         ArrayList <Sensor> als = app.mBluetoothLeServiceM.mbleDot;
         for(Sensor sensor: als){
-            sensor.onFahrenheit = fahrenheit;
+            sensor.onFahrenheit = fahrenheit ;
         }
     }
     private void setWork(){
