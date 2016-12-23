@@ -23,6 +23,7 @@ import android.os.Bundle;
 import android.os.Handler;
 //import android.app.FragmentManager;
 //import android.app.Fragment;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -30,13 +31,17 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 
 
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.portfolio.alexey.connector.Sensor;
 import com.portfolio.alexey.connector.Util;
+
+import java.util.ArrayList;
 
 /**
  * This sample shows you how to use {@link android.support.v7.widget.PopupMenu PopupMenu} from
@@ -124,7 +129,12 @@ public class MainActivity extends AppCompatActivity {// ActionBarActivity {
         if(app.getStartApp()){// "ЭТО первый запуск
             //прячем наш бар на время
             getSupportActionBar().hide();
+            findViewById(R.id.LinearLayoutFahrenheit).setVisibility(View.GONE);
              //заставка релсиба --------------
+//            DisplayMetrics dm = getResources().getDisplayMetrics();
+//            //  получаем в dp
+//            int height = dm.heightPixels / dm.density;
+//            findViewById(mainIdFragment).setLayoutParams(ConstraintLayout.LayoutParams.VERTICAL,height);
             Util.changeFragment(mainIdFragment, new  FragmentHeadBand()
                     , getSupportFragmentManager());
             Handler handler = new Handler();
@@ -134,6 +144,7 @@ public class MainActivity extends AppCompatActivity {// ActionBarActivity {
                     //сбрасываем первый пуск
                     // гасим сразу, чтоб не дергалось изображение
                     findViewById(mainIdFragment).setVisibility(View.GONE);
+                    findViewById(R.id.LinearLayoutFahrenheit).setVisibility(View.VISIBLE);
                     ((RunDataHub) getApplicationContext()).resetStartApp();
                     setWork();
                 }
@@ -141,7 +152,39 @@ public class MainActivity extends AppCompatActivity {// ActionBarActivity {
         }else {
             setWork();
         }
+        //-------------
+        findViewById(R.id.textViewC).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //установка измерения в ЦЕЛЬСИЯХ
+                setOnFahrenheit(false);
+            }
+        });
+        findViewById(R.id.textViewF).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //установка измерения в ФАРЕНГЕЙТАХ
+                setOnFahrenheit(true);
+            }
+        });
         Log.e(TAG, "----onCreate END-----");
+    }
+    private void setOnFahrenheit(boolean fahrenheit){
+        View viewC = findViewById(R.id.textViewC);
+        View viewF = findViewById(R.id.textViewF);
+        if(fahrenheit){
+            viewC.setBackgroundResource(R.drawable.rectangle_line_corners_left_5dp);
+            viewF.setBackgroundResource(R.drawable.rectangle_corners_right_5dp);
+        }else{
+            viewC.setBackgroundResource(R.drawable.rectangle_corners_left_5dp);
+            viewF.setBackgroundResource(R.drawable.rectangle_line_corners_right_5dp);
+        }
+        RunDataHub app = ((RunDataHub) getApplicationContext());
+        if(app == null)return;
+        ArrayList <Sensor> als = app.mBluetoothLeServiceM.mbleDot;
+        for(Sensor sensor: als){
+            sensor.onFahrenheit = fahrenheit;
+        }
     }
     private void setWork(){
        // // установка ИЗОБРАЖЕНИЕ на всь экран, УБИРАЕМ СВЕРХУ И СНИЗУ панели системные
@@ -168,6 +211,10 @@ public class MainActivity extends AppCompatActivity {// ActionBarActivity {
 
             } else{
                 Log.e(TAG, "----init() ---------- ERROR!");
+            }
+            if(app.mBluetoothLeServiceM.mbleDot.size() > 0){
+                //ПРИ первом пуске установили еденицы измерения
+                setOnFahrenheit(app.mBluetoothLeServiceM.mbleDot.get(0).onFahrenheit);
             }
         }
  //!!       popupListFragment.initList();
