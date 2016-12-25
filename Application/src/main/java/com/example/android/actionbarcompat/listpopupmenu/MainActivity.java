@@ -19,6 +19,7 @@ package com.example.android.actionbarcompat.listpopupmenu;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 //import android.app.FragmentManager;
@@ -27,6 +28,7 @@ import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 
@@ -37,6 +39,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import com.portfolio.alexey.connector.Sensor;
 import com.portfolio.alexey.connector.Util;
@@ -73,6 +76,7 @@ public class MainActivity extends AppCompatActivity {// ActionBarActivity {
     private  final   int mainIdFragment = R.id.mainFragment;
 
     public PopupListFragment popupListFragment;
+
     //----------
 //    Анимация Floating Action Button в Android
 //    https://geektimes.ru/company/nixsolutions/blog/276128/
@@ -118,42 +122,25 @@ public class MainActivity extends AppCompatActivity {// ActionBarActivity {
         super.onCreate(savedInstanceState);
         //setContentView(R.layout.sample_main);
         setContentView(R.layout.sample_main);
-        //на 2 секунды показываем заставку релсиба --------------
         //-------------------------------------------------------
         RunDataHub app = ((RunDataHub) getApplicationContext());
         if(app == null)finish();
-        //------------------------------
+         //------------------------------
         app.mainActivity = this;
-        Log.e(TAG,"--app != null");
-        //
+        ////на 3 секунды показываем заставку релсиба --------------
         if(app.getStartApp()){// "ЭТО первый запуск
-            //прячем наш бар на время
-            getSupportActionBar().hide();
-            findViewById(R.id.LinearLayoutFahrenheit).setVisibility(View.GONE);
-//            DisplayMetrics dm = getResources().getDisplayMetrics();
-//            //  получаем в dp
-//            int height = dm.heightPixels / dm.density;
-            //заставка релсиба --------------
-            //внедрил в основной ХМЛ, на постоянно, только сворачиваю изображение
-//            Util.changeFragment(mainIdFragment, new FragmentHeadBand(), getSupportFragmentManager());
             Handler handler = new Handler();
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     //сбрасываем первый пуск
-                    // гасим сразу, чтоб не дергалось изображение
-             //       findViewById(mainIdFragment).setVisibility(View.GONE);
-                    findViewById(R.id.frameHeadband).setVisibility(View.GONE);
-                    //внедрил в основной ХМЛ, на постоянно, только сворачиваю изображение
-                    findViewById(R.id.LinearLayoutFahrenheit).setVisibility(View.VISIBLE);
                     ((RunDataHub) getApplicationContext()).resetStartApp();
-                    setWork();
+                    updateView();
                 }
-            }, 3000);
-        }else {
-            setWork();
+            }, 3000);//на 3 секунды показываем заставку релсиба --------------
         }
-        //-------------
+        updateView();
+        //-------------КНОПКИ УСТАНОВКИ ЕДЕНИЦ ИЗМЕРЕНИЯ --
         findViewById(R.id.textViewC).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -170,37 +157,67 @@ public class MainActivity extends AppCompatActivity {// ActionBarActivity {
         });
         Log.e(TAG, "----onCreate END-----");
     }
+    private void updateView(){
+        // установка ИЗОБРАЖЕНИЕ на всь экран, УБИРАЕМ СВЕРХУ И СНИЗУ панели системные
+        findViewById(mainIdFragment).getRootView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
+        //
+        RunDataHub app = ((RunDataHub) getApplicationContext());
+        //а первый запуск показываем заставку несколько секунд, там и потом убираем системный бар
+        // в случа нуля и если мы не первый раз уже просыпаемся то тогда надо убират
+        // установка ИЗОБРАЖЕНИЕ на всь экран, УБИРАЕМ СВЕРХУ И СНИЗУ панели системные
+        if((app == null) || (app.getStartApp() == true)){
+            //прячем наш бар на время
+            getSupportActionBar().hide();
+            // frameHeadband - ЭТОТ слой сверху, ПО ЭТОМУ он загрывает все что снизу слои
+            // переключение едениц измерения- не гасим, он закрыт слоем ЗАСТАВКИ релсиба
+            findViewById(R.id.frameHeadband).setVisibility(View.VISIBLE);
+            //ВЫБОР едениц изображения-БАР внизу, только сворачиваю изображение
+//            findViewById(R.id.LinearLayoutFahrenheit).setVisibility(View.GONE);
+        } else {
+            findViewById(R.id.frameHeadband).setVisibility(View.GONE);
+            Util.changeFragment(mainIdFragment, new PopupListFragment()
+                    , getSupportFragmentManager());
+            //настраиваем и включаем тулбар
+            Util.setSupportV7appActionBar(getSupportActionBar(),TAG,"  B4/B5 v2.5");
+        }
+        //устанавливаем еденицы измерения
+        if((app != null) && (app.mBluetoothLeServiceM != null)
+        && (app.mBluetoothLeServiceM.mbleDot != null)
+                && (app.mBluetoothLeServiceM.mbleDot.size() > 0)){
+            //для всех еденицы устанавливаются одинакова, по этому берем первый попавшийся
+            setOnFahrenheit(app.mBluetoothLeServiceM.mbleDot.get(0).onFahrenheit);
+        } else{//по умолчанию ставим целсия
+            setOnFahrenheit(false);
+        }
+    }
     private void setOnFahrenheit(boolean fahrenheit){
-        View viewC = findViewById(R.id.textViewC);
-        View viewF = findViewById(R.id.textViewF);
+        TextView viewC = (TextView)findViewById(R.id.textViewC);
+        TextView viewF = (TextView)findViewById(R.id.textViewF);
         if(fahrenheit){
             viewC.setBackgroundResource(R.drawable.rectangle_line_corners_left_5dp);
             viewF.setBackgroundResource(R.drawable.rectangle_corners_right_5dp);
+            viewC.setTextColor(getResources().getColor(R.color.color_blue_light));
+            //поменяли цвета текста на кнопках между собой
+            viewF.setTextColor(getResources().getColor(R.color.colorBackground));
+           //viewF.setTextColor(ContextCompat.getColor(context, R.color.color_blue_light));
         }else{
             viewC.setBackgroundResource(R.drawable.rectangle_corners_left_5dp);
             viewF.setBackgroundResource(R.drawable.rectangle_line_corners_right_5dp);
+            //поменяли цвета текста на кнопках между собой
+            viewC.setTextColor(getResources().getColor(R.color.colorBackground));
+            viewF.setTextColor(getResources().getColor(R.color.color_blue_light));
         }
+        //
         RunDataHub app = ((RunDataHub) getApplicationContext());
-        if(app == null)return;
+        //если масива сенсоров нет, то и устанавливать значений некому!
+        if((app == null) || (app.mBluetoothLeServiceM == null)
+            || (app.mBluetoothLeServiceM.mbleDot == null)
+            || (app.mBluetoothLeServiceM.mbleDot.size() == 0)) return;
+        //устанавливаем еденицы измерения ДЛЯ ВСЕХ одинаково!
         ArrayList <Sensor> als = app.mBluetoothLeServiceM.mbleDot;
         for(Sensor sensor: als){
             sensor.onFahrenheit = fahrenheit ;
         }
-    }
-    private void setWork(){
-       // // установка ИЗОБРАЖЕНИЕ на всь экран, УБИРАЕМ СВЕРХУ И СНИЗУ панели системные
-        findViewById(mainIdFragment).getRootView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
-        //настраиваем и включаем тулбар
-        Util.setSupportV7appActionBar(getSupportActionBar(),TAG,"  B4/B5 v2.5");
-
-        Util.changeFragment(mainIdFragment, new PopupListFragment()
-                , getSupportFragmentManager());
-
-//        popupListFragment = new PopupListFragment();
-//        Util.changeFragment(mainIdFragment, popupListFragment
-//                , getSupportFragmentManager());
-        //ОБЯЗАТЕЛЬНО, ВВерху выключаем!!! видимость, здесь надо включить!!
-        findViewById(mainIdFragment).setVisibility(View.VISIBLE);
     }
     //инициализация фрейма
     public void init(){
@@ -223,13 +240,18 @@ public class MainActivity extends AppCompatActivity {// ActionBarActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        //при возвращениие из других окон, может быть системный бар, по этому еще раз его отменяем
+        findViewById(R.id.mainFragment).getRootView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
         Log.e(TAG, "----onResume() ----------");
         RunDataHub app = ((RunDataHub) getApplicationContext());
         //а первый запуск показываем заставку несколько секунд, там и потом убираем системный бар
         // в случа нуля и если мы не первый раз уже просыпаемся то тогда надо убират
         // установка ИЗОБРАЖЕНИЕ на всь экран, УБИРАЕМ СВЕРХУ И СНИЗУ панели системные
-        if((app == null) || (app.getStartApp() == false)){
-            findViewById(R.id.mainFragment).getRootView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
+        if((app == null) || (app.getStartApp() == true)){
+            //прячем наш бар на время
+            getSupportActionBar().hide();
+          } else{
+            getSupportActionBar().show();
         }
     }
 
@@ -288,12 +310,7 @@ final int iconActionEdit = 12345678;
                 Log.i(TAG,"android.R.id.home--");
     // Добавить вызов ЗАСТАВКИ!!релсиба
 
-//
-//                RunDataHub app = ((RunDataHub) getApplicationContext());
-//                if(app.mBluetoothLeServiceM != null){
-//                    app.mBluetoothLeServiceM.settingPutFile();
-//                }
-                return false;//установили ФАЛШ, чтоб вызов попал в ФРАГМЕНТ, в которм будет обработан!!
+           return false;//установили ФАЛШ, чтоб вызов попал в ФРАГМЕНТ, в которм будет обработан!!
             case iconActionEdit:
                 Log.i(TAG,"edit-");
 //        //вызов активного окна для сканирования

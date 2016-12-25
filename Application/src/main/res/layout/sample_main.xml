@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/FrameLayoutMain"
+    android:id="@+id/LayoutMain"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorBackground"
@@ -52,7 +52,7 @@
                 android:textSize="18sp"
                 android:textStyle="normal|bold"
                 android:textColor="@color/colorTextlight"
-                android:layout_width="128dp" />
+                android:layout_width="96dp" />
 
             <TextView
                 android:text="°F"
@@ -65,7 +65,7 @@
                 android:textSize="18sp"
                 android:textStyle="normal|bold"
                 android:textColor="@color/colorTextlight"
-                android:layout_width="128dp" />
+                android:layout_width="96dp" />
         </LinearLayout>
 
     </LinearLayout>
@@ -81,19 +81,25 @@
         android:layout_height="match_parent"
         android:theme="@android:style/TextAppearance.Inverse"
         android:elevation="1dp"
-        android:background="@drawable/home">
-
+        android:visibility="gone"
+        >
+        <!--Исходно делаем его не видимым, править удобно в отдельном файле-->
+        <include layout="@layout/frame_headband" />
     </FrameLayout>
-</FrameLayout>
-    <!-- <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
-    <!-- android:layout_height="wrap_content"-->
-    <!-- android:layout_width="match_parent"-->
 
-    <!-- &gt;-->
-    <!-- &lt;!&ndash;<ProgressBar android:layout_width="32dp"&ndash;&gt;-->
-    <!-- &lt;!&ndash;android:layout_height="32dp"&ndash;&gt;-->
-    <!-- &lt;!&ndash;android:layout_gravity="center"/>&ndash;&gt;-->
-    <!-- </FrameLayout>-->
-    <!--
-    tools:layout="@layout/poplist_button_float"
-    -->
+</FrameLayout>
+    <!--ЗАСТАВКА РЕЛСИБА -->
+<!--<FrameLayout-->
+<!--xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--xmlns:app="http://schemas.android.com/apk/res-auto"-->
+<!--xmlns:tools="http://schemas.android.com/tools"-->
+
+<!--android:id="@+id/frameHeadband"-->
+<!--android:orientation="horizontal"-->
+<!--android:layout_width="match_parent"-->
+<!--android:layout_height="match_parent"-->
+<!--android:theme="@android:style/TextAppearance.Inverse"-->
+<!--android:elevation="1dp"-->
+<!--android:background="@drawable/home">-->
+
+<!--</FrameLayout>-->
