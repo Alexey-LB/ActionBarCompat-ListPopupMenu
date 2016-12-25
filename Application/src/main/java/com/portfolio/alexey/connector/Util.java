@@ -29,6 +29,7 @@ import com.example.android.actionbarcompat.listpopupmenu.RunDataHub;
 import java.util.ArrayList;
 
 import static android.content.Context.VIBRATOR_SERVICE;
+import static java.lang.Thread.sleep;
 
 /**
  * Created by lesa on 17.12.2016.
@@ -95,7 +96,8 @@ public class Util {
     //
     static public Sensor getSensor(int item,Context context){
         BluetoothLeServiceNew bleS = getAppBleService(context);
-        if(isNoNull(bleS,bleS.mbleDot) && (bleS.mbleDot.size() > item)){
+        if((bleS != null) && (bleS.mbleDot != null)
+                && (bleS.mbleDot.size() > item)){
             return bleS.mbleDot.get(item);
         }
         return null;
@@ -103,7 +105,8 @@ public class Util {
     //
     static public Sensor getSensor(int item,Activity activity){
         BluetoothLeServiceNew bleS = getAppBleService(activity);
-        if(isNoNull(bleS,bleS.mbleDot) && (bleS.mbleDot.size() > item)){
+        if((bleS != null) && (bleS.mbleDot != null)
+                && (bleS.mbleDot.size() > item)){
             return bleS.mbleDot.get(item);
         }
         return null;
@@ -123,7 +126,7 @@ public class Util {
     //
     static public BluetoothLeServiceNew getAppBleService(Context context){
         RunDataHub app = (RunDataHub)context;
-        if(isNoNull(app,app.mBluetoothLeServiceM)){
+        if((app != null) && (app.mBluetoothLeServiceM != null)){
             return app.mBluetoothLeServiceM;
         }
         return null;
@@ -131,7 +134,7 @@ public class Util {
     //
     static public BluetoothLeServiceNew getAppBleService(Activity activity){
         RunDataHub app = (RunDataHub) activity.getApplicationContext();
-        if(isNoNull(app,app.mBluetoothLeServiceM)){
+        if((app != null) && (app.mBluetoothLeServiceM != null)){
             return app.mBluetoothLeServiceM;
         }
         return null;
@@ -191,6 +194,18 @@ public class Util {
                 public void onCompletion(MediaPlayer mp) {
                     //останавливается ПЛЕЕР и выбрасывается из памяти
                     mp.release();//Это закончит, освободить, отпустить
+                    try {
+                        sleep(3000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+//                    if((mp != null) && (mp.isPlaying())) {
+//                        try {
+//                            sleep(3000);
+//                        } catch (InterruptedException e) {
+//                            e.printStackTrace();
+//                        }
+//                    };
                     onRingtoneWork = false;//разрешили другим вызывать музыку
                 }
             });
@@ -262,7 +277,7 @@ public class Util {
     //заносит данные во вювер с на МИНУС работаем с уровнями и,
     // А ТАКЖЕ- если там тоже самое- не записывает в Вювер ,эеономия времени ОТРИСОВКИ
     static public boolean setLevelToImageView(int level, View view) {
-        if (isNoNull(level, view) && (view instanceof ImageView)) {
+        if ((view != null) && (view instanceof ImageView)) {
             //Отрицательное число уровеня- ломает вывод ИЗОБРАЖЕНИЯ по уровням
             if (level < 0) level = ~level + 1;
             ImageView iv = ((ImageView) view);
@@ -287,7 +302,7 @@ public class Util {
     //заносит данные во вювер с на МИНУС работаем с уровнями и,
     // А ТАКЖЕ- если там тоже самое- не записывает в Вювер ,эеономия времени ОТРИСОВКИ
     static public boolean setDrawableToImageView(int level, View view) {
-        if (isNoNull(level, view) && (view instanceof ImageView)) {
+        if ((view != null) && (view instanceof ImageView)) {
             ImageView iv = ((ImageView) view);
             //если ранее не запоминали то обновляем
             if((iv.getTag() == null) || ((Integer)iv.getTag() != level)){
@@ -339,15 +354,5 @@ public class Util {
 
     static public boolean setTextToTextView(String str, int viewID,  View viewRoot, String def) {
         return setTextToTextView(str, viewRoot.findViewById(viewID),def);
-    }
-    ///-------------------------------------------
-    static public boolean isNoNull(Object ob1) {
-        return ((ob1 != null) );
-    }
-    static public boolean isNoNull(Object ob1, Object ob2) {
-        return ((ob1 != null) && (ob2 != null));
-    }
-    static public boolean isNoNull(Object ob1, Object ob2, Object ob3) {
-        return ((ob1 != null) && (ob2 != null) && (ob3 != null));
     }
 }

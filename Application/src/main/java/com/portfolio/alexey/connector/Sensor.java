@@ -119,8 +119,8 @@ public class Sensor {
     public boolean onMinNotificationReset = false;
     public boolean onMaxNotificationReset = false;
 
-    public boolean onMinNotification = false;
-    public boolean onMaxNotification = false;
+    public boolean onMinNotification = false;//разрешение на оповешение звуком или вибрацией
+    public boolean onMaxNotification = false;//разрешение на оповешение звуком или вибрацией
     public boolean onEndNotification = false;
     //
     public String minMelody;
@@ -163,21 +163,21 @@ public class Sensor {
 //        Log.i(TAG,"loop--");
         if(intermediateValue >= maxTemperature){
             Log.e(TAG,"max- " + onMaxNotification + " / " + onMaxNotificationReset);
-            if(onMaxNotification && !onMaxNotificationReset) {
+            if(onMaxNotification && !onMaxNotificationReset && (maxMelody != null)) {
                 Log.e(TAG,"maxMelody");
                 Util.playerRingtone(0f, maxMelody, app.mainActivity,TAG);
             }
-            if(onMaxVibration && !onMaxVibrationReset) {
+            if(onMaxNotification && onMaxVibration && !onMaxVibrationReset) {
                 Log.e(TAG,"maxVibrator");
                 Util.playerVibrator(300, app.mainActivity);
             }
         }else{
             if(intermediateValue <= minTemperature){
-                if(onMinNotification && !onMinNotificationReset){
+                if(onMinNotification && !onMinNotificationReset && (minMelody != null)){
                     Log.e(TAG,"minMelody");
                     Util.playerRingtone(0f, minMelody, app.mainActivity,TAG);
                 }
-                if(onMinVibration && !onMinVibrationReset) {
+                if(onMinNotification && onMinVibration && !onMinVibrationReset) {
                     Log.e(TAG,"minVibrator");
                     Util.playerVibrator(300, app.mainActivity);
                 }

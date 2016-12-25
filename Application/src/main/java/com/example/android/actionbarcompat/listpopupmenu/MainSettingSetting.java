@@ -76,10 +76,20 @@ public class MainSettingSetting  extends Activity implements View.OnClickListene
     private void updateTextString(){
         Util.setTextToTextView(sensor.deviceLabel,R.id.textViewName,this,"?");
 
-        Util.setTextToTextView(sensor.getStringMaxTemperature(true)
-                ,R.id.textViewTemperaturesAbove,this,"-");
-        Util.setTextToTextView(sensor.getStringMinTemperature(true)
-                ,R.id.textViewTemperaturesBelow,this,"-");
+        if(sensor.onMaxNotification){
+            Util.setTextToTextView(sensor.getStringMaxTemperature(true)
+                    ,R.id.textViewTemperaturesAbove,this,"-");
+        } else{
+            Util.setTextToTextView("-",R.id.textViewTemperaturesAbove,this,"-");
+        }
+
+        if(sensor.onMinNotification){
+            Util.setTextToTextView(sensor.getStringMinTemperature(true)
+                    ,R.id.textViewTemperaturesBelow,this,"-");
+        } else{
+            Util.setTextToTextView("-",R.id.textViewTemperaturesBelow,this,"-");
+        }
+
         Util.setDrawableToImageView(sensor.markerColor,R.id.imageButtonMarker, this);
 
 //        ((Switch)findViewById(R.id.switchVibration))
@@ -135,14 +145,14 @@ public class MainSettingSetting  extends Activity implements View.OnClickListene
                     name = data.getStringExtra(SettingName.EXTRAS_VALUE);
                     str = SettingName.EXTRAS_VALUE + name;
                     if(name.length() > 64) name = name.substring(0,63);
-                    if(Util.isNoNull(sensor, name))sensor.deviceLabel = name;
+                    if((sensor != null) && (name != null))sensor.deviceLabel = name;
                     //
                     Util.setTextToTextView(name,R.id.textViewName,this,"?");
                     break;
                 case ACTIVITY_SETTING_URL_MELODI:
                     uri = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
                     //если без звука= то нулл!
-                    if(Util.isNoNull(sensor)){
+                    if(sensor != null){
                         if(uri != null){
                             sensor.endMelody = uri.toString();
                             str = "Uri= " + uri.toString();
@@ -193,7 +203,7 @@ public class MainSettingSetting  extends Activity implements View.OnClickListene
                 break;
             case R.id.imageButtonName:
                 Log.v(TAG,"imageButtonName");
-                if(Util.isNoNull(sensor.deviceLabel)) str = sensor.deviceLabel;
+                if(sensor.deviceLabel != null) str = sensor.deviceLabel;
                 intent = new Intent(this, SettingName.class);
                 intent.putExtra(SettingName.EXTRAS_VALUE, str);
                 intent.putExtra(SettingName.EXTRAS_TYPE, SettingName.VALUE_TYPE_STRING);

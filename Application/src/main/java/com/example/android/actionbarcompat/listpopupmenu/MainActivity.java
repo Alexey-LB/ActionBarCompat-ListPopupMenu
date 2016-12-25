@@ -216,7 +216,10 @@ public class MainActivity extends AppCompatActivity {// ActionBarActivity {
         //устанавливаем еденицы измерения ДЛЯ ВСЕХ одинаково!
         ArrayList <Sensor> als = app.mBluetoothLeServiceM.mbleDot;
         for(Sensor sensor: als){
-            sensor.onFahrenheit = fahrenheit ;
+            if(sensor.onFahrenheit != fahrenheit){
+                sensor.onFahrenheit = fahrenheit ;
+                sensor.changeConfig = true;//установили изменеие сонфигурации ДЛЯ сохранения во ФЛЕШИ телефона
+            }
         }
     }
     //инициализация фрейма

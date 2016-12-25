@@ -250,7 +250,8 @@ public class DeviceScanActivity extends ListActivity {//AppCompatActivity {//Act
             // TODO: 17.12.2016 контроль всех адресов ЧТО есть, вывод внизу с ЗАТЕМНЕНИЕМ, которые НЕ прошли по филтру 
 
             RunDataHub app = ((RunDataHub) getApplicationContext());
-            if(Util.isNoNull(app.mBluetoothLeServiceM,app.mBluetoothLeServiceM.mbleDot)){
+            if((app != null) && (app.mBluetoothLeServiceM != null)
+                    && (app.mBluetoothLeServiceM.mbleDot != null)){
                 //смотрим, есть ли у нас уже зарегестрированный такой адрес!!
                 if(getBluetoothDevice(device.getAddress(),
                         app.mBluetoothLeServiceM.mbleDot) != null) {

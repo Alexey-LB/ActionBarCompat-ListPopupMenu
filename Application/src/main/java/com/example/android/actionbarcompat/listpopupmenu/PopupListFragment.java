@@ -261,7 +261,7 @@ public class PopupListFragment extends ListFragmentA  {
     //
 
     synchronized private void updateViewItem(Sensor sensor, View view){
-        if(!Util.isNoNull(sensor,view)) return;
+        if((sensor == null) || (view == null)) return;
         String str;int bl,rssi;
         boolean b = (sensor.mConnectionState == BluetoothLeServiceNew.STATE_CONNECTED);
         //     || (sensor.mBluetoothDeviceAddress == null);//режим ИММИТАЦИИ- отладки
