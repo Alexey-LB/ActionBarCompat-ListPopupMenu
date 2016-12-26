@@ -185,7 +185,7 @@ private boolean onStartApp = true;
             }
 
             //настраиваем и включаем тулбар
-            Util.setSupportV7appActionBar(getSupportActionBar(),TAG,"  B4/B5 v2.5.1");
+            Util.setSupportV7appActionBar(getSupportActionBar(),TAG,"  B4/B5 v2.5.2");
         }
         //устанавливаем еденицы измерения
         if((app != null) && (app.mBluetoothLeServiceM != null)
