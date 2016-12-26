@@ -1,8 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorTextlight">
+    <!--tools:context="com.example.android.actionbarcompat.listpopupmenu.MainSettingSetting"-->
+
 <LinearLayout
     android:id="@+id/activity_main_setting_item1"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
@@ -11,6 +18,18 @@
     android:background="@color/colorTextlight"
     android:visibility="visible"
     >
+    <!--<LinearLayout-->
+        <!--android:id="@+id/activity_main_setting_item1"-->
+        <!--xmlns:android="http://schemas.android.com/apk/res/android"-->
+        <!--xmlns:app="http://schemas.android.com/apk/res-auto"-->
+        <!--xmlns:tools="http://schemas.android.com/tools"-->
+        <!--android:orientation="vertical"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:weightSum = "100"-->
+        <!--android:background="@color/colorTextlight"-->
+        <!--android:visibility="visible"-->
+        <!--&gt;-->
      <!--ОТСТУПЫ - НЕ работает!? почемуто, хотел добапввить разделители-->
     <!--android:divider="@color/colorAccent"-->
     <!--android:dividerPadding="15dp"-->
@@ -317,3 +336,4 @@
     </LinearLayout>
 
 </LinearLayout>
+</ScrollView>
