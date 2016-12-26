@@ -129,12 +129,14 @@ public class MainActivity extends AppCompatActivity {// ActionBarActivity {
         app.mainActivity = this;
         ////на 3 секунды показываем заставку релсиба --------------
         if(app.getStartApp()){// "ЭТО первый запуск
+            //сбрасываем первый пуск, блокируя повторный вход
+            ((RunDataHub) getApplicationContext()).resetStartApp();
             Handler handler = new Handler();
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    //сбрасываем первый пуск
-                    ((RunDataHub) getApplicationContext()).resetStartApp();
+                    //сбрасываем режи демонстрации заставки
+                    onFrameHeadband = false;
                     updateView();
                 }
             }, 3000);//на 3 секунды показываем заставку релсиба --------------
