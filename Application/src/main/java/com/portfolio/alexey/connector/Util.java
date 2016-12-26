@@ -169,13 +169,25 @@ public class Util {
         playerRingtone(setVolume, uri ,activity,tag);
     }
     static boolean onRingtoneWork = false;
+    private static MediaPlayer mediaPlayer;
+    static public void playerRingtoneStop(){
+        if(mediaPlayer != null) {
+            //mediaPlayer.stop();
+            mediaPlayer.release();
+
+        }
+        onRingtoneWork = false;
+        System.out.println("onRingtoneWork= " + onRingtoneWork);
+    }
     static public void playerRingtone(Float setVolume, Uri uriRingtone , Activity activity,String  tag){
         if(onRingtoneWork) return;//если чет о играем, то пока НЕ закончим, новй играть НЕ будем
         onRingtoneWork = true;
+       // if(mediaPlayer != null) return;
+
         if(uriRingtone == null){// Сигнал по умолчанию
             uriRingtone = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         }
-        MediaPlayer mediaPlayer= new MediaPlayer();
+        mediaPlayer = new MediaPlayer();
         if(setVolume == 0){//ГРОМКОСТЬ системных настроек
             setVolume = 1f;
         }else{

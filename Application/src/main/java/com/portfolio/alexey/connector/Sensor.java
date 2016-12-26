@@ -156,6 +156,7 @@ public class Sensor {
         onMaxVibrationReset = true;
         onMinNotificationReset = true;
         onMinVibrationReset = true;
+        Util.playerRingtoneStop();
     }
 
     private void controlLevelMinMax(){
@@ -172,28 +173,24 @@ public class Sensor {
                 Util.playerVibrator(300, app.mainActivity);
             }
         }else{
-            if(intermediateValue <= minTemperature){
-                if(onMinNotification && !onMinNotificationReset && (minMelody != null)){
-                    Log.e(TAG,"minMelody");
-                    Util.playerRingtone(0f, minMelody, app.mainActivity,TAG);
-                }
-                if(onMinNotification && onMinVibration && !onMinVibrationReset) {
-                    Log.e(TAG,"minVibrator");
-                    Util.playerVibrator(300, app.mainActivity);
-                }
-            } else{
-                //сбрасываем флаги --
-                if(intermediateValue < maxTemperature){
-                    onMaxNotificationReset = false;
-                    onMaxVibrationReset = false;
-                }
-                if(intermediateValue > minTemperature){
-                    onMinNotificationReset = false;
-                    onMinVibrationReset = false;
-                }
-            }
+            //сбрасываем флаги --
+            onMaxNotificationReset = false;
+            onMaxVibrationReset = false;
         }
-
+        //---------------
+        if(intermediateValue <= minTemperature){
+            if(onMinNotification && !onMinNotificationReset && (minMelody != null)){
+                Log.e(TAG,"minMelody");
+                Util.playerRingtone(0f, minMelody, app.mainActivity,TAG);
+            }
+            if(onMinNotification && onMinVibration && !onMinVibrationReset) {
+                Log.e(TAG,"minVibrator");
+                Util.playerVibrator(300, app.mainActivity);
+            }
+        } else{
+            onMinNotificationReset = false;
+            onMinVibrationReset = false;
+        }
     }
 
     //Пока отключил иммитатор -----mHandlerWork = false;
