@@ -116,7 +116,7 @@ public class MainActivity extends AppCompatActivity {// ActionBarActivity {
     //взаимодействие АКТИВНОсТИ и фрагмента, вызов явно метода из фрагмента, по ссылке на него!
     //там же взаимодействи обратное, работа с АкшионБар и КНОПКА НАЗАД!
     // http://developer.alexanderklimov.ru/android/theory/fragments.php
-
+private boolean onStartApp = true;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -128,7 +128,8 @@ public class MainActivity extends AppCompatActivity {// ActionBarActivity {
          //------------------------------
         app.mainActivity = this;
         ////на 3 секунды показываем заставку релсиба --------------
-        if(app.getStartApp()){// "ЭТО первый запуск
+        if(app.getStartApp() && onStartApp){// "ЭТО первый запуск
+            onStartApp = false;//чтоб не заходил сюда лишний раз
             Handler handler = new Handler();
             handler.postDelayed(new Runnable() {
                 @Override
@@ -157,6 +158,7 @@ public class MainActivity extends AppCompatActivity {// ActionBarActivity {
         });
         Log.e(TAG, "----onCreate END-----");
     }
+    private boolean onFrameHeadband = false;
     private void updateView(){
         // установка ИЗОБРАЖЕНИЕ на всь экран, УБИРАЕМ СВЕРХУ И СНИЗУ панели системные
         findViewById(mainIdFragment).getRootView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
@@ -175,8 +177,13 @@ public class MainActivity extends AppCompatActivity {// ActionBarActivity {
 //            findViewById(R.id.LinearLayoutFahrenheit).setVisibility(View.GONE);
         } else {
             findViewById(R.id.frameHeadband).setVisibility(View.GONE);
-            Util.changeFragment(mainIdFragment, new PopupListFragment()
-                    , getSupportFragmentManager());
+            //запускаем подключение если еше не ставили его
+            if(!onFrameHeadband){
+                onFrameHeadband = true;
+                Util.changeFragment(mainIdFragment, new PopupListFragment()
+                        , getSupportFragmentManager());
+            }
+
             //настраиваем и включаем тулбар
             Util.setSupportV7appActionBar(getSupportActionBar(),TAG,"  B4/B5 v2.5");
         }

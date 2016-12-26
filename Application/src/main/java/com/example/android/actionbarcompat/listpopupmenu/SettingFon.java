@@ -136,16 +136,16 @@ public class SettingFon extends Activity implements View.OnClickListener{
                 Log.v(TAG,"imageButtonColor");
                  float value = 0;
 
-                //----НАСТРОЙКА И ЗАПУСК окна ввода ЧИСЛА -----------
-                intent = new Intent(this, SettingName.class);
-                intent.putExtra(SettingName.EXTRAS_VALUE, String.format(" %2.1f",value));
-                intent.putExtra(SettingName.EXTRAS_TYPE, SettingName.VALUE_TYPE_FLOAT);
-                intent.putExtra(Util.EXTRAS_LABEL, "Уровень");
-                intent.putExtra(SettingName.EXTRAS_HINT,"Введите число");
-
-                intent.putExtra(Util.EXTRAS_BAR_TITLE, "   BA2");
-
-                startActivityForResult(intent,ACTIVITY_SETTING_COLOR);
+//                //----НАСТРОЙКА И ЗАПУСК окна ввода ЧИСЛА -----------
+//                intent = new Intent(this, SettingName.class);
+//                intent.putExtra(SettingName.EXTRAS_VALUE, String.format(" %2.1f",value));
+//                intent.putExtra(SettingName.EXTRAS_TYPE, SettingName.VALUE_TYPE_FLOAT);
+//                intent.putExtra(Util.EXTRAS_LABEL, "Уровень");
+//                intent.putExtra(SettingName.EXTRAS_HINT,"Введите число");
+//
+//                intent.putExtra(Util.EXTRAS_BAR_TITLE, "   BA2");
+//
+//                startActivityForResult(intent,ACTIVITY_SETTING_COLOR);
                 //-----------------------------------
                 break;
             case R.id.imageButtonImeg:
