@@ -27,6 +27,7 @@ public class SettingName extends Activity {//} implements View.OnKeyListener{
     public  final static int VALUE_TYPE_INT = 10;
     public  final static int VALUE_TYPE_FLOAT = 20;
     public  final static int VALUE_TYPE_STRING = 30;
+    public  final static int VALUE_TYPE_FLOAT_TEMPERATURE = 40;
 
     public  final static String EXTRAS_TYPE = "EXTRAS_TYPE";
 
@@ -45,11 +46,12 @@ public class SettingName extends Activity {//} implements View.OnKeyListener{
     public int offset = 0;//смещение 0- для  SeekBar (у бара минимум 0, - нет!!)
     private SeekBar sb;
     private TextView tv;
+    private int type;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.setting_name);
-        String extras; int type;Float fl;
+        String extras; Float fl;
         final Intent intent = getIntent();
 
         //Метка поля, указываетчто вводим
@@ -88,8 +90,8 @@ public class SettingName extends Activity {//} implements View.OnKeyListener{
                         | InputType.TYPE_NUMBER_FLAG_SIGNED);
                 sb.setVisibility(View.VISIBLE);
                 fl = Util.parseFloat(intent.getStringExtra(EXTRAS_VALUE));
-                max = intent.getFloatExtra(EXTRAS_FLOAT_MAX,70f);
-                min = intent.getFloatExtra(EXTRAS_FLOAT_MIN,-20f);
+                max = Util.parseFloat(intent.getStringExtra(EXTRAS_FLOAT_MAX));
+                min = Util.parseFloat(intent.getStringExtra(EXTRAS_FLOAT_MIN));
                 setSettingSeekBar(fl);
                 /// всегда скрыват клавиатуру при вводе числа (есть сикБАР)!!
                 getWindow().setSoftInputMode(
@@ -109,24 +111,34 @@ public class SettingName extends Activity {//} implements View.OnKeyListener{
         tv.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View view, int i, KeyEvent keyEvent) {
+
                 if(i == KeyEvent.KEYCODE_ENTER){//выходим с результатом
                     onFinish(view);
+                }else{
+                    //при изменении числа- меняем Положение движка
+                    if(view instanceof TextView){
+                       Float fl = Util.parseFloat(((TextView)view).getText().toString());
+                        setSeekBar(fl);
+                 //       Log.i(TAG,"fl= " + fl);
+                    }
                 }
                 return false;
             }
         });//
         sb.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            private boolean start = false;
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                updateTextString(getValueString(progress));
+                if(start)updateTextString(getValueString(progress));
             }
             @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {}
+            public void onStartTrackingTouch(SeekBar seekBar) {start = true;}
             @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {}
+            public void onStopTrackingTouch(SeekBar seekBar) {start = false;}
         });//
         Util.setActionBar(getActionBar(),TAG, intent.getStringExtra(Util.EXTRAS_BAR_TITLE));
         //getParent()
+        Log.w(TAG, "min= " + min+"   max= " + max + "  offset"+offset + "   sb.getMax()= "+ sb.getMax());
     }
 
     private void onFinish(View view){
@@ -144,14 +156,17 @@ public class SettingName extends Activity {//} implements View.OnKeyListener{
         setResult(RESULT_CANCELED,intent);
         finish();
     }
-    private void setSettingSeekBar(Float fl){
-        int set = (int)((Math.abs(max) + Math.abs(min)) / accuracy);
-        offset = (int)(Math.abs(min) / accuracy);
-        sb.setMax(set);
+    private void setSeekBar(Float fl){
         if(fl != null){
             //с учетом смещения
             sb.setProgress((int)(fl*10) + offset);
         }
+    }
+    private void setSettingSeekBar(Float fl){
+        int set = (int)((Math.abs(max) + Math.abs(min)) / accuracy);
+        offset = (int)(Math.abs(min) / accuracy);
+        sb.setMax(set);
+        setSeekBar(fl);
     }
     private String getValueString(int progress){
         int i = progress - offset;

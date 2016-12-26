@@ -114,6 +114,12 @@ public class SettingMinMax extends Activity implements View.OnClickListener{
                      str = data.getStringExtra(SettingName.EXTRAS_VALUE);
                      value = Util.parseFloat(str);
                      if(value == null) break;
+                     ////с учетом ЦЕЛСИЯ или фаренгейта
+                     //если в Фаренгейт то необходимо перевести в Целсий,
+                     // поскольку у нас ЦЕльсий по умолчанию
+                     if(sensor.onFahrenheit){
+                         value = Util.getCelsius(value);//переводим в Целсий
+                     }
                      if (value > max) value = max;
                      if (value < min) value = min;
                      //
@@ -171,12 +177,14 @@ public class SettingMinMax extends Activity implements View.OnClickListener{
                 else value = sensor.minTemperature;
                 //----НАСТРОЙКА И ЗАПУСК окна ввода ЧИСЛА -----------
                 intent = new Intent(this, SettingName.class);
-                intent.putExtra(SettingName.EXTRAS_VALUE, String.format(" %2.1f",value));
+                //с учетом ЦЕЛСИЯ или фаренгейта
+                intent.putExtra(SettingName.EXTRAS_VALUE, sensor.getStringValue( value, false));
                 intent.putExtra(SettingName.EXTRAS_TYPE, SettingName.VALUE_TYPE_FLOAT);
                 intent.putExtra(Util.EXTRAS_LABEL, "Уровень");
                 intent.putExtra(SettingName.EXTRAS_HINT,"Введите число");
-                intent.putExtra(SettingName.EXTRAS_FLOAT_MAX,max);
-                intent.putExtra(SettingName.EXTRAS_FLOAT_MIN,min);
+                //с учетом ЦЕЛСИЯ или фаренгейта
+                intent.putExtra(SettingName.EXTRAS_FLOAT_MAX,sensor.getStringValue( max, false));
+                intent.putExtra(SettingName.EXTRAS_FLOAT_MIN,sensor.getStringValue( min, false));
                 intent.putExtra(Util.EXTRAS_BAR_TITLE, "   BC3");
 
                 startActivityForResult(intent,ACTIVITY_SETTING_MIN_MAX_VALUE);

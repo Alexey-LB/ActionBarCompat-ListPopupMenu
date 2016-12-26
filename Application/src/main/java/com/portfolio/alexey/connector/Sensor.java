@@ -256,17 +256,25 @@ public class Sensor {
     public static  String getStringValue( float inp, boolean fahrenheit, boolean addType){
         final String str; float f= inp;
         if(Float.isNaN(inp)) return "--";
-        if(fahrenheit) f = (f *9/5) + 32;// перевод в ФАРЕНГЕЙТА
+        if(fahrenheit) {
+            //f = (f *9/5) + 32;// перевод в ФАРЕНГЕЙТА
+            f = Util.getFahrenheit(f);
+        }
         if(addType){
             if(fahrenheit) str = "%2.1f °F";
             else str = "%2.1f °C";
         }else str = "%2.1f";
         return String.format(Locale.getDefault(),str,f);
     }
+
+
     public String getStringValue( float inp, boolean addType){
         final String str; float f= inp;
         if(Float.isNaN(inp))  return "-";
-        if(onFahrenheit) f = (f *9/5) + 32;// перевод в ФАРЕНГЕЙТА
+        if(onFahrenheit) {
+            //f = (f *9/5) + 32;// перевод в ФАРЕНГЕЙТА
+            f = Util.getFahrenheit(f);
+        }
         if(addType){
             if(onFahrenheit) str = "%2.1f °F";
             else str = "%2.1f °C";

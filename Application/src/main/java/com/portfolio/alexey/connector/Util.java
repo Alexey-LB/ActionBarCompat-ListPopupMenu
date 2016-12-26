@@ -56,6 +56,12 @@ public class Util {
 //    public  final static String EXTRAS_INT_1 = "EXTRAS_INT_1";
 //    public  final static String EXTRAS_INT_2 = "EXTRAS_INT_2";
 //    public  final static String EXTRAS_INT_3 = "EXTRAS_INT_3";
+    static public float getFahrenheit(float celsius){
+        return (celsius *9/5) + 32;// перевод в ФАРЕНГЕЙТА
+    }
+    static public float getCelsius(float fahrenheit){
+        return (fahrenheit - 32) *5/9;// перевод в Целсия
+    }
 
     //замена одного фрагмента другим, используем библиотеку потдержки старых устройств (4.4)
     // http://developer.alexanderklimov.ru/android/theory/fragments.php
