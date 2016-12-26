@@ -119,7 +119,7 @@ public class SettingFon extends Activity implements View.OnClickListener{
     }
     @Override
     public void onClick(View view) {
-        Log.w(TAG,"onClick= "+view);
+        Log.w(TAG,"onClick= "+view);//
         Intent intent;
         if(sensor == null)  return;
         //
