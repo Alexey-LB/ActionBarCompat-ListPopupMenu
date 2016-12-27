@@ -5,14 +5,12 @@
     android:id="@+id/LayoutMain"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorBackground"
+    android:background="@android:color/darker_gray"
+
     android:layout_weight="10"
     >
     <!--ЗАСТАВКА РЕЛСИБА -->
     <FrameLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
 
         android:id="@+id/frameHeadband"
         android:orientation="horizontal"
@@ -20,18 +18,59 @@
         android:layout_height="match_parent"
         android:theme="@android:style/TextAppearance.Inverse"
         android:elevation="1dp"
+
+        android:background="@drawable/home"
         android:layout_gravity="fill_vertical|fill_horizontal">
+        <!--android:background="@drawable/rays"-->
 
-        <android.support.constraint.ConstraintLayout
+        <LinearLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:gravity="bottom|center_vertical"
+            android:layout_gravity="bottom|center_vertical">
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/home"
-                android:id="@+id/imageView2" />
-        </android.support.constraint.ConstraintLayout>
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    />
+
+                <!--<RelativeLayout-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="match_parent"-->
+                    <!--android:layout_weight="1">-->
+
+                    <!--<ImageView-->
+                        <!--android:layout_width="280dp"-->
+                        <!--android:layout_height="280dp"-->
+                        <!--app:srcCompat="@drawable/family4"-->
+                        <!--android:id="@+id/imageView4"-->
+                        <!--android:layout_weight="0"-->
+                        <!--android:layout_gravity="bottom|center_horizontal"-->
+                        <!--android:layout_centerVertical="true"-->
+                        <!--android:layout_alignParentEnd="true"-->
+                        <!--android:layout_marginEnd="38dp" />-->
+                    <!--&lt;!&ndash;app:srcCompat="@drawable/button_houme"&ndash;&gt;-->
+                    <!--<ImageButton-->
+                        <!--android:background="@drawable/button_houme"-->
+                        <!--android:id="@+id/imageButton"-->
+                        <!--android:layout_height="80dp"-->
+                        <!--android:layout_width="80dp"-->
+                        <!--android:layout_alignParentBottom="true"-->
+                        <!--android:layout_alignStart="@+id/imageView4"-->
+                        <!--android:layout_marginStart="97dp"-->
+                        <!--android:layout_marginBottom="76dp" />-->
+                <!--</RelativeLayout>-->
+
+            </LinearLayout>
+        </LinearLayout>
+
 
     </FrameLayout>
     <!--app:srcCompat="@drawable/home"-->

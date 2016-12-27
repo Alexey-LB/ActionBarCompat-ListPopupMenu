@@ -111,7 +111,7 @@ private boolean onStartApp = true;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //setContentView(R.layout.sample_main);
-        setContentView(R.layout.activity_main_work);
+        setContentView(R.layout.activity_main_work);//
         //--------ПРИМЕМ ЕСЛИ сервис не запущен и нет доступа к сенсорам, выходим!--
         RunDataHub app = ((RunDataHub) getApplicationContext());
         if((app == null) || (app.mBluetoothLeServiceM == null)
