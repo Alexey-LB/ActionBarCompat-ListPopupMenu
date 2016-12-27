@@ -192,8 +192,8 @@ public class DeviceScanActivity extends ListActivity {//AppCompatActivity {//Act
 //        intent.putExtra(DeviceControlActivityNew.EXTRAS_DEVICE_ADDRESS, device.getAddress());
         Intent intent = new Intent();
 
-        intent.putExtra(MainActivity.EXTRAS_DEVICE_NAME, device.getName());
-        intent.putExtra(MainActivity.EXTRAS_DEVICE_ADDRESS, device.getAddress());
+        intent.putExtra(MainActivityWork.EXTRAS_DEVICE_NAME, device.getName());
+        intent.putExtra(MainActivityWork.EXTRAS_DEVICE_ADDRESS, device.getAddress());
         setResult(RESULT_OK, intent);
 
         if (mScanning) {

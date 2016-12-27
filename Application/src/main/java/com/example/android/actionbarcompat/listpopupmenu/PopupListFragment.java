@@ -645,9 +645,9 @@ return null;//fbButton_;
                             //--------------
                             //-------Setting --
                             final Intent intent = new Intent(getActivity(), MainSettingSetting.class);
-                            intent.putExtra(MainActivity.EXTRAS_DEVICE_ITEM, i);
+                            intent.putExtra(MainActivityWork.EXTRAS_DEVICE_ITEM, i);
 
-                            startActivityForResult(intent,MainActivity.MAINACTIVITY);//
+                            startActivityForResult(intent,MainActivityWork.MAINACTIVITY);//
                             //----------------
                         }
                         //сбрасывем ПОЗИЦИЮ, чтоб потом уже ВЫБИРАТЬ ПУНКТ МЕНЮ!!!

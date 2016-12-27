@@ -29,7 +29,7 @@ public class SettingMaker extends Activity implements View.OnClickListener{
         setContentView(R.layout.activity_setting_maker);
         //--------------------------
         final Intent intent = getIntent();
-        mItem = intent.getIntExtra(MainActivity.EXTRAS_DEVICE_ITEM,0);
+        mItem = intent.getIntExtra(MainActivityWork.EXTRAS_DEVICE_ITEM,0);
         RunDataHub app = ((RunDataHub) getApplicationContext());
         if((app.mBluetoothLeServiceM != null)
                 && (app.mBluetoothLeServiceM.mbleDot != null)
@@ -89,9 +89,9 @@ public class SettingMaker extends Activity implements View.OnClickListener{
     private  String mAdress;
     @Override//сюда прилетают ответы при возвращении из других ОКОН активити
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-         if((resultCode == RESULT_OK) && (requestCode == MainActivity.ACTIVITY_SETTING_MAKER)){
-            mName = data.getStringExtra(MainActivity.EXTRAS_DEVICE_NAME);
-            mAdress = data.getStringExtra(MainActivity.EXTRAS_DEVICE_ADDRESS);
+         if((resultCode == RESULT_OK) && (requestCode == MainActivityWork.ACTIVITY_SETTING_MAKER)){
+            mName = data.getStringExtra(MainActivityWork.EXTRAS_DEVICE_NAME);
+            mAdress = data.getStringExtra(MainActivityWork.EXTRAS_DEVICE_ADDRESS);
 //            Util.setTextToTextView(mName,R.id.textViewFindName, this);
 //            Util.setTextToTextView(mAdress,R.id.textViewFindAdress, this);
             if(sensor != null){
@@ -128,8 +128,8 @@ public class SettingMaker extends Activity implements View.OnClickListener{
     public boolean onOptionsItemSelected(MenuItem item) {
         Log.w(TAG,"onOptionsItemSelected= "+ item);
         Intent intent = new Intent();
-        intent.putExtra(MainActivity.EXTRAS_DEVICE_NAME, mName);
-        intent.putExtra(MainActivity.EXTRAS_DEVICE_ADDRESS, mAdress);
+        intent.putExtra(MainActivityWork.EXTRAS_DEVICE_NAME, mName);
+        intent.putExtra(MainActivityWork.EXTRAS_DEVICE_ADDRESS, mAdress);
         setResult(RESULT_OK, intent);
         finish();
         return true;
@@ -152,8 +152,8 @@ public class SettingMaker extends Activity implements View.OnClickListener{
 
                 intent = new Intent(this, DeviceScanActivity.class);
                 // фильтр поиска устройств
-                intent.putExtra(MainActivity.EXTRAS_DEVICE_NAME_FILTR, "");
-                startActivityForResult(intent, MainActivity.ACTIVITY_SETTING_MAKER);//на поиск к устройству
+                intent.putExtra(MainActivityWork.EXTRAS_DEVICE_NAME_FILTR, "");
+                startActivityForResult(intent, MainActivityWork.ACTIVITY_SETTING_MAKER);//на поиск к устройству
                 break;
             default:
         }

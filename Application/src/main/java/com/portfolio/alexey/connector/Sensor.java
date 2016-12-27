@@ -166,11 +166,11 @@ public class Sensor {
             Log.e(TAG,"max- " + onMaxNotification + " / " + onMaxNotificationReset);
             if(onMaxNotification && !onMaxNotificationReset && (maxMelody != null)) {
                 Log.e(TAG,"maxMelody");
-                Util.playerRingtone(0f, maxMelody, app.mainActivity,TAG);
+                Util.playerRingtone(0f, maxMelody, app.mainActivityWork,TAG);
             }
             if(onMaxNotification && onMaxVibration && !onMaxVibrationReset) {
                 Log.e(TAG,"maxVibrator");
-                Util.playerVibrator(300, app.mainActivity);
+                Util.playerVibrator(300, app.mainActivityWork);
             }
         }else{
             //сбрасываем флаги --
@@ -181,11 +181,11 @@ public class Sensor {
         if(intermediateValue <= minTemperature){
             if(onMinNotification && !onMinNotificationReset && (minMelody != null)){
                 Log.e(TAG,"minMelody");
-                Util.playerRingtone(0f, minMelody, app.mainActivity,TAG);
+                Util.playerRingtone(0f, minMelody, app.mainActivityWork,TAG);
             }
             if(onMinNotification && onMinVibration && !onMinVibrationReset) {
                 Log.e(TAG,"minVibrator");
-                Util.playerVibrator(300, app.mainActivity);
+                Util.playerVibrator(300, app.mainActivityWork);
             }
         } else{
             onMinNotificationReset = false;

@@ -49,7 +49,7 @@ public class MainSettingSetting  extends Activity implements View.OnClickListene
         setContentView(R.layout.activity_main_setting);
         //--------------------------
         final Intent intent = getIntent();
-        mItem = intent.getIntExtra(MainActivity.EXTRAS_DEVICE_ITEM,0);
+        mItem = intent.getIntExtra(MainActivityWork.EXTRAS_DEVICE_ITEM,0);
         sensor = Util.getSensor(mItem,this);
         if(sensor == null) finish();
         //УСТАНАВИЛ флаг изменения, чтоб потом записать в ФАЙЛ на флеш,
@@ -232,7 +232,7 @@ public class MainSettingSetting  extends Activity implements View.OnClickListene
             case R.id.imageButtonTermometer:
                 Log.v(TAG,"imageButtonTermometer");
                 intent = new Intent(this, SettingMaker.class);
-                intent.putExtra(MainActivity.EXTRAS_DEVICE_ITEM , mItem);
+                intent.putExtra(MainActivityWork.EXTRAS_DEVICE_ITEM , mItem);
                 startActivityForResult(intent,ACTIVITY_SETTING_DEVICE);
                 break;
             //case R.id.imageButtonMeasurementMode:

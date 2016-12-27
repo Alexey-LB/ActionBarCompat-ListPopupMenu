@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/LayoutMain"
+    android:id="@+id/LayoutMainWork"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorBackground"
@@ -14,7 +14,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:background="@color/colorBackground"
-        android:id="@+id/home">
+        android:id="@+id/homeWork">
         <!--xmlns:android="http://schemas.android.com/apk/res/android"-->
     <!--<fragment-->
 
@@ -25,7 +25,7 @@
         <!--android:name="com.example.android.actionbarcompat.listpopupmenu.PopupListFragment"-->
         <!--/>-->
         <FrameLayout
-            android:id="@+id/mainFragment"
+            android:id="@+id/mainFragmentWork"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="10"
@@ -69,24 +69,6 @@
         </LinearLayout>
 
     </LinearLayout>
-    <!--ЗАСТАВКА РЕЛСИБА -->
-    <FrameLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-
-        android:id="@+id/frameHeadband"
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:theme="@android:style/TextAppearance.Inverse"
-        android:elevation="1dp"
-        android:visibility="gone"
-        >
-        <!--Исходно делаем его не видимым, править удобно в отдельном файле-->
-        <include layout="@layout/frame_headband" />
-    </FrameLayout>
-
 </FrameLayout>
     <!--ЗАСТАВКА РЕЛСИБА -->
 <!--<FrameLayout-->

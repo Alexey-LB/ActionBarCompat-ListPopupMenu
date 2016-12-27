@@ -364,16 +364,15 @@ public class BluetoothLeServiceNew extends Service {
     @Override
     public void onCreate() {
         super.onCreate();//---------
+        initialize();
         Log.e(TAG,"Service------START -- onCreate()--------------");
-
-
     }
     // это будет именем файла настроек
     public static final String APP_PREFERENCES = "mySettings";
     private SharedPreferences mSettings;
     public void settingGetFileGoToConnect(){
         // SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        mSettings = getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
+        if(mSettings == null)  mSettings = getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
         // Читаем данные
         if(mSettings != null){
             int listSizeBluetooth = mSettings.getInt("listSizeBluetooth", 0);
@@ -410,6 +409,7 @@ public class BluetoothLeServiceNew extends Service {
     }
     public void settingPutFile(){
         // Запоминаем данные
+        if(mSettings == null) mSettings = getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
         if(mSettings != null){
             Sensor sensor;int i;SharedPreferences settingsDevace;String defName;
             // TODO: 09.12.2016 ОБЯЗАТЕЛЬНО ввести контроль изменения!! и толко при наличие изменений Записывать данные

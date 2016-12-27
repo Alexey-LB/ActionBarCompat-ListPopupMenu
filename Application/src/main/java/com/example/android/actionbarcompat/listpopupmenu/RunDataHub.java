@@ -19,7 +19,7 @@ import com.portfolio.alexey.connector.BluetoothLeServiceNew;
 public class RunDataHub extends Application {
     public final   String TAG = getClass().getSimpleName();
     private static DataHubSingleton dataHub;
-    public MainActivity mainActivity;
+    public MainActivityWork mainActivityWork;
     //КОНТРОЛЬначальным, ПЕРВЫМ запуском, без повтора при переворачивании телефона
     public boolean getStartApp(){return dataHub.getStartApp();}
     public void resetStartApp(){dataHub.resetStartApp();}
@@ -44,7 +44,7 @@ public class RunDataHub extends Application {
         @Override
         public void onServiceConnected(ComponentName componentName, IBinder service) {
             mBluetoothLeServiceM = ((BluetoothLeServiceNew.LocalBinder) service).getService();
-            if(mainActivity != null)mainActivity.init();
+   //         if(mainActivityWork != null)mainActivityWork.init();
             Log.e(TAG, "---mBluetoothLeServiceM = getService() OK -----");
 //            if (!mBluetoothLeServiceM.initialize()) {
 //                Log.e(TAG, "Unable to initialize Bluetooth");

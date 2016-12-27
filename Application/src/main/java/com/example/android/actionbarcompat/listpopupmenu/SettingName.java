@@ -147,7 +147,7 @@ public class SettingName extends Activity {//} implements View.OnKeyListener{
             String str = ((EditText)view).getText().toString();
             if((str != null) && (str.length() >= 1)){
                 if(str.length() > 32) str = str.substring(0,31);
-                intent.putExtra(MainActivity.EXTRAS_DEVICE_NAME,str);
+                intent.putExtra(MainActivityWork.EXTRAS_DEVICE_NAME,str);
                 intent.putExtra(EXTRAS_VALUE,str);
                 setResult(RESULT_OK,intent);
                 finish();

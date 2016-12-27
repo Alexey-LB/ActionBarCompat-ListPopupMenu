@@ -23,8 +23,7 @@ public class FragmentHeadBand extends Fragment  {
                              Bundle savedInstanceState) {
         //Нужно помнить, что в методе inflate() последний параметр должен
         // иметь значение false в большинстве случаев.
-        View view = inflater.inflate(R.layout.frame_headband,
-                container, false);
+View view = inflater.inflate(R.layout.frame_headband, container, false);
         // ишем кнопку внутри вювера поскольку это фрагмент а не Активность
         //Button nextButton = (Button) view.findViewById(R.id.button_first);
         return view;

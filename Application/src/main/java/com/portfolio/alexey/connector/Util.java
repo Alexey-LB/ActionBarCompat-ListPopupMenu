@@ -139,6 +139,7 @@ public class Util {
     }
     //
     static public BluetoothLeServiceNew getAppBleService(Activity activity){
+        if(activity == null) return null;
         RunDataHub app = (RunDataHub) activity.getApplicationContext();
         if((app != null) && (app.mBluetoothLeServiceM != null)){
             return app.mBluetoothLeServiceM;
@@ -147,6 +148,7 @@ public class Util {
     }
     //// https://geektimes.ru/post/232885/-------------------------------------------
     static synchronized public void playerVibrator(int milsec, Activity activity){
+        if(activity == null) return;
         Vibrator  vibrator = (Vibrator) activity.getSystemService (VIBRATOR_SERVICE);
         try {
             vibrator.vibrate(milsec);
@@ -162,6 +164,7 @@ public class Util {
     //пример: playerRingtone(0f, Uri); ГРОМКОСТ звука СИТЕМНОЙ настройки проигрывателя и мелодия по Uri
     static synchronized  public void playerRingtone(Float setVolume, String uriRingtone , Activity activity,String  tag){
         Uri uri= null;
+        if(activity == null) return;
         if(uriRingtone != null){
             // TODO: 17.12.2016 обработать возможные ИСКЛЮЧЕНИЯ парсера
             uri = Uri.parse(uriRingtone);
@@ -180,6 +183,7 @@ public class Util {
         System.out.println("onRingtoneWork= " + onRingtoneWork);
     }
     static public void playerRingtone(Float setVolume, Uri uriRingtone , Activity activity,String  tag){
+        if(activity == null) return;
         if(onRingtoneWork) return;//если чет о играем, то пока НЕ закончим, новй играть НЕ будем
         onRingtoneWork = true;
        // if(mediaPlayer != null) return;
@@ -310,10 +314,12 @@ public class Util {
     }
     //ПОИСК глобадьный по АКТИВНОСТИ- берет ПЕРВЫЙ попашийся элемент!
     static public boolean setLevelToImageView(int level, int viewID, Activity activity) {
+        if(activity== null) return false;
         return setLevelToImageView(level,  activity.findViewById(viewID));
     }
     ////ПОИСК ЛОКАЛЬНЫЙ внутри  viewRoot- берет ПЕРВЫЙ попашийся элемент!
     static public boolean setLevelToImageView(int level, int viewID, View viewRoot) {
+        if(viewRoot== null) return false;
         return setLevelToImageView(level,  viewRoot.findViewById(viewID));
     }
     //--------------------------------------------------------------------------------
@@ -333,10 +339,12 @@ public class Util {
     }
     //ПОИСК глобадьный по АКТИВНОСТИ- берет ПЕРВЫЙ попашийся элемент!
     static public boolean setDrawableToImageView(int level, int viewID, Activity activity) {
+        if(activity == null) return false;
         return setDrawableToImageView(level,  activity.findViewById(viewID));
     }
     ////ПОИСК ЛОКАЛЬНЫЙ внутри  viewRoot- берет ПЕРВЫЙ попашийся элемент!
     static public boolean setDrawableToImageView(int level, int viewID, View viewRoot) {
+        if(viewRoot== null) return false;
         return setDrawableToImageView(level,  viewRoot.findViewById(viewID));
     }
     //-------------------------------------------------------------------------------
@@ -358,19 +366,23 @@ public class Util {
     }
 //ПОИСК глобадьный по АКТИВНОСТИ- берет ПЕРВЫЙ попашийся элемент!
     static public boolean setTextToTextView(String str, int viewID, Activity activity) {
+        if(activity == null) return false;
         return setTextToTextView(str,activity.findViewById(viewID),null);
     }
 
     static public boolean setTextToTextView(String str, int viewID, Activity activity, String def) {
+        if(activity == null) return false;
         return setTextToTextView(str, activity.findViewById(viewID),def);
     }
 
 ////ПОИСК ЛОКАЛЬНЫЙ внутри  viewRoot- берет ПЕРВЫЙ попашийся элемент!
     static public boolean setTextToTextView(String str, int viewID, View viewRoot) {
+        if(viewRoot== null) return false;
         return setTextToTextView(str,viewRoot.findViewById(viewID),null);
     }
 
     static public boolean setTextToTextView(String str, int viewID,  View viewRoot, String def) {
+        if(viewRoot== null) return false;
         return setTextToTextView(str, viewRoot.findViewById(viewID),def);
     }
 }
