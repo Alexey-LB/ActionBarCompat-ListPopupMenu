@@ -9,6 +9,9 @@
 
     <color name="color_blue_light">#007aff</color>
 
+    <color name="color_pink_light">#80ffc0c0</color>
+    <color name="color_blue_light_2">#80c0dcff</color>
+
     <color name="disable_forground_grey">#42221f1f</color>
     <color name="disable_thumb_grey">#1c000000</color>
     <color name="disable_thumb_green">#46dbbf</color>

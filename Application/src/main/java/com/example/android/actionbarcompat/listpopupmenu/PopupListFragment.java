@@ -644,11 +644,18 @@ return null;//fbButton_;
                             str = "CLICK_SHORT GoTo i= " + i;
                             //--------------
                             //-------Setting --
-                            final Intent intent = new Intent(getActivity(), MainSettingSetting.class);
+                            final Intent intent = new Intent(getActivity(), MainActivityThermometer.class);
                             intent.putExtra(MainActivityWork.EXTRAS_DEVICE_ITEM, i);
-
-                            startActivityForResult(intent,MainActivityWork.MAINACTIVITY);//
+                            intent.putExtra(Util.EXTRAS_BAR_TITLE, "  C1");
+                           // startActivityForResult(intent,MainActivityWork.MAINACTIVITY);//
+                            startActivity(intent);//
                             //----------------
+//      //-------Setting --
+//      final Intent intent = new Intent(getActivity(), MainSettingSetting.class);
+//      intent.putExtra(MainActivityWork.EXTRAS_DEVICE_ITEM, i);
+//      intent.putExtra(Util.EXTRAS_BAR_TITLE, "  B4/B5");
+//      startActivityForResult(intent,MainActivityWork.MAINACTIVITY);//
+//                            //----------------
                         }
                         //сбрасывем ПОЗИЦИЮ, чтоб потом уже ВЫБИРАТЬ ПУНКТ МЕНЮ!!!
                         /// если мы сдвигали то он НЕ 0!!

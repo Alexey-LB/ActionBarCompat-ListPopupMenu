@@ -52,6 +52,7 @@ public class MainSettingSetting  extends Activity implements View.OnClickListene
         mItem = intent.getIntExtra(MainActivityWork.EXTRAS_DEVICE_ITEM,0);
         sensor = Util.getSensor(mItem,this);
         if(sensor == null) finish();
+        Util.setActionBar(getActionBar(),TAG, intent.getStringExtra(Util.EXTRAS_BAR_TITLE));
         //УСТАНАВИЛ флаг изменения, чтоб потом записать в ФАЙЛ на флеш,
         // ЕСЛИ сюда зашли, значит надо сохранятся!!пока так
         sensor.changeConfig = true;//установки считаны из ФЛЕШИ- не изменены!!
@@ -68,8 +69,6 @@ public class MainSettingSetting  extends Activity implements View.OnClickListene
         //00000
         findViewById(R.id.textViewMeasurementMode).setOnClickListener(this);
         findViewById(R.id.imageButtonName).setOnClickListener(this);
-
-        Util.setActionBar(getActionBar(),TAG, "  B4/B5");
 
         updateTextString();
     }

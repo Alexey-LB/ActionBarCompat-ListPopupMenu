@@ -100,6 +100,7 @@ http://www.fandroid.info/nastrojka-paneli-dejstvij-actionbar/
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".MainActivityThermometer" android:theme="@style/AppThemeN"/>
 
         <activity android:name=".SettingMaker" android:theme="@style/AppThemeM"/>
         <activity android:name=".SettingMinMax" android:theme="@style/AppThemeM"/>
