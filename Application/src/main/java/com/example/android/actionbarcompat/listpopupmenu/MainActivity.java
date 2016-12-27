@@ -46,6 +46,8 @@ import com.portfolio.alexey.connector.Util;
 
 import java.util.ArrayList;
 
+import static java.lang.Thread.sleep;
+
 /**
  * This sample shows you how to use {@link android.support.v7.widget.PopupMenu PopupMenu} from
  * ActionBarCompat to create a list, with each item having a dropdown menu.
@@ -60,22 +62,15 @@ import java.util.ArrayList;
 //fragments-> https://github.com/codepath/android_guides/wiki/creating-and-using-fragments
 public class MainActivity extends AppCompatActivity {// ActionBarActivity {
     public  final static String TAG = "MAIN";
-    public  final static String EXTRAS_DEVICE_NAME = "EXTRAS_DEVICE_NAME";
-    public  final static String EXTRAS_DEVICE_NAME_FILTR = "EXTRAS_DEVICE_NAME_FILTR";
-    public  final static String EXTRAS_DEVICE_ADDRESS = "EXTRAS_DEVICE_ADDRESS";
-    public  final static String EXTRAS_DEVICE_ITEM = "EXTRAS_DEVICE_ITEM";
-
- //ОБЯЗАТЕЛЬНО !! ввести в практику передачу тила для порожденного окна!!
-    public  final static String EXTRA_BAR_TITLE = "EXTRA_BAR_TITLE";
-
-    public  final static int MAINACTIVITY = 11111;
-    public final  static int ACTIVITY_SETTING_SETTING = 22222;
-    public final  static int ACTIVITY_SETTING_MAKER = 444444;
-    public final  static int ACTIVITY_FIND_DEVICE = 555555;
-
-    private  final   int mainIdFragment = R.id.mainFragment;
-
-    public PopupListFragment popupListFragment;
+//    public  final static String EXTRAS_DEVICE_NAME = "EXTRAS_DEVICE_NAME";
+//    public  final static String EXTRAS_DEVICE_NAME_FILTR = "EXTRAS_DEVICE_NAME_FILTR";
+//    public  final static String EXTRAS_DEVICE_ADDRESS = "EXTRAS_DEVICE_ADDRESS";
+//    public  final static String EXTRAS_DEVICE_ITEM = "EXTRAS_DEVICE_ITEM";
+//
+// //ОБЯЗАТЕЛЬНО !! ввести в практику передачу тила для порожденного окна!!
+//    public  final static String EXTRA_BAR_TITLE = "EXTRA_BAR_TITLE";
+//
+    public  final static int MAIN_ACTIVITY = 0xFFFF1234;
 
     //----------
 //    Анимация Floating Action Button в Android
@@ -116,261 +111,80 @@ public class MainActivity extends AppCompatActivity {// ActionBarActivity {
     //взаимодействие АКТИВНОсТИ и фрагмента, вызов явно метода из фрагмента, по ссылке на него!
     //там же взаимодействи обратное, работа с АкшионБар и КНОПКА НАЗАД!
     // http://developer.alexanderklimov.ru/android/theory/fragments.php
-private boolean onStartApp = true;
+private View headband;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //setContentView(R.layout.sample_main);
-        setContentView(R.layout.sample_main);
+        setContentView(R.layout.activity_main);
         //-------------------------------------------------------
         RunDataHub app = ((RunDataHub) getApplicationContext());
         if(app == null)finish();
          //------------------------------
-        app.mainActivity = this;
-        ////на 3 секунды показываем заставку релсиба --------------
-        if(app.getStartApp() && onStartApp){// "ЭТО первый запуск
-            onStartApp = false;//чтоб не заходил сюда лишний раз
-            Handler handler = new Handler();
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    //сбрасываем первый пуск
-                    ((RunDataHub) getApplicationContext()).resetStartApp();
-                    updateView();
-                }
-            }, 3000);//на 3 секунды показываем заставку релсиба --------------
-        }
-        updateView();
-        //-------------КНОПКИ УСТАНОВКИ ЕДЕНИЦ ИЗМЕРЕНИЯ --
-        findViewById(R.id.textViewC).setOnClickListener(new View.OnClickListener() {
+        // показываем заставку релсиба --------------
+        //первый запуск показываем заставку,убираем системный бар
+        headband = findViewById(R.id.frameHeadband);
+        headband.getRootView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
+        getSupportActionBar().hide();
+        headband.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //установка измерения в ЦЕЛЬСИЯХ
-                setOnFahrenheit(false);
-            }
-        });
-        findViewById(R.id.textViewF).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //установка измерения в ФАРЕНГЕЙТАХ
-                setOnFahrenheit(true);
+                //переход в следующее окно
+                go();
             }
         });
         Log.e(TAG, "----onCreate END-----");
     }
-    private boolean onFrameHeadband = false;
-    private void updateView(){
-        // установка ИЗОБРАЖЕНИЕ на всь экран, УБИРАЕМ СВЕРХУ И СНИЗУ панели системные
-        findViewById(mainIdFragment).getRootView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
-        //
-        RunDataHub app = ((RunDataHub) getApplicationContext());
-        //а первый запуск показываем заставку несколько секунд, там и потом убираем системный бар
-        // в случа нуля и если мы не первый раз уже просыпаемся то тогда надо убират
-        // установка ИЗОБРАЖЕНИЕ на всь экран, УБИРАЕМ СВЕРХУ И СНИЗУ панели системные
-        if((app == null) || (app.getStartApp() == true)){
-            //прячем наш бар на время
-            getSupportActionBar().hide();
-            // frameHeadband - ЭТОТ слой сверху, ПО ЭТОМУ он загрывает все что снизу слои
-            // переключение едениц измерения- не гасим, он закрыт слоем ЗАСТАВКИ релсиба
-            findViewById(R.id.frameHeadband).setVisibility(View.VISIBLE);
-            //ВЫБОР едениц изображения-БАР внизу, только сворачиваю изображение
-//            findViewById(R.id.LinearLayoutFahrenheit).setVisibility(View.GONE);
-        } else {
-            findViewById(R.id.frameHeadband).setVisibility(View.GONE);
-            //запускаем подключение если еше не ставили его
-            if(!onFrameHeadband){
-                onFrameHeadband = true;
-                Util.changeFragment(mainIdFragment, new PopupListFragment()
-                        , getSupportFragmentManager());
+    //переход в следующее окно
+    private void go(){
+        RunDataHub app;int i=0;
+        //максимум ВСЕХ настроек и запуска СЕРВИСА, чтение флеши телефона,ждем 6 секунд и финиш
+        while (true){
+            app = ((RunDataHub) getApplicationContext());
+            if((app != null) && (app.mBluetoothLeServiceM != null)
+                && (app.mBluetoothLeServiceM.mbleDot != null))break;
+            //ожидание готовности
+            try {
+                sleep(300);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
-
-            //настраиваем и включаем тулбар
-            Util.setSupportV7appActionBar(getSupportActionBar(),TAG,"  B4/B5 v2.5.2");
-        }
-        //устанавливаем еденицы измерения
-        if((app != null) && (app.mBluetoothLeServiceM != null)
-        && (app.mBluetoothLeServiceM.mbleDot != null)
-                && (app.mBluetoothLeServiceM.mbleDot.size() > 0)){
-            //для всех еденицы устанавливаются одинакова, по этому берем первый попавшийся
-            setOnFahrenheit(app.mBluetoothLeServiceM.mbleDot.get(0).onFahrenheit);
-        } else{//по умолчанию ставим целсия
-            setOnFahrenheit(false);
-        }
-    }
-    private void setOnFahrenheit(boolean fahrenheit){
-        TextView viewC = (TextView)findViewById(R.id.textViewC);
-        TextView viewF = (TextView)findViewById(R.id.textViewF);
-        if(fahrenheit){
-            viewC.setBackgroundResource(R.drawable.rectangle_line_corners_left_5dp);
-            viewF.setBackgroundResource(R.drawable.rectangle_corners_right_5dp);
-            viewC.setTextColor(getResources().getColor(R.color.color_blue_light));
-            //поменяли цвета текста на кнопках между собой
-            viewF.setTextColor(getResources().getColor(R.color.colorBackground));
-           //viewF.setTextColor(ContextCompat.getColor(context, R.color.color_blue_light));
-        }else{
-            viewC.setBackgroundResource(R.drawable.rectangle_corners_left_5dp);
-            viewF.setBackgroundResource(R.drawable.rectangle_line_corners_right_5dp);
-            //поменяли цвета текста на кнопках между собой
-            viewC.setTextColor(getResources().getColor(R.color.colorBackground));
-            viewF.setTextColor(getResources().getColor(R.color.color_blue_light));
-        }
-        //
-        RunDataHub app = ((RunDataHub) getApplicationContext());
-        //если масива сенсоров нет, то и устанавливать значений некому!
-        if((app == null) || (app.mBluetoothLeServiceM == null)
-            || (app.mBluetoothLeServiceM.mbleDot == null)
-            || (app.mBluetoothLeServiceM.mbleDot.size() == 0)) return;
-        //устанавливаем еденицы измерения ДЛЯ ВСЕХ одинаково!
-        ArrayList <Sensor> als = app.mBluetoothLeServiceM.mbleDot;
-        for(Sensor sensor: als){
-            if(sensor.onFahrenheit != fahrenheit){
-                sensor.onFahrenheit = fahrenheit ;
-                sensor.changeConfig = true;//установили изменеие сонфигурации ДЛЯ сохранения во ФЛЕШИ телефона
+            // больше 6 секуд- выходим из приложения- проблеммы у него
+            if(i++> 20){
+                Log.e(TAG,"ERROR app || service || getFile from flash");
+                finish();
             }
+            Log.w(TAG,"wait tame(ms)= " +i*300);
         }
-    }
-    //инициализация фрейма
-    public void init(){
-        Log.e(TAG, "----init() ----------");
-        RunDataHub app = ((RunDataHub) getApplicationContext());
-        if((app != null) && (app.mBluetoothLeServiceM != null)){
-            if(app.mBluetoothLeServiceM.initialize()) {
-                Log.e(TAG, "----init() ---------- OK OK");
-
-            } else{
-                Log.e(TAG, "----init() ---------- ERROR!");
-            }
-            if(app.mBluetoothLeServiceM.mbleDot.size() > 0){
-                //ПРИ первом пуске установили еденицы измерения
-                setOnFahrenheit(app.mBluetoothLeServiceM.mbleDot.get(0).onFahrenheit);
-            }
-        }
- //!!       popupListFragment.initList();
+        Intent intent = new Intent(this, MainActivityWork.class);
+        intent.putExtra(Util.EXTRAS_BAR_TITLE, "     B1/B3 v2.5.2");
+        // все изменения будет писать сразу в сенсор
+        // по умолчанию устанавливаем минимум, все остальное делется НАПРЯМУЮ с данными
+     //   startActivityForResult(intent,MAIN_ACTIVITY);
+        startActivity(intent);
     }
     @Override
     protected void onResume() {
         super.onResume();
         //при возвращениие из других окон, может быть системный бар, по этому еще раз его отменяем
-        findViewById(R.id.mainFragment).getRootView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
+        headband.getRootView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
+        //а первый запуск показываем заставку,убираем системный бар
+        getSupportActionBar().hide();
         Log.e(TAG, "----onResume() ----------");
-        RunDataHub app = ((RunDataHub) getApplicationContext());
-        //а первый запуск показываем заставку несколько секунд, там и потом убираем системный бар
-        // в случа нуля и если мы не первый раз уже просыпаемся то тогда надо убират
-        // установка ИЗОБРАЖЕНИЕ на всь экран, УБИРАЕМ СВЕРХУ И СНИЗУ панели системные
-        if((app == null) || (app.getStartApp() == true)){
-            //прячем наш бар на время
-            getSupportActionBar().hide();
-          } else{
-            getSupportActionBar().show();
-        }
     }
 
-//Develop API Guides User Interface Меню
-    // https://developer.android.com/guide/topics/ui/menus.html#context-menu
-final int iconActionEdit = 12345678;
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu){
- //       MenuInflater menuInflater= getMenuInflater();
- //       menuInflater.inflate(R.menu.poplist_menu,menu);
-        // inflater.inflate(R.menu.myfragment_options, menu);
-       //пока отключил редактирование НЕ к чему, ДА программно ПОРОЖДАЯ- встает в нужном месте
-//        menu.add(Menu.NONE,iconActionEdit,Menu.NONE,"Edit")
-//                .setIcon(R.drawable.ic_clear_black_24dp)
-//                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-        return super.onCreateOptionsMenu(menu);
-    }
     @Override//сюда прилетают ответы при возвращении из других ОКОН активити
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        // User chose not to enable Bluetooth.
-        Log.v(TAG,"onActivityResult requestCode= " + requestCode + "   resultCode= " +resultCode);
-//        if (requestCode == MAINACTIVITY && resultCode == Activity.RESULT_CANCELED) {
-//            finish();
-//            return;
-//        }
-        if (requestCode == MAINACTIVITY && resultCode == Activity.RESULT_OK) {
-            Log.w(TAG,"NAME= " + data.getStringExtra(EXTRAS_DEVICE_NAME)
-            +"   EXTRAS_DEVICE_ADDRESS= " + data.getStringExtra(EXTRAS_DEVICE_ADDRESS));
-            //запуск на коннект!!
-            RunDataHub app = ((RunDataHub) getApplicationContext());
-            if(app.mBluetoothLeServiceM != null){
-                app.mBluetoothLeServiceM.connect(data.getStringExtra(EXTRAS_DEVICE_ADDRESS),true);
-            }
-//!!            if(mBluetoothLeServiceM != null){
-//!!                mBluetoothLeServiceM.connect(data.getStringExtra(EXTRAS_DEVICE_ADDRESS),true);
-//!!            }
-            return;
-        }
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    public void onScanDevice(int i){
-        final Intent intent = new Intent(this, DeviceScanActivity.class);
-          intent.putExtra(MainActivity.EXTRAS_DEVICE_ITEM, i);
-        //  intent.putExtra(MainActivity.EXTRAS_DEVICE_ADDRESS, device.getAddress());
-        Log.i(TAG,"startActivity SCAN");
-        startActivityForResult(intent,MAINACTIVITY);//на подклшючение к устройству
-    }
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        Log.v(TAG,"Menu-edit_a  item= " +item );
-
-        // Handle item selection
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                Log.i(TAG,"android.R.id.home--");
-    // Добавить вызов ЗАСТАВКИ!!релсиба
-
-           return false;//установили ФАЛШ, чтоб вызов попал в ФРАГМЕНТ, в которм будет обработан!!
-            case iconActionEdit:
-                Log.i(TAG,"edit-");
-//        //вызов активного окна для сканирования
-//             //   onScanDevice(1);
-//                //-------Setting --
-//                final Intent intent = new Intent(this, MainSettingSetting.class);
-//                intent.putExtra(MainActivity.EXTRAS_DEVICE_ITEM, 0);
-//
-//                startActivityForResult(intent,MAINACTIVITY);//
-
-                return true;
-            case R.id.edit_a://.new_game_:
-                View v =((View)findViewById(R.id.textViewName));
-                if(v != null){
-                    v.setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
-                }
-//                FragmentManager fm= getSupportFragmentManager();
-//
-//                Fragment f =  fm.findFragmentById(R.layout.list_item);
-//
-//                LayoutInflater lf = getLayoutInflater();
-//                Resources r =getResources();
-
-                System.out.println("Menu-edit_a  v=" + v);
-                ;
-
-                return true;
-            case R.id.add_a://
-                //взаимодействие АКТИВНОсТИ и фрагмента, вызов явно метода из фрагмента, по ссылке на него!
-                //там же взаимодействи обратное, работа с АкшионБар и КНОПКА НАЗАД!
-                // http://developer.alexanderklimov.ru/android/theory/fragments.php
-                popupListFragment.addNoInitObject();
-
-                android.app.ActionBar  ab = getActionBar();
-                System.out.println("Menu-add_a  ab=" + getActionBar());
-                ;return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-
-    }
     @Override
     protected void onDestroy() {
         super.onDestroy();
         if (isFinishing()) {
             Log.e(TAG,"onDestroy() ==============isFinishing() =========== isFinishing() ======");
- //!!           mBluetoothLeServiceM = null;
         } else {
             Log.e(TAG,"onDestroy() -----------WORK ------------- WORK -------------");
-           ; //It's an orientation change.
         }
     }
 }
