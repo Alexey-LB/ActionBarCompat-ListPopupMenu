@@ -3,7 +3,7 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="iten_setting_wight">48dp</dimen>
-    <dimen name="iten_img_size">40dp</dimen>
+    <dimen name="iten_img_size">42dp</dimen>
     <dimen name="ic_img_size">28dp</dimen>
     <dimen name="ic_img_gap">4dp</dimen>
 

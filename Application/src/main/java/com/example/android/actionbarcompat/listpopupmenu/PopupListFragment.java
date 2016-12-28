@@ -646,7 +646,11 @@ return null;//fbButton_;
                             //-------Setting --
                             final Intent intent = new Intent(getActivity(), MainActivityThermometer.class);
                             intent.putExtra(MainActivityWork.EXTRAS_DEVICE_ITEM, i);
-                            intent.putExtra(Util.EXTRAS_BAR_TITLE, "  C1");
+                            String title = "  C1   ";
+                            if(obj instanceof  Sensor){
+                                title += ((Sensor) obj).deviceLabel;
+                            }
+                            intent.putExtra(Util.EXTRAS_BAR_TITLE, title);
                            // startActivityForResult(intent,MainActivityWork.MAINACTIVITY);//
                             startActivity(intent);//
                             //----------------
