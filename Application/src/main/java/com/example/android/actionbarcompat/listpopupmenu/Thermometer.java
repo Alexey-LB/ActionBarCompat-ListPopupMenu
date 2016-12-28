@@ -100,7 +100,7 @@ public class Thermometer extends Drawable {
         Paint paint =  new Paint(Paint.ANTI_ALIAS_FLAG);
         Path path = new Path();
         paint.setAlpha(mPaintEtalon.getAlpha());
-        paint.setColorFilter(mPaintEtalon.getColorFilter());
+        paint.setColorFilter(mPaintEtalon.getColorFilter());//k
         //  path.reset();
         paint.setColor(0xFFA00000);
         int startX = (width - columnWith) /2;
