@@ -123,8 +123,7 @@
 
                 android:ellipsize="end"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textSize="18sp"
-                android:textStyle="normal|bold"/>
+                android:textSize="18sp" />
 
             <!--e49948e Alexey_B on 18.12.2016 at 17:13-->
             <!--Перестал доходить короткий клик мышкой и-->
@@ -146,7 +145,7 @@
                 android:maxLines="1"
                 android:textColor="@color/common_google_signin_btn_text_dark_focused"
                 android:gravity="center_vertical|center_horizontal"
-                android:textSize="24sp"
+                android:textSize="18sp"
                 android:textStyle="normal|bold"/>
 
 
@@ -160,7 +159,6 @@
                 android:layout_height="match_parent"
                 android:gravity="center_vertical|center_horizontal"
                 android:textSize="18sp"
-                android:textStyle="normal|bold"
                 android:background="@android:drawable/screen_background_light"
                 />
 

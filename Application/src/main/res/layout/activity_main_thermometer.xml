@@ -45,7 +45,7 @@
 
                     <ImageView
                         android:layout_height="match_parent"
-                        android:id="@+id/imageView2"
+                        android:id="@+id/thermometer_fon"
                         android:layout_weight="0"
                         android:layout_width="match_parent" />
 
@@ -63,7 +63,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
                             app:srcCompat="@drawable/rectangle_line_corners_black_5dp"
-                            android:id="@+id/imageView6"
+                            android:id="@+id/thermometer_column"
                             android:layout_weight="2.5" />
 
                         <Space
@@ -94,8 +94,7 @@
                             android:layout_margin="@dimen/ic_img_gap">
 
                             <ImageView
-                                app:srcCompat="@drawable/marker_green"
-                                android:id="@+id/imageView3"
+                                android:id="@+id/marker"
                                 android:layout_height="@dimen/ic_img_size"
                                 android:layout_width="@dimen/ic_img_size"
                                 android:layout_gravity="center_vertical|center_horizontal" />
@@ -120,18 +119,16 @@
                                     android:id="@+id/textView15"
                                     android:textSize="12sp"
                                     android:textColor="@color/colorTextlight"
-                                    android:gravity="center_vertical|center_horizontal"
-                                    android:layout_marginTop="1dp" />
+                                    android:gravity="center_vertical|center_horizontal" />
 
                                 <TextView
                                     android:text="--:--"
                                     android:layout_width="match_parent"
-                                    android:layout_height="match_parent"
-                                    android:id="@+id/textView8"
+                                    android:id="@+id/time"
                                     android:textSize="18sp"
                                     android:textColor="@color/colorText"
-                                    android:gravity="center_vertical|center_horizontal"
-                                    android:layout_marginBottom="@dimen/ic_img_gap" />
+                                    android:gravity="top|center_horizontal"
+                                    android:layout_height="wrap_content" />
                             </LinearLayout>
 
                         </FrameLayout>
@@ -144,12 +141,12 @@
                             android:layout_margin="@dimen/ic_img_gap">
 
                             <ImageView
-                                app:srcCompat="@drawable/ic_bluetooth_disabled_black_24dp"
-                                android:id="@+id/imageView4"
+                                android:id="@+id/signal"
                                 android:layout_weight="0"
                                 android:layout_height="@dimen/ic_img_size"
                                 android:layout_width="@dimen/ic_img_size"
-                                android:layout_gravity="center_vertical|center_horizontal" />
+                                android:layout_gravity="center_vertical|center_horizontal"
+                                app:srcCompat="@drawable/ic_sgnal_bluetooth_level" />
                         </FrameLayout>
 
                         <FrameLayout
@@ -160,12 +157,12 @@
                             android:layout_margin="@dimen/ic_img_gap">
 
                             <ImageView
-                                app:srcCompat="@drawable/ic_battery_alert_black_24dp"
-                                android:id="@+id/imageView5"
+                                android:id="@+id/battery"
                                 android:layout_weight="0"
                                 android:layout_width="@dimen/ic_img_size"
                                 android:layout_height="@dimen/ic_img_size"
-                                android:layout_gravity="center_vertical|center_horizontal|center" />
+                                android:layout_gravity="center_vertical|center_horizontal|center"
+                                app:srcCompat="@drawable/ic_battatery_level" />
                         </FrameLayout>
 
                     </LinearLayout>
@@ -182,7 +179,9 @@
                             android:orientation="vertical"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:padding="@dimen/ic_img_gap">
+                            android:padding="@dimen/ic_img_gap"
+                            android:id="@+id/telephon_vertical"
+                            android:layout_weight="1">
 
                             <LinearLayout
                                 android:orientation="vertical"
@@ -219,10 +218,8 @@
                                             android:layout_width="match_parent"
                                             android:layout_height="wrap_content"
                                             android:id="@+id/textView10"
-                                            android:layout_gravity="center_vertical|center_horizontal"
                                             android:gravity="center_vertical|center_horizontal"
                                             android:textSize="12sp"
-                                            android:lineSpacingExtra="18sp"
                                             android:textColor="@color/colorTextlight" />
 
                                         <Space
@@ -235,7 +232,7 @@
                                             android:layout_width="match_parent"
                                             android:layout_weight="3"
                                             android:layout_height="wrap_content"
-                                            android:id="@+id/textView9"
+                                            android:id="@+id/numbe_max"
                                             android:gravity="center_vertical|center_horizontal"
                                             android:textSize="18sp"
                                             android:textColor="@color/colorText" />
@@ -286,7 +283,7 @@
                                         android:text="--,-"
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
-                                        android:id="@+id/textView11"
+                                        android:id="@+id/numbe_cur"
                                         android:layout_weight="3"
                                         android:textSize="30sp"
                                         android:textColor="@color/colorText"
@@ -344,7 +341,7 @@
                                             android:text="--,-"
                                             android:layout_width="match_parent"
                                             android:layout_height="wrap_content"
-                                            android:id="@+id/textView13"
+                                            android:id="@+id/numbe_min"
                                             android:layout_weight="3"
                                             android:gravity="center_vertical|center_horizontal"
                                             android:textSize="18sp"
@@ -359,12 +356,21 @@
                                     <Space
                                         android:layout_width="wrap_content"
                                         android:layout_height="match_parent"
-                                        android:layout_weight="1" />
+                                        android:layout_weight="2" />
 
                                 </LinearLayout>
 
                             </LinearLayout>
                         </LinearLayout>
+
+                        <LinearLayout
+                            android:orientation="vertical"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:id="@+id/telephon_horizontal"
+                            android:layout_weight="1"
+                            android:visibility="gone"></LinearLayout>
+
                     </LinearLayout>
 
                     <LinearLayout
@@ -386,8 +392,16 @@
                             android:layout_weight="1"
                             android:layout_height="@dimen/iten_img_size"
                             android:background="@drawable/rectangle_line_corners_black_5dp"
-                            android:layout_margin="@dimen/ic_img_gap">
+                            android:layout_margin="@dimen/ic_img_gap"
+                            android:id="@+id/reset_min_max">
 
+                            <TextView
+                                android:text="Сброс"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/textView2"
+                                android:textColor="@color/colorTextlight"
+                                android:layout_gravity="center_vertical|center_horizontal" />
                         </FrameLayout>
                     </LinearLayout>
 

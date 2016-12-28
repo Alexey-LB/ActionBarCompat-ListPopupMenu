@@ -30,7 +30,6 @@ editbox_dropdown_light_frame,[sym_contact_card](screen_background_light)screen_b
         android:clickable="false" />
 
     <TextView
-        android:text="Изменить"
         android:layout_width="100dp"
         android:layout_height="match_parent"
         android:id="@+id/img_setting"
@@ -43,7 +42,7 @@ editbox_dropdown_light_frame,[sym_contact_card](screen_background_light)screen_b
         android:textAlignment="center" />
 
     <TextView
-        android:text="Сбросить"
+        android:text="Изменить"
         android:layout_height="match_parent"
 
         android:id="@+id/img_goto"

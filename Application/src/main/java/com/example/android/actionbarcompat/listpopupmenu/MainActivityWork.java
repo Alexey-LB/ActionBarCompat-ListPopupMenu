@@ -106,16 +106,18 @@ public class MainActivityWork extends AppCompatActivity {// ActionBarActivity {
     //взаимодействие АКТИВНОсТИ и фрагмента, вызов явно метода из фрагмента, по ссылке на него!
     //там же взаимодействи обратное, работа с АкшионБар и КНОПКА НАЗАД!
     // http://developer.alexanderklimov.ru/android/theory/fragments.php
-private boolean onStartApp = true;
+    private boolean onStartApp = true;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //setContentView(R.layout.sample_main);
         setContentView(R.layout.activity_main_work);//
+        final Intent intent = getIntent();
         //--------ПРИМЕМ ЕСЛИ сервис не запущен и нет доступа к сенсорам, выходим!--
         RunDataHub app = ((RunDataHub) getApplicationContext());
         if((app == null) || (app.mBluetoothLeServiceM == null)
                 || (app.mBluetoothLeServiceM.mbleDot == null)){
+
             Log.e(TAG,"ERR = ((app == null) || (app.mBluetoothLeServiceM == null)" +
                     "                || (app.mBluetoothLeServiceM.mbleDot == null))");
             finish();
@@ -126,7 +128,6 @@ private boolean onStartApp = true;
         // установка ИЗОБРАЖЕНИЕ на всь экран, УБИРАЕМ СВЕРХУ И СНИЗУ панели системные
         findViewById(mainIdFragmentWork).getRootView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
         //настраиваем и включаем тулбар
-        final Intent intent = getIntent();
         Util.setSupportV7appActionBar(getSupportActionBar(),TAG,
                 intent.getStringExtra(Util.EXTRAS_BAR_TITLE));
         //устанавливаем еденицы измерения

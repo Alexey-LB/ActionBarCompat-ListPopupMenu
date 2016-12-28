@@ -326,6 +326,7 @@ public class Util {
     //заносит данные во вювер с на МИНУС работаем с уровнями и,
     // А ТАКЖЕ- если там тоже самое- не записывает в Вювер ,эеономия времени ОТРИСОВКИ
     static public boolean setDrawableToImageView(int level, View view) {
+
         if ((view != null) && (view instanceof ImageView)) {
             ImageView iv = ((ImageView) view);
             //если ранее не запоминали то обновляем

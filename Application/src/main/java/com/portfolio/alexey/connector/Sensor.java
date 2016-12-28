@@ -247,7 +247,14 @@ public class Sensor {
         initSensor(app_);
         if(mSettings != null)getConfig( mSettings);
     }
+    public String  getStringTime(){
+        long h,m,s = 0;
+        if(time != 0) s = ( System.currentTimeMillis() - time)/1000;
+        m = s/60;
+        h = m/60;
 
+        return String.format("%02d:%02d:%02d",h,m % 60,s % 60);
+    }
     // TODO: 09.12.2016 МЛАДШИЙ разряд датчика температуры-to 0.0625°C, а выдает 0.1 точность, ГДЕ теряется? надо выдавать все, чтоб НЕ РЫСКАЛО
     // в будующем сделать порог  0.0625°C, чтоб показания не прыгали!
     public static  String getStringValue( float inp, boolean fahrenheit, boolean addType){
