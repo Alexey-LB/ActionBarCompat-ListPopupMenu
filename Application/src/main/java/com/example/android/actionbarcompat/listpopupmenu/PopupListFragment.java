@@ -678,7 +678,14 @@ return null;//fbButton_;
                                 if ((positionScroll < 0) && (positionStartX < maxScroll)){//редактирование
   //имедж редактировать-----------------------------
   clearScrollX_View(true);//затираем на него ссылку? с ним закончили
-                                    if(obj instanceof Sensor) ((Sensor)obj).resetMinMaxValueTemperature();
+             //                       if(obj instanceof Sensor) ((Sensor)obj).resetMinMaxValueTemperature();
+                                    //      //-------Setting --
+      final Intent intent = new Intent(getActivity(), MainSettingSetting.class);
+      intent.putExtra(MainActivityWork.EXTRAS_DEVICE_ITEM, i);
+      intent.putExtra(Util.EXTRAS_BAR_TITLE, "  B4/B5");
+      //startActivityForResult(intent,MainActivityWork.MAINACTIVITY);//
+      startActivity(intent);//
+
                                     str = "CLICK_SHORT i= " + i + "  Edit obj= " + obj;
            //                         if(i >= 0) Toast.makeText(getActivity(), "onClick Edit N= " + i, Toast.LENGTH_SHORT).show();
                                 }else str = "CLICK_SHORT i= " + i + "  no Work obj= " + obj;
