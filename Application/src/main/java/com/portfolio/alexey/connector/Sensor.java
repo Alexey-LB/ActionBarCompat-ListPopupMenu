@@ -271,6 +271,14 @@ public class Sensor {
         return String.format(Locale.getDefault(),str,f);
     }
 
+    public float getValue( float inp){
+        if(Float.isNaN(inp))  return Float.NaN;
+        if(onFahrenheit) {
+            //f = (f *9/5) + 32;// перевод в ФАРЕНГЕЙТА
+            return Util.getFahrenheit(inp);
+        }
+        return inp;
+    }
 
     public String getStringValue( float inp, boolean addType){
         final String str; float f= inp;

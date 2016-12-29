@@ -18,12 +18,8 @@ public class Thermometer extends Drawable {
     //используем как эталон для остальных фигур
     private Paint mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private Path mPath = new Path();
-    // высота столбика термометра
-    public void setColumn(int column) {
-        hightColumn = column;
-    }
-    private  int hightColumn = 5000;//   0 /10000
-    private final int hightColumnMax = 10000;
+
+    private  int hightColumn = 0;//
     //
     private final float density;
     private int offsetLeftRight = 20;//   1/20 смещенеие от левого и правого края имеджа
@@ -35,6 +31,10 @@ public class Thermometer extends Drawable {
     private final int columnWithFinal = 10;//  10 dpi - ширина столбика термометра
     private final float minTemperature;
     private final float maxTemperature;
+
+    private  float k_Temperature;//коэффициент перехода от градусов к пикселям
+    private  int minTemperaturePoint;//точка на градуснике которая соответствует minTemperature
+    private  int maxTemperaturePoint;//точка на градуснике которая соответствует maxTemperature
 
     private  int width = 0;//  10 dpi
     private  int height = 0;//  10 dpi
@@ -53,11 +53,22 @@ public class Thermometer extends Drawable {
         // ДЛЯ размера меню И ТД, используется density !!!
        // density = getResources().getDisplayMetrics().density;
     }
+    // высота столбика термометра
+    public void setColumnTemperature(float temperature) {
+        //входную температуру для отображения Вычитаем минимальное значение, домножаем на коэфициент
+        // перехода к пикселам и добавляем смещение пикселов на экране
+        hightColumn = (int)((temperature - minTemperature) * k_Temperature + minTemperaturePoint);
+        invalidateSelf();
+  //      Log.i(TAG," column= " + column +"  hightC= "+ hightColumn +" minT= " +minTemperature + " maxT= " +maxTemperature
+  //              +"  k_T= " + k_Temperature + " minP= " +minTemperaturePoint + " maxP= " +maxTemperaturePoint);
+    }
+
+
     @Override
     public void draw(Canvas canvas) {
         if((width <= 0) || (height <= 0))return;
         //
-        Log.i(TAG, " --="+canvas.getHeight()+ " --="+canvas.getDensity());
+  //      Log.i(TAG, " --="+canvas.getHeight()+ " --="+canvas.getDensity());
 
 //        if(density != 0) {
 //            offsetLeftRight = offsetLeftRightFinal * density;
@@ -66,7 +77,12 @@ public class Thermometer extends Drawable {
 //        }
         //
         // рисуем фон градусника, шкалу, ЕСЛИ ИЗМЕНИЛИСЬ РАЗМЕРЫ!!
-        if(chengSize)drawThermometerFon(canvas);
+        if(chengSize){
+            minTemperaturePoint = (int)(40 * density);//точка на градуснике которая соответствует minTemperature
+            maxTemperaturePoint = height -(int)(40 * density);//точка на градуснике которая соответствует maxTemperature
+            k_Temperature = (float)(maxTemperaturePoint - minTemperaturePoint)/(maxTemperature - minTemperature);
+            drawThermometerFon(canvas);
+        }
 
         //рисуем столбик
         drawThermometerColumn(canvas);
@@ -90,7 +106,6 @@ public class Thermometer extends Drawable {
                 +"  cX=" + bounds.centerX()  +"  cY=" + bounds.centerY()
                 +"\n  l=" + bounds.left+"  r=" + bounds.right
                 +"  t=" + bounds.top+"  b=" + bounds.bottom
-                +"  h=" + getIntrinsicHeight()+"  w=" + getIntrinsicWidth()
         );
         if((width != bounds.width()) || (height != bounds.height()))chengSize = true;
         else chengSize = false;
@@ -99,6 +114,7 @@ public class Thermometer extends Drawable {
         height = bounds.height();
     }
     private  void drawThermometerFon(Canvas canvas) {
+   //     Path mPath = new Path();
         int offset = width /offsetLeftRight;//смещение от края имеджа
         int step = height /offsetGap;//смещение от края имеджа
         int x,endX;
@@ -111,38 +127,56 @@ public class Thermometer extends Drawable {
                 else x = offsetGap *4;
             }
             endX = width - x;
-            drawLine(x,endX,y, y-(int)density);
+            drawLine(x,endX,y, y-(int)density, mPath);
         }
-        drawCanvas(canvas, 0xFF000000);
+        drawCanvas(canvas, 0xFF000000, mPath);
     }
     //можно использовать один и тот же Path, НО обязательно path.reset(); при повторном использовании
-    //Paint- хранит цвет кисть и т д - нужен всегда новый!
+    //Paint- хранит цвет кисть и т д -
     private void drawThermometerColumn(Canvas canvas) {
-        int level = (hightColumn * height)/hightColumnMax;
-        //сначала стираем столбик
-        int startX = (width - columnWith) /2;
-        drawLine(startX,startX + columnWith,0,level);
-        drawCanvas(canvas, 0xFFFFFFFF);
         //
+        int level, startX;
+        //       mPath = new Path();
+        startX = (width - columnWith *2) /2;
+        drawLine(startX,startX + columnWith *2,0, minTemperaturePoint, mPath);
+        drawCanvas(canvas, 0xc000c0ff, mPath);
+        //
+        startX = (width - columnWith *2) /2;
+        drawLine(startX,startX + columnWith *2, maxTemperaturePoint,height, mPath);
+        drawCanvas(canvas, 0xc0ff0000, mPath);
+        //
+//        Log.i(TAG,"hightColumn= " + hightColumn);
+  //      Path mPath = new Path();
+        level = hightColumn;
+//        //сначала стираем столбик
         startX = (width - columnWith) /2;
-        drawLine(startX,startX + columnWith,0,level);
-        drawCanvas(canvas, 0xFFA00000);
+        drawLine(startX,startX + columnWith,0,height, mPath);
+        drawCanvas(canvas, 0xffFFFFFF, mPath);
+
+
         //
-        startX = (width - columnWith + 6) /2;
-        drawLine(startX,startX + columnWith -6,0,level);
-        drawCanvas(canvas, 0xFFE08080);
+ //       mPath = new Path();
+        startX = (width - columnWith) /2;
+        drawLine(startX,startX + columnWith,0,level, mPath);
+        drawCanvas(canvas, 0xFFA00000, mPath);
         //
-        startX = (width - columnWith + 8) /2;
-        drawLine(startX,startX + columnWith -8,0,level);
-        drawCanvas(canvas, 0xFFE08080);
+   //     mPath = new Path();
+        startX = (width - columnWith + (int)(6 * density)) /2;
+        drawLine(startX,startX + columnWith -(int)(6 * density),0,level, mPath);
+        drawCanvas(canvas, 0xFFE08080, mPath);
+        //
+  //      mPath = new Path();
+        startX = (width - columnWith + (int)(8 * density)) /2;
+        drawLine(startX,startX + columnWith -(int)(8 * density),0,level, mPath);
+        drawCanvas(canvas, 0xFFE08080, mPath );
     }
     //можно использовать один и тот же Path,
     // НО!! обязательно path.reset(); после canvas.drawPath()
     // иначе продолжает рисовать ОДНИМ И тем же цветом!!
     //Paint- хранит цвет кисть
-    private  void drawCanvas(Canvas canvas, int color) {
+    private  void drawCanvas(Canvas canvas, int color, Path mPath ) {
         mPath.close();//перед новым использованием обязательно закрываем
-//        Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+ //       Paint mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 //        paint.setColorFilter(mPaint.getColorFilter());
 //        paint.setAlpha(mPaint.getAlpha());
         //
@@ -152,13 +186,18 @@ public class Thermometer extends Drawable {
         canvas.drawPath(mPath, mPaint);//рисуем
         //можно использовать один и тот же Path,
         // НО!! обязательно path.reset(); после canvas.drawPath()
-        mPath.reset();//сбрасываем запомненную фигуру
+        mPath.reset();//сбрасываем запомненную фигуру(возможно просто отрисовывает)
     }
-    private void drawLine(int x,int endX,int y,int endY){
+    private void drawLine(int x,int endX,int y,int endY, Path mPath ){
+        //ПО УМОЛЧАНИЮ- 0 У, верхний левый УГОЛ экрана!
+        // переворачиваем- ИДЕМ СНИЗУ вверх,
+        y = height - y;
+        endY = height - endY;
         if(x < 0) x = 0;
         if(y < 0)y = 0;
-        if(x > width) x = width;
-        if(y > height)y = height;
+        if(x >= width) x = width -1;
+        if(y >= height)y = height -1;
+
         mPath.moveTo(x, y);
         mPath.lineTo(endX, y);
         mPath.lineTo(endX, endY);
