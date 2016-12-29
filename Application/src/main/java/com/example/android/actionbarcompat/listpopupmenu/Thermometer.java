@@ -167,17 +167,23 @@ public class Thermometer extends Drawable {
  //       mPath = new Path();
         startX = (width - columnWith) /2;
         drawLine(startX,startX + columnWith,0,level, mPath);
-        drawCanvas(canvas, 0xFFA00000, mPath);
+        drawCanvas(canvas, 0xFF404040, mPath);
+    //    drawCanvas(canvas, 0xFFA00000, mPath);
         //
    //     mPath = new Path();
         startX = (width - columnWith + (int)(6 * density)) /2;
         drawLine(startX,startX + columnWith -(int)(6 * density),0,level, mPath);
-        drawCanvas(canvas, 0xFFE08080, mPath);
+        drawCanvas(canvas, 0xFF808080, mPath);
+   //     drawCanvas(canvas, 0xFFE08080, mPath);//
         //
   //      mPath = new Path();
         startX = (width - columnWith + (int)(8 * density)) /2;
         drawLine(startX,startX + columnWith -(int)(8 * density),0,level, mPath);
-        drawCanvas(canvas, 0xFFE08080, mPath );
+        drawCanvas(canvas, 0xFFc0c0c0, mPath );
+   //     drawCanvas(canvas, 0xFFE08080, mPath );
+        startX = (width - columnWith + (int)(9 * density)) /2;
+        drawLine(startX,startX + columnWith -(int)(9 * density),0,level, mPath);
+        drawCanvas(canvas, 0xFFffffff, mPath );
     }
     //можно использовать один и тот же Path,
     // НО!! обязательно path.reset(); после canvas.drawPath()
