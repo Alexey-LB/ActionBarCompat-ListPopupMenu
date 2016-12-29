@@ -78,7 +78,17 @@ public class MainActivityThermometer  extends AppCompatActivity {// ActionBarAct
                 if(sensor != null) sensor.resetMinMaxValueTemperature();
             }
         });
+        thermometer.findViewById(R.id.bottom_bar).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //сброс минимум и максимум
+                if(sensor != null) sensor.resetNotificationVibrationLevelMinMax();
+            }
+        });
         setThermometerView();
+        //  при запуске если в горизогнтальном положении был, учитываем это
+        onConfigurationChanged(getResources().getConfiguration());
+        //
         Log.e(TAG, "----onCreate END-----");
     }
     private void setThermometerView(){

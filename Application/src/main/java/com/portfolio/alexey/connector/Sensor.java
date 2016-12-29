@@ -47,7 +47,7 @@ public class Sensor {
 //    public static final int STATE_FIND_DEVICE = 6;//advertising
 
     private static int indexDevace = 0;//для нумерации названий
-    private static final String deviceLabelStringDefault = "Термометр";//по умолчанию назначаем имя + номер
+    private static final String deviceLabelStringDefault = "Монитор";//по умолчанию назначаем имя + номер
     public RunDataHub app;
     private Context mContext;
     public float maxInputDeviceTemperature = 70f;
@@ -133,10 +133,15 @@ public class Sensor {
         if (mBluetoothGatt == null) return;
         mBluetoothGatt.close();
         mBluetoothGatt = null;
+        mConnectionState = 0;
+        rssi = 4;
+        battery_level = 0;
     }
     public void disconnect(){
         if (mBluetoothGatt == null) return;
         mBluetoothGatt.disconnect();
+         rssi = 4;
+        battery_level = 0;
     }
     //// для сброса к текущей температуре ОТДЕЛЬНАЯ кнопка
     public void resetMinMaxValueTemperature(){

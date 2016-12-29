@@ -62,29 +62,29 @@ public class DeviceScanActivity extends ListActivity {//AppCompatActivity {//Act
 
     private static final int REQUEST_ENABLE_BT = 1;
     // Stops scanning after 3 seconds.
-    private static final long SCAN_PERIOD = 3000;
-
+    private static final long SCAN_PERIOD = 10000;
+      private Sensor sensor;
+    private  int mItem= 0;
     @Override// Set up the {@link android.app.ActionBar}, if the API is available.
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.e(TAG,"START onCreate--");
+        //урали вверху системный бар
+        if(getListView() != null ) getListView().getRootView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
+        //--------------------------
+        final Intent intent = getIntent();
+        mItem = intent.getIntExtra(MainActivityWork.EXTRAS_DEVICE_ITEM,0);
+        RunDataHub app = ((RunDataHub) getApplicationContext());
+        if((app.mBluetoothLeServiceM == null)
+                || (app.mBluetoothLeServiceM.mbleDot == null)
+                || (app.mBluetoothLeServiceM.mbleDot.size() <= 0)){
+            finish();
+            Log.e(TAG,"ERROR -- No sensor item= " + mItem);
+        }
+        sensor = app.mBluetoothLeServiceM.mbleDot.get(mItem);
+        Util.setActionBar(getActionBar(),TAG, intent.getStringExtra(Util.EXTRAS_BAR_TITLE));//"  BB3"
+        //-------------------------------------------
         //74:DA:EA:9F:4C:21-new
-        Util.setActionBar(getActionBar(),TAG, "  BB3");
-//        ActionBar actionBar = getActionBar();//getSupportActionBar();??--это решалось в другом методе(getDelegate().getSupportActionBar();)
-//        if (actionBar != null) {
-//            actionBar.setTitle(R.string.title_devices);//getActionBar().setTitle(R.string.title_devices);
-//            // Show the Up button in the action bar.
-//            actionBar.setDisplayHomeAsUpEnabled(true);
-//            //вместо ЗНачка по умолчанию, назначаемого выше, подставляет свой
-//            actionBar.setHomeAsUpIndicator(R.drawable.ic_chevron_left_black_24dp);
-//            //------------------------------
-//            //  actionBar.setHomeButtonEnabled(true); //устанавливает надпись и иконку как кнопку домой(не требуется метод - actionBar.setDisplayHomeAsUpEnabled(true);)
-//            //--- все ниже както не работет или для другого предназаначена
-//            //actionBar.setIcon(null);
-//            //actionBar.setCustomView(null);
-//            //actionBar.setDisplayUseLogoEnabled(false);
-//            //actionBar.setLogo(null);
-//        }
         mHandler = new Handler();
         // Use this check to determine whether BLE is supported on the device.  Then you can
         // selectively disable BLE-related features.
@@ -101,10 +101,9 @@ public class DeviceScanActivity extends ListActivity {//AppCompatActivity {//Act
         if (mBluetoothAdapter == null) {
             Toast.makeText(this, R.string.error_bluetooth_not_supported, Toast.LENGTH_SHORT).show();
             finish();
-            return;
         }
-        //урали вверху системный бар
-        if(getListView() != null ) getListView().getRootView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
+       ////--------
+
     }
     //вызывается при построениии и после вызова метода invalidateOptionsMenu();
     @Override
@@ -200,6 +199,22 @@ public class DeviceScanActivity extends ListActivity {//AppCompatActivity {//Act
             mBluetoothAdapter.stopLeScan(mLeScanCallback);
             mScanning = false;
             sleep(1000);//для того чтоб закончилося останов поиска окончательно
+        }
+        ///-- теперь подключаем ЗДЕСЬ!!
+        if(sensor != null){
+                // TODO: 19.12.2016 МОЖЕТ задержку сдесь сделать? если былл коннект
+                // со старым устройством //если был коннект- отключаем нафиг
+                if(sensor.mBluetoothGatt != null){
+                    sensor.close();
+                }
+
+                sensor.mBluetoothDeviceAddress = device.getAddress();
+                //
+                RunDataHub app = ((RunDataHub) getApplicationContext());
+                if(app.mBluetoothLeServiceM != null){
+                    app.mBluetoothLeServiceM.connect(sensor.mBluetoothDeviceAddress,true);
+                    Log.v(TAG,"sensor item= " + mItem + "  connectAdress= " + sensor.mBluetoothDeviceAddress);
+                }
         }
         finish();
        // startActivity(intent);//на подклшючение к устройству

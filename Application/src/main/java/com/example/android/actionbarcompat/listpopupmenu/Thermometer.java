@@ -78,8 +78,9 @@ public class Thermometer extends Drawable {
         //
         // рисуем фон градусника, шкалу, ЕСЛИ ИЗМЕНИЛИСЬ РАЗМЕРЫ!!
         if(chengSize){
-            minTemperaturePoint = (int)(40 * density);//точка на градуснике которая соответствует minTemperature
-            maxTemperaturePoint = height -(int)(40 * density);//точка на градуснике которая соответствует maxTemperature
+            // 52dp = 44dp + 4dp * 2
+            minTemperaturePoint = (int)(52 * density);//точка на градуснике которая соответствует minTemperature
+            maxTemperaturePoint = height -(int)(52 * density);//точка на градуснике которая соответствует maxTemperature
             k_Temperature = (float)(maxTemperaturePoint - minTemperaturePoint)/(maxTemperature - minTemperature);
             drawThermometerFon(canvas);
         }
@@ -143,7 +144,8 @@ public class Thermometer extends Drawable {
         //
         startX = (width - columnWith *2) /2;
         drawLine(startX,startX + columnWith *2, maxTemperaturePoint,height, mPath);
-        drawCanvas(canvas, 0xc0ff0000, mPath);
+       // drawCanvas(canvas, 0xc0ffc0c0, mPath);
+        drawCanvas(canvas, 0xc0ff0000, mPath);//80ffc0c0
         //
 //        Log.i(TAG,"hightColumn= " + hightColumn);
   //      Path mPath = new Path();

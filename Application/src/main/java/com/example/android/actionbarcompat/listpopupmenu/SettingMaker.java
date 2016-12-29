@@ -94,22 +94,23 @@ public class SettingMaker extends Activity implements View.OnClickListener{
             mAdress = data.getStringExtra(MainActivityWork.EXTRAS_DEVICE_ADDRESS);
 //            Util.setTextToTextView(mName,R.id.textViewFindName, this);
 //            Util.setTextToTextView(mAdress,R.id.textViewFindAdress, this);
-            if(sensor != null){
-                if(mName != null)sensor.deviceName = mName;
-                if(mAdress != null){
-                    // TODO: 19.12.2016 МОЖЕТ задержку сдесь сделать? если былл коннект
-                    // со старым устройством //если был коннект- отключаем нафиг
-                    if(sensor.mBluetoothGatt != null) sensor.disconnect();
-
-                    sensor.mBluetoothDeviceAddress = mAdress;
-                    //
-                    RunDataHub app = ((RunDataHub) getApplicationContext());
-                    if(app.mBluetoothLeServiceM != null){
-                        app.mBluetoothLeServiceM.connect(mAdress,true);
-                        Log.v(TAG,"sensor item= " + mItem + "  connectAdress= " + mAdress);
-                    }
-                }
-            }
+             //делаем это СЕЧАС ПРЯМО в выборе ПОСЛЕ СКАНА
+//            if(sensor != null){
+//                if(mName != null)sensor.deviceName = mName;
+//                if(mAdress != null){
+//                    // TODO: 19.12.2016 МОЖЕТ задержку сдесь сделать? если былл коннект
+//                    // со старым устройством //если был коннект- отключаем нафиг
+//                    if(sensor.mBluetoothGatt != null) sensor.disconnect();
+//
+//                    sensor.mBluetoothDeviceAddress = mAdress;
+//                    //
+//                    RunDataHub app = ((RunDataHub) getApplicationContext());
+//                    if(app.mBluetoothLeServiceM != null){
+//                        app.mBluetoothLeServiceM.connect(mAdress,true);
+//                        Log.v(TAG,"sensor item= " + mItem + "  connectAdress= " + mAdress);
+//                    }
+//                }
+//            }
 
             updateTextString();
             Log.v(TAG,"requestCode= "+ requestCode +"  resultCode= RESULT_OK    name= " +mName
@@ -153,7 +154,11 @@ public class SettingMaker extends Activity implements View.OnClickListener{
                 intent = new Intent(this, DeviceScanActivity.class);
                 // фильтр поиска устройств
                 intent.putExtra(MainActivityWork.EXTRAS_DEVICE_NAME_FILTR, "");
-                startActivityForResult(intent, MainActivityWork.ACTIVITY_SETTING_MAKER);//на поиск к устройству
+                intent.putExtra(MainActivityWork.EXTRAS_DEVICE_ITEM,mItem);
+                intent.putExtra(Util.EXTRAS_BAR_TITLE,"  BB3   " + sensor.deviceLabel);
+                startActivity(intent);//на поиск к устройству
+//                startActivityForResult(intent, MainActivityWork.ACTIVITY_SETTING_MAKER);//на поиск к устройству
+
                 break;
             default:
         }
