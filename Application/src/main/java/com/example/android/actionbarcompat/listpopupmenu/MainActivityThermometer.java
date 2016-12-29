@@ -99,7 +99,8 @@ public class MainActivityThermometer  extends AppCompatActivity {// ActionBarAct
         // ДЛЯ размера меню И ТД, используется density !!!
         float density = getResources().getDisplayMetrics().density;
 
-        thermometerDrawable = new Thermometer(density,sensor.minTemperature,sensor.maxTemperature);
+        thermometerDrawable = new Thermometer(density
+                ,sensor.minTemperature,sensor.maxTemperature,sensor.onFahrenheit);
         fon.setBackground(thermometerDrawable);
     }
 //вызывается при смене ориентации экрана, необходимо указать разрешений в МАНИФЕСТЕ
@@ -173,6 +174,7 @@ public class MainActivityThermometer  extends AppCompatActivity {// ActionBarAct
         if(thermometerDrawable != null){
            // float f = (float)Math.random()*100 - 20;
             thermometerDrawable.setColumnTemperature
+                    //??!!
                     (b?sensor.getValue(sensor.intermediateValue):-100f); //     fon.invalidate();
         }
         Util.setTextToTextView(sensor.getString_3_ValueTemperature(true),R.id.numbe_max, view);

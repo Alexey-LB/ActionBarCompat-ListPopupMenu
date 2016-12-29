@@ -9,6 +9,8 @@ import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 
+import com.portfolio.alexey.connector.Util;
+
 /**
  * Created by lesa on 28.12.2016.
  */
@@ -32,6 +34,8 @@ public class Thermometer extends Drawable {
     private final float minTemperature;
     private final float maxTemperature;
 
+    public boolean onFahrenheit = false;
+
     private  float k_Temperature;//коэффициент перехода от градусов к пикселям
     private  int minTemperaturePoint;//точка на градуснике которая соответствует minTemperature
     private  int maxTemperaturePoint;//точка на градуснике которая соответствует maxTemperature
@@ -40,10 +44,17 @@ public class Thermometer extends Drawable {
     private  int height = 0;//  10 dpi
     private  boolean chengSize = false;//  10 dpi
 
-    Thermometer(float density_,float minTemperature_,float maxTemperature_){
+    Thermometer(float density_,float minTemperature_,float maxTemperature_, boolean fahrenheit){
         super();
-        minTemperature = minTemperature_;
-        maxTemperature = maxTemperature_;
+        onFahrenheit = fahrenheit;
+        if(fahrenheit){
+            minTemperature = Util.getFahrenheit(minTemperature_);
+            maxTemperature = Util.getFahrenheit(maxTemperature_);
+        }else {
+            minTemperature = minTemperature_;
+            maxTemperature = maxTemperature_;
+        }
+
         density = density_;
         if(density != 0) {
             offsetLeftRight = (int)(offsetLeftRightFinal * density);
@@ -115,6 +126,16 @@ public class Thermometer extends Drawable {
         height = bounds.height();
     }
     private  void drawThermometerFon(Canvas canvas) {
+        //MIN
+        int colWith = columnWith *4;
+        int startX = (width - colWith) /2;
+        drawLine(startX,startX + colWith,0, minTemperaturePoint, mPath);
+        drawCanvas(canvas, 0xc000c0ff, mPath);
+        //MAX
+        startX = (width - colWith) /2;
+        drawLine(startX,startX + colWith, maxTemperaturePoint,height, mPath);
+        drawCanvas(canvas, 0xc0ff0000, mPath);//80ffc0c0
+        //-----------
    //     Path mPath = new Path();
         int offset = width /offsetLeftRight;//смещение от края имеджа
         int step = height /offsetGap;//смещение от края имеджа
@@ -137,26 +158,12 @@ public class Thermometer extends Drawable {
     private void drawThermometerColumn(Canvas canvas) {
         //
         int level, startX;
-        //       mPath = new Path();
-        startX = (width - columnWith *2) /2;
-        drawLine(startX,startX + columnWith *2,0, minTemperaturePoint, mPath);
-        drawCanvas(canvas, 0xc000c0ff, mPath);
-        //
-        startX = (width - columnWith *2) /2;
-        drawLine(startX,startX + columnWith *2, maxTemperaturePoint,height, mPath);
-       // drawCanvas(canvas, 0xc0ffc0c0, mPath);
-        drawCanvas(canvas, 0xc0ff0000, mPath);//80ffc0c0
-        //
-//        Log.i(TAG,"hightColumn= " + hightColumn);
-  //      Path mPath = new Path();
-        level = hightColumn;
 //        //сначала стираем столбик
         startX = (width - columnWith) /2;
         drawLine(startX,startX + columnWith,0,height, mPath);
         drawCanvas(canvas, 0xffFFFFFF, mPath);
 
-
-        //
+        level = hightColumn;
  //       mPath = new Path();
         startX = (width - columnWith) /2;
         drawLine(startX,startX + columnWith,0,level, mPath);
