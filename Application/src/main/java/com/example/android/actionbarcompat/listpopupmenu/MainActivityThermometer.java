@@ -85,7 +85,10 @@ public class MainActivityThermometer  extends AppCompatActivity {// ActionBarAct
         ImageView fon, column;
         fon = (ImageView)thermometer.findViewById(R.id.thermometer_fon);
         column = (ImageView)thermometer.findViewById(R.id.thermometer_column);
-        Drawable d = new Thermometer();
+        // ДЛЯ размера меню И ТД, используется density !!!
+        float density = getResources().getDisplayMetrics().density;
+
+        Drawable d = new Thermometer(density,sensor.minTemperature,sensor.maxTemperature);
 
         fon.setBackground(d);
 
