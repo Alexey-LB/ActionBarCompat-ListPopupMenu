@@ -157,7 +157,7 @@ private View headband;
             Log.w(TAG,"wait tame(ms)= " +i*300);
         }
         Intent intent = new Intent(this, MainActivityWork.class);
-        intent.putExtra(Util.EXTRAS_BAR_TITLE, "     B1/B3 v2.5.3");
+        intent.putExtra(Util.EXTRAS_BAR_TITLE, "     B1/B3 v2.5.4");
         // все изменения будет писать сразу в сенсор
         // по умолчанию устанавливаем минимум, все остальное делется НАПРЯМУЮ с данными
      //   startActivityForResult(intent,MAIN_ACTIVITY);
