@@ -1,6 +1,21 @@
 alexey.l.andr0id@gmail.com -моя почта под которой зарегестрирован ГИТ ХАБ
 ! при переворачивании умирает лист поп
 
+
+юю---------------------Нордик программа декомпилированная--------------------
+cod bluetooth
+D:\Cloud_mail_ru\_FIRM\Relsib\Ilja\no.nordicsemi.android.mcp_2016-12-02_source_from_JADX\no.nordicsemi.android.mcp_2016-12-02_source_from_JADX\no\nordicsemi\android\ 
+D:\Cloud_mail_ru\_FIRM\Relsib\Ilja\no.nordicsemi.android.mcp_2016-12-02_source_from_JADX\no.nordicsemi.android.mcp_2016-12-02_source_from_JADX\no\nordicsemi\android\dfu\DfuBaseService.java 
+интересно порождение УИД из 16.32 или 128 битого числа
+D:\Cloud_mail_ru\_FIRM\Relsib\Ilja\no.nordicsemi.android.mcp_2016-12-02_source_from_JADX\no.nordicsemi.android.mcp_2016-12-02_source_from_JADX\no\nordicsemi\android\support\v18\scanner\BluetoothUuid.java 
+
+png`
+
+
+D:\Cloud_mail_ru\_FIRM\Relsib\Ilja\no.nordicsemi.android.mcp_2016-12-02_source_from_JADX\no.nordicsemi.android.mcp_2016-12-02_source_from_JADX\res\drawable\ic_signal.xml 
+D:\Cloud_mail_ru\_FIRM\Relsib\Ilja\no.nordicsemi.android.mcp_2016-12-02_source_from_JADX\no.nordicsemi.android.mcp_2016-12-02_source_from_JADX\res\drawable-xhdpi-v4\ic_rssi_0_bar.png 
+..---------------------------------------------
+
 Переключател по этой ссылке описан
     !!там описана разница в кодах как для 4.1 и 5.1 делать
     http://stackoverflow.com/questions/11253512/change-on-color-of-a-switch
