@@ -11,8 +11,10 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 
@@ -23,7 +25,7 @@ import com.portfolio.alexey.connector.Util;
 import java.security.acl.Group;
 
 import static java.lang.Thread.sleep;
-
+import com.kyleduo.switchbutton.SwitchButton;
 /**
  * Created by lesa on 27.12.2016.
  */
@@ -85,12 +87,112 @@ public class MainActivityThermometer  extends AppCompatActivity {// ActionBarAct
                 if(sensor != null) sensor.resetNotificationVibrationLevelMinMax();
             }
         });
+        SwitchButton sw = (SwitchButton)thermometer.findViewById(R.id.switchOffSensor);
+        sw.setTextColor(getResources().getColor(R.color.colorTextlight));
+        //ловит касания и перемещение
+        sw.setOnTouchListener(new CompoundButton.OnTouchListener(){
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return onTouchSwitchButton(v,event);
+            }
+        });
+        //ловит изменеия состояния
+//        sw.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener(){
+//            @Override
+//            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+//                Log.v(TAG,"onCheckedChanged--");
+//            }
+//        });
+ //       sw.setThumbSize(50f,50f);//размер круга- большлго пальца
+        sw.setText("wait","offSensor");
+//        sw.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                //сброс минимум и максимум
+//              ; // if(sensor != null) sensor.resetNotificationVibrationLevelMinMax();
+//            }
+//        });
         setThermometerView();
         //  при запуске если в горизогнтальном положении был, учитываем это
         onConfigurationChanged(getResources().getConfiguration());
         //
         Log.e(TAG, "----onCreate END-----");
     }
+    private boolean onTouchSwitchButton(View v, MotionEvent event) {
+        boolean in = false;
+        SwitchButton sw = (SwitchButton)v;
+        Log.v(TAG,"onTouch--" + event.getX() + "  size= " + v.getWidth()
+                +"  start= "+ (event.getX() -v.getX())
+                + "  progress= " + sw.getProcess() + "   Checked= "+sw.isChecked());
+        //  if(event.getAction() == MotionEvent.ACTION_DOWN){return true;}
+        //ЕСЛИ возвратить ИСТИНО- то это означает конец обработки слушателя
+        // блокируя дальнейшее  распространение, переключатель не перепрыгивает из вкл/выкл
+        // при отпускании МЫ контролируем где это произошло, и
+        // если это вблизи 30% от переключения, разрешаем переключаться,
+        // иначе возвращяем назад все
+        if(in) {
+            in = false;
+            return false;
+        }
+        if(event.getAction() == MotionEvent.ACTION_UP){
+            boolean on = sw.isChecked();
+            if(!on){//если выключен
+                if(sw.getProcess() < 0.7f){
+                    sw.setProcess(0f);//возвращяем все назад
+                    return true;// обработка завершена
+                } else{//преходим в новое состояние сами собой
+                   sw.toggleImmediatelyNoEvent();
+                    in = true;
+                    sw.onTouchEvent(event);
+                    in = false;
+                  //  sw.invalidate();
+                  //  sw.toggleNoEvent();
+//                    sw.setChecked(true);
+//                    sw.setProcess(1f);
+//                    Handler handler = new Handler();
+//                    handler.postDelayed(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            sw.onTouchEvent();
+//                        }
+//                    },1000);
+                }
+            } else {
+                sw.setProcess(1f);//возвращяем все назад
+                return true;// обработка завершена
+            }
+        }
+        return false;
+    }
+//    private boolean onTouchSwitchButton(View v, MotionEvent event) {
+//        SwitchButton sw = (SwitchButton)v;
+//        Log.v(TAG,"onTouch--" + event.getX() + "  size= " + v.getWidth()
+//                +"  start= "+ (event.getX() -v.getX())
+//                + "  progress= " + sw.getProcess() + "   Checked= "+sw.isChecked());
+//        //  if(event.getAction() == MotionEvent.ACTION_DOWN){return true;}
+//        //ЕСЛИ возвратить ИСТИНО- то это означает конец обработки слушателя
+//        // блокируя дальнейшее  распространение, переключатель не перепрыгивает из вкл/выкл
+//        // при отпускании МЫ контролируем где это произошло, и
+//        // если это вблизи 30% от переключения, разрешаем переключаться,
+//        // иначе возвращяем назад все
+//        if(event.getAction() == MotionEvent.ACTION_UP){
+//            boolean on = sw.isChecked();
+//            //если вЫключен, и мы НЕ превысили порог переключения ВКЛ (70%)
+//            if(!on && (sw.getProcess() < 0.7f)){
+//                sw.setProcess(0f);//возвращяем все назад
+//                return true;// обработка завершена
+//            }  else{
+//                //если включен, и мы НЕ превысили порог переключения ВЫКЛ (30%)
+//                if(on && (sw.getProcess() > 0.3f)){
+//                    // запрешяем обработку, возвращяем назад
+//                    sw.setProcess(1f);//возвращяем все назад
+//                    return true;// обработка завершена
+//                }
+//            }
+//        }
+//        return false;
+//    }
+
     private void setThermometerView(){
       //  thermometer_column
         ImageView fon, column;

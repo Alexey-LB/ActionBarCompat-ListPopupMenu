@@ -380,10 +380,25 @@
 
                         <FrameLayout
                             android:layout_width="match_parent"
-                            android:layout_weight="1"
+                            android:layout_weight="0.2"
                             android:layout_height="@dimen/iten_img_size"
                             android:background="@drawable/rectangle_line_corners_black_5dp"
                             android:layout_margin="@dimen/ic_img_gap">
+                            <com.kyleduo.switchbutton.SwitchButton
+                                android:id="@+id/switchOffSensor"
+                                style="@style/SwitchButtonStyle"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                app:kswAnimationDuration="300"
+                                app:kswBackDrawable="@drawable/ios_back_drawable"
+                                app:kswBackMeasureRatio="5"
+                                app:kswThumbDrawable="@drawable/ios_thumb_selector"
+                                app:kswThumbMarginBottom="-8dp"
+                                app:kswThumbMarginLeft="-5dp"
+                                app:kswThumbMarginRight="-5dp"
+                                app:kswThumbMarginTop="-2.5dp"
+                                android:layout_weight="0"
+                                android:layout_marginRight="3dp"/>
 
                         </FrameLayout>
 
@@ -394,7 +409,21 @@
                             android:background="@drawable/rectangle_line_corners_black_5dp"
                             android:layout_margin="@dimen/ic_img_gap"
                             android:id="@+id/reset_min_max">
-
+                            <com.kyleduo.switchbutton.SwitchButton
+                                android:id="@+id/switchResetMeasurement"
+                                style="@style/SwitchButtonStyle"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                app:kswAnimationDuration="300"
+                                app:kswBackDrawable="@drawable/ios_back_drawable"
+                                app:kswBackMeasureRatio="3"
+                                app:kswThumbDrawable="@drawable/ios_thumb_selector"
+                                app:kswThumbMarginBottom="-8dp"
+                                app:kswThumbMarginLeft="-5dp"
+                                app:kswThumbMarginRight="-5dp"
+                                app:kswThumbMarginTop="-2.5dp"
+                                android:layout_weight="0"
+                                android:layout_marginRight="3dp"/>
                             <TextView
                                 android:text="Сброс"
                                 android:layout_width="wrap_content"

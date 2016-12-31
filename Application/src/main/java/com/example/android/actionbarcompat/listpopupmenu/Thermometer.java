@@ -130,11 +130,11 @@ public class Thermometer extends Drawable {
         int colWith = columnWith *4;
         int startX = (width - colWith) /2;
         drawLine(startX,startX + colWith,0, minTemperaturePoint, mPath);
-        drawCanvas(canvas, 0xc000c0ff, mPath);
+        drawCanvas(canvas, 0xc000c0ff, mPath,  Paint.Style.FILL);//Paint.Style.STROKE
         //MAX
         startX = (width - colWith) /2;
         drawLine(startX,startX + colWith, maxTemperaturePoint,height, mPath);
-        drawCanvas(canvas, 0xc0ff0000, mPath);//80ffc0c0
+        drawCanvas(canvas, 0xc0ff0000, mPath, Paint.Style.FILL);//80ffc0c0 Paint.Style.STROKE
         //-----------
    //     Path mPath = new Path();
         int offset = width /offsetLeftRight;//смещение от края имеджа
@@ -149,9 +149,9 @@ public class Thermometer extends Drawable {
                 else x = offsetGap *4;
             }
             endX = width - x;
-            drawLine(x,endX,y, y-(int)density, mPath);
+            drawLine(x,endX,y, y+(int)density, mPath);
         }
-        drawCanvas(canvas, 0xFF000000, mPath);
+        drawCanvas(canvas, 0xFF000000, mPath, Paint.Style.FILL);//Paint.Style.STROKE--почемуто хреново рисует!
     }
     //можно использовать один и тот же Path, НО обязательно path.reset(); при повторном использовании
     //Paint- хранит цвет кисть и т д -
@@ -161,35 +161,35 @@ public class Thermometer extends Drawable {
 //        //сначала стираем столбик
         startX = (width - columnWith) /2;
         drawLine(startX,startX + columnWith,0,height, mPath);
-        drawCanvas(canvas, 0xffFFFFFF, mPath);
+        drawCanvas(canvas, 0xffFFFFFF, mPath,   Paint.Style.FILL);//Paint.Style.STROKE
 
         level = hightColumn;
  //       mPath = new Path();
         startX = (width - columnWith) /2;
         drawLine(startX,startX + columnWith,0,level, mPath);
-        drawCanvas(canvas, 0xFF404040, mPath);
+        drawCanvas(canvas, 0xFF404040, mPath,   Paint.Style.FILL);//Paint.Style.STROKE
     //    drawCanvas(canvas, 0xFFA00000, mPath);
         //
    //     mPath = new Path();
         startX = (width - columnWith + (int)(6 * density)) /2;
         drawLine(startX,startX + columnWith -(int)(6 * density),0,level, mPath);
-        drawCanvas(canvas, 0xFF808080, mPath);
+        drawCanvas(canvas, 0xFF808080, mPath,   Paint.Style.FILL);//Paint.Style.STROKE
    //     drawCanvas(canvas, 0xFFE08080, mPath);//
         //
   //      mPath = new Path();
         startX = (width - columnWith + (int)(8 * density)) /2;
         drawLine(startX,startX + columnWith -(int)(8 * density),0,level, mPath);
-        drawCanvas(canvas, 0xFFc0c0c0, mPath );
+        drawCanvas(canvas, 0xFFc0c0c0, mPath ,   Paint.Style.FILL);//Paint.Style.STROKE
    //     drawCanvas(canvas, 0xFFE08080, mPath );
         startX = (width - columnWith + (int)(9 * density)) /2;
         drawLine(startX,startX + columnWith -(int)(9 * density),0,level, mPath);
-        drawCanvas(canvas, 0xFFffffff, mPath );
+        drawCanvas(canvas, 0xFFffffff, mPath,   Paint.Style.FILL);//Paint.Style.STROKE
     }
     //можно использовать один и тот же Path,
     // НО!! обязательно path.reset(); после canvas.drawPath()
     // иначе продолжает рисовать ОДНИМ И тем же цветом!!
     //Paint- хранит цвет кисть
-    private  void drawCanvas(Canvas canvas, int color, Path mPath ) {
+    private  void drawCanvas(Canvas canvas, int color, Path mPath , Paint.Style style) {
         mPath.close();//перед новым использованием обязательно закрываем
  //       Paint mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 //        paint.setColorFilter(mPaint.getColorFilter());
@@ -198,20 +198,50 @@ public class Thermometer extends Drawable {
 //        paint.setColor(color);//новый цвет фигуры
 //        canvas.drawPath(mPath, paint);//рисуем
         mPaint.setColor(color);//новый цвет фигуры
+        mPaint.setStrokeWidth(density);
+         mPaint.setStyle(style);//Paint.Style.STROKE
         canvas.drawPath(mPath, mPaint);//рисуем
         //можно использовать один и тот же Path,
         // НО!! обязательно path.reset(); после canvas.drawPath()
         mPath.reset();//сбрасываем запомненную фигуру(возможно просто отрисовывает)
     }
+    private void drawrectangle(int x,int endX,int y,int endY, Path mPath ){
+        //ПО УМОЛЧАНИЮ- 0 У, верхний левый УГОЛ экрана!
+        // переворачиваем- ИДЕМ СНИЗУ вверх,
+           y = height - y;
+        endY = height - endY;
+        if(x <= 0) x = 1;
+        if(y <= 0)y = 1;
+        if(x >= width) x = width -1;
+        if(y >= height)y = height -1;
+        if((x == endX) && (y == endY)) return;//это точка ее не рисует, выдает только ошибку
+
+//        if(x < 10) x = 10;
+//        if(y < 10)y = 10;
+//        if(x >= (width -10)) x = width -10;
+//        if(y >= (height - 10))y = height -10;
+
+        mPath.moveTo(x, y);
+        mPath.lineTo(endX, y);
+        mPath.lineTo(endX, endY);
+        mPath.lineTo(x, endY);
+        mPath.lineTo(x, y);
+    }
     private void drawLine(int x,int endX,int y,int endY, Path mPath ){
         //ПО УМОЛЧАНИЮ- 0 У, верхний левый УГОЛ экрана!
         // переворачиваем- ИДЕМ СНИЗУ вверх,
+        if(true) return;
         y = height - y;
         endY = height - endY;
-        if(x < 0) x = 0;
-        if(y < 0)y = 0;
+        if(x <= 0) x = 1;
+        if(y <= 0)y = 1;
         if(x >= width) x = width -1;
         if(y >= height)y = height -1;
+        if((x == endX) || (y == endY)) return;//это точка ее не рисует, выдает только ошибку
+//        if(x < 10) x = 10;
+//        if(y < 10)y = 10;
+//        if(x >= (width -10)) x = width -10;
+//        if(y >= (height - 10))y = height -10;
 
         mPath.moveTo(x, y);
         mPath.lineTo(endX, y);
