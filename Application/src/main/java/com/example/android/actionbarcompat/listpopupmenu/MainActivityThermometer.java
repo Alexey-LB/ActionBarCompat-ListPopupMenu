@@ -2,27 +2,22 @@ package com.example.android.actionbarcompat.listpopupmenu;
 
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
-import android.widget.ListView;
 
 import com.portfolio.alexey.connector.BluetoothLeServiceNew;
 import com.portfolio.alexey.connector.Sensor;
+import com.portfolio.alexey.connector.Thermometer;
 import com.portfolio.alexey.connector.Util;
-
-import java.security.acl.Group;
 
 import static java.lang.Thread.sleep;
 import com.kyleduo.switchbutton.SwitchButton;
@@ -119,45 +114,28 @@ public class MainActivityThermometer  extends AppCompatActivity {// ActionBarAct
         Log.e(TAG, "----onCreate END-----");
     }
     private boolean onTouchSwitchButton(View v, MotionEvent event) {
-      //  boolean in = false;
         SwitchButton sw = (SwitchButton)v;
-        Log.v(TAG,"onTouch--" + event.getX() + "  size= " + v.getWidth()
-                +"  start= "+ (event.getX() -v.getX())
-                + "  progress= " + sw.getProcess() + "   Checked= "+sw.isChecked());
+//        Log.v(TAG,"onTouch--" + event.getX() + "  size= " + v.getWidth()
+//                +"  start= "+ (event.getX() -v.getX())
+//                + "  progress= " + sw.getProcess() + "   Checked= "+sw.isChecked());
         //  if(event.getAction() == MotionEvent.ACTION_DOWN){return true;}
         //ЕСЛИ возвратить ИСТИНО- то это означает конец обработки слушателя
         // блокируя дальнейшее  распространение, переключатель не перепрыгивает из вкл/выкл
         // при отпускании МЫ контролируем где это произошло, и
         // если это вблизи 30% от переключения, разрешаем переключаться,
         // иначе возвращяем назад все
-//        if(in) {
-//            in = false;
-//            return false;
-//        }
         if(event.getAction() == MotionEvent.ACTION_UP){
             boolean on = sw.isChecked();
             if(!on){//если выключен
                 if(sw.getProcess() < 0.7f){
                     sw.setProcess(0f);//возвращяем все назад
                     return true;// обработка завершена
-                } else{//преходим в новое состояние сами собой
+                } else{
+                    //преходим в новое состояние сами собой
                    sw.toggleImmediatelyNoEvent();
-//                    in = true;
-//                    sw.onTouchEvent(event);
-//                    in = false;
-                  //  sw.invalidate();
-                  //  sw.toggleNoEvent();
-//                    sw.setChecked(true);
-//                    sw.setProcess(1f);
-//                    Handler handler = new Handler();
-//                    handler.postDelayed(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            sw.onTouchEvent();
-//                        }
-//                    },1000);
                 }
             } else {
+                //блокируем во включенном состоянии, при обновлении экрана- возвращяем в 0
                 sw.setProcess(1f);//возвращяем все назад
                 return true;// обработка завершена
             }

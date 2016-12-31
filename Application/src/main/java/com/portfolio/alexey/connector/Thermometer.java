@@ -1,4 +1,4 @@
-package com.example.android.actionbarcompat.listpopupmenu;
+package com.portfolio.alexey.connector;
 
 import android.graphics.Canvas;
 import android.graphics.ColorFilter;
@@ -44,7 +44,7 @@ public class Thermometer extends Drawable {
     private  int height = 0;//  10 dpi
     private  boolean chengSize = false;//  10 dpi
 
-    Thermometer(float density_,float minTemperature_,float maxTemperature_, boolean fahrenheit){
+    public Thermometer(float density_,float minTemperature_,float maxTemperature_, boolean fahrenheit){
         super();
         onFahrenheit = fahrenheit;
         if(fahrenheit){
@@ -157,13 +157,13 @@ public class Thermometer extends Drawable {
     //Paint- хранит цвет кисть и т д -
     private void drawThermometerColumn(Canvas canvas) {
         //
-        int level, startX;
+        int startX, level = hightColumn;
+
 //        //сначала стираем столбик
         startX = (width - columnWith) /2;
         drawLine(startX,startX + columnWith,0,height, mPath);
         drawCanvas(canvas, 0xffFFFFFF, mPath,   Paint.Style.FILL);//Paint.Style.STROKE
 
-        level = hightColumn;
  //       mPath = new Path();
         startX = (width - columnWith) /2;
         drawLine(startX,startX + columnWith,0,level, mPath);
@@ -208,18 +208,18 @@ public class Thermometer extends Drawable {
     private void drawrectangle(int x,int endX,int y,int endY, Path mPath ){
         //ПО УМОЛЧАНИЮ- 0 У, верхний левый УГОЛ экрана!
         // переворачиваем- ИДЕМ СНИЗУ вверх,
-           y = height - y;
+        y = height - y;
         endY = height - endY;
-        if(x <= 0) x = 1;
-        if(y <= 0)y = 1;
+        if(x < 0) x = 0;
+        if(y < 0)y = 0;
         if(x >= width) x = width -1;
         if(y >= height)y = height -1;
-        if((x == endX) && (y == endY)) return;//это точка ее не рисует, выдает только ошибку
-
-//        if(x < 10) x = 10;
-//        if(y < 10)y = 10;
-//        if(x >= (width -10)) x = width -10;
-//        if(y >= (height - 10))y = height -10;
+        //
+        if(endX < 0) endX = 0;
+        if(endY < 0)endY = 0;
+        if(endX >= width) endX = width -1;
+        if(endY >= height)endY = height -1;
+        if((x == endX) && (y == endY)) return;//это точка ее не рисует,
 
         mPath.moveTo(x, y);
         mPath.lineTo(endX, y);
@@ -230,14 +230,18 @@ public class Thermometer extends Drawable {
     private void drawLine(int x,int endX,int y,int endY, Path mPath ){
         //ПО УМОЛЧАНИЮ- 0 У, верхний левый УГОЛ экрана!
         // переворачиваем- ИДЕМ СНИЗУ вверх,
-        if(true) return;
         y = height - y;
         endY = height - endY;
-        if(x <= 0) x = 1;
-        if(y <= 0)y = 1;
+        if(x < 0) x = 0;
+        if(y < 0)y = 0;
         if(x >= width) x = width -1;
         if(y >= height)y = height -1;
-        if((x == endX) || (y == endY)) return;//это точка ее не рисует, выдает только ошибку
+        //
+        if(endX < 0) endX = 0;
+        if(endY < 0)endY = 0;
+        if(endX >= width) endX = width -1;
+        if(endY >= height)endY = height -1;
+        if((x == endX) && (y == endY)) return;//это точка ее не рисует,
 //        if(x < 10) x = 10;
 //        if(y < 10)y = 10;
 //        if(x >= (width -10)) x = width -10;
@@ -248,5 +252,7 @@ public class Thermometer extends Drawable {
         mPath.lineTo(endX, endY);
         mPath.lineTo(x, endY);
         mPath.lineTo(x, y);
+
+       // Log.v(TAG,"x= "+x +"  endX= " + endX +"  y= "+y+"  endY= "+ endY);
     }
 }
