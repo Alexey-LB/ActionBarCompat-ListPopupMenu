@@ -389,7 +389,7 @@
                                 style="@style/SwitchButtonStyle"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                app:kswAnimationDuration="300"
+                                app:kswAnimationDuration="1000"
                                 app:kswBackDrawable="@drawable/ios_back_drawable"
                                 app:kswBackMeasureRatio="5"
                                 app:kswThumbDrawable="@drawable/ios_thumb_selector"

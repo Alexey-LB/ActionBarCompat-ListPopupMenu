@@ -119,7 +119,7 @@ public class MainActivityThermometer  extends AppCompatActivity {// ActionBarAct
         Log.e(TAG, "----onCreate END-----");
     }
     private boolean onTouchSwitchButton(View v, MotionEvent event) {
-        boolean in = false;
+      //  boolean in = false;
         SwitchButton sw = (SwitchButton)v;
         Log.v(TAG,"onTouch--" + event.getX() + "  size= " + v.getWidth()
                 +"  start= "+ (event.getX() -v.getX())
@@ -130,10 +130,10 @@ public class MainActivityThermometer  extends AppCompatActivity {// ActionBarAct
         // при отпускании МЫ контролируем где это произошло, и
         // если это вблизи 30% от переключения, разрешаем переключаться,
         // иначе возвращяем назад все
-        if(in) {
-            in = false;
-            return false;
-        }
+//        if(in) {
+//            in = false;
+//            return false;
+//        }
         if(event.getAction() == MotionEvent.ACTION_UP){
             boolean on = sw.isChecked();
             if(!on){//если выключен
@@ -142,9 +142,9 @@ public class MainActivityThermometer  extends AppCompatActivity {// ActionBarAct
                     return true;// обработка завершена
                 } else{//преходим в новое состояние сами собой
                    sw.toggleImmediatelyNoEvent();
-                    in = true;
-                    sw.onTouchEvent(event);
-                    in = false;
+//                    in = true;
+//                    sw.onTouchEvent(event);
+//                    in = false;
                   //  sw.invalidate();
                   //  sw.toggleNoEvent();
 //                    sw.setChecked(true);
@@ -283,6 +283,11 @@ public class MainActivityThermometer  extends AppCompatActivity {// ActionBarAct
 
         Util.setLevelToImageView(b? sensor.battery_level: 0, R.id.battery, view);
         Util.setLevelToImageView(sensor.rssi, R.id.signal, view);
+        //
+        SwitchButton sw = (SwitchButton)thermometer.findViewById(R.id.switchOffSensor);
+        if(sw.isChecked()){
+            sw.setChecked(false);
+        }
      }
     private boolean mHandlerWork = true;
     private Handler mHandler = new Handler();
