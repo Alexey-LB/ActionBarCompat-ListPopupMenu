@@ -9,8 +9,8 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Switch;
-
+//import android.widget.Switch;
+import com.kyleduo.switchbutton.SwitchButton;
 import com.portfolio.alexey.connector.InputBox;
 import com.portfolio.alexey.connector.Sensor;
 import com.portfolio.alexey.connector.Util;
@@ -63,23 +63,22 @@ public class SettingMinMax extends Activity implements View.OnClickListener{
     private void updateTextString(){
         if((sensor == null) || (mHandlerWork == false)) return;
         //
+        String value; boolean vibration, notification;
         if(maxValue){
-            Util.setTextToTextView(sensor.getStringMaxTemperature(true)
-                    ,R.id.textViewValue, this);
-            ((Switch)findViewById(R.id.switchVibration))
-                    .setChecked(sensor.onMaxVibration);
-
-        ((Switch)findViewById(R.id.switchNotification))
-        .setChecked(sensor.onMaxNotification);
-        }else{
-            Util.setTextToTextView(sensor.getStringMinTemperature(true)
-                    ,R.id.textViewValue, this);
-            ((Switch)findViewById(R.id.switchVibration))
-                    .setChecked(sensor.onMinVibration);
-
-            ((Switch)findViewById(R.id.switchNotification))
-                    .setChecked(sensor.onMinNotification);
+            value = sensor.getStringMaxTemperature(true);
+            notification = sensor.onMaxNotification;
+            vibration = sensor.onMaxVibration;
+        } else{
+            value = sensor.getStringMinTemperature(true);
+            notification = sensor.onMinNotification;
+            vibration = sensor.onMinVibration;
         }
+        Util.setTextToTextView(value,R.id.textViewValue, this);
+        //установка состояния переключателя
+        ((SwitchButton)findViewById(R.id.switchNotification)).setChecked(notification);
+        ((SwitchButton)findViewById(R.id.switchVibration)).setChecked(vibration);
+        // установка его ДОСТУПНОСТИ, работает или нет
+        findViewById(R.id.switchVibration).setEnabled(notification);
     }
     @Override
     protected void onPause() {
@@ -201,14 +200,14 @@ public class SettingMinMax extends Activity implements View.OnClickListener{
                 }
                 break;
             case R.id.switchNotification:
-                on = ((Switch)findViewById(R.id.switchNotification)).isChecked();
+                on = ((SwitchButton)findViewById(R.id.switchNotification)).isChecked();
                 if(maxValue) sensor.onMaxNotification = on;
                 else sensor.onMinNotification  = on;
                 if(on)Util.playerRingtone(0f, maxValue?sensor.maxMelody:sensor.minMelody
                         , this,TAG);
                 break;
             case R.id.switchVibration:
-                on = ((Switch)findViewById(R.id.switchVibration)).isChecked();
+                on = ((SwitchButton)findViewById(R.id.switchVibration)).isChecked();
                 if(maxValue) sensor.onMaxVibration = on;
                 else sensor.onMinVibration = on;
                 //

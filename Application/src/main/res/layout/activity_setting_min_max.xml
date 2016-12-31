@@ -70,14 +70,30 @@
             android:layout_height="wrap_content"
             android:layout_weight="10" />
 
-        <Switch
+        <!--<Switch-->
+            <!--android:id="@+id/switchNotification"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_weight="0"-->
+            <!--android:layout_marginRight="20dp"-->
+            <!--android:layout_gravity="right|center_vertical"-->
+            <!--android:switchTextAppearance="@style/TextAppearance.AppCompat" />-->
+        <com.kyleduo.switchbutton.SwitchButton
             android:id="@+id/switchNotification"
+            style="@style/SwitchButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            app:kswAnimationDuration="300"
+            app:kswBackDrawable="@drawable/ios_back_drawable"
+            app:kswBackMeasureRatio="1.6"
+            app:kswThumbDrawable="@drawable/ios_thumb_selector"
+            app:kswThumbMarginBottom="-8dp"
+            app:kswThumbMarginLeft="-5dp"
+            app:kswThumbMarginRight="-5dp"
+            app:kswThumbMarginTop="-2.5dp"
             android:layout_weight="0"
-            android:layout_marginRight="20dp"
-            android:layout_gravity="right|center_vertical"
-            android:switchTextAppearance="@style/TextAppearance.AppCompat" />
+
+            android:layout_marginRight="3dp"/>
 
     </LinearLayout>
 
@@ -206,14 +222,31 @@
             android:layout_height="wrap_content"
             android:layout_weight="10" />
 
-        <Switch
+        <!--<Switch-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:id="@+id/switchVibration"-->
+            <!--android:layout_weight="0"-->
+            <!--android:layout_marginRight="20dp"-->
+            <!--android:layout_gravity="right|center_vertical"-->
+            <!--android:switchTextAppearance="@style/TextAppearance.AppCompat" />-->
+
+        <com.kyleduo.switchbutton.SwitchButton
+            android:id="@+id/switchVibration"
+            style="@style/SwitchButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/switchVibration"
+            app:kswAnimationDuration="300"
+            app:kswBackDrawable="@drawable/ios_back_drawable"
+            app:kswBackMeasureRatio="1.6"
+            app:kswThumbDrawable="@drawable/ios_thumb_selector"
+            app:kswThumbMarginBottom="-8dp"
+            app:kswThumbMarginLeft="-5dp"
+            app:kswThumbMarginRight="-5dp"
+            app:kswThumbMarginTop="-2.5dp"
             android:layout_weight="0"
-            android:layout_marginRight="20dp"
-            android:layout_gravity="right|center_vertical"
-            android:switchTextAppearance="@style/TextAppearance.AppCompat" />
+
+            android:layout_marginRight="3dp"/>
 
     </LinearLayout>
     <!--Версия прошивки-->

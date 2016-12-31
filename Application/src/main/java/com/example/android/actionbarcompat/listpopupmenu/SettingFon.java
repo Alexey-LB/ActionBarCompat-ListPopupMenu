@@ -9,7 +9,7 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Switch;
+//import android.widget.Switch;
 
 import com.portfolio.alexey.connector.InputBox;
 import com.portfolio.alexey.connector.Sensor;

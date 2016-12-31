@@ -433,6 +433,10 @@ return null;//fbButton_;
             mbleDot.add((Sensor) object);
             //adapter.notifyDataSetInvalidated();
             adapter.notifyDataSetChanged();
+            // переходим в ОКНО настройки
+           // goToSetting(adapter.getPosition(object));//один вариант
+            //второй вариант, добавление в лист идет в конец, поэтому берем длинну лиcта -1
+            goToSetting(mbleDot.size() - 1);
         }
         objectDataToView.moveButton();//позиционируем
         return true;
@@ -466,6 +470,14 @@ return null;//fbButton_;
 //        getResources().getDisplayMetrics().xdpi;//точное количество пикселей по ширине экрана на один дюймна 1 дюйм (25.4 мм)
 //        getResources().getDisplayMetrics().ydpi;//точное количество пикселей по высоте экрана на один дюймна 1 дюйм (25.4 мм)
 //        getResources().getDisplayMetrics().densityDpi;//примерная обобщенная оценка кол. пикселей на один дюймна 1 дюйм (25.4 мм)
+    }
+    //переход в окно установок (после добавления объекта тоже сюда идем!)
+    private void goToSetting(int i) {
+        final Intent intent = new Intent(getActivity(), MainSettingSetting.class);
+        intent.putExtra(MainActivityWork.EXTRAS_DEVICE_ITEM, i);
+        intent.putExtra(Util.EXTRAS_BAR_TITLE, "  B4/B5");
+        //startActivityForResult(intent,MainActivityWork.MAINACTIVITY);//
+        startActivity(intent);//
     }
     /**
      * Класс обеспечивающий по событиям добавлять удалять объекты и вызывать события для вызова других окон
@@ -680,11 +692,12 @@ return null;//fbButton_;
   clearScrollX_View(true);//затираем на него ссылку? с ним закончили
              //                       if(obj instanceof Sensor) ((Sensor)obj).resetMinMaxValueTemperature();
                                     //      //-------Setting --
-      final Intent intent = new Intent(getActivity(), MainSettingSetting.class);
-      intent.putExtra(MainActivityWork.EXTRAS_DEVICE_ITEM, i);
-      intent.putExtra(Util.EXTRAS_BAR_TITLE, "  B4/B5");
-      //startActivityForResult(intent,MainActivityWork.MAINACTIVITY);//
-      startActivity(intent);//
+                                    goToSetting(i);
+//      final Intent intent = new Intent(getActivity(), MainSettingSetting.class);
+//      intent.putExtra(MainActivityWork.EXTRAS_DEVICE_ITEM, i);
+//      intent.putExtra(Util.EXTRAS_BAR_TITLE, "  B4/B5");
+//      //startActivityForResult(intent,MainActivityWork.MAINACTIVITY);//
+//      startActivity(intent);//
 
                                     str = "CLICK_SHORT i= " + i + "  Edit obj= " + obj;
            //                         if(i >= 0) Toast.makeText(getActivity(), "onClick Edit N= " + i, Toast.LENGTH_SHORT).show();

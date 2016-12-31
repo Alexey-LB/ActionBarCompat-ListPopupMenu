@@ -21,10 +21,11 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+//import android.widget.Switch;
+import com.kyleduo.switchbutton.SwitchButton;
 import com.portfolio.alexey.connector.InputBox;
 import com.portfolio.alexey.connector.Sensor;
 import com.portfolio.alexey.connector.Util;
@@ -246,8 +247,10 @@ public class MainSettingSetting  extends Activity implements View.OnClickListene
                 break;
             case R.id.switchVibration:
                 Log.v(TAG,"imageButtonVibration");
-                sensor.onEndVibration = ((Switch)findViewById(R.id.switchVibration))
-                        .isChecked();
+            //    sensor.onEndVibration = ((Switch)findViewById(R.id.switchVibration))
+            //            .isChecked();//SwitchButton
+                sensor.onEndVibration = ((SwitchButton)findViewById(R.id.switchVibration))
+                        .isChecked();//SwitchButton
                 if(sensor.onEndVibration)Util.playerVibrator(400,this);
                 break;
             case R.id.imageButtonTemperaturesAbove:

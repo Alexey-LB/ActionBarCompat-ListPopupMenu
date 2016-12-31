@@ -123,12 +123,27 @@
             android:textStyle="normal|bold"
             android:gravity="right|center_vertical" />
         <!---->
-        <Switch
+        <!--<Switch-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:id="@+id/switchVibration"-->
+            <!--android:layout_weight="0"-->
+            <!--android:layout_marginRight="15dp" />-->
+        <com.kyleduo.switchbutton.SwitchButton
+            android:id="@+id/switchVibration"
+            style="@style/SwitchButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/switchVibration"
+            app:kswAnimationDuration="300"
+            app:kswBackDrawable="@drawable/ios_back_drawable"
+            app:kswBackMeasureRatio="1.6"
+            app:kswThumbDrawable="@drawable/ios_thumb_selector"
+            app:kswThumbMarginBottom="-8dp"
+            app:kswThumbMarginLeft="-5dp"
+            app:kswThumbMarginRight="-5dp"
+            app:kswThumbMarginTop="-2.5dp"
             android:layout_weight="0"
-            android:layout_marginRight="15dp" />
+            android:layout_marginRight="3dp"/>
 
         <!--ВИСНИТ но потом проверить, именно такой переключатель нужен!!-->
         <!--там описана разница в кодах как для 4.1 и 5.1 делать-->
