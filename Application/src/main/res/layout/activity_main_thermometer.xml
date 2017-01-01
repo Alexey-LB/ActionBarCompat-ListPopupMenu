@@ -36,12 +36,13 @@
                 android:layout_height="match_parent">
 
                 <FrameLayout
-                    android:layout_width="64dp"
+                    android:layout_width="@dimen/frame_thermometer_wigth"
                     android:layout_height="match_parent"
                     android:layout_weight="0"
                     android:background="@drawable/rectangle_line_corners_black_10dp"
                     android:layout_marginRight="@dimen/ic_img_gap"
-                    android:layout_marginLeft="2dp">
+                    android:layout_marginLeft="2dp"
+                    android:id="@+id/frameLayoutThermometer">
 
                     <ImageView
                         android:layout_height="match_parent"
@@ -400,7 +401,7 @@
                             app:kswThumbMarginTop="-2.5dp"
                                 app:kswBackMeasureRatio="2"
                                 app:kswThumbWidth="45dp"
-                                app:kswThumbHeight="45dp"
+                                app:kswThumbHeight="@dimen/switch_button_size"
                                 android:layout_weight="1"
                                 android:layout_marginRight="7dp"
                                 android:layout_gravity="top|left"
@@ -432,8 +433,8 @@
                                 app:kswThumbMarginRight="-5dp"
                                 app:kswThumbMarginTop="-2.5dp"
                                 app:kswBackMeasureRatio="2"
-                                app:kswThumbWidth="45dp"
-                                app:kswThumbHeight="45dp"
+                                app:kswThumbWidth="@dimen/switch_button_size"
+                                app:kswThumbHeight="@dimen/switch_button_size"
                                 android:layout_weight="1"
                                 android:layout_marginRight="7dp"
                                 android:layout_gravity="top|right"

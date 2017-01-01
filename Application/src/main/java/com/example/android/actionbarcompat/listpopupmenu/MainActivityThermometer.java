@@ -91,7 +91,7 @@ public class MainActivityThermometer  extends AppCompatActivity {// ActionBarAct
                 .findViewById(R.id.switchOffSensor);
         mSwitchOffSensor.setTextColor(getResources()
                 .getColor(R.color.colorTextlight));//  sw.setBackColor(android.content.res.ColorStateList.valueOf(0xFFd0d0d0));
-     //   mSwitchOffSensor.setText("","Откл.");//
+        mSwitchOffSensor.setText("","Откл.");//
       //  mSwitchOffSensor.setMinWidth(200);
         //размер по ШИРИНЕ переключателя можно определить примерно ТАК
         //Ratio(2f) * ThumbSize(45f,45f) + 20dp = 110dp, + layout_marginRight(3dp)== 113dp!!
@@ -111,7 +111,7 @@ public class MainActivityThermometer  extends AppCompatActivity {// ActionBarAct
                 .findViewById(R.id.switchResetMeasurement);
         mSwitchResetMeasurement.setTextColor(getResources()
                 .getColor(R.color.colorTextlight));//  sw.setBackColor(android.content.res.ColorStateList.valueOf(0xFFd0d0d0));
-   //     mSwitchResetMeasurement.setText("","Сброс");//
+        mSwitchResetMeasurement.setText("","Сброс");//
         /////       sw.setThumbSize(50f,50f);//размер круга- большлго пальца
         //ловит касания и перемещение ЗДЕСЬ обработка сдвига переключателя
         // и фиксация во включенром сотоянии, в обновлении мы возвращяем его назад и
@@ -249,17 +249,22 @@ public class MainActivityThermometer  extends AppCompatActivity {// ActionBarAct
                 }
                 break;
         }
-        //--
         //-- вычисление размеров переключателей
         width = getResources().getDisplayMetrics().widthPixels
                 / getResources().getDisplayMetrics().density;
         //размер градусника+отступ слева (2), отступ справа (4) от градусника,
         // слой отступ слева (0), справа (0)= 6dp
-        width  = (width - 64 - 6)/2;
-        width = (width - 20) / 45;//дополнительный значения внутри переключателя, компенсируем
+        width  = width - getResources().getDimension(R.dimen.frame_thermometer_wigth)
+                - getResources().getDimension(R.dimen.ic_img_gap) *2;
+        // делим на 2, поскольку ереключателей 2
+        width  = width/2;
+        //дополнительный значения внутри переключателя, компенсируем
+        //делим на размер кнопки (радиуса)
+        width = (width - 20) / getResources().getDimension(R.dimen.switch_button_size);
         if (width > 7) width = 7;//ограничим длинну переключателя максимом
         if(mSwitchOffSensor != null)mSwitchOffSensor.setBackMeasureRatio(width);
         if(mSwitchResetMeasurement != null)mSwitchResetMeasurement.setBackMeasureRatio(width);
+        //--
         Log.w(TAG," Orientation==== " +newConfig.orientation + "   Ratio= "+ width);
     }
 
