@@ -2,6 +2,7 @@ package com.example.android.actionbarcompat.listpopupmenu;
 
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.PointF;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
@@ -42,6 +43,8 @@ public class MainActivityThermometer  extends AppCompatActivity {// ActionBarAct
     private int itemSensor = 0;
     private Sensor sensor;
     private Thermometer thermometerDrawable;
+    private SwitchButton mSwitchOffSensor;
+    private SwitchButton mSwitchResetMeasurement;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,39 +85,68 @@ public class MainActivityThermometer  extends AppCompatActivity {// ActionBarAct
                 if(sensor != null) sensor.resetNotificationVibrationLevelMinMax();
             }
         });
-        SwitchButton sw = (SwitchButton)thermometer.findViewById(R.id.switchOffSensor);
-        sw.setTextColor(getResources().getColor(R.color.colorTextlight));
-        //ловит касания и перемещение
-        sw.setOnTouchListener(new CompoundButton.OnTouchListener(){
+        //-------- ПЕРЕКЛЮЧАТЕЛИ --- Размеры его можно узнать ТОЛЬко после его отображения,
+        // не удобно расчитывать, по этому возьмем примерно
+        mSwitchOffSensor = (SwitchButton)thermometer
+                .findViewById(R.id.switchOffSensor);
+        mSwitchOffSensor.setTextColor(getResources()
+                .getColor(R.color.colorTextlight));//  sw.setBackColor(android.content.res.ColorStateList.valueOf(0xFFd0d0d0));
+     //   mSwitchOffSensor.setText("","Откл.");//
+      //  mSwitchOffSensor.setMinWidth(200);
+        //размер по ШИРИНЕ переключателя можно определить примерно ТАК
+        //Ratio(2f) * ThumbSize(45f,45f) + 20dp = 110dp, + layout_marginRight(3dp)== 113dp!!
+    //    mSwitchOffSensor.setBackMeasureRatio(2f);
+   //     mSwitchOffSensor.setThumbSize(45f,45f);
+
+        /////       sw.setThumbSize(50f,50f);//размер круга- большлго пальца
+        //ловит касания и перемещение ЗДЕСЬ обработка сдвига переключателя
+        // и фиксация во включенром сотоянии, в обновлении мы возвращяем его назад и
+        // выполняем функцию которой он предназначен!
+        mSwitchOffSensor.setOnTouchListener(new CompoundButton.OnTouchListener(){
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                return onTouchSwitchButton(v,event);
-            }
+            public boolean onTouch(View v, MotionEvent event) {return onTouchSwitchButton(v,event);}
+        });
+        //
+        mSwitchResetMeasurement = (SwitchButton)thermometer
+                .findViewById(R.id.switchResetMeasurement);
+        mSwitchResetMeasurement.setTextColor(getResources()
+                .getColor(R.color.colorTextlight));//  sw.setBackColor(android.content.res.ColorStateList.valueOf(0xFFd0d0d0));
+   //     mSwitchResetMeasurement.setText("","Сброс");//
+        /////       sw.setThumbSize(50f,50f);//размер круга- большлго пальца
+        //ловит касания и перемещение ЗДЕСЬ обработка сдвига переключателя
+        // и фиксация во включенром сотоянии, в обновлении мы возвращяем его назад и
+        // выполняем функцию которой он предназначен!
+        mSwitchResetMeasurement.setOnTouchListener(new CompoundButton.OnTouchListener(){
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {return onTouchSwitchButton(v,event);}
         });
         //ловит изменеия состояния
 //        sw.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener(){
 //            @Override
-//            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-//                Log.v(TAG,"onCheckedChanged--");
-//            }
-//        });
- //       sw.setThumbSize(50f,50f);//размер круга- большлго пальца
-        sw.setText("wait","offSensor");
-//        sw.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                //сброс минимум и максимум
-//              ; // if(sensor != null) sensor.resetNotificationVibrationLevelMinMax();
-//            }
-//        });
+//            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {Log.v(TAG,"onCheckedChanged--");}});
+        //-------------------------------------------------------------
         setThermometerView();
         //  при запуске если в горизогнтальном положении был, учитываем это
         onConfigurationChanged(getResources().getConfiguration());
+
+
         //
-        Log.e(TAG, "----onCreate END-----");
+        Log.e(TAG, "----onCreate END-----" );//+ ((PointF)mSwitchOffSensor.getBackSizeF()).toString());
+
+        View view = findViewById(R.id.linearLayoutSwitch);
+
+        Log.v(TAG, "----" + mSwitchOffSensor.getWidth()
+                + " = " + mSwitchOffSensor.getBackMeasureRatio()
+                + " = " + view.getWidth());
     }
     private boolean onTouchSwitchButton(View v, MotionEvent event) {
         SwitchButton sw = (SwitchButton)v;
+        View view = findViewById(R.id.frameLayoutSwitchOffSensor);
+        Log.v(TAG, "----" + sw.getWidth()
+               + " = " + sw.getBackMeasureRatio()
+                + " = " + view.getWidth()
+        );//((PointF)mSwitchOffSensor.getBackSizeF()).toString());
+
 //        Log.v(TAG,"onTouch--" + event.getX() + "  size= " + v.getWidth()
 //                +"  start= "+ (event.getX() -v.getX())
 //                + "  progress= " + sw.getProcess() + "   Checked= "+sw.isChecked());
@@ -127,12 +159,13 @@ public class MainActivityThermometer  extends AppCompatActivity {// ActionBarAct
         if(event.getAction() == MotionEvent.ACTION_UP){
             boolean on = sw.isChecked();
             if(!on){//если выключен
-                if(sw.getProcess() < 0.7f){
+                if(sw.getProcess() < 0.8f){
                     sw.setProcess(0f);//возвращяем все назад
                     return true;// обработка завершена
                 } else{
                     //преходим в новое состояние сами собой
-                   sw.toggleImmediatelyNoEvent();
+                   //sw.toggleImmediatelyNoEvent();
+                    sw.toggleNoEvent();
                 }
             } else {
                 //блокируем во включенном состоянии, при обновлении экрана- возвращяем в 0
@@ -189,7 +222,7 @@ public class MainActivityThermometer  extends AppCompatActivity {// ActionBarAct
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         //-- если горизонтально расположен ---
-        ViewGroup horizontal, vertical;View v,v2;
+        ViewGroup horizontal, vertical;View v,v2;float width;
         horizontal = (ViewGroup)thermometer.findViewById(R.id.telephon_horizontal);
         vertical = (ViewGroup)thermometer.findViewById(R.id.telephon_vertical);
 
@@ -216,7 +249,18 @@ public class MainActivityThermometer  extends AppCompatActivity {// ActionBarAct
                 }
                 break;
         }
-        Log.w(TAG," Orientation==== " +newConfig.orientation + "   "+ Configuration.ORIENTATION_LANDSCAPE);
+        //--
+        //-- вычисление размеров переключателей
+        width = getResources().getDisplayMetrics().widthPixels
+                / getResources().getDisplayMetrics().density;
+        //размер градусника+отступ слева (2), отступ справа (4) от градусника,
+        // слой отступ слева (0), справа (0)= 6dp
+        width  = (width - 64 - 6)/2;
+        width = (width - 20) / 45;//дополнительный значения внутри переключателя, компенсируем
+        if (width > 7) width = 7;//ограничим длинну переключателя максимом
+        if(mSwitchOffSensor != null)mSwitchOffSensor.setBackMeasureRatio(width);
+        if(mSwitchResetMeasurement != null)mSwitchResetMeasurement.setBackMeasureRatio(width);
+        Log.w(TAG," Orientation==== " +newConfig.orientation + "   Ratio= "+ width);
     }
 
     final int iconActionSetting = 234567896;
@@ -261,10 +305,13 @@ public class MainActivityThermometer  extends AppCompatActivity {// ActionBarAct
 
         Util.setLevelToImageView(b? sensor.battery_level: 0, R.id.battery, view);
         Util.setLevelToImageView(sensor.rssi, R.id.signal, view);
-        //
-        SwitchButton sw = (SwitchButton)thermometer.findViewById(R.id.switchOffSensor);
-        if(sw.isChecked()){
-            sw.setChecked(false);
+        //ловим в сотоянии ВКЛЮЧЕН, запускаем функцию на выполнение и сбрасываем переключатель
+        // в исхождное положение
+        if((mSwitchOffSensor != null) && (mSwitchOffSensor.isChecked())){
+            mSwitchOffSensor.setChecked(false);
+        }
+        if((mSwitchResetMeasurement != null) && (mSwitchResetMeasurement.isChecked())){
+            mSwitchResetMeasurement.setChecked(false);
         }
      }
     private boolean mHandlerWork = true;
@@ -290,7 +337,7 @@ public class MainActivityThermometer  extends AppCompatActivity {// ActionBarAct
                 if(mHandlerWork) mHandler.postDelayed(this, 300);
             }
         },500);
-        Log.e(TAG, "----onResume() ----------");
+        Log.e(TAG, "----onResume() ----------");// + mSwitchOffSensor.getWidth());
     }
 
     @Override//сюда прилетают ответы при возвращении из других ОКОН активити

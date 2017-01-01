@@ -7,6 +7,7 @@
         </shape>
     </item>
     <item android:state_enabled="false" android:state_checked="false">
+		<!--<solid android:color="#FEFEFE"/>-->
         <shape>
             <solid android:color="#FEFEFE"/>
             <corners android:radius="99dp"/>
@@ -14,6 +15,7 @@
                 android:width="1.5dp"
                 android:color="#F0F0F0"/>
         </shape>
+		<!--android:color="#F0F0F0"/>-->
     </item>
 	<item android:state_checked="true">
 		<shape>
@@ -22,12 +24,16 @@
 		</shape>
 	</item>
 	<item>
+		<!--<solid android:color="#FEFEFE"/>-->
 		<shape>
-			<solid android:color="#FEFEFE"/>
+			<!--эта заливка в выключенном сотоянии-->
+			<solid android:color="#f0f0f0"/>
 			<corners android:radius="99dp"/>
+			<!--обвод вокруг области в виде линии-->
 			<stroke
 				android:width="1.5dp"
-				android:color="#E6E6E6"/>
+				android:color="#d0d0d0"/>
 		</shape>
+		<!--android:color="#E6E6E6"/>-->
 	</item>
 </selector>
