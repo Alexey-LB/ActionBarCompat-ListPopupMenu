@@ -221,7 +221,7 @@ public class MainActivityThermometer  extends AppCompatActivity {// ActionBarAct
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         //-- если горизонтально расположен ---
-        ViewGroup horizontal, vertical;View v,v2;float width;
+        ViewGroup horizontal, vertical;View v,v2;float width,density;
         horizontal = (ViewGroup)thermometer.findViewById(R.id.telephon_horizontal);
         vertical = (ViewGroup)thermometer.findViewById(R.id.telephon_vertical);
 
@@ -249,22 +249,28 @@ public class MainActivityThermometer  extends AppCompatActivity {// ActionBarAct
                 break;
         }
         //-- вычисление размеров переключателей
-        width = getResources().getDisplayMetrics().widthPixels
-                / getResources().getDisplayMetrics().density;
+        density = getResources().getDisplayMetrics().density;
+        width = getResources().getDisplayMetrics().widthPixels;
         //размер градусника+отступ слева (2), отступ справа (4) от градусника,
         // слой отступ слева (0), справа (0)= 6dp
+        //получаем ИЗ РЕСУРСОВ(там указаг размер в dp) домноженный на density = Pixels!!
+        // по ЭТОМУ РАСЧЕТ В ПИКСЕЛАЙ!!
         width  = width - getResources().getDimension(R.dimen.frame_thermometer_wigth)
                 - getResources().getDimension(R.dimen.ic_img_gap) *2;
         // делим на 2, поскольку ереключателей 2
         width  = width/2;
         //дополнительный значения внутри переключателя, компенсируем
-        //делим на размер кнопки (радиуса)
-        width = (width - 20) / getResources().getDimension(R.dimen.switch_button_size);
+        //делим на размер кнопки (радиуса)// по ЭТОМУ РАСЧЕТ В ПИКСЕЛАЙ!!
+        width = (width - 20 * density) / getResources().getDimension(R.dimen.switch_button_size);
+
         if (width > 7) width = 7;//ограничим длинну переключателя максимом
         if(mSwitchOffSensor != null)mSwitchOffSensor.setBackMeasureRatio(width);
         if(mSwitchResetMeasurement != null)mSwitchResetMeasurement.setBackMeasureRatio(width);
         //--
-        Log.w(TAG," Orientation==== " +newConfig.orientation + "   Ratio= "+ width);
+        Log.w(TAG," Orientation==== " +newConfig.orientation + "   Ratio= "+ width
+                + "   Pixels= "+ getResources().getDisplayMetrics().widthPixels
+                + "   density= "+ getResources().getDisplayMetrics().density
+        );
     }
 
     final int iconActionSetting = 234567896;
@@ -319,9 +325,9 @@ public class MainActivityThermometer  extends AppCompatActivity {// ActionBarAct
                 }
                 if((sensor.mConnectionState == 0) && (mSwitchOffSensor.isEnabled())){
                     //сначала ЦВЕТ текста меняем, А ПОТОМ сбрасываем - иначе цвет НЕ устанавливается!!
-                    mSwitchOffSensor.setTextColor(getResources()
-                            .getColor(R.color.colorBackgroundGrey));
-                    mSwitchOffSensor.setEnabled(false);
+//                    mSwitchOffSensor.setTextColor(getResources()
+//                            .getColor(R.color.colorBackgroundGrey));
+//                    mSwitchOffSensor.setEnabled(false);
 
                 }else {
                     if((sensor.mConnectionState != 0) && (!mSwitchOffSensor.isEnabled()))
@@ -339,9 +345,9 @@ public class MainActivityThermometer  extends AppCompatActivity {// ActionBarAct
             }
             if((sensor.mConnectionState == 0) && (mSwitchResetMeasurement.isEnabled())){
                 //сначала ЦВЕТ текста меняем, А ПОТОМ сбрасываем - иначе цвет НЕ устанавливается!!
-                mSwitchResetMeasurement.setTextColor(getResources()
-                        .getColor(R.color.colorBackgroundGrey));
-                mSwitchResetMeasurement.setEnabled(false);
+//                mSwitchResetMeasurement.setTextColor(getResources()
+//                        .getColor(R.color.colorBackgroundGrey));
+//                mSwitchResetMeasurement.setEnabled(false);
             } else {
                 if((sensor.mConnectionState != 0) && (!mSwitchResetMeasurement.isEnabled()))
                     mSwitchResetMeasurement.setEnabled(true);

@@ -552,6 +552,10 @@ public class Sensor {
     //--- Запись характеристики
     public boolean uuidCharacteristicWrite(byte[] value, UUID uuidService, UUID uuidCharacteristic) {
         boolean rez = false;
+        if (mBluetoothGatt == null) {
+            Log.e(TAG,"mBluetoothGatt == null");
+            return rez;
+        }
         BluetoothGattService service = mBluetoothGatt.getService(uuidService);
         if (service == null) {
             Log.e(TAG,"Not found Service= " + uuidService.toString());
@@ -616,6 +620,10 @@ public class Sensor {
 
         BluetoothGattService service;
         BluetoothGattCharacteristic characteristic;
+        if (mBluetoothGatt == null) {
+            Log.e(TAG,"mBluetoothGatt == null");
+            return;
+        }
         //СМОТРИМ наличие СЕРВИСА (внутри сервеса характеристики с описателями их)
         service = mBluetoothGatt.getService(PartGatt.UUID_DEVICE_INFORMATION_SERVICE);
         if (service != null) {
@@ -690,6 +698,10 @@ public class Sensor {
         BluetoothGattCharacteristic characteristic;
         BluetoothGattDescriptor descriptor;
         BluetoothGattService service;
+        if (mBluetoothGatt == null) {
+            Log.e(TAG,"mBluetoothGatt == null");
+            return;
+        }
         // должно быть
         //enableTXNotification:  //getState: 12 //isDiscovering: false //getScanMode: 21
         //Log.w(TAG, "enableTXNotification:  "+" //isDiscovering: "+ mBluetoothAdapter.isDiscovering() +" //getScanMode: " + mBluetoothAdapter.getScanMode());
