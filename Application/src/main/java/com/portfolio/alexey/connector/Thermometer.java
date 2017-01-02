@@ -40,9 +40,25 @@ public class Thermometer extends Drawable {
     private  int minTemperaturePoint;//точка на градуснике которая соответствует minTemperature
     private  int maxTemperaturePoint;//точка на градуснике которая соответствует maxTemperature
 
-    private  int width = 0;//  10 dpi
+    private  int width = 0;//  10 dpi,
     private  int height = 0;//  10 dpi
     private  boolean chengSize = false;//  10 dpi
+
+    private  float mRangeTemperature = 0;
+    private  float[] stepNet = {0.1f,0.25f,0.5f,1f,2.5f,5f,10f,25f};
+    private  int[] stepDp = {5,6,7,8,9,10,11,12};
+    //--
+    private void calckFon(){
+        if(maxTemperature > minTemperature){
+            mRangeTemperature = maxTemperature - minTemperature;
+        }else {
+            mRangeTemperature = minTemperature - maxTemperature;
+        }
+        mRangeTemperature = mRangeTemperature *1.2f;
+        if (mRangeTemperature < 3f) mRangeTemperature = 3f;
+        //--------------------
+
+    }
 
     public Thermometer(float density_,float minTemperature_,float maxTemperature_, boolean fahrenheit){
         super();
