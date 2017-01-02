@@ -370,6 +370,7 @@ public class BluetoothLeServiceNew extends Service {
     // это будет именем файла настроек
     public static final String APP_PREFERENCES = "mySettings";
     private SharedPreferences mSettings;
+
     public void settingGetFileGoToConnect(){
         // SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         if(mSettings == null)  mSettings = getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);

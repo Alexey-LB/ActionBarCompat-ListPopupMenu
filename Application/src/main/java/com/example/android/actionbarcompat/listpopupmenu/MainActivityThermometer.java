@@ -86,6 +86,7 @@ public class MainActivityThermometer  extends AppCompatActivity {// ActionBarAct
             }
         });
         //-------- ПЕРЕКЛЮЧАТЕЛИ --- Размеры его можно узнать ТОЛЬко после его отображения,
+        //  https://github.com/kyleduo/switchbutton
         // не удобно расчитывать, по этому возьмем примерно
         mSwitchOffSensor = (SwitchButton)thermometer
                 .findViewById(R.id.switchOffSensor);
@@ -140,6 +141,7 @@ public class MainActivityThermometer  extends AppCompatActivity {// ActionBarAct
                 + " = " + view.getWidth());
     }
     private boolean onTouchSwitchButton(View v, MotionEvent event) {
+        //https://github.com/kyleduo/switchbutton
         SwitchButton sw = (SwitchButton)v;
         View view = findViewById(R.id.frameLayoutSwitchOffSensor);
         Log.v(TAG, "----" + sw.getWidth()
@@ -312,11 +314,41 @@ public class MainActivityThermometer  extends AppCompatActivity {// ActionBarAct
         Util.setLevelToImageView(sensor.rssi, R.id.signal, view);
         //ловим в сотоянии ВКЛЮЧЕН, запускаем функцию на выполнение и сбрасываем переключатель
         // в исхождное положение
-        if((mSwitchOffSensor != null) && (mSwitchOffSensor.isChecked())){
-            mSwitchOffSensor.setChecked(false);
-        }
-        if((mSwitchResetMeasurement != null) && (mSwitchResetMeasurement.isChecked())){
-            mSwitchResetMeasurement.setChecked(false);
+        if(sensor != null){
+            if(mSwitchOffSensor != null){
+                if(mSwitchOffSensor.isChecked()){//отключение сенсора
+                    mSwitchOffSensor.setChecked(false);
+                    sensor.switchOffSensor();
+                }
+                if((sensor.mConnectionState == 0) && (mSwitchOffSensor.isEnabled())){
+                    //сначала ЦВЕТ текста меняем, А ПОТОМ сбрасываем - иначе цвет НЕ устанавливается!!
+                    mSwitchOffSensor.setTextColor(getResources()
+                            .getColor(R.color.colorBackgroundGrey));
+                    mSwitchOffSensor.setEnabled(false);
+
+                }else {
+                    if((sensor.mConnectionState != 0) && (!mSwitchOffSensor.isEnabled()))
+                        mSwitchOffSensor.setEnabled(true);
+                    mSwitchOffSensor.setTextColor(getResources()
+                            .getColor(R.color.colorTextlight));
+                }
+            }
+            //---
+            if(mSwitchResetMeasurement.isChecked()){//сброс измерения
+                mSwitchResetMeasurement.setChecked(false);
+                sensor.resetMeasurement();
+            }
+            if((sensor.mConnectionState == 0) && (mSwitchResetMeasurement.isEnabled())){
+                //сначала ЦВЕТ текста меняем, А ПОТОМ сбрасываем - иначе цвет НЕ устанавливается!!
+                mSwitchResetMeasurement.setTextColor(getResources()
+                        .getColor(R.color.colorBackgroundGrey));
+                mSwitchResetMeasurement.setEnabled(false);
+            } else {
+                if((sensor.mConnectionState != 0) && (!mSwitchResetMeasurement.isEnabled()))
+                    mSwitchResetMeasurement.setEnabled(true);
+                mSwitchResetMeasurement.setTextColor(getResources()
+                        .getColor(R.color.colorTextlight));
+            }
         }
      }
     private boolean mHandlerWork = true;
