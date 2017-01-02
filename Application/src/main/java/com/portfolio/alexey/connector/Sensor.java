@@ -237,7 +237,7 @@ public class Sensor {
         deviceLabel = deviceLabelStringDefault + " " + indexDevace++;
         markerColor = 0x7 & indexDevace;
         //----------------------
-        time = 0;
+        time = System.currentTimeMillis();
         loop();
     }
 
@@ -591,7 +591,7 @@ public class Sensor {
 //                mBluetoothGatt.setCharacteristicNotification(characteristic,true);
 //                descriptor =  characteristic.getDescriptor(PartGatt.UUID_CLIENT_CHARACTERISTIC_CONFIG);
 //                if( descriptor != null) {
-//                    descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
+//                    descriptor.setValue(BluetoothGattDescriptor.ENABLE_INDICATION_VALUE);
 //                    mBluetoothGatt.writeDescriptor(descriptor);
 //                    Log.i(TAG, "enableRXNotification: health_RELSIB_SERVICE ");
 //                }
@@ -706,7 +706,7 @@ public class Sensor {
                 mBluetoothGatt.setCharacteristicNotification(characteristic,true);
                 descriptor =  characteristic.getDescriptor(PartGatt.UUID_CLIENT_CHARACTERISTIC_CONFIG);
                 if( descriptor != null) {
-                    descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
+                    descriptor.setValue(BluetoothGattDescriptor.ENABLE_INDICATION_VALUE);
                     mBluetoothGatt.writeDescriptor(descriptor);
                     Log.i(TAG, "enableRXNotification: health_RELSIB_SERVICE ");
                 }
