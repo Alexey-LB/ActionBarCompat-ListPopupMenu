@@ -226,6 +226,46 @@ public class BluetoothLeServiceNew extends Service {
             //sensor.mBluetoothGatt.readRemoteRssi();
 
         }
+        //.. https://gist.github.com/SoulAuctioneer/ee4cb9bc0b3785bbdd51 -- пример
+        @Override
+        public void onCharacteristicWrite(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status)
+        {
+            Log.w(TAG, "----------------------onCharacteristic_Write");
+//            String deviceName = gatt.getDevice().getName();
+//            String serviceName = BleNamesResolver.resolveServiceName(characteristic.getService().getUuid().toString().toLowerCase(Locale.getDefault()));
+//            String charName = BleNamesResolver.resolveCharacteristicName(characteristic.getUuid().toString().toLowerCase(Locale.getDefault()));
+//            String description = "Device: " + deviceName + " Service: " + serviceName + " Characteristic: " + charName;
+//
+//            // Ready for next transmission
+//            processTxQueue();
+//
+//            // we got response regarding our request to write new value to the characteristic
+//            // let see if it failed or not
+            if(status == BluetoothGatt.GATT_SUCCESS) {
+                Log.v(TAG, "onCharacteristicWrite OK>"+characteristic.toString());
+   //             mUiCallback.uiSuccessfulWrite(mBluetoothGatt, mBluetoothDevice, mBluetoothSelectedService, characteristic, description);
+            } else {
+                Log.e(TAG, "onCharacteristicWrite ERROR>"+characteristic.toString());
+   //             mUiCallback.uiFailedWrite(mBluetoothGatt, mBluetoothDevice, mBluetoothSelectedService, characteristic, description + " STATUS = " + status);
+            }
+        }
+        /**
+         * Callback indicating the result of a descriptor write operation.
+         *
+         * @param gatt GATT client invoked {@link BluetoothGatt#writeDescriptor}
+         * @param descriptor Descriptor that was written to the associated
+         *                   remote device.
+         * @param status The result of the write operation
+         *               {@link BluetoothGatt#GATT_SUCCESS} if the operation succeeds.
+         */
+        @Override
+        public void onDescriptorWrite(BluetoothGatt gatt, BluetoothGattDescriptor descriptor, int status)
+        {
+            Log.w(TAG, "-----------onDescriptorWrite");
+
+            // Ready for next transmission
+        //   processTxQueue();
+        }
     };
 
     private void broadcastUpdate(final String action,final Sensor sensor) {

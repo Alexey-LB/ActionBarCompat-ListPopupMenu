@@ -46,6 +46,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.portfolio.alexey.connector.PartGatt;
 import com.portfolio.alexey.connector.Sensor;
 import com.portfolio.alexey.connector.Util;
 
@@ -206,8 +207,15 @@ public class DeviceScanActivity extends ListActivity {//AppCompatActivity {//Act
                 // со старым устройством //если был коннект- отключаем нафиг
                 if(sensor.mBluetoothGatt != null){
                     sensor.close();
+                    //сбрасываем все строковые значения которые касаются модели и номеров прошивок
+                    //все считываемпотом заново!
+                    sensor.softwareRevision = null;
+                    sensor.firmwareRevision = null;
+                    sensor.hardwareRevision = null;
+                    sensor.serialNumber = null;
+                    sensor.modelNumber = null;
+                    sensor.manufacturerName = null;
                 }
-
                 sensor.mBluetoothDeviceAddress = device.getAddress();
                 //
                 RunDataHub app = ((RunDataHub) getApplicationContext());

@@ -672,6 +672,18 @@ public class Sensor {
     // если ключи кривые то ЗАКОНЧИТ ДИСКОННЕКТОМ в течении 1 сек
     // (кривой ключь - удаленное блутуз УСТРОЙСТВО сбрасывали или отключали)
     // TODO: 10.12.2016 СДЕЛАТЬ метод установить нотификацию для одного УИД, а потом его из метода ниже вызывать
+    //
+    //http://stackoverflow.com/questions/18011816/has-native-android-ble-gatt-implementation-synchronous-nature
+    //One of the most important concepts of the Samsung F/W and s tack is its synchronous nature.
+    // That is, if we call for example , writeCharacteristic for a particular characteristic,
+    // if it returns true, the next call to any BluetoothGatt or BluetoothGattServer method
+    // should be done after the onCharacteristicRead callbac k is received .
+    // This is because the stack is designed to support and process only one GATT call at time ,
+    // and if , for example , you call writeCharacteristic or readCharacteristic of any c haracteristic
+    // soon after the first one, it is ignored.
+    //
+    // https://code.google.com/p/android/issues/detail?id=58381   - обсуждение проблем по блутузу
+    // https://gist.github.com/SoulAuctioneer/ee4cb9bc0b3785bbdd51  -- пример!
     public void enableTXNotification()
     {
         boolean status,status2;
@@ -686,11 +698,15 @@ public class Sensor {
         if (service != null) {
             characteristic = service.getCharacteristic(PartGatt.UUID_INTERMEDIATE_TEMPERATURE);
             if( characteristic != null){
-                mBluetoothGatt.setCharacteristicNotification(characteristic,true);
+  //???              mBluetoothGatt.setCharacteristicNotification(characteristic,true);
                 descriptor =  characteristic.getDescriptor(PartGatt.UUID_CLIENT_CHARACTERISTIC_CONFIG);
                 if( descriptor != null) {
+
                     descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
                     mBluetoothGatt.writeDescriptor(descriptor);
+
+                    mBluetoothGatt.setCharacteristicNotification(characteristic,true);
+
                     Log.i(TAG, "enableRXNotification: healthThermometerService");
                 }
             }
