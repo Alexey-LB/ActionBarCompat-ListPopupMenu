@@ -144,10 +144,7 @@ public class MainActivityThermometer  extends AppCompatActivity {// ActionBarAct
         //https://github.com/kyleduo/switchbutton
         SwitchButton sw = (SwitchButton)v;
         View view = findViewById(R.id.frameLayoutSwitchOffSensor);
-        Log.v(TAG, "----" + sw.getWidth()
-               + " = " + sw.getBackMeasureRatio()
-                + " = " + view.getWidth()
-        );//((PointF)mSwitchOffSensor.getBackSizeF()).toString());
+     //   Log.v(TAG, "----" + sw.getWidth() + " = " + sw.getBackMeasureRatio() + " = " + view.getWidth());//((PointF)mSwitchOffSensor.getBackSizeF()).toString());
 
 //        Log.v(TAG,"onTouch--" + event.getX() + "  size= " + v.getWidth()
 //                +"  start= "+ (event.getX() -v.getX())
@@ -336,7 +333,9 @@ public class MainActivityThermometer  extends AppCompatActivity {// ActionBarAct
             //---
             if(mSwitchResetMeasurement.isChecked()){//сброс измерения
                 mSwitchResetMeasurement.setChecked(false);
-                sensor.resetMeasurement();
+                sensor.resetMeasurement();//сброс измерения на самом сенсоре
+                // для сброса Мин Мах к текущей температуре
+                sensor.resetMinMaxValueTemperature();
             }
             if((sensor.mConnectionState == 0) && (mSwitchResetMeasurement.isEnabled())){
                 //сначала ЦВЕТ текста меняем, А ПОТОМ сбрасываем - иначе цвет НЕ устанавливается!!

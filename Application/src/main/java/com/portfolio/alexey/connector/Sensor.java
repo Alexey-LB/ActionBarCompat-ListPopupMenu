@@ -569,11 +569,36 @@ public class Sensor {
     }
     //с//отключение сенсора  команды на сброс в сервис РЭЛСИБА
     public void switchOffSensor(){
+        //Запись 1 приводит к отключению термометра.
         uuidCharacteristicWrite(new byte[]{1}, PartGatt.UUID_RELSIB_SERVICE, PartGatt.UUID_RELSIB_SHUTDOWN);
+       // установка термометра медецинского
+      //  uuidCharacteristicWrite(new byte[]{1}, PartGatt.UUID_RELSIB_SERVICE, PartGatt.UUID_RELSIB_MODE);
     }
     //сброс измерения посылка команды на сброс в сервис РЭЛСИБА
     public void resetMeasurement(){
-
+        //Флаг сброса последнего измеренного значения температуры (1 байт чтение/запись)
+        //Запись 1 приводит к сбросу последнего измеренного значения температуры,
+        uuidCharacteristicWrite(new byte[]{1}, PartGatt.UUID_RELSIB_SERVICE, PartGatt.UUID_RELSIB_RESET_MEAS_FLAG);
+//        //-------------------------
+//        BluetoothGattCharacteristic characteristic;
+//        BluetoothGattDescriptor descriptor;
+//        BluetoothGattService service;
+//        // установка предсказания температуры
+//        service = mBluetoothGatt.getService(PartGatt.UUID_RELSIB_SERVICE);
+//        if (service != null) {
+//            characteristic = service.getCharacteristic(PartGatt.UUID_RELSIB_TEMP);
+//            if( characteristic != null){
+//                mBluetoothGatt.setCharacteristicNotification(characteristic,true);
+//                descriptor =  characteristic.getDescriptor(PartGatt.UUID_CLIENT_CHARACTERISTIC_CONFIG);
+//                if( descriptor != null) {
+//                    descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
+//                    mBluetoothGatt.writeDescriptor(descriptor);
+//                    Log.i(TAG, "enableRXNotification: health_RELSIB_SERVICE ");
+//                }
+//            }
+//        } else {
+//            Log.w(TAG, "enableRXNotification: UUID_RELSIB_SERVICE  Service not found!");
+//        }
     }
     //--------------
     private boolean flagRead = false;
