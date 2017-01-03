@@ -30,9 +30,10 @@ public class Thermometer extends Drawable {
 
     private final int offsetLeftRightFinal = 20;//   1/20 смещенеие от левого и правого края имеджа
     private final int offsetGapFinal = 5;//  5 dpi //через сколько дпи по У рисуем линии
+    private final int offsetX = 5;// смещение от края по Х в др
     private final int columnWithFinal = 10;//  10 dpi - ширина столбика термометра
-    private final float minTemperature;
-    private final float maxTemperature;
+    private  float minTemperature;
+    private float maxTemperature;
 
     public boolean onFahrenheit = false;
 
@@ -45,21 +46,64 @@ public class Thermometer extends Drawable {
     private  boolean chengSize = false;//  10 dpi
 
     private  float mRangeTemperature = 0;
-    private  float[] stepNet = {0.1f,0.25f,0.5f,1f,2.5f,5f,10f,25f};
-    private  int[] stepDp = {5,6,7,8,9,10,11,12};
+    private  float[] stepNet = {0.1f,0.25f,0.5f,1f,2.5f,5f,10f,25f,50f,100f};
+    private  int[] stepDp = {offsetGapFinal,offsetGapFinal +1,offsetGapFinal +2,
+            offsetGapFinal +3,offsetGapFinal +4,offsetGapFinal +5,
+            offsetGapFinal +6,offsetGapFinal +7};
+    private final float minRange = 3;//C
+    private float mstep;// в градусах на деление
+//    offsetGap = 5;//  5 dpi //через сколько дпи по У рисуем линии
     //--
-    private void calckFon(){
-        if(maxTemperature > minTemperature){
-            mRangeTemperature = maxTemperature - minTemperature;
-        }else {
-            mRangeTemperature = minTemperature - maxTemperature;
+    private void calckStep(){
+        int i,j;float rangeWidth, y,k = 0;
+        //------ расчет в пикселях--------------
+        for(j = 0;j < stepDp.length;j++) {
+
+            rangeWidth = height / (stepDp[j] * density);//реальное количество делений на градуснике
+            y = mRangeTemperature / rangeWidth;//ищем ЦЕНУ минимального деления
+            for (i = 0; i < stepNet.length; i++) if (stepNet[i] > y) break;
+            //контроль диапазона
+            if(i >= stepNet.length) i--;
+            y = (mRangeTemperature / stepNet[i]) /  rangeWidth;//получили коэфициент использования шкалы
+            // чем ближе он к 1 тем полнее заполняет шкалу
+            if(y > k) {
+                k = y;
+                mstep = stepNet[i];//сколько градусов на деление!! mstep * rangeWidth = ДИАПАЗОН выода температуры
+                offsetGap = (int)(stepDp[j] * density);
+
+                Log.w(TAG, " net= " + (int)rangeWidth+"  step= " + stepNet[i] + "  stepDp= " + stepDp[j] + "   count=" + (int)(mRangeTemperature / stepNet[i])
+                        + "   RangeTemp=" + (int)mRangeTemperature+"   mRangeTempALL= " +(int)(stepNet[i] *rangeWidth));
+            } else{
+                Log.i(TAG, " net= " + (int)rangeWidth+"  step= " + stepNet[i] + "  stepDp= " + stepDp[j] + "   count=" + (int)(mRangeTemperature / stepNet[i])
+                        + "   RangeTemp=" + (int)mRangeTemperature+"   mRangeTempALL= " +(int)(stepNet[i] *rangeWidth));
+            }
+
         }
-        mRangeTemperature = mRangeTemperature *1.2f;
-        if (mRangeTemperature < 3f) mRangeTemperature = 3f;
-        //--------------------
-
     }
-
+    private void calckFon(){
+        float y, rangeWidth;int i;
+        //контроль входных данных
+        mRangeTemperature = (maxTemperature - minTemperature) *1.2f;
+        //--расчет  начала
+        //---контроль минимума диапазона --
+        y = minRange;
+        if(onFahrenheit) y = minRange * 2;
+        if (y > mRangeTemperature) mRangeTemperature = y;
+        calckStep();
+        rangeWidth = height / (offsetGap * density);
+        Log.v(TAG, " net= " + (int)rangeWidth+"  step= " + mstep  + "   count=" + (int)(mRangeTemperature / mstep)
+               + "   RangeTemp=" + (int)mRangeTemperature+"   mRangeTempALL= " +(int)(mstep *rangeWidth));
+    }
+    private  float[] testMin = {-20,-23.23f,-25.5f,-30.76f,-30f,  0f, -10f, -50f};
+    private  float[] testMax = {-22, -3.5f  , 10.75f, 30.1f,70.5f,5f,15f,25f};
+    private void testFon(){
+        calckFon();
+        for(int i = 0;i <testMin.length; i++){
+            minTemperature = testMin[i];
+            maxTemperature = testMax[i];
+            calckFon();
+        }
+    }
     public Thermometer(float density_,float minTemperature_,float maxTemperature_, boolean fahrenheit){
         super();
         onFahrenheit = fahrenheit;
@@ -70,7 +114,12 @@ public class Thermometer extends Drawable {
             minTemperature = minTemperature_;
             maxTemperature = maxTemperature_;
         }
-
+        //контроль входных данных
+        if(minTemperature > maxTemperature)  {
+            float y = maxTemperature;
+            maxTemperature = minTemperature;
+            minTemperature = y;
+        }
         density = density_;
         if(density != 0) {
             offsetLeftRight = (int)(offsetLeftRightFinal * density);
@@ -79,6 +128,7 @@ public class Thermometer extends Drawable {
         }
         // ДЛЯ размера меню И ТД, используется density !!!
        // density = getResources().getDisplayMetrics().density;
+
     }
     // высота столбика термометра
     public void setColumnTemperature(float temperature) {
@@ -132,7 +182,7 @@ public class Thermometer extends Drawable {
         super.onBoundsChange(bounds);
         Log.v(TAG,  "  w=" + bounds.width()  +"  h=" + bounds.height()
                 +"  cX=" + bounds.centerX()  +"  cY=" + bounds.centerY()
-                +"\n  l=" + bounds.left+"  r=" + bounds.right
+                +"  l=" + bounds.left+"  r=" + bounds.right
                 +"  t=" + bounds.top+"  b=" + bounds.bottom
         );
         if((width != bounds.width()) || (height != bounds.height()))chengSize = true;
@@ -140,6 +190,8 @@ public class Thermometer extends Drawable {
         // устнавливаем размеры для рисования
         width = bounds.width();
         height = bounds.height();
+        //
+        testFon();
     }
     private  void drawThermometerFon(Canvas canvas) {
         //MIN
@@ -159,10 +211,10 @@ public class Thermometer extends Drawable {
         // mPath.reset();
         mPaint.setColor(0xFF000000);
         for(int y = offsetGap, i = (int)(-2 * density); y < height; y += offsetGap, i++){
-            if((i % 10) == 0)x = offsetGap;
+            if((i % 10) == 0)x = offsetX;
             else{
-                if((i % 5) == 0)x = offsetGap *2 + offsetGap / 2;
-                else x = offsetGap *4;
+                if((i % 5) == 0)x = offsetX *2 + offsetX / 2;
+                else x = offsetX *4;
             }
             endX = width - x;
             drawLine(x,endX,y, y+(int)density, mPath);
