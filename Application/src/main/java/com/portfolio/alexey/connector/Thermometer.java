@@ -28,9 +28,13 @@ public class Thermometer extends Drawable {
     private int offsetGap = 5;//  5 dpi //через сколько дпи по У рисуем линии
     private int columnWith = 10;//  10 dpi - ширина столбика термометра
 
+    private final float textSizeFinal = 18f;
+    private float textSize = textSizeFinal;
+
     private final int offsetLeftRightFinal = 20;//   1/20 смещенеие от левого и правого края имеджа
     private final int offsetGapFinal = 5;//  5 dpi //через сколько дпи по У рисуем линии
-    private final int offsetX = 5;// смещение от края по Х в др
+    private final int offsetXFinal = 5;// смещение от края по Х в др
+    private int offsetX = offsetXFinal;// смещение от края по Х в
     private final int columnWithFinal = 10;//  10 dpi - ширина столбика термометра
     private  float minTemperature;
     private float maxTemperature;
@@ -125,6 +129,8 @@ public class Thermometer extends Drawable {
             offsetLeftRight = (int)(offsetLeftRightFinal * density);
             offsetGap = (int)(offsetGapFinal * density);
             columnWith = (int)(columnWithFinal * density);
+            offsetX = (int)(offsetXFinal * density);
+            textSize = (textSizeFinal * density);
         }
         // ДЛЯ размера меню И ТД, используется density !!!
        // density = getResources().getDisplayMetrics().density;
@@ -195,6 +201,7 @@ public class Thermometer extends Drawable {
     }
     private  void drawThermometerFon(Canvas canvas) {
         //MIN
+        Path path;int x,endX;
         int colWith = columnWith *4;
         int startX = (width - colWith) /2;
         drawLine(startX,startX + colWith,0, minTemperaturePoint, mPath);
@@ -203,23 +210,36 @@ public class Thermometer extends Drawable {
         startX = (width - colWith) /2;
         drawLine(startX,startX + colWith, maxTemperaturePoint,height, mPath);
         drawCanvas(canvas, 0xc0ff0000, mPath, Paint.Style.FILL);//80ffc0c0 Paint.Style.STROKE
+
         //-----------
-   //     Path mPath = new Path();
-        int offset = width /offsetLeftRight;//смещение от края имеджа
-        int step = height /offsetGap;//смещение от края имеджа
-        int x,endX;
+
         // mPath.reset();
         mPaint.setColor(0xFF000000);
-        for(int y = offsetGap, i = (int)(-2 * density); y < height; y += offsetGap, i++){
-            if((i % 10) == 0)x = offsetX;
-            else{
+        mPaint.setTextSize(textSize);
+        for(int y = offsetGap, i = -2; y < height; y += offsetGap, i++){
+            if((i % 10) == 0){
+                x = offsetX;
+                path = new Path();
+            }else{
+                path = null;
                 if((i % 5) == 0)x = offsetX *2 + offsetX / 2;
                 else x = offsetX *4;
+
             }
             endX = width - x;
-            drawLine(x,endX,y, y+(int)density, mPath);
+            mPath.addRect(getXpixel(x),getYpixel(y),getXpixel(endX),getYpixel(y-(int)density),Path.Direction.CW);
+            if(path != null){
+                path.moveTo(getXpixel(x), getYpixel(y));
+                path.lineTo(getXpixel(endX), getYpixel(y));
+                int st = (int)(-mstep * i);
+                int stM = Math.abs(st % 10);
+                st = (st % 100) / 10;
+                canvas.drawTextOnPath(Integer.toString(st), path,(st < 0)?0:offsetX/2 ,  -textSize*1/10 , mPaint);
+                canvas.drawTextOnPath(Integer.toString(stM), path, endX - textSize , -textSize*1/10, mPaint);
+            }
         }
         drawCanvas(canvas, 0xFF000000, mPath, Paint.Style.FILL);//Paint.Style.STROKE--почемуто хреново рисует!
+
     }
     //можно использовать один и тот же Path, НО обязательно path.reset(); при повторном использовании
     //Paint- хранит цвет кисть и т д -
@@ -273,27 +293,21 @@ public class Thermometer extends Drawable {
         // НО!! обязательно path.reset(); после canvas.drawPath()
         mPath.reset();//сбрасываем запомненную фигуру(возможно просто отрисовывает)
     }
-    private void drawrectangle(int x,int endX,int y,int endY, Path mPath ){
-        //ПО УМОЛЧАНИЮ- 0 У, верхний левый УГОЛ экрана!
-        // переворачиваем- ИДЕМ СНИЗУ вверх,
-        y = height - y;
-        endY = height - endY;
-        if(x < 0) x = 0;
+    private int getYpixel(int y){
+        int maxHeightYpixel = height -1;
+    //    y = y * (int)density;
         if(y < 0)y = 0;
-        if(x >= width) x = width -1;
-        if(y >= height)y = height -1;
-        //
-        if(endX < 0) endX = 0;
-        if(endY < 0)endY = 0;
-        if(endX >= width) endX = width -1;
-        if(endY >= height)endY = height -1;
-        if((x == endX) && (y == endY)) return;//это точка ее не рисует,
-
-        mPath.moveTo(x, y);
-        mPath.lineTo(endX, y);
-        mPath.lineTo(endX, endY);
-        mPath.lineTo(x, endY);
-        mPath.lineTo(x, y);
+        if(y > maxHeightYpixel) y = maxHeightYpixel;
+        ////ПО УМОЛЧАНИЮ- 0 У, верхний левый УГОЛ экрана!
+        // переворачиваем- ИДЕМ СНИЗУ вверх,
+        return maxHeightYpixel - y;
+    }
+    private int getXpixel(int x){
+        int maxwidthXpixel = width - 1;
+     //   x = x * (int)density;
+        if(x < 0) x = 0;
+        if(x >  maxwidthXpixel) x = maxwidthXpixel;
+        return x;
     }
     private void drawLine(int x,int endX,int y,int endY, Path mPath ){
         //ПО УМОЛЧАНИЮ- 0 У, верхний левый УГОЛ экрана!
@@ -310,17 +324,63 @@ public class Thermometer extends Drawable {
         if(endX >= width) endX = width -1;
         if(endY >= height)endY = height -1;
         if((x == endX) && (y == endY)) return;//это точка ее не рисует,
-//        if(x < 10) x = 10;
-//        if(y < 10)y = 10;
-//        if(x >= (width -10)) x = width -10;
-//        if(y >= (height - 10))y = height -10;
-
         mPath.moveTo(x, y);
         mPath.lineTo(endX, y);
         mPath.lineTo(endX, endY);
         mPath.lineTo(x, endY);
         mPath.lineTo(x, y);
-
        // Log.v(TAG,"x= "+x +"  endX= " + endX +"  y= "+y+"  endY= "+ endY);
     }
+//    private  void drawThermometerFon(Canvas canvas) {
+//        //MIN
+//        int colWith = columnWith *4;
+//        int startX = (width - colWith) /2;
+//        drawLine(startX,startX + colWith,0, minTemperaturePoint, mPath);
+//        drawCanvas(canvas, 0xc000c0ff, mPath,  Paint.Style.FILL);//Paint.Style.STROKE
+//        //MAX
+//        startX = (width - colWith) /2;
+//        drawLine(startX,startX + colWith, maxTemperaturePoint,height, mPath);
+//        drawCanvas(canvas, 0xc0ff0000, mPath, Paint.Style.FILL);//80ffc0c0 Paint.Style.STROKE
+//
+//        //-----------
+//        //     Path mPath = new Path();
+//        int offset = width /offsetLeftRight;//смещение от края имеджа
+//        int step = height /offsetGap;//смещение от края имеджа
+//        int x,endX; boolean flag;
+//        // mPath.reset();
+//        mPaint.setColor(0xFF000000);
+//        mPaint.setTextSize(18f * density);
+//        for(int y = offsetGap, i = (int)(-2 * density); y < height; y += offsetGap, i++){
+//            if((i % 10) == 0){
+//                flag = true;
+//                x = offsetX;
+//            }else{
+//                flag = false;
+//                if((i % 5) == 0)x = offsetX *2 + offsetX / 2;
+//                else x = offsetX *4;
+//            }
+//            endX = width - x;
+//            //  drawLine(x,endX,y, y+(int)density, mPath);
+//            mPath.addRect(endX,y+(int)density,x,y,Path.Direction.CW);
+//            if(flag){
+//                Path path = new Path();
+//                path.moveTo(x, y);
+//                path.lineTo(endX, y);
+//                // path.addCircle(x, y, radius, Path.Direction.CW);
+//                int st = (int)(-mstep * i);
+//                int stM = Math.abs(st % 10);
+//                st = (st % 100) / 10;
+//                mPaint.setColor(0xFFFFFFFF);
+//                mPaint.setFakeBoldText(true);
+//                canvas.drawTextOnPath(Integer.toString(st), path,(st < 0)?0:offsetX *density/2 ,  18 * density*4/10 , mPaint);
+//                canvas.drawTextOnPath(Integer.toString(stM), path, endX - 18 * density , 18 * density*4/10, mPaint);
+////                mPaint.setColor(0xFF000000);
+////                mPaint.setFakeBoldText(true);
+////                canvas.drawTextOnPath(Integer.toString(st), path,(st < 0)?0:offsetX *density/2 ,  18 * density*4/10 , mPaint);
+////                canvas.drawTextOnPath(Integer.toString(stM), path, endX - 18 * density , 18 * density*4/10, mPaint);
+//            }
+//        }
+//        drawCanvas(canvas, 0xFF000000, mPath, Paint.Style.FILL);//Paint.Style.STROKE--почемуто хреново рисует!
+//
+//    }
 }
