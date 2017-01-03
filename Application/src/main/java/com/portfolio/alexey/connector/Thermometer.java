@@ -21,50 +21,62 @@ public class Thermometer extends Drawable {
     private Paint mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private Path mPath = new Path();
 
-    private  int hightColumn = 0;//
+    private  int hightColumn = 0;//высота столюбика ртути
     //
-    private final float density;
-    private int offsetLeftRight = 20;//   1/20 смещенеие от левого и правого края имеджа
-    private int offsetGap = 5;//  5 dpi //через сколько дпи по У рисуем линии
-    private int columnWith = 10;//  10 dpi - ширина столбика термометра
+    private final float density;//пикселей на dp
 
-    private final float textSizeFinal = 18f;
+    private final int offsetGapFinal = 5;//  5 dpi //через сколько дпи по У рисуем линии
+    private int offsetGap = offsetGapFinal;//  5 dpi //через сколько дпи по У рисуем линии
+
+    private  final int columnWithFinal = 10;//  10 dpi - ширина столбика термометра
+    private  int columnWith = columnWithFinal;//  10 dpi - ширина столбика термометра
+
+    private final float textSizeFinal = 18f;//размер текста надписи в градусах
     private float textSize = textSizeFinal;
 
-    private final int offsetLeftRightFinal = 20;//   1/20 смещенеие от левого и правого края имеджа
-    private final int offsetGapFinal = 5;//  5 dpi //через сколько дпи по У рисуем линии
+
     private final int offsetXFinal = 5;// смещение от края по Х в др
     private int offsetX = offsetXFinal;// смещение от края по Х в
-    private final int columnWithFinal = 10;//  10 dpi - ширина столбика термометра
-    private  float minTemperature;
-    private float maxTemperature;
 
-    public boolean onFahrenheit = false;
+    private float minTemperature; //минимальная температура, при которой срабатывает сигнализация
+    private float maxTemperature;//максимальная температура, при которой срабатывает сигнализация
 
-    private  float k_Temperature;//коэффициент перехода от градусов к пикселям
-    private  int minTemperaturePoint;//точка на градуснике которая соответствует minTemperature
-    private  int maxTemperaturePoint;//точка на градуснике которая соответствует maxTemperature
+    private  int minTemperaturePoint;//точка на градуснике в ПИКСЕЛАХ которая соответствует minTemperature
+    private  int maxTemperaturePoint;//точка на градуснике в ПИКСЕЛАХ которая соответствует maxTemperature
 
-    private  int width = 0;//  10 dpi,
-    private  int height = 0;//  10 dpi
-    private  boolean chengSize = false;//  10 dpi
+    private  float startTemperatureScale;//начало шкалы градусника в ГРАДУСАХ
+    private   float stopTemperatureScale;//конец шкалы градусника в ГРАДУСАХ
 
-    private  float mRangeTemperature = 0;
-    private  float[] stepNet = {0.1f,0.25f,0.5f,1f,2.5f,5f,10f,25f,50f,100f};
-    private  int[] stepDp = {offsetGapFinal,offsetGapFinal +1,offsetGapFinal +2,
+    public  final boolean onFahrenheit;
+    private  boolean chengSize = false;//  признак изменения размеров градусника и НЕОБХОДИМОСТЬ заново отрисовать ФОН
+
+    private float mstep;// в градусах на деление
+    private  float k_Temperature;//коэффициент перехода от градусов / offsetGap  (сколько градусов в 1 offsetGap)
+
+    private  int width = 0;//  ширина градусника в пикселях
+    private  int height = 0;//   высота градусника в пикселях
+
+    private  float mRangeTemperature = 0;//диапазон теператру, который необходимо вывести на градуснике
+
+    private  float[] stepNet = {0.1f,0.25f,0.5f,1f,2.5f,5f,10f,25f,50f,100f};//разрешенные шаги на шкале градусника
+    private  int[] stepDp = {offsetGapFinal,offsetGapFinal +1,offsetGapFinal +2,//разрешенные МИНИМАЛЬНЫЕ растояния между делениями
             offsetGapFinal +3,offsetGapFinal +4,offsetGapFinal +5,
             offsetGapFinal +6,offsetGapFinal +7};
-    private final float minRange = 3;//C
-    private float mstep;// в градусах на деление
-//    offsetGap = 5;//  5 dpi //через сколько дпи по У рисуем линии
+    private final float minRange = 3;//C минимальная шкала градусника
+
     //--
+    private float  roundingFloat(float f, float round){
+        int i = Math.round(f/round);
+        f = (float)i;
+        return f * round;
+    }
     private void calckStep(){
         int i,j;float rangeWidth, y,k = 0;
-        //------ расчет в пикселях--------------
+        //------ расчет в пикселях, задаем ШАГ между делениями по оси У --------------
         for(j = 0;j < stepDp.length;j++) {
-
+            //ШАГ между делениями по оси У в пикселах = (stepDp[j] * density)
             rangeWidth = height / (stepDp[j] * density);//реальное количество делений на градуснике
-            y = mRangeTemperature / rangeWidth;//ищем ЦЕНУ минимального деления
+            y = mRangeTemperature / rangeWidth;//ищем ЦЕНУ минимального деления ИЗ разрешенных значений
             for (i = 0; i < stepNet.length; i++) if (stepNet[i] > y) break;
             //контроль диапазона
             if(i >= stepNet.length) i--;
@@ -74,32 +86,49 @@ public class Thermometer extends Drawable {
                 k = y;
                 mstep = stepNet[i];//сколько градусов на деление!! mstep * rangeWidth = ДИАПАЗОН выода температуры
                 offsetGap = (int)(stepDp[j] * density);
-
                 Log.w(TAG, " net= " + (int)rangeWidth+"  step= " + stepNet[i] + "  stepDp= " + stepDp[j] + "   count=" + (int)(mRangeTemperature / stepNet[i])
                         + "   RangeTemp=" + (int)mRangeTemperature+"   mRangeTempALL= " +(int)(stepNet[i] *rangeWidth));
             } else{
                 Log.i(TAG, " net= " + (int)rangeWidth+"  step= " + stepNet[i] + "  stepDp= " + stepDp[j] + "   count=" + (int)(mRangeTemperature / stepNet[i])
                         + "   RangeTemp=" + (int)mRangeTemperature+"   mRangeTempALL= " +(int)(stepNet[i] *rangeWidth));
             }
-
         }
+        // выбор сделан, устанавливаем начало - мин значение и максимальное.
+        // полученный диапазон вывода на градусник будет равен заданному или больше его, определяем это
+         k = (maxTemperature - minTemperature) / mstep;//шкалу которую надо вывести, этот диапазон обязателен
+         rangeWidth = (float)height / (float)offsetGap;//реальное количество делений на градуснике
+        mRangeTemperature = rangeWidth * mstep; //  диапазон выводимах значений
+        y = (rangeWidth - k) / 2;// вычислили отступ вверх и вниз от maxTemperature и minTemperature
+        // minTemperaturePoint - округляем до шага шкалы по У
+        startTemperatureScale = roundingFloat(minTemperature - mstep * y,mstep);//начало шкалы градусника в ГРАДУСАХ
+        stopTemperatureScale = startTemperatureScale + mRangeTemperature;//конец шкалы градусника в ГРАДУСАХ
+        //установка в пикселах УРОВНЕЙ срабатывания сигнализации
+        // точка на градуснике в ПИКСЕЛАХ которая соответствует minTemperature
+        minTemperaturePoint = (int)((offsetGap * (minTemperature - startTemperatureScale))/mstep);
+        //точка на градуснике в ПИКСЕЛАХ которая соответствует maxTemperature
+        maxTemperaturePoint = (int)((offsetGap * (maxTemperature - startTemperatureScale))/mstep);
+        //
+        Log.d(TAG, " min= " + minTemperature+"  max= " + maxTemperature
+                + " start= " + startTemperatureScale+"  stop= " + stopTemperatureScale
+                + " step= " + mstep+"  offsetGap= " + offsetGap
+                + "   minPoint=" + minTemperaturePoint+"   maxPoint= " +maxTemperaturePoint);
     }
     private void calckFon(){
         float y, rangeWidth;int i;
         //контроль входных данных
-        mRangeTemperature = (maxTemperature - minTemperature) *1.2f;
+        mRangeTemperature = (maxTemperature - minTemperature) *1.2f;// на 20% выводим больше, для отображения ЗОН сигнализации
         //--расчет  начала
         //---контроль минимума диапазона --
         y = minRange;
-        if(onFahrenheit) y = minRange * 2;
+        if(onFahrenheit) y = minRange * 9/5;
         if (y > mRangeTemperature) mRangeTemperature = y;
         calckStep();
         rangeWidth = height / (offsetGap * density);
         Log.v(TAG, " net= " + (int)rangeWidth+"  step= " + mstep  + "   count=" + (int)(mRangeTemperature / mstep)
                + "   RangeTemp=" + (int)mRangeTemperature+"   mRangeTempALL= " +(int)(mstep *rangeWidth));
     }
-    private  float[] testMin = {-20,-23.23f,-25.5f,-30.76f,-30f,  0f, -10f, -50f};
-    private  float[] testMax = {-22, -3.5f  , 10.75f, 30.1f,70.5f,5f,15f,25f};
+    private  float[] testMin = {-22,-23.23f,-25.5f,-30.76f,-30f,  0f, -10f, -50f};
+    private  float[] testMax = {-20, -3.5f  , 10.75f, 30.1f,70.5f,5f,15f,25f};
     private void testFon(){
         calckFon();
         for(int i = 0;i <testMin.length; i++){
@@ -126,11 +155,10 @@ public class Thermometer extends Drawable {
         }
         density = density_;
         if(density != 0) {
-            offsetLeftRight = (int)(offsetLeftRightFinal * density);
-            offsetGap = (int)(offsetGapFinal * density);
-            columnWith = (int)(columnWithFinal * density);
-            offsetX = (int)(offsetXFinal * density);
-            textSize = (textSizeFinal * density);
+             offsetGap = (int)(offsetGapFinal * density);  ///5 dpi //через сколько дпи по У рисуем линии
+            columnWith = (int)(columnWithFinal * density);//  10 dpi - ширина столбика термометра
+            offsetX = (int)(offsetXFinal * density);// смещение от края по Х в др
+            textSize = (textSizeFinal * density);//размер текста надписи в градусах
         }
         // ДЛЯ размера меню И ТД, используется density !!!
        // density = getResources().getDisplayMetrics().density;
@@ -165,6 +193,7 @@ public class Thermometer extends Drawable {
             minTemperaturePoint = (int)(52 * density);//точка на градуснике которая соответствует minTemperature
             maxTemperaturePoint = height -(int)(52 * density);//точка на градуснике которая соответствует maxTemperature
             k_Temperature = (float)(maxTemperaturePoint - minTemperaturePoint)/(maxTemperature - minTemperature);
+
             drawThermometerFon(canvas);
         }
 
