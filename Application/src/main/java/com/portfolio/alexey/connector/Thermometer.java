@@ -259,9 +259,10 @@ public class Thermometer extends Drawable {
                 int st = (int)(bottomTemperatureScale + mstep * (i - shift)),stM;
                 if((st / 10) != 0){
                     stM = Math.abs(st % 10);
-                    st = (st % 100) / 10;
+                    st = st / 10;//st = (st % 100) / 10;
                     // пишем текст
-                    canvas.drawTextOnPath(Integer.toString(st), path,(st < 0)?0:offsetX/2 ,  -textSize*1/10 , mPaint);
+                    if(Math.abs(st) >= 10) canvas.drawTextOnPath(Integer.toString(st), path,(st < 0)?offsetX/2:0 ,  -textSize*1/10 , mPaint);
+                    else canvas.drawTextOnPath(Integer.toString(st), path,offsetX/2,  -textSize*1/10 , mPaint);
                 } else{
                     //если меньше 10, знак минуса ВЫВОДИТЬ НАДО! а 0 первый НЕ выводим!
                     stM = st % 10;
