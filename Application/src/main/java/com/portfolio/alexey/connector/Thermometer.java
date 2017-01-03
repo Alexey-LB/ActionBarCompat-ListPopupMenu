@@ -202,7 +202,7 @@ public class Thermometer extends Drawable {
     private  void drawThermometerFon(Canvas canvas) {
         //MIN
         Path path;int x,endX;
-        int colWith = columnWith *4;
+        int colWith = columnWith *2;
         int startX = (width - colWith) /2;
         drawLine(startX,startX + colWith,0, minTemperaturePoint, mPath);
         drawCanvas(canvas, 0xc000c0ff, mPath,  Paint.Style.FILL);//Paint.Style.STROKE
@@ -229,11 +229,13 @@ public class Thermometer extends Drawable {
             endX = width - x;
             mPath.addRect(getXpixel(x),getYpixel(y),getXpixel(endX),getYpixel(y-(int)density),Path.Direction.CW);
             if(path != null){
+                //формируем линию, вдоль которой будем писать
                 path.moveTo(getXpixel(x), getYpixel(y));
                 path.lineTo(getXpixel(endX), getYpixel(y));
                 int st = (int)(-mstep * i);
                 int stM = Math.abs(st % 10);
                 st = (st % 100) / 10;
+                // пишем текст
                 canvas.drawTextOnPath(Integer.toString(st), path,(st < 0)?0:offsetX/2 ,  -textSize*1/10 , mPaint);
                 canvas.drawTextOnPath(Integer.toString(stM), path, endX - textSize , -textSize*1/10, mPaint);
             }
