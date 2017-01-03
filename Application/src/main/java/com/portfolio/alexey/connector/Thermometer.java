@@ -9,8 +9,6 @@ import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 
-import com.portfolio.alexey.connector.Util;
-
 /**
  * Created by lesa on 28.12.2016.
  */
@@ -44,21 +42,22 @@ public class Thermometer extends Drawable {
     private  int minTemperaturePoint;//точка на градуснике в ПИКСЕЛАХ которая соответствует minTemperature
     private  int maxTemperaturePoint;//точка на градуснике в ПИКСЕЛАХ которая соответствует maxTemperature
 
-    private  float startTemperatureScale;//начало шкалы градусника в ГРАДУСАХ
-    private   float stopTemperatureScale;//конец шкалы градусника в ГРАДУСАХ
+    private  float bottomTemperatureScale;//начало шкалы градусника в ГРАДУСАХ
+    private   float topTemperatureScale;//конец шкалы градусника в ГРАДУСАХ
 
     public  final boolean onFahrenheit;
     private  boolean chengSize = false;//  признак изменения размеров градусника и НЕОБХОДИМОСТЬ заново отрисовать ФОН
 
-    private float mstep;// в градусах на деление
-    private  float k_Temperature;//коэффициент перехода от градусов / offsetGap  (сколько градусов в 1 offsetGap)
+    private float mstep;// в градусах на деление ШКАЛЫ термометра
+    private  float k_Temperature;//(для столбика)коэффициент перехода от градусов / ПИКСЕЛЫ ( шкала в градусах/ шкалу в пикселах)
 
     private  int width = 0;//  ширина градусника в пикселях
     private  int height = 0;//   высота градусника в пикселях
 
     private  float mRangeTemperature = 0;//диапазон теператру, который необходимо вывести на градуснике
 
-    private  float[] stepNet = {0.1f,0.25f,0.5f,1f,2.5f,5f,10f,25f,50f,100f};//разрешенные шаги на шкале градусника
+    //private  float[] stepNet = {0.1f,0.25f,0.5f,1f,2.5f,5f,10f,25f,50f,100f};//разрешенные шаги на шкале градусника
+    private  float[] stepNet = {0.1f,0.2f,0.5f,1f,2f,5f,10f,20f,50f,100f};//разрешенные шаги на шкале градусника
     private  int[] stepDp = {offsetGapFinal,offsetGapFinal +1,offsetGapFinal +2,//разрешенные МИНИМАЛЬНЫЕ растояния между делениями
             offsetGapFinal +3,offsetGapFinal +4,offsetGapFinal +5,
             offsetGapFinal +6,offsetGapFinal +7};
@@ -86,11 +85,11 @@ public class Thermometer extends Drawable {
                 k = y;
                 mstep = stepNet[i];//сколько градусов на деление!! mstep * rangeWidth = ДИАПАЗОН выода температуры
                 offsetGap = (int)(stepDp[j] * density);
-                Log.w(TAG, " net= " + (int)rangeWidth+"  step= " + stepNet[i] + "  stepDp= " + stepDp[j] + "   count=" + (int)(mRangeTemperature / stepNet[i])
-                        + "   RangeTemp=" + (int)mRangeTemperature+"   mRangeTempALL= " +(int)(stepNet[i] *rangeWidth));
+//                Log.w(TAG, " net= " + (int)rangeWidth+"  step= " + stepNet[i] + "  stepDp= " + stepDp[j] + "   count=" + (int)(mRangeTemperature / stepNet[i])
+//                        + "   RangeTemp=" + (int)mRangeTemperature+"   mRangeTempALL= " +(int)(stepNet[i] *rangeWidth));
             } else{
-                Log.i(TAG, " net= " + (int)rangeWidth+"  step= " + stepNet[i] + "  stepDp= " + stepDp[j] + "   count=" + (int)(mRangeTemperature / stepNet[i])
-                        + "   RangeTemp=" + (int)mRangeTemperature+"   mRangeTempALL= " +(int)(stepNet[i] *rangeWidth));
+//                Log.i(TAG, " net= " + (int)rangeWidth+"  step= " + stepNet[i] + "  stepDp= " + stepDp[j] + "   count=" + (int)(mRangeTemperature / stepNet[i])
+//                        + "   RangeTemp=" + (int)mRangeTemperature+"   mRangeTempALL= " +(int)(stepNet[i] *rangeWidth));
             }
         }
         // выбор сделан, устанавливаем начало - мин значение и максимальное.
@@ -98,20 +97,20 @@ public class Thermometer extends Drawable {
          k = (maxTemperature - minTemperature) / mstep;//шкалу которую надо вывести, этот диапазон обязателен
          rangeWidth = (float)height / (float)offsetGap;//реальное количество делений на градуснике
         mRangeTemperature = rangeWidth * mstep; //  диапазон выводимах значений
+        k_Temperature = mRangeTemperature / height;//(для столбика)коэффициент перехода от градусов / ПИКСЕЛЫ ( шкала в градусах/ шкалу в пикселах)
         y = (rangeWidth - k) / 2;// вычислили отступ вверх и вниз от maxTemperature и minTemperature
         // minTemperaturePoint - округляем до шага шкалы по У
-        startTemperatureScale = roundingFloat(minTemperature - mstep * y,mstep);//начало шкалы градусника в ГРАДУСАХ
-        stopTemperatureScale = startTemperatureScale + mRangeTemperature;//конец шкалы градусника в ГРАДУСАХ
+        bottomTemperatureScale = roundingFloat(minTemperature - mstep * y,mstep);//начало шкалы градусника в ГРАДУСАХ
+        topTemperatureScale = bottomTemperatureScale + mRangeTemperature;//конец шкалы градусника в ГРАДУСАХ
         //установка в пикселах УРОВНЕЙ срабатывания сигнализации
         // точка на градуснике в ПИКСЕЛАХ которая соответствует minTemperature
-        minTemperaturePoint = (int)((offsetGap * (minTemperature - startTemperatureScale))/mstep);
+        minTemperaturePoint = (int)((offsetGap * (minTemperature - bottomTemperatureScale))/mstep);
         //точка на градуснике в ПИКСЕЛАХ которая соответствует maxTemperature
-        maxTemperaturePoint = (int)((offsetGap * (maxTemperature - startTemperatureScale))/mstep);
+        maxTemperaturePoint = (int)((offsetGap * (maxTemperature - bottomTemperatureScale))/mstep);
         //
-        Log.d(TAG, " min= " + minTemperature+"  max= " + maxTemperature
-                + " start= " + startTemperatureScale+"  stop= " + stopTemperatureScale
+        Log.d(TAG, " min= " + minTemperature + " / " + bottomTemperatureScale +"  max= " + maxTemperature +" / " + topTemperatureScale
                 + " step= " + mstep+"  offsetGap= " + offsetGap
-                + "   minPoint=" + minTemperaturePoint+"   maxPoint= " +maxTemperaturePoint);
+                + "   min/max Point=" + minTemperaturePoint+" / " +maxTemperaturePoint);
     }
     private void calckFon(){
         float y, rangeWidth;int i;
@@ -168,8 +167,11 @@ public class Thermometer extends Drawable {
     public void setColumnTemperature(float temperature) {
         //входную температуру для отображения Вычитаем минимальное значение, домножаем на коэфициент
         // перехода к пикселам и добавляем смещение пикселов на экране
-        hightColumn = (int)((temperature - minTemperature) * k_Temperature + minTemperaturePoint);
-        invalidateSelf();
+       // hightColumn = (int)((temperature - bottomTemperatureScale) * k_Temperature);//
+       hightColumn = (int)(density + (temperature - bottomTemperatureScale) * offsetGap / mstep);//
+       // hightColumn = (int)((temperature - bottomTemperatureScale) * height / (topTemperatureScale - bottomTemperatureScale));//
+
+        invalidateSelf();//Запуск ПЕРЕРИСОВАТЬ!!
   //      Log.i(TAG," column= " + column +"  hightC= "+ hightColumn +" minT= " +minTemperature + " maxT= " +maxTemperature
   //              +"  k_T= " + k_Temperature + " minP= " +minTemperaturePoint + " maxP= " +maxTemperaturePoint);
     }
@@ -179,24 +181,15 @@ public class Thermometer extends Drawable {
     public void draw(Canvas canvas) {
         if((width <= 0) || (height <= 0))return;
         //
-  //      Log.i(TAG, " --="+canvas.getHeight()+ " --="+canvas.getDensity());
-
-//        if(density != 0) {
-//            offsetLeftRight = offsetLeftRightFinal * density;
-//            offsetGap = offsetGapFinal * density;
-//            columnWith = columnWithFinal * density;
-//        }
+  //      Log.i(TAG, "draw --="+canvas.getHeight()+ " --="+canvas.getDensity());
         //
         // рисуем фон градусника, шкалу, ЕСЛИ ИЗМЕНИЛИСЬ РАЗМЕРЫ!!
-        if(chengSize){
-            // 52dp = 44dp + 4dp * 2
-            minTemperaturePoint = (int)(52 * density);//точка на градуснике которая соответствует minTemperature
-            maxTemperaturePoint = height -(int)(52 * density);//точка на градуснике которая соответствует maxTemperature
-            k_Temperature = (float)(maxTemperaturePoint - minTemperaturePoint)/(maxTemperature - minTemperature);
-
-            drawThermometerFon(canvas);
-        }
-
+//        if(chengSize){
+//            drawThermometerFon(canvas);
+//            chengSize = false;
+//        }
+        //надо всегда отрисовывать, иначе ничего не отображается
+        drawThermometerFon(canvas);
         //рисуем столбик
         drawThermometerColumn(canvas);
     }
@@ -220,17 +213,18 @@ public class Thermometer extends Drawable {
                 +"  l=" + bounds.left+"  r=" + bounds.right
                 +"  t=" + bounds.top+"  b=" + bounds.bottom
         );
-        if((width != bounds.width()) || (height != bounds.height()))chengSize = true;
-        else chengSize = false;
+        if((width != bounds.width()) || (height != bounds.height())){
+            chengSize = true;
+        } else chengSize = false;
         // устнавливаем размеры для рисования
         width = bounds.width();
         height = bounds.height();
-        //
-        testFon();
+        //testFon();
+        calckFon();
     }
     private  void drawThermometerFon(Canvas canvas) {
         //MIN
-        Path path;int x,endX;
+        Path path;int x,endX,y,i,shift;
         int colWith = columnWith *2;
         int startX = (width - colWith) /2;
         drawLine(startX,startX + colWith,0, minTemperaturePoint, mPath);
@@ -245,7 +239,8 @@ public class Thermometer extends Drawable {
         // mPath.reset();
         mPaint.setColor(0xFF000000);
         mPaint.setTextSize(textSize);
-        for(int y = offsetGap, i = -2; y < height; y += offsetGap, i++){
+        shift = 10 - Math.abs(((int)(bottomTemperatureScale / mstep)) % 10);
+        for( y = 0, i = shift ; y < height; y += offsetGap, i++){
             if((i % 10) == 0){
                 x = offsetX;
                 path = new Path();
@@ -261,16 +256,23 @@ public class Thermometer extends Drawable {
                 //формируем линию, вдоль которой будем писать
                 path.moveTo(getXpixel(x), getYpixel(y));
                 path.lineTo(getXpixel(endX), getYpixel(y));
-                int st = (int)(-mstep * i);
-                int stM = Math.abs(st % 10);
-                st = (st % 100) / 10;
-                // пишем текст
-                canvas.drawTextOnPath(Integer.toString(st), path,(st < 0)?0:offsetX/2 ,  -textSize*1/10 , mPaint);
-                canvas.drawTextOnPath(Integer.toString(stM), path, endX - textSize , -textSize*1/10, mPaint);
+                int st = (int)(bottomTemperatureScale + mstep * (i - shift)),stM;
+                if((st / 10) != 0){
+                    stM = Math.abs(st % 10);
+                    st = (st % 100) / 10;
+                    // пишем текст
+                    canvas.drawTextOnPath(Integer.toString(st), path,(st < 0)?0:offsetX/2 ,  -textSize*1/10 , mPaint);
+                } else{
+                    //если меньше 10, знак минуса ВЫВОДИТЬ НАДО! а 0 первый НЕ выводим!
+                    stM = st % 10;
+                }
+                // пишем текст, если отрицательный, немного сдигаем его для отображения МИНУСА
+                if(stM >= 0)canvas.drawTextOnPath(Integer.toString(stM), path, endX - textSize , -textSize*1/10, mPaint);
+                else canvas.drawTextOnPath(Integer.toString(stM), path, endX - textSize *13/10, -textSize*1/10, mPaint);
             }
         }
+     //   Log.w(TAG,"------drawThermometerFon");
         drawCanvas(canvas, 0xFF000000, mPath, Paint.Style.FILL);//Paint.Style.STROKE--почемуто хреново рисует!
-
     }
     //можно использовать один и тот же Path, НО обязательно path.reset(); при повторном использовании
     //Paint- хранит цвет кисть и т д -
