@@ -10,6 +10,8 @@ import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.util.Log;
 
+import java.util.Objects;
+
 /**
  * Created by lesa on 28.12.2016.
  */
@@ -63,6 +65,8 @@ public class Thermometer extends Drawable {
             offsetGapFinal +3,offsetGapFinal +4,offsetGapFinal +5,
             offsetGapFinal +6,offsetGapFinal +7};
     private final float minRange = 3;//C минимальная шкала градусника
+
+    private Canvas canvasFon;// = new Canvas();
 
     //--
     private float  roundingFloat(float f, float round){
@@ -217,13 +221,13 @@ public class Thermometer extends Drawable {
         //
   //      Log.i(TAG, "draw --="+canvas.getHeight()+ " --="+canvas.getDensity());
         //
-        // рисуем фон градусника, шкалу, ЕСЛИ ИЗМЕНИЛИСЬ РАЗМЕРЫ!!
+        // (ПОЧЕМУТО НЕ работает, получается всегда заново отрисовывает)рисуем фон градусника, шкалу, ЕСЛИ ИЗМЕНИЛИСЬ РАЗМЕРЫ!!
 //        if(chengSize){
 //            drawThermometerFon(canvas);
 //            chengSize = false;
 //        }
         //надо всегда отрисовывать, иначе ничего не отображается
-        drawThermometerFon(canvas);
+       drawThermometerFon(canvas);
         //рисуем столбик
         drawThermometerColumn(canvas);
     }
@@ -258,18 +262,17 @@ public class Thermometer extends Drawable {
     }
     private  void drawThermometerFon(Canvas canvas) {
         //MIN
-        Path path;int x,endX,y,i,shift;
+        Path path;int x,y,i,shift;
         int colWith = columnWith *2;
         int startX = (width - colWith) /2;
-        drawLine(startX,startX + colWith,0, minTemperaturePoint, mPath);
+        int endX = startX + colWith;
+        // MIN
+        drawRect(startX,0 ,endX,minTemperaturePoint,mPath);
         drawCanvas(canvas, 0xc000c0ff, mPath,  Paint.Style.FILL);//Paint.Style.STROKE
         //MAX
-        startX = (width - colWith) /2;
-        drawLine(startX,startX + colWith, maxTemperaturePoint,height, mPath);
+        drawRect(startX,maxTemperaturePoint,endX,height,mPath);
         drawCanvas(canvas, 0xc0ff0000, mPath, Paint.Style.FILL);//80ffc0c0 Paint.Style.STROKE
-
-        //-----------
-
+       //-----------
         // mPath.reset();
         mPaint.setColor(0xFF000000);
         mPaint.setTextSize(textSize);
@@ -289,9 +292,9 @@ public class Thermometer extends Drawable {
 
             }
             endX = width - x;
-            mPath.addRect(getXpixel(x),getYpixel(y),getXpixel(endX),getYpixel(y-(int)density),Path.Direction.CW);
+            drawRect(x,y,endX,y-(int)density,mPath);
             if(path != null){
-                //формируем линию, вдоль которой будем писать
+                //формируем линию, вдоль которой будем писать(y- переворачиваем)
                 path.moveTo(getXpixel(x), getYpixel(y));
                 path.lineTo(getXpixel(endX), getYpixel(y));
                 int st = (int)(bottomTemperatureScale + mstep * (i - shift)),stM;
@@ -317,33 +320,30 @@ public class Thermometer extends Drawable {
     //Paint- хранит цвет кисть и т д -
     private void drawThermometerColumn(Canvas canvas) {
         //
-        int startX, level = hightColumn;
-
+        int startX,endX, levelY = hightColumn;
         //сначала стираем столбик ( реально мы рисуем по чистому листу, просто
-        // стираем разметку делений градусника, а то некрасиво выглядит)
         startX = (width - columnWith) /2;
-        drawLine(startX,startX + columnWith,0,height, mPath);
+        endX = startX + columnWith;
+        drawRect(startX,0 ,endX,height,mPath);
         drawCanvas(canvas, 0xFFFFFFFF, mPath,   Paint.Style.FILL);//Paint.Style.STROKE
 
- //       mPath = new Path();
         startX = (width - columnWith) /2;
-        drawLine(startX,startX + columnWith,0,level, mPath);
+        drawRect(startX,0 ,endX,levelY,mPath);
         drawCanvas(canvas, 0xFF404040, mPath,   Paint.Style.FILL);//Paint.Style.STROKE
-    //    drawCanvas(canvas, 0xFFA00000, mPath);
-        //
-   //     mPath = new Path();
+
         startX = (width - columnWith + (int)(6 * density)) /2;
-        drawLine(startX,startX + columnWith -(int)(6 * density),0,level, mPath);
+        endX = startX + columnWith -(int)(6 * density);
+        drawRect(startX,0 ,endX,levelY,mPath);
         drawCanvas(canvas, 0xFF808080, mPath,   Paint.Style.FILL);//Paint.Style.STROKE
-   //     drawCanvas(canvas, 0xFFE08080, mPath);//
-        //
-  //      mPath = new Path();
+         //
         startX = (width - columnWith + (int)(8 * density)) /2;
-        drawLine(startX,startX + columnWith -(int)(8 * density),0,level, mPath);
+        endX = startX + columnWith -(int)(8 * density);
+        drawRect(startX,0 ,endX,levelY,mPath);
         drawCanvas(canvas, 0xFFc0c0c0, mPath ,   Paint.Style.FILL);//Paint.Style.STROKE
-   //     drawCanvas(canvas, 0xFFE08080, mPath );
+
         startX = (width - columnWith + (int)(9 * density)) /2;
-        drawLine(startX,startX + columnWith -(int)(9 * density),0,level, mPath);
+        endX = startX + columnWith -(int)(9 * density);
+        drawRect(startX,0 ,endX,levelY,mPath);
         drawCanvas(canvas, 0xFFffffff, mPath,   Paint.Style.FILL);//Paint.Style.STROKE
     }
     //можно использовать один и тот же Path,
@@ -379,6 +379,24 @@ public class Thermometer extends Drawable {
         if(x < 0) x = 0;
         if(x >  width) x = width;
         return x;
+    }
+    private void drawRect(int x,int y,int endX,int endY, Path mPath ){
+        //ПО УМОЛЧАНИЮ- 0 У, верхний левый УГОЛ экрана!
+        // переворачиваем- ИДЕМ СНИЗУ вверх,
+        y = height - y;
+        endY = height - endY;
+        if(x < 0) x = 0;
+        if(y < 0)y = 0;
+        if(x > width) x = width;
+        if(y > height)y = height;
+        //
+        if(endX < 0) endX = 0;
+        if(endY < 0)endY = 0;
+        if(endX > width) endX = width;
+        if(endY > height)endY = height;
+        //
+        mPath.addRect(x,y ,endX,endY,Path.Direction.CW);
+        // Log.v(TAG,"x= "+x +"  endX= " + endX +"  y= "+y+"  endY= "+ endY);
     }
     private void drawLine(int x,int endX,int y,int endY, Path mPath ){
         //ПО УМОЛЧАНИЮ- 0 У, верхний левый УГОЛ экрана!
