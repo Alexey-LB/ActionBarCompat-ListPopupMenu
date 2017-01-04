@@ -127,6 +127,8 @@ public class MainActivityThermometer  extends AppCompatActivity {// ActionBarAct
 //            @Override
 //            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {Log.v(TAG,"onCheckedChanged--");}});
         //-------------------------------------------------------------
+        //устанавливаем ГРАДУСНИК со шкалой, в выделенный View
+        thermometer.findViewById(R.id.thermometer_fon).setBackground(mThermometerDrawable);
         //  при запуске если в горизогнтальном положении был, учитываем это
         onConfigurationChanged(getResources().getConfiguration());
         //
@@ -200,19 +202,6 @@ public class MainActivityThermometer  extends AppCompatActivity {// ActionBarAct
 //        }
 //        return false;
 //    }
-
-    private void setThermometerView(){
-      //  thermometer_column
-        ImageView fon, column;
-        fon = (ImageView)thermometer.findViewById(R.id.thermometer_fon);
-        column = (ImageView)thermometer.findViewById(R.id.thermometer_column);
-        // ДЛЯ размера меню И ТД, используется density !!!
-        float density = getResources().getDisplayMetrics().density;
-
-        mThermometerDrawable.setSettingThermometer(density
-                ,sensor.minTemperature,sensor.maxTemperature,sensor.onFahrenheit,true);
-        fon.setBackground(mThermometerDrawable);
-    }
 //вызывается при смене ориентации экрана, необходимо указать разрешений в МАНИФЕСТЕ
     //перебрасывает минимум и максимум в другой слой и все
     @Override
@@ -367,7 +356,8 @@ public class MainActivityThermometer  extends AppCompatActivity {// ActionBarAct
         //при возвращениие из других окон, может быть системный бар, по этому еще раз его отменяем
         thermometer.getRootView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
         //делаем Здесь обновление термометра, чтоб при выходе из настроек сенсора, изменения были учтены
-        setThermometerView();
+        mThermometerDrawable.setSettingThermometer(getResources().getDisplayMetrics().density
+                ,sensor.minTemperature,sensor.maxTemperature,sensor.onFahrenheit,true);
         //---
         mHandlerWork = true;
         //сам заводится и работает

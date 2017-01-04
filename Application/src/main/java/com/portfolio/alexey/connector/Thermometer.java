@@ -168,22 +168,30 @@ public class Thermometer extends Drawable {
         // ДЛЯ размера меню И ТД, используется density !!!
         // density = getResources().getDisplayMetrics().density;
         mHandlerWork = false;
+        Log.w(TAG,"minTemp= " + minTemperature + " maxTemp= " + maxTemperature + "  class= " + this);
         if(test){
+            //необходимо всегда УДАЛЯТЬ старые запуски, иначе ОНИ НАЧИНАЮТ ЖИТЬ ВСЕ ВМЕСТЕ!!!
+            mHandler.removeCallbacks(runnable);
             mHandlerWork = true;
             //сам заводится и работает
-            if(mHandler == null) mHandler = new Handler();
-            mHandler.postDelayed(new Runnable() {
-                public void run() {
-                    //         Log.v(TAG,"mHandler --");
-
-                    setColumnTemperature_(getNextTestTemp());
-
-                    // повторяем через каждые 300 миллисекунд
-                    if(mHandlerWork) mHandler.postDelayed(this, 3000);
-                }
-            },500);
+            mHandler.postDelayed(runnable,500);
         }
+        calckFon();//пересчитать фон!!
+        //    invalidateSelf();//Запуск ПЕРЕРИСОВАТЬ!!
     }
+
+    private Runnable runnable = new Runnable(){
+        public void run() {
+            //         Log.v(TAG,"mHandler --");
+
+            setColumnTemperature_(getNextTestTemp());
+
+            // повторяем через каждые 300 миллисекунд
+            if(mHandlerWork) mHandler.postDelayed(this, 3000);
+        }
+    };
+
+
     private float getNextTestTemp(){
         int value;
         value = Math.round(bottomTemperatureScale);
@@ -195,8 +203,8 @@ public class Thermometer extends Drawable {
     }
     private int iCount = 1;
 
-    private boolean mHandlerWork = true;
-    private Handler mHandler;
+    public  boolean mHandlerWork = false;
+    private Handler mHandler = new Handler();
 
     // высота столбика термометра
     public void setColumnTemperature(float temperature) {
@@ -284,6 +292,7 @@ public class Thermometer extends Drawable {
         if(bottomTemperatureScale < 0) shift = 10 - shift;
         Log.v(TAG,"valueTemperature= " +valueTemperature+ "   shift= " + shift
                 + "   countShift=" + (bottomTemperatureScale / mstep)+ " bottTemp= "+ bottomTemperatureScale);
+   //     Log.i(TAG,"minTemp= " + minTemperature + " maxTemp= " + maxTemperature + "  class= " + this);
         for( y = 0, i = shift ; y < height; y += offsetGap, i++){
             if((i % 10) == 0){
                 x = offsetX;
