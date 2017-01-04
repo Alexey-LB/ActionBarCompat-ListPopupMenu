@@ -45,6 +45,7 @@ public class MainActivityThermometer  extends AppCompatActivity {// ActionBarAct
     private Thermometer thermometerDrawable;
     private SwitchButton mSwitchOffSensor;
     private SwitchButton mSwitchResetMeasurement;
+    Thermometer mThermometerDrawable = new Thermometer();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -126,11 +127,8 @@ public class MainActivityThermometer  extends AppCompatActivity {// ActionBarAct
 //            @Override
 //            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {Log.v(TAG,"onCheckedChanged--");}});
         //-------------------------------------------------------------
-        setThermometerView();
         //  при запуске если в горизогнтальном положении был, учитываем это
         onConfigurationChanged(getResources().getConfiguration());
-
-
         //
         Log.e(TAG, "----onCreate END-----" );//+ ((PointF)mSwitchOffSensor.getBackSizeF()).toString());
 
@@ -211,9 +209,9 @@ public class MainActivityThermometer  extends AppCompatActivity {// ActionBarAct
         // ДЛЯ размера меню И ТД, используется density !!!
         float density = getResources().getDisplayMetrics().density;
 
-        thermometerDrawable = new Thermometer(density
-                ,sensor.minTemperature,sensor.maxTemperature,sensor.onFahrenheit);
-        fon.setBackground(thermometerDrawable);
+        mThermometerDrawable.setSettingThermometer(density
+                ,sensor.minTemperature,sensor.maxTemperature,sensor.onFahrenheit,true);
+        fon.setBackground(mThermometerDrawable);
     }
 //вызывается при смене ориентации экрана, необходимо указать разрешений в МАНИФЕСТЕ
     //перебрасывает минимум и максимум в другой слой и все
@@ -325,9 +323,9 @@ public class MainActivityThermometer  extends AppCompatActivity {// ActionBarAct
                 }
                 if((sensor.mConnectionState == 0) && (mSwitchOffSensor.isEnabled())){
                     //сначала ЦВЕТ текста меняем, А ПОТОМ сбрасываем - иначе цвет НЕ устанавливается!!
-//                    mSwitchOffSensor.setTextColor(getResources()
-//                            .getColor(R.color.colorBackgroundGrey));
-//                    mSwitchOffSensor.setEnabled(false);
+                    mSwitchOffSensor.setTextColor(getResources()
+                            .getColor(R.color.colorBackgroundGrey));
+                    mSwitchOffSensor.setEnabled(false);
 
                 }else {
                     if((sensor.mConnectionState != 0) && (!mSwitchOffSensor.isEnabled()))
@@ -345,9 +343,9 @@ public class MainActivityThermometer  extends AppCompatActivity {// ActionBarAct
             }
             if((sensor.mConnectionState == 0) && (mSwitchResetMeasurement.isEnabled())){
                 //сначала ЦВЕТ текста меняем, А ПОТОМ сбрасываем - иначе цвет НЕ устанавливается!!
-//                mSwitchResetMeasurement.setTextColor(getResources()
-//                        .getColor(R.color.colorBackgroundGrey));
-//                mSwitchResetMeasurement.setEnabled(false);
+                mSwitchResetMeasurement.setTextColor(getResources()
+                        .getColor(R.color.colorBackgroundGrey));
+                mSwitchResetMeasurement.setEnabled(false);
             } else {
                 if((sensor.mConnectionState != 0) && (!mSwitchResetMeasurement.isEnabled()))
                     mSwitchResetMeasurement.setEnabled(true);
@@ -368,6 +366,8 @@ public class MainActivityThermometer  extends AppCompatActivity {// ActionBarAct
         super.onResume();
         //при возвращениие из других окон, может быть системный бар, по этому еще раз его отменяем
         thermometer.getRootView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
+        //делаем Здесь обновление термометра, чтоб при выходе из настроек сенсора, изменения были учтены
+        setThermometerView();
         //---
         mHandlerWork = true;
         //сам заводится и работает

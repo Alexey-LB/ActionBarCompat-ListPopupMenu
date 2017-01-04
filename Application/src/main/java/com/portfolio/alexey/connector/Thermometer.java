@@ -25,7 +25,7 @@ public class Thermometer extends Drawable {
     private  int hightColumn = 0;//высота столюбика ртути
     public   float valueTemperature = 0;//значение темепературы в градусах
     //
-    private final float density;//пикселей на dp
+    private float density;//пикселей на dp
 
     private final int offsetGapFinal = 5;//  5 dpi //через сколько дпи по У рисуем линии
     private int offsetGap = offsetGapFinal;//  5 dpi //через сколько дпи по У рисуем линии
@@ -49,7 +49,7 @@ public class Thermometer extends Drawable {
     private  float bottomTemperatureScale;//начало шкалы градусника в ГРАДУСАХ
     private   float topTemperatureScale;//конец шкалы градусника в ГРАДУСАХ
 
-    public  final boolean onFahrenheit;
+    public  boolean onFahrenheit;
     private  boolean chengSize = false;//  признак изменения размеров градусника и НЕОБХОДИМОСТЬ заново отрисовать ФОН
 
     private float mstep;// в градусах на деление ШКАЛЫ термометра
@@ -66,8 +66,9 @@ public class Thermometer extends Drawable {
             offsetGapFinal +6,offsetGapFinal +7};
     private final float minRange = 3;//C минимальная шкала градусника
 
-    private Canvas canvasFon;// = new Canvas();
+    //private Canvas canvasFon;// = new Canvas();
 
+    public Thermometer(){super();}
     //--
     private float  roundingFloat(float f, float round){
         int i = Math.round(f/round);
@@ -141,8 +142,8 @@ public class Thermometer extends Drawable {
             calckFon();
         }
     }
-    public Thermometer(float density_,float minTemperature_,float maxTemperature_, boolean fahrenheit){
-        super();
+
+    public void setSettingThermometer(float density_,float minTemperature_,float maxTemperature_, boolean fahrenheit,boolean test){
         onFahrenheit = fahrenheit;
         if(fahrenheit){
             minTemperature = Util.getFahrenheit(minTemperature_);
@@ -159,27 +160,29 @@ public class Thermometer extends Drawable {
         }
         density = density_;
         if(density != 0) {
-             offsetGap = (int)(offsetGapFinal * density);  ///5 dpi //через сколько дпи по У рисуем линии
+            offsetGap = (int)(offsetGapFinal * density);  ///5 dpi //через сколько дпи по У рисуем линии
             columnWith = (int)(columnWithFinal * density);//  10 dpi - ширина столбика термометра
             offsetX = (int)(offsetXFinal * density);// смещение от края по Х в др
             textSize = (textSizeFinal * density);//размер текста надписи в градусах
         }
         // ДЛЯ размера меню И ТД, используется density !!!
-       // density = getResources().getDisplayMetrics().density;
-        mHandlerWork = true;
-        //сам заводится и работает
-        if(mHandler == null) mHandler = new Handler();
-        mHandler.postDelayed(new Runnable() {
-            public void run() {
-       //         Log.v(TAG,"mHandler --");
+        // density = getResources().getDisplayMetrics().density;
+        mHandlerWork = false;
+        if(test){
+            mHandlerWork = true;
+            //сам заводится и работает
+            if(mHandler == null) mHandler = new Handler();
+            mHandler.postDelayed(new Runnable() {
+                public void run() {
+                    //         Log.v(TAG,"mHandler --");
 
-    setColumnTemperature_(getNextTestTemp());
+                    setColumnTemperature_(getNextTestTemp());
 
-                // повторяем через каждые 300 миллисекунд
-                if(mHandlerWork) mHandler.postDelayed(this, 3000);
-            }
-        },500);
-
+                    // повторяем через каждые 300 миллисекунд
+                    if(mHandlerWork) mHandler.postDelayed(this, 3000);
+                }
+            },500);
+        }
     }
     private float getNextTestTemp(){
         int value;
