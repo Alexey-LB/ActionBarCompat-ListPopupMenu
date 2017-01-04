@@ -7,6 +7,7 @@ import android.graphics.Path;
 import android.graphics.PixelFormat;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
+import android.os.Handler;
 import android.util.Log;
 
 /**
@@ -20,6 +21,7 @@ public class Thermometer extends Drawable {
     private Path mPath = new Path();
 
     private  int hightColumn = 0;//высота столюбика ртути
+    public   float valueTemperature = 0;//значение темепературы в градусах
     //
     private final float density;//пикселей на dp
 
@@ -49,7 +51,6 @@ public class Thermometer extends Drawable {
     private  boolean chengSize = false;//  признак изменения размеров градусника и НЕОБХОДИМОСТЬ заново отрисовать ФОН
 
     private float mstep;// в градусах на деление ШКАЛЫ термометра
-    private  float k_Temperature;//(для столбика)коэффициент перехода от градусов / ПИКСЕЛЫ ( шкала в градусах/ шкалу в пикселах)
 
     private  int width = 0;//  ширина градусника в пикселях
     private  int height = 0;//   высота градусника в пикселях
@@ -80,6 +81,7 @@ public class Thermometer extends Drawable {
             //контроль диапазона
             if(i >= stepNet.length) i--;
             y = (mRangeTemperature / stepNet[i]) /  rangeWidth;//получили коэфициент использования шкалы
+            y = y* (float)Math.pow(0.95f,i);//для нас важнее более мелкое деление
             // чем ближе он к 1 тем полнее заполняет шкалу
             if(y > k) {
                 k = y;
@@ -97,7 +99,6 @@ public class Thermometer extends Drawable {
          k = (maxTemperature - minTemperature) / mstep;//шкалу которую надо вывести, этот диапазон обязателен
          rangeWidth = (float)height / (float)offsetGap;//реальное количество делений на градуснике
         mRangeTemperature = rangeWidth * mstep; //  диапазон выводимах значений
-        k_Temperature = mRangeTemperature / height;//(для столбика)коэффициент перехода от градусов / ПИКСЕЛЫ ( шкала в градусах/ шкалу в пикселах)
         y = (rangeWidth - k) / 2;// вычислили отступ вверх и вниз от maxTemperature и minTemperature
         // minTemperaturePoint - округляем до шага шкалы по У
         bottomTemperatureScale = roundingFloat(minTemperature - mstep * y,mstep);//начало шкалы градусника в ГРАДУСАХ
@@ -161,17 +162,50 @@ public class Thermometer extends Drawable {
         }
         // ДЛЯ размера меню И ТД, используется density !!!
        // density = getResources().getDisplayMetrics().density;
+        mHandlerWork = true;
+        //сам заводится и работает
+        if(mHandler == null) mHandler = new Handler();
+        mHandler.postDelayed(new Runnable() {
+            public void run() {
+       //         Log.v(TAG,"mHandler --");
+
+    setColumnTemperature_(getNextTestTemp());
+
+                // повторяем через каждые 300 миллисекунд
+                if(mHandlerWork) mHandler.postDelayed(this, 3000);
+            }
+        },500);
 
     }
+    private float getNextTestTemp(){
+        int value;
+        value = Math.round(bottomTemperatureScale);
+        value = value + iCount * (int)(mstep * 10);
+   //     Log.i(TAG,"*testTemp= " + value);
+        iCount++;
+        if(value >= (topTemperatureScale - (mstep * 11))) iCount= 1;
+        return (float)value;
+    }
+    private int iCount = 1;
+
+    private boolean mHandlerWork = true;
+    private Handler mHandler;
+
     // высота столбика термометра
     public void setColumnTemperature(float temperature) {
+        if(mHandlerWork) return;
+        setColumnTemperature_(temperature);
+    }
+    // высота столбика термометра
+    public void setColumnTemperature_(float temperature) {
         //входную температуру для отображения Вычитаем минимальное значение, домножаем на коэфициент
         // перехода к пикселам и добавляем смещение пикселов на экране
-       // hightColumn = (int)((temperature - bottomTemperatureScale) * k_Temperature);//
-       hightColumn = (int)(density + (temperature - bottomTemperatureScale) * offsetGap / mstep);//
-       // hightColumn = (int)((temperature - bottomTemperatureScale) * height / (topTemperatureScale - bottomTemperatureScale));//
-
-        invalidateSelf();//Запуск ПЕРЕРИСОВАТЬ!!
+        valueTemperature = temperature;
+       int n = (int)(density/2 + (temperature - bottomTemperatureScale) * offsetGap / mstep);//
+        if(n != hightColumn){//если есть изменения
+            hightColumn = n;
+            invalidateSelf();//Запуск ПЕРЕРИСОВАТЬ!!
+        }
   //      Log.i(TAG," column= " + column +"  hightC= "+ hightColumn +" minT= " +minTemperature + " maxT= " +maxTemperature
   //              +"  k_T= " + k_Temperature + " minP= " +minTemperaturePoint + " maxP= " +maxTemperaturePoint);
     }
@@ -239,7 +273,11 @@ public class Thermometer extends Drawable {
         // mPath.reset();
         mPaint.setColor(0xFF000000);
         mPaint.setTextSize(textSize);
-        shift = 10 - Math.abs(((int)(bottomTemperatureScale / mstep)) % 10);
+        // в зависимости от ЗНАКА, мы идем вперед или догоняем остаток
+        shift =  Math.abs(((int)(bottomTemperatureScale / mstep)) % 10);
+        if(bottomTemperatureScale < 0) shift = 10 - shift;
+        Log.v(TAG,"valueTemperature= " +valueTemperature+ "   shift= " + shift
+                + "   countShift=" + (bottomTemperatureScale / mstep)+ " bottTemp= "+ bottomTemperatureScale);
         for( y = 0, i = shift ; y < height; y += offsetGap, i++){
             if((i % 10) == 0){
                 x = offsetX;
@@ -281,10 +319,11 @@ public class Thermometer extends Drawable {
         //
         int startX, level = hightColumn;
 
-//        //сначала стираем столбик
+        //сначала стираем столбик ( реально мы рисуем по чистому листу, просто
+        // стираем разметку делений градусника, а то некрасиво выглядит)
         startX = (width - columnWith) /2;
         drawLine(startX,startX + columnWith,0,height, mPath);
-        drawCanvas(canvas, 0xffFFFFFF, mPath,   Paint.Style.FILL);//Paint.Style.STROKE
+        drawCanvas(canvas, 0xFFFFFFFF, mPath,   Paint.Style.FILL);//Paint.Style.STROKE
 
  //       mPath = new Path();
         startX = (width - columnWith) /2;
@@ -328,19 +367,17 @@ public class Thermometer extends Drawable {
         mPath.reset();//сбрасываем запомненную фигуру(возможно просто отрисовывает)
     }
     private int getYpixel(int y){
-        int maxHeightYpixel = height -1;
-    //    y = y * (int)density;
+     //    y = y * (int)density;
         if(y < 0)y = 0;
-        if(y > maxHeightYpixel) y = maxHeightYpixel;
+        if(y > height) y = height;
         ////ПО УМОЛЧАНИЮ- 0 У, верхний левый УГОЛ экрана!
         // переворачиваем- ИДЕМ СНИЗУ вверх,
-        return maxHeightYpixel - y;
+        return height - y;
     }
     private int getXpixel(int x){
-        int maxwidthXpixel = width - 1;
      //   x = x * (int)density;
         if(x < 0) x = 0;
-        if(x >  maxwidthXpixel) x = maxwidthXpixel;
+        if(x >  width) x = width;
         return x;
     }
     private void drawLine(int x,int endX,int y,int endY, Path mPath ){
@@ -350,13 +387,13 @@ public class Thermometer extends Drawable {
         endY = height - endY;
         if(x < 0) x = 0;
         if(y < 0)y = 0;
-        if(x >= width) x = width -1;
-        if(y >= height)y = height -1;
+        if(x > width) x = width;
+        if(y > height)y = height;
         //
         if(endX < 0) endX = 0;
         if(endY < 0)endY = 0;
-        if(endX >= width) endX = width -1;
-        if(endY >= height)endY = height -1;
+        if(endX > width) endX = width;
+        if(endY > height)endY = height;
         if((x == endX) && (y == endY)) return;//это точка ее не рисует,
         mPath.moveTo(x, y);
         mPath.lineTo(endX, y);
@@ -365,56 +402,4 @@ public class Thermometer extends Drawable {
         mPath.lineTo(x, y);
        // Log.v(TAG,"x= "+x +"  endX= " + endX +"  y= "+y+"  endY= "+ endY);
     }
-//    private  void drawThermometerFon(Canvas canvas) {
-//        //MIN
-//        int colWith = columnWith *4;
-//        int startX = (width - colWith) /2;
-//        drawLine(startX,startX + colWith,0, minTemperaturePoint, mPath);
-//        drawCanvas(canvas, 0xc000c0ff, mPath,  Paint.Style.FILL);//Paint.Style.STROKE
-//        //MAX
-//        startX = (width - colWith) /2;
-//        drawLine(startX,startX + colWith, maxTemperaturePoint,height, mPath);
-//        drawCanvas(canvas, 0xc0ff0000, mPath, Paint.Style.FILL);//80ffc0c0 Paint.Style.STROKE
-//
-//        //-----------
-//        //     Path mPath = new Path();
-//        int offset = width /offsetLeftRight;//смещение от края имеджа
-//        int step = height /offsetGap;//смещение от края имеджа
-//        int x,endX; boolean flag;
-//        // mPath.reset();
-//        mPaint.setColor(0xFF000000);
-//        mPaint.setTextSize(18f * density);
-//        for(int y = offsetGap, i = (int)(-2 * density); y < height; y += offsetGap, i++){
-//            if((i % 10) == 0){
-//                flag = true;
-//                x = offsetX;
-//            }else{
-//                flag = false;
-//                if((i % 5) == 0)x = offsetX *2 + offsetX / 2;
-//                else x = offsetX *4;
-//            }
-//            endX = width - x;
-//            //  drawLine(x,endX,y, y+(int)density, mPath);
-//            mPath.addRect(endX,y+(int)density,x,y,Path.Direction.CW);
-//            if(flag){
-//                Path path = new Path();
-//                path.moveTo(x, y);
-//                path.lineTo(endX, y);
-//                // path.addCircle(x, y, radius, Path.Direction.CW);
-//                int st = (int)(-mstep * i);
-//                int stM = Math.abs(st % 10);
-//                st = (st % 100) / 10;
-//                mPaint.setColor(0xFFFFFFFF);
-//                mPaint.setFakeBoldText(true);
-//                canvas.drawTextOnPath(Integer.toString(st), path,(st < 0)?0:offsetX *density/2 ,  18 * density*4/10 , mPaint);
-//                canvas.drawTextOnPath(Integer.toString(stM), path, endX - 18 * density , 18 * density*4/10, mPaint);
-////                mPaint.setColor(0xFF000000);
-////                mPaint.setFakeBoldText(true);
-////                canvas.drawTextOnPath(Integer.toString(st), path,(st < 0)?0:offsetX *density/2 ,  18 * density*4/10 , mPaint);
-////                canvas.drawTextOnPath(Integer.toString(stM), path, endX - 18 * density , 18 * density*4/10, mPaint);
-//            }
-//        }
-//        drawCanvas(canvas, 0xFF000000, mPath, Paint.Style.FILL);//Paint.Style.STROKE--почемуто хреново рисует!
-//
-//    }
 }
