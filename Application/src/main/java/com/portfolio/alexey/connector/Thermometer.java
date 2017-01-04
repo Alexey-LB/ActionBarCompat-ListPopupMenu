@@ -23,7 +23,7 @@ public class Thermometer extends Drawable {
     private Path mPath = new Path();
 
     private  int hightColumn = 0;//высота столюбика ртути
-    public   float valueTemperature = 0;//значение темепературы в градусах
+    public   float testValueTemperature = 0;//значение темепературы в градусах
     //
     private float density;//пикселей на dp
 
@@ -46,13 +46,13 @@ public class Thermometer extends Drawable {
     private  int minTemperaturePoint;//точка на градуснике в ПИКСЕЛАХ которая соответствует minTemperature
     private  int maxTemperaturePoint;//точка на градуснике в ПИКСЕЛАХ которая соответствует maxTemperature
 
-    private  float bottomTemperatureScale;//начало шкалы градусника в ГРАДУСАХ
-    private   float topTemperatureScale;//конец шкалы градусника в ГРАДУСАХ
+    public  float bottomTemperatureScale;//начало шкалы градусника в ГРАДУСАХ
+    public   float topTemperatureScale;//конец шкалы градусника в ГРАДУСАХ
 
     public  boolean onFahrenheit;
     private  boolean chengSize = false;//  признак изменения размеров градусника и НЕОБХОДИМОСТЬ заново отрисовать ФОН
 
-    private float mstep;// в градусах на деление ШКАЛЫ термометра
+    public float mstep;// в градусах на деление ШКАЛЫ термометра
 
     private  int width = 0;//  ширина градусника в пикселях
     private  int height = 0;//   высота градусника в пикселях
@@ -184,7 +184,7 @@ public class Thermometer extends Drawable {
         public void run() {
             //         Log.v(TAG,"mHandler --");
 
-            setColumnTemperature_(getNextTestTemp());
+            setColumnTemperature(getNextTestTemp());
 
             // повторяем через каждые 300 миллисекунд
             if(mHandlerWork) mHandler.postDelayed(this, 3000);
@@ -208,15 +208,10 @@ public class Thermometer extends Drawable {
 
     // высота столбика термометра
     public void setColumnTemperature(float temperature) {
-        if(mHandlerWork) return;
-        setColumnTemperature_(temperature);
-    }
-    // высота столбика термометра
-    public void setColumnTemperature_(float temperature) {
         //входную температуру для отображения Вычитаем минимальное значение, домножаем на коэфициент
         // перехода к пикселам и добавляем смещение пикселов на экране
-        valueTemperature = temperature;
-       int n = (int)(density/2 + (temperature - bottomTemperatureScale) * offsetGap / mstep);//
+        testValueTemperature = temperature;
+       int n = calckColumnTemperature(temperature);//
         if(n != hightColumn){//если есть изменения
             hightColumn = n;
             invalidateSelf();//Запуск ПЕРЕРИСОВАТЬ!!
@@ -224,7 +219,10 @@ public class Thermometer extends Drawable {
   //      Log.i(TAG," column= " + column +"  hightC= "+ hightColumn +" minT= " +minTemperature + " maxT= " +maxTemperature
   //              +"  k_T= " + k_Temperature + " minP= " +minTemperaturePoint + " maxP= " +maxTemperaturePoint);
     }
-
+    //вычисление столбика высоты столбика термометра в пикселах
+    public  int calckColumnTemperature(float temperature){
+         return (int)(density/2 + (temperature - bottomTemperatureScale) * offsetGap / mstep);//
+    }
 
     @Override
     public void draw(Canvas canvas) {
@@ -290,7 +288,7 @@ public class Thermometer extends Drawable {
         // в зависимости от ЗНАКА, мы идем вперед или догоняем остаток
         shift =  Math.abs(((int)(bottomTemperatureScale / mstep)) % 10);
         if(bottomTemperatureScale < 0) shift = 10 - shift;
-        Log.v(TAG,"valueTemperature= " +valueTemperature+ "   shift= " + shift
+        Log.v(TAG,"valueTemperature= " +testValueTemperature+ "   shift= " + shift
                 + "   countShift=" + (bottomTemperatureScale / mstep)+ " bottTemp= "+ bottomTemperatureScale);
    //     Log.i(TAG,"minTemp= " + minTemperature + " maxTemp= " + maxTemperature + "  class= " + this);
         for( y = 0, i = shift ; y < height; y += offsetGap, i++){

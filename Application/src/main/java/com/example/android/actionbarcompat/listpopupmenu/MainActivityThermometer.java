@@ -289,16 +289,31 @@ public class MainActivityThermometer  extends AppCompatActivity {// ActionBarAct
         Util.setDrawableToImageView(sensor.markerColor,R.id.marker, view);
 
         Util.setTextToTextView(sensor.getStringTime(),R.id.time, view);
-        Util.setTextToTextView(sensor.getString_1_ValueTemperature(true),R.id.numbe_min, view);
-        Util.setTextToTextView(b? sensor.getString_2_ValueTemperature(true):"Нет подкл."
-                , R.id.numbe_cur, view);
-        if(thermometerDrawable != null){
-           // float f = (float)Math.random()*100 - 20;
-            thermometerDrawable.setColumnTemperature
-                    //??!!
-                    (b?sensor.getValue(sensor.intermediateValue):-100f); //     fon.invalidate();
+
+        //для тестов, если иммитация значений на ртутном столбике термометра- показываем эти значения
+        if(mThermometerDrawable.mHandlerWork){
+            ///значение столбика
+            Util.setTextToTextView(String.format("%2.1f",mThermometerDrawable.testValueTemperature)
+                    , R.id.numbe_cur, view);
+            // откуда начинаем
+            Util.setTextToTextView(String.format("%2.1f",mThermometerDrawable.bottomTemperatureScale)
+                    ,R.id.numbe_min, view);
+            //шаг шкалы
+            Util.setTextToTextView(String.format("%2.1f",mThermometerDrawable.mstep)
+                    ,R.id.numbe_max, view);
+        } else{
+            Util.setTextToTextView(b? sensor.getString_2_ValueTemperature(true):"Нет подкл."
+                    , R.id.numbe_cur, view);
+            Util.setTextToTextView(sensor.getString_1_ValueTemperature(true),R.id.numbe_min, view);
+            Util.setTextToTextView(sensor.getString_3_ValueTemperature(true),R.id.numbe_max, view);
+            if(thermometerDrawable != null){
+                // float f = (float)Math.random()*100 - 20;
+                thermometerDrawable.setColumnTemperature
+                        //??!!
+                                (b?sensor.getValue(sensor.intermediateValue):-100f); //     fon.invalidate();
+            }
         }
-        Util.setTextToTextView(sensor.getString_3_ValueTemperature(true),R.id.numbe_max, view);
+
 
         Util.setLevelToImageView(b? sensor.battery_level: 0, R.id.battery, view);
         Util.setLevelToImageView(sensor.rssi, R.id.signal, view);
