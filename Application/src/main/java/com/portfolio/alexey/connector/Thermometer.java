@@ -1,5 +1,7 @@
 package com.portfolio.alexey.connector;
 
+import android.app.Activity;
+import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.ColorFilter;
 import android.graphics.Paint;
@@ -8,9 +10,10 @@ import android.graphics.PixelFormat;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import com.example.android.actionbarcompat.listpopupmenu.*;
 
-import java.util.Objects;
 
 /**
  * Created by lesa on 28.12.2016.
@@ -67,8 +70,8 @@ public class Thermometer extends Drawable {
     private final float minRange = 3;//C минимальная шкала градусника
 
     //private Canvas canvasFon;// = new Canvas();
-
-    public Thermometer(){super();}
+    private final Activity mActivity;
+    public Thermometer(Activity activity){super(); mActivity = activity ;}
     //--
     private float  roundingFloat(float f, float round){
         int i = Math.round(f/round);
@@ -275,16 +278,22 @@ public class Thermometer extends Drawable {
         int colWith = columnWith *2;
         int startX = (width - colWith) /2;
         int endX = startX + colWith;
+        Resources res = mActivity.getResources();
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//            yourTitle.setTextColor(getActivity().getResources().getColor(android.R.color.white, getActivity().getTheme()));
+//        }else {
+//            yourTitle.setTextColor(getActivity().getResources().getColor(android.R.color.white));
+//        }
         // MIN
         drawRect(startX,0 ,endX,minTemperaturePoint,mPath);
-        drawCanvas(canvas, 0xc000c0ff, mPath,  Paint.Style.FILL);//Paint.Style.STROKE
+        drawCanvas(canvas, res.getColor(R.color.colorMinThermometer), mPath,  Paint.Style.FILL);//Paint.Style.STROKE
         //MAX
         drawRect(startX,maxTemperaturePoint,endX,height,mPath);
-        drawCanvas(canvas, 0xc0ff0000, mPath, Paint.Style.FILL);//80ffc0c0 Paint.Style.STROKE
+        drawCanvas(canvas,res.getColor( R.color.colorMaxThermometer), mPath, Paint.Style.FILL);//80ffc0c0 Paint.Style.STROKE
        //-----------
-        // mPath.reset();
-        mPaint.setColor(0xFF000000);
-        mPaint.setTextSize(textSize);
+        // mPath.reset();values/colors.xml
+        mPaint.setColor(res.getColor(R.color.colorScaleDivisionThermometer));
+        mPaint.setTextSize(res.getDimension(R.dimen.TextScaleDivisionThermometerSize));
         // в зависимости от ЗНАКА, мы идем вперед или догоняем остаток
         shift =  Math.abs(Math.round((bottomTemperatureScale / mstep)) % 10);
         if(bottomTemperatureScale < 0) shift = 10 - shift;
@@ -331,6 +340,7 @@ public class Thermometer extends Drawable {
     private void drawThermometerColumn(Canvas canvas) {
         //
         int startX,endX, levelY = hightColumn;
+        Resources res = mActivity.getResources();
         //сначала стираем столбик ( реально мы рисуем по чистому листу, просто
         startX = (width - columnWith) /2;
         endX = startX + columnWith;
@@ -339,17 +349,17 @@ public class Thermometer extends Drawable {
 
         startX = (width - columnWith) /2;
         drawRect(startX,0 ,endX,levelY,mPath);
-        drawCanvas(canvas, 0xFF404040, mPath,   Paint.Style.FILL);//Paint.Style.STROKE
+        drawCanvas(canvas, res.getColor(R.color.colorColumnThermometer), mPath,   Paint.Style.FILL);//Paint.Style.STROKE
 
         startX = (width - columnWith + Math.round((6 * density))) /2;
         endX = startX + columnWith -Math.round((6 * density));
         drawRect(startX,0 ,endX,levelY,mPath);
-        drawCanvas(canvas, 0xFF808080, mPath,   Paint.Style.FILL);//Paint.Style.STROKE
+        drawCanvas(canvas, 0x80ffffff, mPath,   Paint.Style.FILL);//Paint.Style.STROKE
          //
         startX = (width - columnWith + Math.round((8 * density))) /2;
         endX = startX + columnWith -Math.round((8 * density));
         drawRect(startX,0 ,endX,levelY,mPath);
-        drawCanvas(canvas, 0xFFc0c0c0, mPath ,   Paint.Style.FILL);//Paint.Style.STROKE
+        drawCanvas(canvas, 0xC0FFFFFF, mPath ,   Paint.Style.FILL);//Paint.Style.STROKE
 
         startX = (width - columnWith + Math.round((9 * density))) /2;
         endX = startX + columnWith -Math.round((9 * density));
@@ -406,6 +416,7 @@ public class Thermometer extends Drawable {
         if(endY > height)endY = height;
         //
         mPath.addRect(x,y ,endX,endY,Path.Direction.CW);
+
         // Log.v(TAG,"x= "+x +"  endX= " + endX +"  y= "+y+"  endY= "+ endY);
     }
     private void drawLine(int x,int endX,int y,int endY, Path mPath ){

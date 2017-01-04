@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!---->
+    <!-- Цвета для градусника -->
+    <color name="colorMaxThermometer">#c0ff0000</color>
+    <color name="colorMinThermometer">#c000c0ff</color>
+    <color name="colorColumnThermometer">#FF404040</color>
+    <!-- деления на шкале-->
+    <color name="colorScaleDivisionThermometer">#FF000000</color>
+    <!--        =======================            -->
     <color name="colorPrimary">@color/colorBackground</color>
 
     <color name="colorPrimaryDark">#303f9f</color>

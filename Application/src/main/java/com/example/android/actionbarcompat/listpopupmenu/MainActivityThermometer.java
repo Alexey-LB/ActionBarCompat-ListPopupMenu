@@ -45,7 +45,7 @@ public class MainActivityThermometer  extends AppCompatActivity {// ActionBarAct
     private Thermometer thermometerDrawable;
     private SwitchButton mSwitchOffSensor;
     private SwitchButton mSwitchResetMeasurement;
-    Thermometer mThermometerDrawable = new Thermometer();
+    Thermometer mThermometerDrawable = new Thermometer(this);
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -7,9 +7,12 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Vibrator;
 import android.support.constraint.solver.ArrayLinkedVariables;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
+//import android.support.v4.content.ContextCompatApi23;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -385,5 +388,15 @@ public class Util {
     static public boolean setTextToTextView(String str, int viewID,  View viewRoot, String def) {
         if(viewRoot== null) return false;
         return setTextToTextView(str, viewRoot.findViewById(viewID),def);
+    }
+
+    public static final int getColor(Context context, int id) {
+        final int version = Build.VERSION.SDK_INT;
+        if (version >= 23) {
+           // return ContextCompatApi23.getColor(context, id);
+            return ContextCompat.getColor(context, id);
+        } else {
+            return context.getResources().getColor(id);
+        }
     }
 }
