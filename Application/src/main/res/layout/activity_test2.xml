@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/LayoutMain"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/darker_gray"
+    android:layout_weight="10"
+    >
+    <!---->
+    <!--ЗАСТАВКА РЕЛСИБА -->
+    <FrameLayout
+        android:id="@+id/frameHeadband"
+        android:orientation="horizontal"
+        android:theme="@android:style/TextAppearance.Inverse"
+        android:elevation="1dp"
+
+        android:background="@drawable/ic_battery_10_black_24dp_test"
+        android:layout_gravity="fill_vertical|fill_horizontal"
+        android:layout_width="380dp"
+        android:layout_height="380dp">
+        <!--android:background="@drawable/rays"-->
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="bottom|center_vertical"
+            android:layout_gravity="bottom|center_vertical">
+
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    />
+
+        </LinearLayout>
+        <!--</LinearLayout>-->
+
+
+    </FrameLayout>
+    <!--app:srcCompat="@drawable/home"-->
+</FrameLayout>

@@ -166,7 +166,7 @@
                                 android:layout_width="@dimen/ic_img_size"
                                 android:layout_height="@dimen/ic_img_size"
                                 android:layout_gravity="center_vertical|center_horizontal|center"
-                                app:srcCompat="@drawable/ic_battatery_level" />
+                                app:srcCompat="@drawable/ica_battatery_level" />
                         </FrameLayout>
 
                     </LinearLayout>

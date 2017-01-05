@@ -14,5 +14,8 @@
     <dimen name="TextScaleDivisionThermometerSize">18sp</dimen>
     <!--размер переключателя на термеметре- сборос и отключение-!!! связан с вычислением размеров пеереключателя!!-->
     <dimen name="switch_button_size">45dp</dimen>
-
+    <!--для отображения батареки ПОЧЕМУТО НЕ РАБОТАЕТ ссылка на это-->
+    <!--<dimen name="BatteryStrokeWidth">1.5</dimen>-->
+    <!--<dimen name="BatteryStrokeAlpha">0.6</dimen>-->
+    <!--<dimen name="BatteryFillAlpha">0.6</dimen>-->
 </resources>

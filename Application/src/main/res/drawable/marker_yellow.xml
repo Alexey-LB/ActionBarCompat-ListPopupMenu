@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <!--http://developer.alexanderklimov.ru/android/theory/shape.php#shape-->
-    <item>
+    <item >
         <shape  android:shape="oval"
             android:thickness="1dp"
             >
