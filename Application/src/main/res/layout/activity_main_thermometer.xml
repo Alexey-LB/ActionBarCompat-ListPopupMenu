@@ -92,10 +92,11 @@
                             android:layout_width="@dimen/iten_img_size"
                             android:layout_height="@dimen/iten_img_size"
                             android:layout_weight="0"
-                            android:background="@drawable/rectangle_line_corners_black_10dp_yellow_fill"
+                            android:background="@drawable/marker_fon"
                             android:layout_margin="@dimen/ic_img_gap"
                             android:id="@+id/marker_fon"
                             android:elevation="1dp">
+
 
                             <ImageView
                                 android:id="@+id/marker"

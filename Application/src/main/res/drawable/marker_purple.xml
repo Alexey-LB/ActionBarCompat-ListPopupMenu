@@ -1,33 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <!--http://developer.alexanderklimov.ru/android/theory/shape.php#shape-->
-    <item>
-        <shape  android:shape="oval"
-            android:thickness="1dp"
-            >
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval"
+    android:thickness="1dp"
+    >
 
-            <gradient
-                android:centerColor="#800080"
-                android:centerX="0.5"
-                android:centerY="0.5"
-                android:endColor="#400040"
-                android:gradientRadius="20"
-                android:startColor="#ff00ff"
-                android:type="radial"/>
+    <gradient
+        android:centerColor="#800080"
+        android:centerX="0.5"
+        android:centerY="0.5"
+        android:endColor="#400040"
+        android:gradientRadius="20"
+        android:startColor="#ff00ff"
+        android:type="radial"/>
 
-        </shape>
-    </item>
-    <!--android:thickness="1dp"  без этого ЭМУЛЯТОР не показывает фигуру! а на телефон нормально видно все-->
-
-
-    <!--/>-->
-    <!--<stroke-->
-    <!--android:width="1dip"-->
-    <!--/>-->
-    <!--android:dashGap="6dip"
-    android:dashWidth="8dip"
-    android:color="#000000"
-    -->
-    <!--<solid android:color="#028eb9"/>-->
-    <!--<corners android:radius="10.0dip" />-->
-</selector>
+</shape>

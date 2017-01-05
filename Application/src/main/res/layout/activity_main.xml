@@ -5,55 +5,68 @@
     android:id="@+id/LayoutMain"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/darker_gray"
     android:layout_weight="10"
-    >
+    android:background="@color/colorMinThermometer">
     <!---->
     <!--ЗАСТАВКА РЕЛСИБА -->
-    <FrameLayout
-        android:id="@+id/frameHeadband"
-        android:orientation="horizontal"
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:theme="@android:style/TextAppearance.Inverse"
-        android:elevation="1dp"
+        android:visibility="visible"
+        android:background="@drawable/house_start">
 
-        android:background="@drawable/home"
-        android:layout_gravity="fill_vertical|fill_horizontal">
-        <!--android:background="@drawable/rays"-->
+        <FrameLayout
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:id="@+id/frame2">
 
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="bottom|center_vertical"
-            android:layout_gravity="bottom|center_vertical">
+        </FrameLayout>
 
-                <Space
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    />
+        <FrameLayout
+            android:id="@+id/frameHeadband"
+            android:orientation="horizontal"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:theme="@android:style/TextAppearance.Inverse"
+            android:elevation="1dp"
 
-                <com.kyleduo.switchbutton.SwitchButton
-                    android:id="@+id/sb_ios"
-                    style="@style/SwitchButtonStyle"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    app:kswAnimationDuration="300"
-                    app:kswBackDrawable="@drawable/ios_back_drawable"
-                    app:kswBackMeasureRatio="3.4"
-                    app:kswThumbDrawable="@drawable/ios_thumb_selector"
-                    app:kswThumbMarginBottom="-8dp"
-                    app:kswThumbMarginLeft="-5dp"
-                    app:kswThumbMarginRight="-5dp"
-                    app:kswThumbMarginTop="-2.5dp"
-                    android:layout_weight="1.76" />
+
+            android:layout_gravity="fill_vertical|fill_horizontal">
+            <!--android:background="@drawable/rays"-->
+            <!--android:background="@drawable/home"-->
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="bottom|center_vertical"
+                android:layout_gravity="bottom|center_vertical">
 
             </LinearLayout>
-        <!--</LinearLayout>-->
+            <!--</LinearLayout>-->
 
+
+        </FrameLayout>
+    </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:id="@+id/frame_button"
+        android:layout_gravity="center_vertical|center_horizontal"
+        android:background="@drawable/house_button_transition">
 
     </FrameLayout>
+
+    <FrameLayout
+        android:background="@drawable/house_relsib_logo"
+        android:layout_gravity="bottom|right"
+        android:layout_marginBottom="35dp"
+        android:layout_marginRight="35dp"
+        android:layout_width="70dp"
+        android:layout_height="70dp">
+
+    </FrameLayout>
+
     <!--app:srcCompat="@drawable/home"-->
 </FrameLayout>

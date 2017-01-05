@@ -292,7 +292,7 @@ public class MainActivityThermometer  extends AppCompatActivity {// ActionBarAct
         View  vMarker = findViewById(R.id.marker_fon);
 
         Drawable draw = getResources().getDrawable(R.drawable.marker_fon);
-       // draw.setLevel(0);
+       //draw.setLevel(0);
         vMarker.setBackground(draw);
 
         if((mHandlerLoop & 1) == 0){
@@ -333,6 +333,7 @@ public class MainActivityThermometer  extends AppCompatActivity {// ActionBarAct
             }
         }
         View view2 = findViewById(R.id.numbe_cur);
+
         // в случае СРАБАТЫВАНИЯ сигнализации меняем фон
       //  if(sensor.onMinNotification || sensor.onMaxNotification){
         if((mHandlerLoop & 2) == 0){

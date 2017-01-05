@@ -20,6 +20,9 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Color;
+import android.graphics.drawable.AnimationDrawable;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.TransitionDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 //import android.app.FragmentManager;
@@ -39,6 +42,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.portfolio.alexey.connector.Sensor;
@@ -123,18 +127,49 @@ private View headband;
          //------------------------------
         // показываем заставку релсиба --------------
         //первый запуск показываем заставку,убираем системный бар
-        headband = findViewById(R.id.frameHeadband);
+        headband = findViewById(R.id.frame_button);
         headband.getRootView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
         getSupportActionBar().hide();
+
+
         headband.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //красиво переключемем (ПЕРЕХОД)между рисунком off -> on button
+                ((TransitionDrawable)findViewById(R.id.frame_button).getBackground()).startTransition(500);
                 //переход в следующее окно
                 go();
             }
         });
         Log.e(TAG, "----onCreate END-----");
+//      //  ImageView iv = (ImageView)findViewById(R.id.imageView2);
+//        TransitionDrawable td = (TransitionDrawable)getResources().getDrawable(R.drawable.marker_transition);
+//        findViewById(R.id.frameHeadband).setBackground(td);
+//        td.startTransition(5000);
+//
+//        //
+//        AnimationDrawable ad = (AnimationDrawable)getResources().getDrawable(R.drawable.marker_animation);
+//        findViewById(R.id.frame2).setBackground(ad);
+//        ad.start();
     }
+//    Drawable.Callback cb = new Drawable.Callback(){
+//
+//        @Override
+//        public void invalidateDrawable(Drawable who) {
+//            ((TransitionDrawable)who).startTransition(5000);
+//            Log.e(TAG,"-------------invalidateDrawable");
+//        }
+//
+//        @Override
+//        public void scheduleDrawable(Drawable who, Runnable what, long when) {
+//            Log.e(TAG,"-------------scheduleDrawable");
+//        }
+//
+//        @Override
+//        public void unscheduleDrawable(Drawable who, Runnable what) {
+//            Log.e(TAG,"-------------unscheduleDrawable");
+//        }
+//    };
     //переход в следующее окно
     private void go(){
         RunDataHub app;int i=0;
@@ -166,6 +201,9 @@ private View headband;
     @Override
     protected void onResume() {
         super.onResume();
+        //быстро возвращяем назад кнопку в  OFF, рисунк ON -> off button
+        ((TransitionDrawable)findViewById(R.id.frame_button).getBackground()).resetTransition();
+
         //при возвращениие из других окон, может быть системный бар, по этому еще раз его отменяем
         headband.getRootView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
         //а первый запуск показываем заставку,убираем системный бар

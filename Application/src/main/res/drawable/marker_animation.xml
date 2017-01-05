@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animation-list xmlns:android="http://schemas.android.com/apk/res/android"
+    android:oneshot="false" >
+
+    <item android:duration="500"  android:drawable="@drawable/marker_white"/>
+    <item android:duration="500"  android:drawable="@drawable/marker_red"/>
+    <item android:duration="500"   android:drawable="@drawable/marker_yellow"/>
+    <item android:duration="500"   android:drawable="@drawable/marker_green"/>
+    <item android:duration="500"   android:drawable="@drawable/marker_cyan"/>
+    <item android:duration="500"   android:drawable="@drawable/marker_blue"/>
+    <item android:duration="500"   android:drawable="@drawable/marker_purple"/>
+    <item android:duration="500"   android:drawable="@drawable/marker_black"/>
+
+</animation-list>
