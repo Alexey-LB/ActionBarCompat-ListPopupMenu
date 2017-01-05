@@ -3,6 +3,7 @@ package com.example.android.actionbarcompat.listpopupmenu;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.PointF;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
@@ -288,6 +289,24 @@ public class MainActivityThermometer  extends AppCompatActivity {// ActionBarAct
         // по умолчанию из метода toString -> заталкивается в R.id.text1, по этому мы сами это НЕ делаем
         Util.setDrawableToImageView(sensor.markerColor,R.id.marker, view);
 
+        View  vMarker = findViewById(R.id.marker_fon);
+
+        Drawable draw = getResources().getDrawable(R.drawable.marker_fon);
+       // draw.setLevel(0);
+        vMarker.setBackground(draw);
+
+        if((mHandlerLoop & 1) == 0){
+            draw.setLevel(0);
+           // View view2 =
+        //    findViewById(R.id.marker_fon).setBackgroundColor(R.drawable.rectangle_fill_alarm_corners_10dp);
+          //  findViewById(R.id.marker_fon).setBackground(getResources().getDrawable(R.drawable.rectangle_fill_alarm_corners_10dp));
+        } else{
+            draw.setLevel(1);
+     //       findViewById(R.id.marker_fon).setBackgroundColor(R.drawable.rectangle_line_corners_black_10dp);
+         //   findViewById(R.id.marker_fon).setBackground(getResources().getDrawable(R.drawable.rectangle_line_corners_black_10dp));
+ }
+
+
         Util.setTextToTextView(sensor.getStringTime(),R.id.time, view);
 
         //для тестов, если иммитация значений на ртутном столбике термометра- показываем эти значения
@@ -312,6 +331,15 @@ public class MainActivityThermometer  extends AppCompatActivity {// ActionBarAct
                         //??!!
                                 (b?sensor.getValue(sensor.intermediateValue):-100f); //     fon.invalidate();
             }
+        }
+        View view2 = findViewById(R.id.numbe_cur);
+        // в случае СРАБАТЫВАНИЯ сигнализации меняем фон
+      //  if(sensor.onMinNotification || sensor.onMaxNotification){
+        if((mHandlerLoop & 2) == 0){
+            if((mHandlerLoop & 1) == 0) view2.setBackground(getResources().getDrawable(R.drawable.rectangle_fill_min_corners_10dp));
+            else view2.setBackground(getResources().getDrawable(R.drawable.rectangle_fill_max_corners_10dp));
+        }else{
+            if(view2.getBackground() != null)view2.setBackground(null);
         }
 
 
@@ -358,6 +386,7 @@ public class MainActivityThermometer  extends AppCompatActivity {// ActionBarAct
             }
         }
      }
+    private int mHandlerLoop = 0;
     private boolean mHandlerWork = true;
     private Handler mHandler = new Handler();
     @Override
@@ -380,6 +409,7 @@ public class MainActivityThermometer  extends AppCompatActivity {// ActionBarAct
             public void run() {
                 // Log.v(TAG,"mHandler --");
                 updateViewItem(sensor, thermometer);
+                mHandlerLoop++;
                 // повторяем через каждые 300 миллисекунд
                 if(mHandlerWork) mHandler.postDelayed(this, 300);
             }

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item android:maxLevel="0"  android:drawable="@drawable/ic_access_alarm"/>
+    <item android:maxLevel="1"  android:drawable="@drawable/ic_sgnal_bluetooth_level"/>
+
+</layer-list>
+<!--<item android:maxLevel="0"  android:drawable="@drawable/rectangle_corners_10dp"/>-->
+<!--<item android:maxLevel="1"  android:drawable="@drawable/rectangle_fill_alarm_corners_10dp"/>-->
+
+<!--<item android:maxLevel="0" >-->
+<!--<bitmap-->
+    <!--android:gravity="center_vertical"-->
+    <!--android:src="@drawable/marker_green" />-->
+<!--</item>-->
+<!--<item>-->
+<!--<bitmap-->
+    <!--android:gravity="left"-->
+    <!--android:src="@drawable/marker_black" />-->
+<!--</item>-->
+<!--<item>-->
+<!--<bitmap-->
+    <!--android:gravity="right"-->
+    <!--android:src="@drawable/marker_cyan" />-->
+<!--</item>-->

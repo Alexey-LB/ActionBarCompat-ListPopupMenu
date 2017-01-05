@@ -6,6 +6,7 @@
     <color name="colorColumnThermometer">#FF404040</color>
     <!-- деления на шкале-->
     <color name="colorScaleDivisionThermometer">#FF000000</color>
+    <color name="colorAlarmThermometer">#FFFFFF00</color>
     <!--        =======================            -->
     <color name="colorPrimary">@color/colorBackground</color>
 
