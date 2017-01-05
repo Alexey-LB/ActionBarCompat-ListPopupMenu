@@ -127,7 +127,7 @@ private View headband;
          //------------------------------
         // показываем заставку релсиба --------------
         //первый запуск показываем заставку,убираем системный бар
-        headband = findViewById(R.id.frame_button);
+        headband = findViewById(R.id.imeg_button_transition);
         headband.getRootView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
         getSupportActionBar().hide();
 
@@ -136,7 +136,12 @@ private View headband;
             @Override
             public void onClick(View v) {
                 //красиво переключемем (ПЕРЕХОД)между рисунком off -> on button
-                ((TransitionDrawable)findViewById(R.id.frame_button).getBackground()).startTransition(500);
+                ((TransitionDrawable)findViewById(R.id.imeg_button_transition).getBackground()).startTransition(500);
+                try {
+                    sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 //переход в следующее окно
                 go();
             }
@@ -202,7 +207,7 @@ private View headband;
     protected void onResume() {
         super.onResume();
         //быстро возвращяем назад кнопку в  OFF, рисунк ON -> off button
-        ((TransitionDrawable)findViewById(R.id.frame_button).getBackground()).resetTransition();
+        ((TransitionDrawable)findViewById(R.id.imeg_button_transition).getBackground()).resetTransition();
 
         //при возвращениие из других окон, может быть системный бар, по этому еще раз его отменяем
         headband.getRootView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
