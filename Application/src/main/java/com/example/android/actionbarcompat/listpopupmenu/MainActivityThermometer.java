@@ -46,6 +46,9 @@ public class MainActivityThermometer  extends AppCompatActivity {// ActionBarAct
     private Thermometer thermometerDrawable;
     private SwitchButton mSwitchOffSensor;
     private SwitchButton mSwitchResetMeasurement;
+    private Drawable marker_fon;
+    private Drawable numbe_cur_fon;
+
     Thermometer mThermometerDrawable = new Thermometer(this);
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +73,8 @@ public class MainActivityThermometer  extends AppCompatActivity {// ActionBarAct
 
         Util.setSupportV7appActionBar(getSupportActionBar(),TAG,
                 intent.getStringExtra(Util.EXTRAS_BAR_TITLE));
+
+
         //убираем системный бар
         thermometer = findViewById(R.id.LayoutMainThermometer);
         thermometer.getRootView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
@@ -133,14 +138,18 @@ public class MainActivityThermometer  extends AppCompatActivity {// ActionBarAct
         //  при запуске если в горизогнтальном положении был, учитываем это
         onConfigurationChanged(getResources().getConfiguration());
         //
-        Log.e(TAG, "----onCreate END-----" );//+ ((PointF)mSwitchOffSensor.getBackSizeF()).toString());
+        Log.e(TAG, "----onCreate END----- = " + getSupportActionBar().getHeight() );//+ ((PointF)mSwitchOffSensor.getBackSizeF()).toString());
 
         View view = findViewById(R.id.linearLayoutSwitch);
+        // инициализируем укзатл на рисунок с 2 уровнями(там 2 рисунка)
+        marker_fon = (Drawable)findViewById(R.id.marker_fon).getBackground();
+        numbe_cur_fon = (Drawable)findViewById(R.id.numbe_cur).getBackground();
 
         Log.v(TAG, "----" + mSwitchOffSensor.getWidth()
                 + " = " + mSwitchOffSensor.getBackMeasureRatio()
                 + " = " + view.getWidth());
     }
+    //Кнопки ИОС для сброса измерения и ОТКЛЮчения термометра --
     private boolean onTouchSwitchButton(View v, MotionEvent event) {
         //https://github.com/kyleduo/switchbutton
         SwitchButton sw = (SwitchButton)v;
@@ -266,7 +275,7 @@ public class MainActivityThermometer  extends AppCompatActivity {// ActionBarAct
         menuFragment = menu;//запомил, чтоб потом  изменить меню или удалить ПРИ ВЫХОДЕ из фрейма
 
         menu.add(Menu.NONE,iconActionSetting,Menu.NONE,"Setting")
-                .setIcon(R.drawable.ic_settings_blue_32dp)
+                .setIcon(R.drawable.ic_settings_blue_32dp)//ic_settings_blue_32dp
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         // menu.clear();
         //       MenuInflater menuInflater= getMenuInflater();
@@ -281,34 +290,14 @@ public class MainActivityThermometer  extends AppCompatActivity {// ActionBarAct
 
     synchronized private void updateViewItem(Sensor sensor, View view){
         if((sensor == null) || (view == null)) return;
-
-        String str;int bl,rssi;
+        int color;
         boolean b = (sensor.mConnectionState == BluetoothLeServiceNew.STATE_CONNECTED);
-        //     || (sensor.mBluetoothDeviceAddress == null);//режим ИММИТАЦИИ- отладки
         //
-        // по умолчанию из метода toString -> заталкивается в R.id.text1, по этому мы сами это НЕ делаем
-        Util.setDrawableToImageView(sensor.markerColor,R.id.marker, view);
-
-        View  vMarker = findViewById(R.id.marker_fon);
-
-        Drawable draw = getResources().getDrawable(R.drawable.marker_fon);
-       //draw.setLevel(0);
-        vMarker.setBackground(draw);
-
-        if((mHandlerLoop & 1) == 0){
-            draw.setLevel(0);
-           // View view2 =
-        //    findViewById(R.id.marker_fon).setBackgroundColor(R.drawable.rectangle_fill_alarm_corners_10dp);
-          //  findViewById(R.id.marker_fon).setBackground(getResources().getDrawable(R.drawable.rectangle_fill_alarm_corners_10dp));
-        } else{
-            draw.setLevel(1);
-     //       findViewById(R.id.marker_fon).setBackgroundColor(R.drawable.rectangle_line_corners_black_10dp);
-         //   findViewById(R.id.marker_fon).setBackground(getResources().getDrawable(R.drawable.rectangle_line_corners_black_10dp));
- }
-
-
         Util.setTextToTextView(sensor.getStringTime(),R.id.time, view);
-
+        Util.setLevelToImageView(b? sensor.battery_level: 0, R.id.battery, view);
+        Util.setLevelToImageView(sensor.rssi, R.id.signal, view);
+        //     || (sensor.mBluetoothDeviceAddress == null);//режим ИММИТАЦИИ- отладки
+        // по умолчанию из метода toString -> заталкивается в R.id.text1, по этому мы сами это НЕ делаем
         //для тестов, если иммитация значений на ртутном столбике термометра- показываем эти значения
         if(mThermometerDrawable.mHandlerWork){
             ///значение столбика
@@ -321,6 +310,7 @@ public class MainActivityThermometer  extends AppCompatActivity {// ActionBarAct
             Util.setTextToTextView(String.format("%2.1f",mThermometerDrawable.mstep)
                     ,R.id.numbe_max, view);
         } else{
+            // ЭТО НОРМАЛЬНАЯ РАБОТА  - тест сброшен -
             Util.setTextToTextView(b? sensor.getString_2_ValueTemperature(true):"Нет подкл."
                     , R.id.numbe_cur, view);
             Util.setTextToTextView(sensor.getString_1_ValueTemperature(true),R.id.numbe_min, view);
@@ -332,58 +322,52 @@ public class MainActivityThermometer  extends AppCompatActivity {// ActionBarAct
                                 (b?sensor.getValue(sensor.intermediateValue):-100f); //     fon.invalidate();
             }
         }
-        View view2 = findViewById(R.id.numbe_cur);
-
-        // в случае СРАБАТЫВАНИЯ сигнализации меняем фон
-      //  if(sensor.onMinNotification || sensor.onMaxNotification){
-        if((mHandlerLoop & 2) == 0){
-            if((mHandlerLoop & 1) == 0) view2.setBackground(getResources().getDrawable(R.drawable.rectangle_fill_min_corners_10dp));
-            else view2.setBackground(getResources().getDrawable(R.drawable.rectangle_fill_max_corners_10dp));
-        }else{
-            if(view2.getBackground() != null)view2.setBackground(null);
+        // СИГНАЛИЗАЦИЯ-- в случае СРАБАТЫВАНИЯ сигнализации меняем фон
+        if(sensor.onMinNotification || sensor.onMaxNotification){
+            // меняем фон переодически в маркере
+            if((mHandlerLoop & 1) == 0) marker_fon.setLevel(0);
+            else marker_fon.setLevel(1);
+            // меняем фон под основным измерением, предварительно
+            // проверяем текуший уровень, чтоб НЕ грузить процессор
+            if(sensor.onMinNotification) {if(numbe_cur_fon.getLevel() != 1)numbe_cur_fon.setLevel(1);}
+            else {if(numbe_cur_fon.getLevel() != 2)numbe_cur_fon.setLevel(2);}
+        }else {
+            if(numbe_cur_fon.getLevel() != 0)numbe_cur_fon.setLevel(0);//
         }
-
-
-        Util.setLevelToImageView(b? sensor.battery_level: 0, R.id.battery, view);
-        Util.setLevelToImageView(sensor.rssi, R.id.signal, view);
+        //---положение переключателей-----положение переключателей-----------------------
         //ловим в сотоянии ВКЛЮЧЕН, запускаем функцию на выполнение и сбрасываем переключатель
-        // в исхождное положение
-        if(sensor != null){
-            if(mSwitchOffSensor != null){
-                if(mSwitchOffSensor.isChecked()){//отключение сенсора
-                    mSwitchOffSensor.setChecked(false);
-                    sensor.switchOffSensor();
-                }
-                if((sensor.mConnectionState == 0) && (mSwitchOffSensor.isEnabled())){
-                    //сначала ЦВЕТ текста меняем, А ПОТОМ сбрасываем - иначе цвет НЕ устанавливается!!
-                    mSwitchOffSensor.setTextColor(getResources()
-                            .getColor(R.color.colorBackgroundGrey));
-                    mSwitchOffSensor.setEnabled(false);
-
-                }else {
-                    if((sensor.mConnectionState != 0) && (!mSwitchOffSensor.isEnabled()))
-                        mSwitchOffSensor.setEnabled(true);
-                    mSwitchOffSensor.setTextColor(getResources()
-                            .getColor(R.color.colorTextlight));
-                }
+        //отключение сенсора
+        if(mSwitchOffSensor.isChecked()){
+            mSwitchOffSensor.setChecked(false);// в исхождное положение
+            sensor.switchOffSensor();
+        }
+        //сброс измерения сенсора
+        if(mSwitchResetMeasurement.isChecked()){
+            mSwitchResetMeasurement.setChecked(false);
+            sensor.resetMeasurement();//сброс измерения на самом сенсоре
+            // для сброса Мин Мах к текущей температуре
+            sensor.resetMinMaxValueTemperature();
+        }
+        //ОТОБРАЖЕНИЕ и положение переключателей
+        // коннекта ЕСТЬ!
+        if(sensor.mConnectionState > 0){
+            if(!mSwitchOffSensor.isEnabled() || !mSwitchResetMeasurement.isEnabled()){
+                color = getResources().getColor(R.color.colorTextlight);
+                mSwitchOffSensor.setEnabled(true);
+                mSwitchOffSensor.setTextColor(color);
+                //
+                mSwitchResetMeasurement.setEnabled(true);
+                mSwitchResetMeasurement.setTextColor(color);
             }
-            //---
-            if(mSwitchResetMeasurement.isChecked()){//сброс измерения
-                mSwitchResetMeasurement.setChecked(false);
-                sensor.resetMeasurement();//сброс измерения на самом сенсоре
-                // для сброса Мин Мах к текущей температуре
-                sensor.resetMinMaxValueTemperature();
-            }
-            if((sensor.mConnectionState == 0) && (mSwitchResetMeasurement.isEnabled())){
-                //сначала ЦВЕТ текста меняем, А ПОТОМ сбрасываем - иначе цвет НЕ устанавливается!!
-                mSwitchResetMeasurement.setTextColor(getResources()
-                        .getColor(R.color.colorBackgroundGrey));
+        } else{
+            //если установлн то сбрасываем
+            if(mSwitchOffSensor.isEnabled() || mSwitchResetMeasurement.isEnabled()){
+                color = getResources().getColor(R.color.colorBackgroundGrey);
+                mSwitchOffSensor.setTextColor(color);
+                mSwitchOffSensor.setEnabled(false);
+                //устанавливает цвет, иначе после СБРОСА цвет НЕ установить!
+                mSwitchResetMeasurement.setTextColor(color);
                 mSwitchResetMeasurement.setEnabled(false);
-            } else {
-                if((sensor.mConnectionState != 0) && (!mSwitchResetMeasurement.isEnabled()))
-                    mSwitchResetMeasurement.setEnabled(true);
-                mSwitchResetMeasurement.setTextColor(getResources()
-                        .getColor(R.color.colorTextlight));
             }
         }
      }
@@ -402,7 +386,12 @@ public class MainActivityThermometer  extends AppCompatActivity {// ActionBarAct
         thermometer.getRootView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
         //делаем Здесь обновление термометра, чтоб при выходе из настроек сенсора, изменения были учтены
         mThermometerDrawable.setSettingThermometer(getResources().getDisplayMetrics().density
-                ,sensor.minTemperature,sensor.maxTemperature,sensor.onFahrenheit,true);
+                ,sensor.minTemperature,sensor.maxTemperature,sensor.onFahrenheit,false);
+        /// тоже что выше НО с ЗАПУСКОМ ТЕСТА ртутного столбика!
+//        mThermometerDrawable.setSettingThermometer(getResources().getDisplayMetrics().density
+//                ,sensor.minTemperature,sensor.maxTemperature,sensor.onFahrenheit,true);
+        //вывод ЦВЕТНОГО МАРКЕРА, делаем в резюме- поскольку можем прийти из сеттингов
+        Util.setDrawableToImageView(sensor.markerColor,R.id.marker, thermometer);
         //---
         mHandlerWork = true;
         //сам заводится и работает

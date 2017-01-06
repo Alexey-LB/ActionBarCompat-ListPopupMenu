@@ -293,7 +293,8 @@
                                         android:textSize="30sp"
                                         android:textColor="@color/colorText"
                                         android:gravity="center_vertical|center_horizontal"
-                                        android:textStyle="normal|bold" />
+                                        android:textStyle="normal|bold"
+                                        android:background="@drawable/temperature_fon" />
 
                                     <Space
                                         android:layout_width="match_parent"

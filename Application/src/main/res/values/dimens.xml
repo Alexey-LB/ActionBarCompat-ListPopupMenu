@@ -7,6 +7,8 @@
     <dimen name="ic_img_size">28dp</dimen>
     <dimen name="ic_img_gap">4dp</dimen>
 
+    <dimen name="actionBarSize">42dp</dimen>
+
     <dimen name="iten_vertical_gap_wight">1dp</dimen>
     <dimen name="iten_text_size">18sp</dimen>
     <!--ширина рисунка градусника-->

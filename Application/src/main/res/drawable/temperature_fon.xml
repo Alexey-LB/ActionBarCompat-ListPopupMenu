@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<level-list xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item android:maxLevel="0"  android:drawable="@drawable/rectangle_clear"/>
+    <item android:maxLevel="1"  android:drawable="@drawable/rectangle_fill_min_corners_10dp"/>
+    <item android:maxLevel="2"  android:drawable="@drawable/rectangle_fill_max_corners_10dp"/>
+
+</level-list>
+<!--<item android:maxLevel="0"  android:drawable="@drawable/rectangle_corners_10dp"/>-->
+<!--<item android:maxLevel="1"  android:drawable="@drawable/rectangle_fill_alarm_corners_10dp"/>-->
+
+<!--<item android:maxLevel="0" >-->
+<!--<bitmap-->
+    <!--android:gravity="center_vertical"-->
+    <!--android:src="@drawable/marker_green" />-->
+<!--</item>-->
+<!--<item>-->
+<!--<bitmap-->
+    <!--android:gravity="left"-->
+    <!--android:src="@drawable/marker_black" />-->
+<!--</item>-->
+<!--<item>-->
+<!--<bitmap-->
+    <!--android:gravity="right"-->
+    <!--android:src="@drawable/marker_cyan" />-->
+<!--</item>-->
