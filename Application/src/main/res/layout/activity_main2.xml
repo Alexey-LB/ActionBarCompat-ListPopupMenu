@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/LayoutMain"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_weight="10"
+    android:background="@color/colorPrimaryDark">
+    <!---->
+    <!--ЗАСТАВКА РЕЛСИБА -->
+    <!--<LinearLayout-->
+        <!--android:orientation="vertical"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:visibility="visible"-->
+        <!--android:background="@drawable/house_start2">-->
+
+        <!--<FrameLayout-->
+            <!--android:layout_width="100dp"-->
+            <!--android:layout_height="100dp"-->
+            <!--android:id="@+id/frame2">-->
+
+        <!--</FrameLayout>-->
+
+        <!--<FrameLayout-->
+            <!--android:id="@+id/frameHeadband"-->
+            <!--android:orientation="horizontal"-->
+            <!--android:layout_width="100dp"-->
+            <!--android:layout_height="100dp"-->
+            <!--android:theme="@android:style/TextAppearance.Inverse"-->
+            <!--android:elevation="1dp"-->
+
+
+            <!--android:layout_gravity="fill_vertical|fill_horizontal">-->
+            <!--&lt;!&ndash;android:background="@drawable/rays"&ndash;&gt;-->
+            <!--&lt;!&ndash;android:background="@drawable/home"&ndash;&gt;-->
+            <!--&lt;!&ndash;</LinearLayout>&ndash;&gt;-->
+
+
+        <!--</FrameLayout>-->
+    <!--</LinearLayout>-->
+
+    <FrameLayout
+        android:id="@+id/frame_button"
+        android:layout_gravity="center_vertical|center_horizontal"
+        android:layout_height="180dp"
+        android:layout_width="180dp">
+
+        <ImageView
+            android:id="@+id/imeg_button_transition"
+            android:layout_gravity="center_vertical|center_horizontal"
+            android:layout_height="140dp"
+            android:layout_width="140dp"
+            android:layout_marginBottom="1dp"
+            android:background="@drawable/marker_blue" />
+        <!--android:background="@drawable/marker_transition"-->
+        <!--<ImageView-->
+            <!--android:id="@+id/imageView3"-->
+            <!--android:layout_gravity="center_vertical|center_horizontal"-->
+            <!--android:layout_width="100dp"-->
+            <!--android:layout_height="100dp"-->
+            <!--android:layout_marginLeft="4dp"-->
+            <!--android:layout_marginBottom="1dp"-->
+            <!--android:background="@drawable/house_relsib_logo" />-->
+    </FrameLayout>
+
+    <!--app:srcCompat="@drawable/home"-->
+</FrameLayout>

@@ -115,7 +115,9 @@ public class MainActivity extends AppCompatActivity {// ActionBarActivity {
     //взаимодействие АКТИВНОсТИ и фрагмента, вызов явно метода из фрагмента, по ссылке на него!
     //там же взаимодействи обратное, работа с АкшионБар и КНОПКА НАЗАД!
     // http://developer.alexanderklimov.ru/android/theory/fragments.php
-private View headband;
+    private View mLayoutMain;
+    private View mImageButtonTransition;
+    TransitionDrawable mTransitionDrawable;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -127,23 +129,40 @@ private View headband;
          //------------------------------
         // показываем заставку релсиба --------------
         //первый запуск показываем заставку,убираем системный бар
-        headband = findViewById(R.id.imeg_button_transition);
-        headband.getRootView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
+        mLayoutMain = findViewById(R.id.LayoutMain);
+        mLayoutMain.getRootView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
         getSupportActionBar().hide();
-
-
-        headband.setOnClickListener(new View.OnClickListener() {
+        //переходы и АНИМАЦИИ примеры ---------
+        //http://startandroid.ru/ru/uroki/vse-uroki-spiskom/392-urok-164-grafika-drawable-level-list-transition-inset-clip-scale.html
+        //http://androidfanclub.ru/programming/%D0%BA%D0%BB%D0%B0%D1%81%D1%81-transitiondrawable
+        //http://developer.alexanderklimov.ru/android/theory/drawable.php#layer-list
+       // mImageButtonTransition = findViewById(R.id.imeg_button_transition);
+        mImageButtonTransition = findViewById(R.id.button_transition);//frame_button
+        //TransitionDrawable td = (TransitionDrawable)getResources().getDrawable(R.drawable.marker_transition);
+        //mImageButtonTransition.setBackground(td);
+        //УСТАНОВЛЕН ДОЛЖЕН БЫТЬ ИМЕННО TransitionDrawable, ИНЧЕ ОБЛОМ В ЭТОМ МЕСТЕ
+        mTransitionDrawable = (TransitionDrawable)mImageButtonTransition.getBackground();
+        //
+        mImageButtonTransition.setOnClickListener(new View.OnClickListener() {
+            private Handler mHandler;
+            private Runnable runnable = new Runnable() {
+                @Override
+                public void run() {
+                    //переход в следующее окно
+                    go();
+                }
+            };
             @Override
             public void onClick(View v) {
-                //красиво переключемем (ПЕРЕХОД)между рисунком off -> on button
-                ((TransitionDrawable)findViewById(R.id.imeg_button_transition).getBackground()).startTransition(500);
-                try {
-                    sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                if(mHandler == null){
+                    mHandler = new Handler();
+                } else {//удаляем старые запуски, чтоб небло повторов вызовов
+                    mHandler.removeCallbacks(runnable);
                 }
                 //переход в следующее окно
-                go();
+                mHandler.postDelayed(runnable,250);
+                //красиво переключемем (ПЕРЕХОД)между рисунком off -> on button
+                mTransitionDrawable.startTransition(300);
             }
         });
         Log.e(TAG, "----onCreate END-----");
@@ -151,74 +170,64 @@ private View headband;
 //        TransitionDrawable td = (TransitionDrawable)getResources().getDrawable(R.drawable.marker_transition);
 //        findViewById(R.id.frameHeadband).setBackground(td);
 //        td.startTransition(5000);
-//
-//        //
+   //     ((TransitionDrawable)(mImageButtonTransition.getBackground())).startTransition(3000);
 //        AnimationDrawable ad = (AnimationDrawable)getResources().getDrawable(R.drawable.marker_animation);
 //        findViewById(R.id.frame2).setBackground(ad);
 //        ad.start();
     }
 //    Drawable.Callback cb = new Drawable.Callback(){
-//
 //        @Override
 //        public void invalidateDrawable(Drawable who) {
 //            ((TransitionDrawable)who).startTransition(5000);
 //            Log.e(TAG,"-------------invalidateDrawable");
 //        }
-//
 //        @Override
 //        public void scheduleDrawable(Drawable who, Runnable what, long when) {
 //            Log.e(TAG,"-------------scheduleDrawable");
 //        }
-//
 //        @Override
 //        public void unscheduleDrawable(Drawable who, Runnable what) {
 //            Log.e(TAG,"-------------unscheduleDrawable");
 //        }
 //    };
-    //переход в следующее окно
-    private void go(){
-        RunDataHub app;int i=0;
-        //максимум ВСЕХ настроек и запуска СЕРВИСА, чтение флеши телефона,ждем 6 секунд и финиш
-        while (true){
-            app = ((RunDataHub) getApplicationContext());
-            if((app != null) && (app.mBluetoothLeServiceM != null)
-                && (app.mBluetoothLeServiceM.mbleDot != null))break;
-            //ожидание готовности
-            try {
-                sleep(300);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            // больше 6 секуд- выходим из приложения- проблеммы у него
-            if(i++> 20){
-                Log.e(TAG,"ERROR app || service || getFile from flash");
-                finish();
-            }
-            Log.w(TAG,"wait tame(ms)= " +i*300);
+//переход в следующее окно
+    private void go() {
+        //контроль ВСЕХ настроек и запуска СЕРВИСА,
+        RunDataHub app = ((RunDataHub) getApplicationContext());
+        if((app == null) || (app.mBluetoothLeServiceM == null)
+                || (app.mBluetoothLeServiceM.mbleDot == null)){
+            Log.e(TAG,"ERROR app || service || getFile from flash");
+            finish();
         }
+        //переход в следующее окно
         Intent intent = new Intent(this, MainActivityWork.class);
         intent.putExtra(Util.EXTRAS_BAR_TITLE, "     B1/B3 v2.5.9");
         // все изменения будет писать сразу в сенсор
         // по умолчанию устанавливаем минимум, все остальное делется НАПРЯМУЮ с данными
-     //   startActivityForResult(intent,MAIN_ACTIVITY);
+        //   startActivityForResult(intent,MAIN_ACTIVITY);
         startActivity(intent);
     }
+
     @Override
     protected void onResume() {
         super.onResume();
-        //быстро возвращяем назад кнопку в  OFF, рисунк ON -> off button
-        ((TransitionDrawable)findViewById(R.id.imeg_button_transition).getBackground()).resetTransition();
-
         //при возвращениие из других окон, может быть системный бар, по этому еще раз его отменяем
-        headband.getRootView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
+        mLayoutMain.getRootView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
         //а первый запуск показываем заставку,убираем системный бар
         getSupportActionBar().hide();
+        //быстро возвращяем назад кнопку в  OFF, рисунк ON -> off button
+        mTransitionDrawable.resetTransition();
+       // mTransitionDrawable.reverseTransition(500);//resetTransition();
         Log.e(TAG, "----onResume() ----------");
     }
-
+    @Override
+    public  void onPause() {
+        super.onPause();
+    }
     @Override//сюда прилетают ответы при возвращении из других ОКОН активити
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        Log.e(TAG, "----onActivityResult ----------");
     }
 
     @Override
@@ -231,3 +240,30 @@ private View headband;
         }
     }
 }
+//    private void go(){
+//        RunDataHub app;int i=0;
+//        //максимум ВСЕХ настроек и запуска СЕРВИСА, чтение флеши телефона,ждем 6 секунд и финиш
+//        while (true){
+//            app = ((RunDataHub) getApplicationContext());
+//            if((app != null) && (app.mBluetoothLeServiceM != null)
+//                    && (app.mBluetoothLeServiceM.mbleDot != null))break;
+//            //ожидание готовности
+//            try {
+//                sleep(300);
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
+//            // больше 6 секуд- выходим из приложения- проблеммы у него
+//            if(i++> 20){
+//                Log.e(TAG,"ERROR app || service || getFile from flash");
+//                finish();
+//            }
+//            Log.w(TAG,"wait tame(ms)= " +i*300);
+//        }
+//        Intent intent = new Intent(this, MainActivityWork.class);
+//        intent.putExtra(Util.EXTRAS_BAR_TITLE, "     B1/B3 v2.5.9");
+//        // все изменения будет писать сразу в сенсор
+//        // по умолчанию устанавливаем минимум, все остальное делется НАПРЯМУЮ с данными
+//        //   startActivityForResult(intent,MAIN_ACTIVITY);
+//        startActivity(intent);
+//    }
