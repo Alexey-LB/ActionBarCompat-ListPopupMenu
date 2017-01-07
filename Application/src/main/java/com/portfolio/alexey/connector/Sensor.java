@@ -167,6 +167,7 @@ public class Sensor {
         onMinVibrationReset = true;
 // Util.playerRingtoneStop();
         maxLevelNotification.resetNotification();
+       // Log.e(TAG," app= " + app +"  app.mainActivityWork=" +app.mainActivityWork);
     }
 
     private void controlLevelMinMax(){
@@ -191,11 +192,11 @@ public class Sensor {
         if(intermediateValue <= minTemperature){
             if(onMinNotification && !onMinNotificationReset && (minMelody != null)){
                 Log.e(TAG,"minMelody");
-                Util.playerRingtone(0f, minMelody, app.mainActivityWork,TAG);
+                Util.playerRingtone(0f, minMelody,TAG);
             }
             if(onMinNotification && onMinVibration && !onMinVibrationReset) {
                 Log.e(TAG,"minVibrator");
-                Util.playerVibrator(300, app.mainActivityWork);
+                Util.playerVibrator(300);
             }
         } else{
             onMinNotificationReset = false;
@@ -213,7 +214,7 @@ public class Sensor {
 
       //          minLevelNotification.calck(intermediateValue);
                 maxLevelNotification.calck(intermediateValue);
-                minLevelNotification.activity = app.mainActivityWork;
+                maxLevelNotification.activity = app.mainActivityWork;
       //          endMeasurementNotification.calck(false);
 
                 //Пока отключил иммитатор ----

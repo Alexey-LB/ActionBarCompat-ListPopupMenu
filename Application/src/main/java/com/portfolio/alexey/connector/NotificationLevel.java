@@ -26,7 +26,7 @@ public class NotificationLevel {
     public int timeLongMelody = 60;// длительность работы ОПОВЕЩЕНИЯ звуком (ограниячиваем 300 секунд)
     //
     private long timerVibration = 0;// время окончания работы ОПОВЕЩЕНИЯ вибрацией (ограниячиваем 5 секунд)
-    public int timeLongVibration = 30;// длительность работы ОПОВЕЩЕНИЯ вибрацией (ограниячиваем 5 секунд)
+    public int timeLongVibration = 10;// длительность работы ОПОВЕЩЕНИЯ вибрацией (ограниячиваем 5 секунд)
     //
     private  final int typeLevel;//какой тип (логический, флоат)порог контролируем, минимум максимум указанного значения
     public static final int BOOLEAN_FALSE = 0;// срабатывание при логическом значяениии лож
@@ -54,8 +54,8 @@ public class NotificationLevel {
     //// для сброса к текущей температуре ОТДЕЛЬНАЯ кнопка
     public void resetNotification(){
         //сбрасываем таймеры работы
-        timerMelody = 0;// время окончания работы ОПОВЕЩЕНИЯ звуком (ограниячиваем 300 секунд)
-        timerVibration = 0;// время окончания работы ОПОВЕЩЕНИЯ вибрацией (ограниячиваем 5 секунд)
+        timerMelody = 1;// время окончания работы ОПОВЕЩЕНИЯ звуком (ограниячиваем 300 секунд)
+        timerVibration = 1;// время окончания работы ОПОВЕЩЕНИЯ вибрацией (ограниячиваем 5 секунд)
         resetNotification = true;/// сброс работающего ОПОВЕЩЕНИЕ(сбрасывает флаг ПОРОГА срабатывания)
         Util.playerRingtoneStop();
     }
@@ -63,6 +63,7 @@ public class NotificationLevel {
         onNotification = true;
         long time = System.currentTimeMillis();
         if(timerMelody == 0){
+            Util.playerRingtoneStop();// на всякий случай сбрасываем предыдущие мелодии
             timerMelody = time + timeLongMelody * 1000;// время окончания работы ОПОВЕЩЕНИЯ звуком (ограниячиваем 300 секунд)
         }
         if(timerVibration == 0){
@@ -72,21 +73,22 @@ public class NotificationLevel {
 
     }
     private void notification() {
-        log(" onNotf= " + onNotification +"  resetNotf= " + resetNotification +"  timeVibr" + (timerVibration/1000) % 1000 + "  time= "+(System.currentTimeMillis()/1000 ) % 1000+ "  melody= " + (timerMelody / 1000) % 1000);
         if(timerVibration > System.currentTimeMillis()) {
-            log("---timerVibration");
-            Util.playerVibrator(300, activity);
+            log("---timerVibration  activity= " + activity);
+            Util.playerVibrator(300);
         }
         if((melody != null) && (timerMelody > System.currentTimeMillis())) {
-            log("---melody");
-            Util.playerRingtone(0f, melody, activity,TAG);
+            log("---melody, onNotf= " + onNotification +"  resetNotf= " + resetNotification +"  timeVibr" + (timerVibration/1000) % 1000 + "  time= "+(System.currentTimeMillis()/1000 ) % 1000+ "  melody= " + (timerMelody / 1000) % 1000);
+            Util.playerRingtone(0f, melody,TAG);
         }
     }
     private void initNotification(){
         //сбрасываем таймеры ЗВУКА и вибрации, чтоб ПРИ последуюших превышениях СРАБОТАЛ
         // он у нас ограничен по времени
-        timerMelody = 0;// разрешаем сново сработать сигнализации БЕЗ сброса ()
-        timerVibration = 0;//  разрешаем сново сработать сигнализации БЕЗ сброса
+        long time = System.currentTimeMillis();
+        // сбрасываем только после того как все отыграет
+        if(time > timerMelody ) timerMelody = 0;// разрешаем сново сработать сигнализации БЕЗ сброса ()
+        if(time > timerVibration )timerVibration = 0;//  разрешаем сново сработать сигнализации БЕЗ сброса
         //приводим сигнализацию к новому срабатывания, если предыдущее срабатываение было сброшено!
         if(resetNotification) {
             onNotification = false;
@@ -135,6 +137,18 @@ public class NotificationLevel {
     }
 
     private void log(String mess){
-        if(debug)Log.e(TAG,mess);
+        if(debug){
+            String str = "";
+            switch(typeLevel){
+                case BOOLEAN_FALSE: str = ColorString.getBlueFonBlack(" FALSE");
+                    break;
+                case BOOLEAN_TRUE: str = ColorString.getRedFonBlack(" TRUE");
+                    break;
+                case FLOAT_MIN: str = ColorString.getBlueFonBlack(" MIN");
+                    break;
+                case FLOAT_MAX: str = ColorString.getRedFonBlack(" MAX");
+            }
+            Log.w(TAG + str, mess);
+        }
     }
 }

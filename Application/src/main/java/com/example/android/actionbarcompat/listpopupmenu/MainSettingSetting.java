@@ -252,7 +252,7 @@ if(sensor.maxLevelNotification.switchNotification){
             //            .isChecked();//SwitchButton
                 sensor.onEndVibration = ((SwitchButton)findViewById(R.id.switchVibration))
                         .isChecked();//SwitchButton
-                if(sensor.onEndVibration)Util.playerVibrator(400,this);
+                if(sensor.onEndVibration)Util.playerVibrator(300);
                 break;
             case R.id.imageButtonTemperaturesAbove:
                 Log.v(TAG,"imageButtonTemperaturesAbove");

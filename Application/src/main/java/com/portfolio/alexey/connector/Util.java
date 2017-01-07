@@ -40,6 +40,9 @@ import static java.lang.Thread.sleep;
 
 public class Util {
     static final String TAG = "Util";
+    // context - при запуске приложения- устанавливаембазовый контекст, и потом им пользуемся
+    public  static  Context context;
+
     public  final static String EXTRAS_NAME = "EXTRAS_NAME";
     public  final static String EXTRAS_NAME_FILTR = "EXTRAS_NAME_FILTR";
     public  final static String EXTRAS_ADDRESS = "EXTRAS_ADDRESS";
@@ -141,18 +144,20 @@ public class Util {
         return null;
     }
     //
-    static public BluetoothLeServiceNew getAppBleService(Activity activity){
-        if(activity == null) return null;
-        RunDataHub app = (RunDataHub) activity.getApplicationContext();
+    static public BluetoothLeServiceNew getAppBleService(){
+        if(context == null) return null;
+        RunDataHub app = (RunDataHub) context;
         if((app != null) && (app.mBluetoothLeServiceM != null)){
             return app.mBluetoothLeServiceM;
         }
         return null;
-    }
+    }    //
+
     //// https://geektimes.ru/post/232885/-------------------------------------------
-    static synchronized public void playerVibrator(int milsec, Activity activity){
-        if(activity == null) return;
-        Vibrator  vibrator = (Vibrator) activity.getSystemService (VIBRATOR_SERVICE);
+    static synchronized public void playerVibrator(int milsec){
+        if(context == null) return;
+        //context.getSystemService();
+        Vibrator  vibrator = (Vibrator) context.getSystemService (VIBRATOR_SERVICE);
         try {
             vibrator.vibrate(milsec);
         }catch (Exception e){
@@ -160,67 +165,60 @@ public class Util {
         }
     }
     //----------------------------------------------------------------------------
+    // пуск/стоп НЕ получилось!!!вкрнул назад
+    static public void playerRingtoneStop(){
+        if(mediaPlayer != null) {
+         //   if(mediaPlayer.isPlaying())mediaPlayer.stop();//просто остановить
+             mediaPlayer.release();//уничтожить проигрыватель(mediaPlayer != null, )
+        }
+        onRingtoneWork = false;
+        System.out.println("onRingtoneWork= " + onRingtoneWork);
+    }
     // https://geektimes.ru/post/232885/
 // Что бы звук не был тихим:
 // stackoverflow.com/questions/8278939/android-mediaplayer-volume-is-very-low-already-adjusted-volume
     //пример: playerRingtone(0.8f, null); рингтонг 0.8 от макимума звука и мелодия по умолчанию
     //пример: playerRingtone(0f, Uri); ГРОМКОСТ звука СИТЕМНОЙ настройки проигрывателя и мелодия по Uri
-    static synchronized  public void playerRingtone(Float setVolume, String uriRingtone , Activity activity,String  tag){
+    // context - при запуске приложения- устанавливаембазовый контекст, и потом им пользуемся
+// пуск/стоп НЕ получилось!!!вкрнул назад ПЕРЕДЕЛАЛ, ПРОСТО СТОП И ПУСК, если есть проигрыватель, зачит он уже был нужен и мы его НЕ уничтожаем!
+    static public void playerRingtone(Float setVolume, String uriRingtone ,String  tag){
         Uri uri= null;
-        if(activity == null) return;
         if(uriRingtone != null){
             // TODO: 17.12.2016 обработать возможные ИСКЛЮЧЕНИЯ парсера
+            try {
             uri = Uri.parse(uriRingtone);
+            } catch (Exception e) {
+                uri = null;
+                Log.e(tag, "  Uri.parse(uriRingtone) ERR= " + e);
+            }
         }
-        playerRingtone(setVolume, uri ,activity,tag);
+        playerRingtone(setVolume, uri,tag);
     }
     static boolean onRingtoneWork = false;
     private static MediaPlayer mediaPlayer;
-    static public void playerRingtoneStop(){
-        if(mediaPlayer != null) {
-            //mediaPlayer.stop();
-            mediaPlayer.release();
-
-        }
-        onRingtoneWork = false;
-        System.out.println("onRingtoneWork= " + onRingtoneWork);
-    }
-    static public void playerRingtone(Float setVolume, Uri uriRingtone , Activity activity,String  tag){
-        if(activity == null) return;
-        if(onRingtoneWork) return;//если чет о играем, то пока НЕ закончим, новй играть НЕ будем
+    // context - при запуске приложения- устанавливаембазовый контекст, и потом им пользуемся
+    static public void playerRingtone(Float setVolume, Uri uriRingtone ,String  tag){
+        if(context == null) return;
+        if(onRingtoneWork) return;// пока НЕ закончим, новй играть НЕ будем
         onRingtoneWork = true;
-       // if(mediaPlayer != null) return;
 
         if(uriRingtone == null){// Сигнал по умолчанию
             uriRingtone = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         }
-        mediaPlayer = new MediaPlayer();
-        if(setVolume == 0){//ГРОМКОСТЬ системных настроек
-            setVolume = 1f;
-        }else{
-            // (Завист только от setVolume)НА ПОЛНУЮ гмкость ВНЕ зависмости от УСТАНОВКИ в СИСТЕМЕ!!!
-//http://stackoverflow.com/questions/8278939/android-mediaplayer-volume-is-very-low-already-adjusted-volume
-            AudioManager amanager = (AudioManager) activity.getSystemService(Context.AUDIO_SERVICE);
-            // int maxVolume = amanager.getStreamMaxVolume(AudioManager.STREAM_ALARM);
-            int maxVolume = amanager.getStreamVolume(AudioManager.STREAM_ALARM);
-            amanager.setStreamVolume(AudioManager.STREAM_ALARM, maxVolume, 0);
-            mediaPlayer.setAudioStreamType(AudioManager.STREAM_ALARM); // this is important.
-        }
-        //устанавливает ОТ максимума!!!
-        mediaPlayer.setVolume(setVolume, setVolume);
-        try {
-            mediaPlayer.setDataSource(activity.getApplicationContext(), uriRingtone);
-            //  mediaPlayer.setLooping(looping);
-            mediaPlayer.prepare();
-            mediaPlayer.start();
+      //  if(mediaPlayer == null)
+        {
+            mediaPlayer = new MediaPlayer();
             mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                 //после проигрывания попадает сюда
                 @Override
                 public void onCompletion(MediaPlayer mp) {
                     //останавливается ПЛЕЕР и выбрасывается из памяти
-                    mp.release();//Это закончит, освободить, отпустить
+                    //возможно это излишне
+//                  //  if(mp.isPlaying())mp.stop();//просто остановить
+                    //используем СТОП, не затираем плеер
+ mp.release();//Это закончит, освободить память, отпустить
                     try {
-                        sleep(3000);
+                        sleep(1000);//чтоб изменения дошли, повтор через 1 секунду
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -234,12 +232,117 @@ public class Util {
                     onRingtoneWork = false;//разрешили другим вызывать музыку
                 }
             });
+        }
+        if(setVolume == 0){//ГРОМКОСТЬ системных настроек
+            setVolume = 1f;
+        }else{
+            // (Завист только от setVolume)НА ПОЛНУЮ гмкость ВНЕ зависмости от УСТАНОВКИ в СИСТЕМЕ!!!
+//http://stackoverflow.com/questions/8278939/android-mediaplayer-volume-is-very-low-already-adjusted-volume
+            AudioManager amanager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+            // int maxVolume = amanager.getStreamMaxVolume(AudioManager.STREAM_ALARM);
+            int maxVolume = amanager.getStreamVolume(AudioManager.STREAM_ALARM);
+            amanager.setStreamVolume(AudioManager.STREAM_ALARM, maxVolume, 0);
+            mediaPlayer.setAudioStreamType(AudioManager.STREAM_ALARM); // this is important.
+        }
+        //устанавливает ОТ максимума!!!
+        mediaPlayer.setVolume(setVolume, setVolume);
+        try {
+            mediaPlayer.setDataSource(context, uriRingtone);
+            //  mediaPlayer.setLooping(looping);
+            mediaPlayer.prepare();
+            mediaPlayer.start();
         } catch (Exception e) {
-            Toast.makeText(activity.getApplicationContext(), "Error default media ", Toast.LENGTH_LONG).show();
+            Toast.makeText(context, "Error default media ", Toast.LENGTH_LONG).show();
             Log.e(tag, "  Ringtone ERR= " + e);
         }
 
     }
+//    // https://geektimes.ru/post/232885/
+//// Что бы звук не был тихим:
+//// stackoverflow.com/questions/8278939/android-mediaplayer-volume-is-very-low-already-adjusted-volume
+//    //пример: playerRingtone(0.8f, null); рингтонг 0.8 от макимума звука и мелодия по умолчанию
+//    //пример: playerRingtone(0f, Uri); ГРОМКОСТ звука СИТЕМНОЙ настройки проигрывателя и мелодия по Uri
+//    // context - при запуске приложения- устанавливаембазовый контекст, и потом им пользуемся
+////    static synchronized  public void playerRingtone(Float setVolume, String uriRingtone , Activity activity,String  tag){
+//    static public void playerRingtone(Float setVolume, String uriRingtone ,String  tag){
+//        Uri uri= null;
+//        if(uriRingtone != null){
+//            // TODO: 17.12.2016 обработать возможные ИСКЛЮЧЕНИЯ парсера
+//            try {
+//                uri = Uri.parse(uriRingtone);
+//            } catch (Exception e) {
+//                uri = null;
+//                Log.e(tag, "  Uri.parse(uriRingtone) ERR= " + e);
+//            }
+//        }
+//        playerRingtone(setVolume, uri,tag);
+//    }
+//    static boolean onRingtoneWork = false;
+//    private static MediaPlayer mediaPlayer;
+//    static public void playerRingtoneStop(){
+//        if(mediaPlayer != null) {
+//            //mediaPlayer.stop();
+//            mediaPlayer.release();
+//
+//        }
+//        onRingtoneWork = false;
+//        System.out.println("onRingtoneWork= " + onRingtoneWork);
+//    }
+//    // context - при запуске приложения- устанавливаембазовый контекст, и потом им пользуемся
+//    static public void playerRingtone(Float setVolume, Uri uriRingtone ,String  tag){
+//        if(context == null) return;
+//        if(onRingtoneWork) return;// пока НЕ закончим, новй играть НЕ будем
+//        onRingtoneWork = true;
+//
+//        if(uriRingtone == null){// Сигнал по умолчанию
+//            uriRingtone = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+//        }
+//        mediaPlayer = new MediaPlayer();
+//        if(setVolume == 0){//ГРОМКОСТЬ системных настроек
+//            setVolume = 1f;
+//        }else{
+//            // (Завист только от setVolume)НА ПОЛНУЮ гмкость ВНЕ зависмости от УСТАНОВКИ в СИСТЕМЕ!!!
+////http://stackoverflow.com/questions/8278939/android-mediaplayer-volume-is-very-low-already-adjusted-volume
+//            AudioManager amanager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+//            // int maxVolume = amanager.getStreamMaxVolume(AudioManager.STREAM_ALARM);
+//            int maxVolume = amanager.getStreamVolume(AudioManager.STREAM_ALARM);
+//            amanager.setStreamVolume(AudioManager.STREAM_ALARM, maxVolume, 0);
+//            mediaPlayer.setAudioStreamType(AudioManager.STREAM_ALARM); // this is important.
+//        }
+//        //устанавливает ОТ максимума!!!
+//        mediaPlayer.setVolume(setVolume, setVolume);
+//        try {
+//            mediaPlayer.setDataSource(context, uriRingtone);
+//            //  mediaPlayer.setLooping(looping);
+//            mediaPlayer.prepare();
+//            mediaPlayer.start();
+//            mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+//                //после проигрывания попадает сюда
+//                @Override
+//                public void onCompletion(MediaPlayer mp) {
+//                    //останавливается ПЛЕЕР и выбрасывается из памяти
+//                    mp.release();//Это закончит, освободить, отпустить
+//                    try {
+//                        sleep(3000);
+//                    } catch (InterruptedException e) {
+//                        e.printStackTrace();
+//                    }
+////                    if((mp != null) && (mp.isPlaying())) {
+////                        try {
+////                            sleep(3000);
+////                        } catch (InterruptedException e) {
+////                            e.printStackTrace();
+////                        }
+////                    };
+//                    onRingtoneWork = false;//разрешили другим вызывать музыку
+//                }
+//            });
+//        } catch (Exception e) {
+//            Toast.makeText(context, "Error default media ", Toast.LENGTH_LONG).show();
+//            Log.e(tag, "  Ringtone ERR= " + e);
+//        }
+//
+//    }
 
 
     //android.support.v7.app.ActionBar

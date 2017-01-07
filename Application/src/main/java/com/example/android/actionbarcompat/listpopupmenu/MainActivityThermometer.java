@@ -143,6 +143,16 @@ public class MainActivityThermometer  extends AppCompatActivity {// ActionBarAct
         View view = findViewById(R.id.linearLayoutSwitch);
         // инициализируем укзатл на рисунок с 2 уровнями(там 2 рисунка)
         marker_fon = (Drawable)findViewById(R.id.marker_fon).getBackground();
+        //нажати на меркер- СБРОС СИГНАЛИЗАЦИИ!!
+        findViewById(R.id.marker_fon).setOnClickListener(
+            new View.OnClickListener(){
+                 @Override
+                 public void onClick(View v) {
+                     //СБРОС СИГНАЛИЗАЦИИ!!
+                     sensor.resetNotificationVibrationLevelMinMax();
+                 }
+             }
+        );
         numbe_cur_fon = (Drawable)findViewById(R.id.numbe_cur).getBackground();
 
         Log.v(TAG, "----" + mSwitchOffSensor.getWidth()
@@ -324,16 +334,19 @@ public class MainActivityThermometer  extends AppCompatActivity {// ActionBarAct
         }
         // СИГНАЛИЗАЦИЯ-- в случае СРАБАТЫВАНИЯ сигнализации меняем фон
  // if(sensor.onMinNotification || sensor.onMaxNotification){
- if(sensor.onMinNotification || sensor.maxLevelNotification.onNotification){
-            // меняем фон переодически в маркере
-            if((mHandlerLoop & 1) == 0) marker_fon.setLevel(0);
-            else marker_fon.setLevel(1);
+// if(sensor.onMinNotification ||
+         if(sensor.maxLevelNotification.onNotification){
+            // меняем фон переодически в маркере, ЕСЛИ НЕ СБРОШЕНА НОТИФИКАЦИЯ
+            if(((mHandlerLoop & 1) == 0) || (sensor.maxLevelNotification.resetNotification)) {
+                if (marker_fon.getLevel() != 0) marker_fon.setLevel(0);
+            }else if(marker_fon.getLevel() != 1)marker_fon.setLevel(1);
             // меняем фон под основным измерением, предварительно
             // проверяем текуший уровень, чтоб НЕ грузить процессор
             if(sensor.onMinNotification) {if(numbe_cur_fon.getLevel() != 1)numbe_cur_fon.setLevel(1);}
             else {if(numbe_cur_fon.getLevel() != 2)numbe_cur_fon.setLevel(2);}
         }else {
             if(numbe_cur_fon.getLevel() != 0)numbe_cur_fon.setLevel(0);//
+            if(marker_fon.getLevel() != 0)marker_fon.setLevel(0);//
         }
         //---положение переключателей-----положение переключателей-----------------------
         //ловим в сотоянии ВКЛЮЧЕН, запускаем функцию на выполнение и сбрасываем переключатель

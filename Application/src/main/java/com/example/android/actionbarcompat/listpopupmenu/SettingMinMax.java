@@ -214,7 +214,7 @@ if(maxValue) value = sensor.maxLevelNotification.valueLevel;
                 else sensor.onMinNotification  = on;
 //if(on)Util.playerRingtone(0f, maxValue?sensor.maxMelody
  if(on)Util.playerRingtone(0f, maxValue?sensor.maxLevelNotification.melody
-                        :sensor.minMelody, this,TAG);
+                        :sensor.minMelody,TAG);
                 break;
             case R.id.switchVibration:
                 on = ((SwitchButton)findViewById(R.id.switchVibration)).isChecked();
@@ -222,7 +222,7 @@ if(maxValue) value = sensor.maxLevelNotification.valueLevel;
 if(maxValue) sensor.maxLevelNotification.switchVibration = on;
                 else sensor.onMinVibration = on;
                 //
-                if(on)Util.playerVibrator(400,this);
+                if(on)Util.playerVibrator(300);
                 break;
             default:
         }
