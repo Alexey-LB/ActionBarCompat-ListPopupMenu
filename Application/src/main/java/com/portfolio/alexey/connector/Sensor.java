@@ -119,9 +119,9 @@ public class Sensor {
     public boolean onMinNotificationReset = false;
     public boolean onMaxNotificationReset = false;
 
-    public boolean onMinNotification = false;//разрешение на оповешение звуком или вибрацией
-    public boolean onMaxNotification = false;//разрешение на оповешение звуком или вибрацией
-    public boolean onEndNotification = false;
+    public boolean onMinNotification = false;//КНОПКА разрешение на оповешение звуком или вибрацией
+    public boolean onMaxNotification = false;//КНОПКА разрешение на оповешение звуком или вибрацией
+    public boolean onEndNotification = false;////КНОПКА разрешение на оповешение звуком по концу измерения
     //
     public String minMelody;
     public String  maxMelody;
