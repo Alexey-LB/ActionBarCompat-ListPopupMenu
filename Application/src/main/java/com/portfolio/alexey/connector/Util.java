@@ -42,6 +42,7 @@ public class Util {
     static final String TAG = "Util";
     // context - при запуске приложения- устанавливаембазовый контекст, и потом им пользуемся
     public  static  Context context;
+    public  static  RunDataHub runDataHub;
 
     public  final static String EXTRAS_NAME = "EXTRAS_NAME";
     public  final static String EXTRAS_NAME_FILTR = "EXTRAS_NAME_FILTR";
@@ -105,50 +106,68 @@ public class Util {
         }
         return value;
     }
-    //
-    static public Sensor getSensor(int item,Context context){
-        BluetoothLeServiceNew bleS = getAppBleService(context);
-        if((bleS != null) && (bleS.mbleDot != null)
-                && (bleS.mbleDot.size() > item)){
-            return bleS.mbleDot.get(item);
-        }
-        return null;
-    }
+//    //
+//    static public Sensor getSensor(int item,Context context){
+//        BluetoothLeServiceNew bleS = getAppBleService(context);
+//        if((bleS != null) && (bleS.mbleDot != null)
+//                && (bleS.mbleDot.size() > item)){
+//            return bleS.mbleDot.get(item);
+//        }
+//        return null;
+//    }
+//    //
+//    static public Sensor getSensor(int item,Activity activity){
+//        BluetoothLeServiceNew bleS = getAppBleService(activity);
+//        if((bleS != null) && (bleS.mbleDot != null)
+//                && (bleS.mbleDot.size() > item)){
+//            return bleS.mbleDot.get(item);
+//        }
+//        return null;
+//    }
+//    //
+//    static public ArrayList<Sensor> getListSensor(Context context){
+//        BluetoothLeServiceNew bleS = getAppBleService(context);
+//        if(bleS != null)  return bleS.mbleDot;
+//        return null;
+//    }
+//    //
+//    static public ArrayList<Sensor> getListSensor(Activity activity){
+//        BluetoothLeServiceNew bleS = getAppBleService(activity);
+//        if(bleS != null) return bleS.mbleDot;
+//        return null;
+//    }
+//    //
+//    static public BluetoothLeServiceNew getAppBleService(Context context){
+//        RunDataHub app = (RunDataHub)context;
+//        if((app != null) && (app.mBluetoothLeServiceM != null)){
+//            return app.mBluetoothLeServiceM;
+//        }
+//        return null;
+//    }
+//
     //
     static public Sensor getSensor(int item,Activity activity){
-        BluetoothLeServiceNew bleS = getAppBleService(activity);
+        BluetoothLeServiceNew bleS = getAppBleService();
         if((bleS != null) && (bleS.mbleDot != null)
                 && (bleS.mbleDot.size() > item)){
             return bleS.mbleDot.get(item);
         }
-        return null;
-    }
-    //
-    static public ArrayList<Sensor> getListSensor(Context context){
-        BluetoothLeServiceNew bleS = getAppBleService(context);
-        if(bleS != null)  return bleS.mbleDot;
         return null;
     }
     //
     static public ArrayList<Sensor> getListSensor(Activity activity){
-        BluetoothLeServiceNew bleS = getAppBleService(activity);
+        BluetoothLeServiceNew bleS = getAppBleService();
         if(bleS != null) return bleS.mbleDot;
         return null;
     }
     //
     static public BluetoothLeServiceNew getAppBleService(Context context){
-        RunDataHub app = (RunDataHub)context;
-        if((app != null) && (app.mBluetoothLeServiceM != null)){
-            return app.mBluetoothLeServiceM;
-        }
-        return null;
+        return getAppBleService();
     }
     //
     static public BluetoothLeServiceNew getAppBleService(){
-        if(context == null) return null;
-        RunDataHub app = (RunDataHub) context;
-        if((app != null) && (app.mBluetoothLeServiceM != null)){
-            return app.mBluetoothLeServiceM;
+        if((runDataHub != null) && (runDataHub.mBluetoothLeServiceM != null)){
+            return runDataHub.mBluetoothLeServiceM;
         }
         return null;
     }    //

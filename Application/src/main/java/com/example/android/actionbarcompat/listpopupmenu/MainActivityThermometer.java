@@ -342,7 +342,7 @@ public class MainActivityThermometer  extends AppCompatActivity {// ActionBarAct
             }else if(marker_fon.getLevel() != 1)marker_fon.setLevel(1);
             // меняем фон под основным измерением, предварительно
             // проверяем текуший уровень, чтоб НЕ грузить процессор
-            if(sensor.onMinNotification) {if(numbe_cur_fon.getLevel() != 1)numbe_cur_fon.setLevel(1);}
+            if(sensor.minLevelNotification.switchNotification) {if(numbe_cur_fon.getLevel() != 1)numbe_cur_fon.setLevel(1);}
             else {if(numbe_cur_fon.getLevel() != 2)numbe_cur_fon.setLevel(2);}
         }else {
             if(numbe_cur_fon.getLevel() != 0)numbe_cur_fon.setLevel(0);//
@@ -400,8 +400,8 @@ public class MainActivityThermometer  extends AppCompatActivity {// ActionBarAct
         thermometer.getRootView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
         //делаем Здесь обновление термометра, чтоб при выходе из настроек сенсора, изменения были учтены
         mThermometerDrawable.setSettingThermometer(getResources().getDisplayMetrics().density
-//,sensor.minTemperature,sensor.maxTemperature,sensor.onFahrenheit,false);
-,sensor.minTemperature,sensor.maxLevelNotification.valueLevel,sensor.onFahrenheit,false);
+                ,sensor.minLevelNotification.valueLevel,
+                sensor.maxLevelNotification.valueLevel,sensor.onFahrenheit,false);
         /// тоже что выше НО с ЗАПУСКОМ ТЕСТА ртутного столбика!
 //        mThermometerDrawable.setSettingThermometer(getResources().getDisplayMetrics().density
 //                ,sensor.minTemperature,sensor.maxTemperature,sensor.onFahrenheit,true);

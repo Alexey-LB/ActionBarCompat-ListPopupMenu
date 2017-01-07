@@ -74,14 +74,12 @@ public class Sensor {
     public float predictedTemperature = Float.NaN;//C для градусника ПРЕСКАЗАНИЯ
 //медицинский режим - 1 значение:текущее, второе:МАКСИМАЛЬНОЕ, 3 значение прогнозируемо
 //МОНИТОР режим      1 значение:минимальное, второе:текущее, 3 значение макисмальное
-    public int measurementMode = 0;//0 режим медецинский Или универсальный
+    public int measurementMode = 1;//0 режим медецинский Или универсальный
     //
     public boolean onFahrenheit = false;
     //
     public long time = 0;//время НАЧАЛА работы сенсора
 
-    public float minTemperature = -20f;//C ПРЕДЕЛ для АЛЕРТА для монитора температуры
- //   public float maxTemperature = +70f;//C ПРЕДЕЛ для АЛЕРТА ддля монитора температуры
     public float endTemperature = 0f;//C ПРОГНОЗИРИРОВАНИЕ температуры для медецинского градусника
 
     //
@@ -104,32 +102,13 @@ public class Sensor {
     public String serialNumber;
     public String modelNumber ;
     public String manufacturerName;
-
     //
     public int fonColor = 0;
     public int fonImg = 0;
     //
     public NotificationLevel minLevelNotification;
     public NotificationLevel maxLevelNotification;
-    public NotificationLevel endMeasurementNotification;
-//
-    public boolean onMinVibrationReset = false;
-//    public boolean onMaxVibrationReset = false;
-
-    public boolean onMinVibration = false;
-//    public boolean onMaxVibration = false;
-    public boolean onEndVibration = false;
-    //
-    public boolean onMinNotificationReset = false;
- //   public boolean onMaxNotificationReset = false;
-
-    public boolean onMinNotification = false;//КНОПКА разрешение на оповешение звуком или вибрацией
-//    public boolean onMaxNotification = false;//КНОПКА разрешение на оповешение звуком или вибрацией
-    public boolean onEndNotification = false;////КНОПКА разрешение на оповешение звуком по концу измерения
-    //
-    public String minMelody;
-//    public String  maxMelody;
-    public String  endMelody;
+    public NotificationLevel endMeasurementNotification;//КНОПКА разрешение на оповешение звуком по концу измерения
 
     public boolean   goToConnect= false;//Устанавливается после того как отправляется на коннект!!чтоб повторно НЕ коннектить
 //
@@ -161,47 +140,16 @@ public class Sensor {
         return (float)( Math.random() * (max-min) + min);
     }
     public void resetNotificationVibrationLevelMinMax(){
-  //      onMaxNotificationReset = true;
-  //      onMaxVibrationReset = true;
-        onMinNotificationReset = true;
-        onMinVibrationReset = true;
-// Util.playerRingtoneStop();
+        minLevelNotification.resetNotification();
         maxLevelNotification.resetNotification();
+        endMeasurementNotification.resetNotification();
+        Util.playerRingtoneStop();
        // Log.e(TAG," app= " + app +"  app.mainActivityWork=" +app.mainActivityWork);
     }
-
     private void controlLevelMinMax(){
-        if(measurementMode == 0) return;//режим 0 - медецинский Или 1 - универсальный
-//        Log.i(TAG,"loop--");
-//        if(intermediateValue >= maxTemperature){
-//            Log.e(TAG,"max- " + onMaxNotification + " / " + onMaxNotificationReset);
-//            if(onMaxNotification && !onMaxNotificationReset && (maxMelody != null)) {
-//                Log.e(TAG,"maxMelody");
-//                Util.playerRingtone(0f, maxMelody, app.mainActivityWork,TAG);
-//            }
-//            if(onMaxNotification && onMaxVibration && !onMaxVibrationReset) {
-//                Log.e(TAG,"maxVibrator");
-//                Util.playerVibrator(300, app.mainActivityWork);
-//            }
-//        }else{
-//            //сбрасываем флаги --
-//            onMaxNotificationReset = false;
-//            onMaxVibrationReset = false;
-//        }
-        //---------------
-        if(intermediateValue <= minTemperature){
-            if(onMinNotification && !onMinNotificationReset && (minMelody != null)){
-                Log.e(TAG,"minMelody");
-                Util.playerRingtone(0f, minMelody,TAG);
-            }
-            if(onMinNotification && onMinVibration && !onMinVibrationReset) {
-                Log.e(TAG,"minVibrator");
-                Util.playerVibrator(300);
-            }
-        } else{
-            onMinNotificationReset = false;
-            onMinVibrationReset = false;
-        }
+        minLevelNotification.calck(intermediateValue);
+        maxLevelNotification.calck(intermediateValue);
+        endMeasurementNotification.calck(false);
     }
 
     //Пока отключил иммитатор -----mHandlerWork = false;
@@ -211,12 +159,6 @@ public class Sensor {
             @Override
             public void run() {
                 controlLevelMinMax();
-
-      //          minLevelNotification.calck(intermediateValue);
-                maxLevelNotification.calck(intermediateValue);
-                maxLevelNotification.activity = app.mainActivityWork;
-      //          endMeasurementNotification.calck(false);
-
                 //Пока отключил иммитатор ----
                 if ((false) && (mBluetoothDeviceAddress == null))  {
                     intermediateValue = getValueRandom(20f, 100f);
@@ -355,7 +297,7 @@ public class Sensor {
     }
     //ПРЕДЕЛ срабатывания оповещения
     public String getStringMinTemperature( boolean addType){
-        return getStringValue( minTemperature, onFahrenheit, addType);
+        return getStringValue( minLevelNotification.valueLevel, onFahrenheit, addType);
     }
     //ПРЕДЕЛ срабатывания оповещения
     public String getStringMaxTemperature( boolean addType){
@@ -841,30 +783,27 @@ return getStringValue( maxLevelNotification.valueLevel, onFahrenheit, addType);
         modelNumber = mSettings.getString("modelNumber",modelNumber);
         manufacturerName = mSettings.getString("manufacturerName", manufacturerName);
         //
-        minTemperature = mSettings.getFloat("minTemperature", minTemperature);
-//maxTemperature = mSettings.getFloat("maxTemperature", maxTemperature);
-maxLevelNotification.valueLevel = mSettings.getFloat("maxTemperature", maxLevelNotification.valueLevel);
+        minLevelNotification.valueLevel = mSettings.getFloat("minTemperature", minLevelNotification.valueLevel);
+        maxLevelNotification.valueLevel = mSettings.getFloat("maxTemperature", maxLevelNotification.valueLevel);
         //
         onFahrenheit = mSettings.getBoolean("onFahrenheit", onFahrenheit);
         //
-        onMinVibration = mSettings.getBoolean("onMinVibration", onMinVibration);
-// onMaxVibration = mSettings.getBoolean("onMaxVibration", onMaxVibration);
- maxLevelNotification.switchVibration = mSettings.getBoolean("onMaxVibration", maxLevelNotification.switchVibration);
+        minLevelNotification.switchVibration = mSettings.getBoolean("onMinVibration", minLevelNotification.switchVibration);
+        maxLevelNotification.switchVibration = mSettings.getBoolean("onMaxVibration", maxLevelNotification.switchVibration);
 
-        onEndVibration = mSettings.getBoolean("onEndVibration", onEndVibration);
+        endMeasurementNotification.switchVibration = mSettings.getBoolean("onEndVibration", endMeasurementNotification.switchVibration);
 
-        onMinNotification = mSettings.getBoolean("onMinNotification", onMinNotification);
-//onMaxNotification = mSettings.getBoolean("onMaxNotification", onMaxNotification);
-maxLevelNotification.switchNotification = mSettings.getBoolean("onMaxNotification", maxLevelNotification.switchNotification);
+        minLevelNotification.switchNotification = mSettings.getBoolean("onMinNotification", minLevelNotification.switchNotification);
+        maxLevelNotification.switchNotification = mSettings.getBoolean("onMaxNotification", maxLevelNotification.switchNotification);
 
-        onEndNotification = mSettings.getBoolean("onEndNotification", onEndNotification);
+        endMeasurementNotification.switchNotification = mSettings.getBoolean("onEndNotification", endMeasurementNotification.switchNotification);
 
 // TODO: 17.12.2016 в случае чтения непонятного типа(например булеан,
 // а чтиаем стринг- выбрасывает из программы- обработаь !!прерывания
-        minMelody = mSettings.getString("minMelody", minMelody);
-//maxMelody = mSettings.getString("maxMelody", maxMelody);
-maxLevelNotification.melody = mSettings.getString("maxMelody", maxLevelNotification.melody);
-        endMelody = mSettings.getString("endMelody", endMelody);
+        minLevelNotification.melody = mSettings.getString("minMelody", minLevelNotification.melody);
+
+        maxLevelNotification.melody = mSettings.getString("maxMelody", maxLevelNotification.melody);
+        endMeasurementNotification.melody = mSettings.getString("endMelody", endMeasurementNotification.melody);
     }
 
     public void putConfig(SharedPreferences.Editor editor){
@@ -888,27 +827,24 @@ maxLevelNotification.melody = mSettings.getString("maxMelody", maxLevelNotificat
         editor.putString("modelNumber",modelNumber);
         editor.putString("manufacturerName", manufacturerName);
         //
-        editor.putFloat("minTemperature", minTemperature);
- //editor.putFloat("maxTemperature", maxTemperature);
-editor.putFloat("maxTemperature", maxLevelNotification.valueLevel);
+        editor.putFloat("minTemperature", minLevelNotification.valueLevel);
+        editor.putFloat("maxTemperature", maxLevelNotification.valueLevel);
 
         //
         editor.putBoolean("onFahrenheit", onFahrenheit);
         //
-        editor.putBoolean("onMinVibration", onMinVibration);
-//editor.putBoolean("onMaxVibration", onMaxVibration);
-editor.putBoolean("onMaxVibration", maxLevelNotification.switchVibration);
-        editor.putBoolean("onEndVibration", onEndVibration);
+        editor.putBoolean("onMinVibration", minLevelNotification.switchVibration);
+        editor.putBoolean("onMaxVibration", maxLevelNotification.switchVibration);
+        editor.putBoolean("onEndVibration", endMeasurementNotification.switchVibration);
         //
-        editor.putBoolean("onMinNotification", onMinNotification);
-//editor.putBoolean("onMaxNotification", onMaxNotification);
-editor.putBoolean("onMaxNotification", maxLevelNotification.switchNotification);
-        editor.putBoolean("onEndNotification", onEndNotification);
+        editor.putBoolean("onMinNotification", minLevelNotification.switchNotification);
+        editor.putBoolean("onMaxNotification", maxLevelNotification.switchNotification);
+        editor.putBoolean("onEndNotification", endMeasurementNotification.switchNotification);
 
-        editor.putString("minMelody", minMelody);
-//editor.putString("maxMelody", maxMelody);
-editor.putString("maxMelody", maxLevelNotification.melody);
-        editor.putString("endMelody", endMelody);
+        editor.putString("minMelody", minLevelNotification.melody);
+
+        editor.putString("maxMelody", maxLevelNotification.melody);
+        editor.putString("endMelody", endMeasurementNotification.melody);
         //записать на флеш
         editor.apply();//
     }

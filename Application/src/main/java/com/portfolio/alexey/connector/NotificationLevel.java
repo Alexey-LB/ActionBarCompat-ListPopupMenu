@@ -12,8 +12,6 @@ import android.util.Log;
 public class NotificationLevel {
     private  static  final boolean debug = true;
     private  static  final String TAG = "NOTIF_LEVEL";
-    public   Activity activity;
-    public   Context context;
     public boolean switchNotification = false;//ПЕРЕКЛЮЧатель разрешение на оповешение звуком или вибрацией
     public boolean switchVibration = false; //ПЕРЕКЛЮЧатель разрешение на оповешение  вибрацией
     //
@@ -57,7 +55,6 @@ public class NotificationLevel {
         timerMelody = 1;// время окончания работы ОПОВЕЩЕНИЯ звуком (ограниячиваем 300 секунд)
         timerVibration = 1;// время окончания работы ОПОВЕЩЕНИЯ вибрацией (ограниячиваем 5 секунд)
         resetNotification = true;/// сброс работающего ОПОВЕЩЕНИЕ(сбрасывает флаг ПОРОГА срабатывания)
-        Util.playerRingtoneStop();
     }
     private void setNotification() {
         onNotification = true;
@@ -68,13 +65,13 @@ public class NotificationLevel {
         }
         if(timerVibration == 0){
             timerVibration = time + timeLongVibration * 1000;// время окончания работы ОПОВЕЩЕНИЯ вибрацией (ограниячиваем 5 секунд)
-            log(" setNotification= " + onNotification +" activity= " + activity +"  timeVibr" + (timerVibration/1000) % 1000 + "  time= "+(System.currentTimeMillis()/1000 ) % 1000+ "  melody= " + (timerMelody / 1000) % 1000);
+            log(" setNotification= " + onNotification +"  timeVibr" + (timerVibration/1000) % 1000 + "  time= "+(System.currentTimeMillis()/1000 ) % 1000+ "  melody= " + (timerMelody / 1000) % 1000);
         }
 
     }
     private void notification() {
         if(timerVibration > System.currentTimeMillis()) {
-            log("---timerVibration  activity= " + activity);
+            log("---timerVibration  ");
             Util.playerVibrator(300);
         }
         if((melody != null) && (timerMelody > System.currentTimeMillis())) {

@@ -30,6 +30,7 @@ public class RunDataHub extends Application {
         if(dataHub == null)dataHub = DataHubSingleton.getInstance();
         //устанавливаем для работы Контекст ПРИЛОЖЕНИЯ в УТИЛИТАХ(музака вибрация и т д)
         Util.context = getBaseContext();
+        Util.runDataHub = (RunDataHub)getBaseContext();
         //
         //подключение сервиса//-------------ЗАПУСТИЛИ ервис ---------
         Intent gattServiceIntent = new Intent(this, BluetoothLeServiceNew.class);
@@ -56,6 +57,11 @@ public class RunDataHub extends Application {
 //            // Automatically connects to the device upon successful start-up initialization.
 //            //         mBluetoothLeService.connect(mDeviceAddress,true);
 //            Log.w(TAG, "---initialize ---onServiceConnected-----");
+
+
+
+            //устанавливаем для работы Контекст ПРИЛОЖЕНИЯ в УТИЛИТАХ(музака вибрация и т д)
+
         }
 
         @Override

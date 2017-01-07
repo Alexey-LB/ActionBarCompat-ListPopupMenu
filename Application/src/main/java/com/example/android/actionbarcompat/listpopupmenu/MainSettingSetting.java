@@ -76,15 +76,15 @@ public class MainSettingSetting  extends Activity implements View.OnClickListene
     private void updateTextString(){
         Util.setTextToTextView(sensor.deviceLabel,R.id.textViewName,this,"?");
 
-//if(sensor.onMaxNotification){
-if(sensor.maxLevelNotification.switchNotification){
+
+        if(sensor.maxLevelNotification.switchNotification){
             Util.setTextToTextView(sensor.getStringMaxTemperature(true)
                     ,R.id.textViewTemperaturesAbove,this,"-");
         } else{
             Util.setTextToTextView("-",R.id.textViewTemperaturesAbove,this,"-");
         }
 
-        if(sensor.onMinNotification){
+        if(sensor.minLevelNotification.switchNotification){
             Util.setTextToTextView(sensor.getStringMinTemperature(true)
                     ,R.id.textViewTemperaturesBelow,this,"-");
         } else{
@@ -155,9 +155,9 @@ if(sensor.maxLevelNotification.switchNotification){
                     //если без звука= то нулл!
                     if(sensor != null){
                         if(uri != null){
-                            sensor.endMelody = uri.toString();
+                            sensor.endMeasurementNotification.melody = uri.toString();
                             str = "Uri= " + uri.toString();
-                        } else sensor.endMelody = null;
+                        } else sensor.endMeasurementNotification.melody = null;
                     }
                     str = str + "   Uri= " + uri;
                     break;
@@ -243,16 +243,16 @@ if(sensor.maxLevelNotification.switchNotification){
             case R.id.imageButtonMelody:
                 Log.v(TAG,"imageButtonMelody");
                 InputBox.pickRingtone(ACTIVITY_SETTING_URL_MELODI, "  BB4"
-                        ,sensor.endMelody,TAG, this);
+                        ,sensor.endMeasurementNotification.melody,TAG, this);
                 //pickRingtone();
                 break;
             case R.id.switchVibration:
                 Log.v(TAG,"imageButtonVibration");
             //    sensor.onEndVibration = ((Switch)findViewById(R.id.switchVibration))
             //            .isChecked();//SwitchButton
-                sensor.onEndVibration = ((SwitchButton)findViewById(R.id.switchVibration))
+                sensor.endMeasurementNotification.switchVibration = ((SwitchButton)findViewById(R.id.switchVibration))
                         .isChecked();//SwitchButton
-                if(sensor.onEndVibration)Util.playerVibrator(300);
+                if(sensor.endMeasurementNotification.switchVibration)Util.playerVibrator(300);
                 break;
             case R.id.imageButtonTemperaturesAbove:
                 Log.v(TAG,"imageButtonTemperaturesAbove");
