@@ -10,10 +10,10 @@ import android.util.Log;
  */
 
 public class NotificationLevel {
-    private  final boolean debug = true;
-    private  final String TAG = "NOTIF_LEVEL";
-    private  Activity activity;
-    private  Context context;
+    private  static  final boolean debug = true;
+    private  static  final String TAG = "NOTIF_LEVEL";
+    public   Activity activity;
+    public   Context context;
     public boolean switchNotification = false;//ПЕРЕКЛЮЧатель разрешение на оповешение звуком или вибрацией
     public boolean switchVibration = false; //ПЕРЕКЛЮЧатель разрешение на оповешение  вибрацией
     //
@@ -23,36 +23,25 @@ public class NotificationLevel {
     public String melody;//УРЛ мелодии ОПОВЕЩЕНИЯ звуком
     //
     private long timerMelody = 0;// время окончания работы ОПОВЕЩЕНИЯ звуком (ограниячиваем 300 секунд)
-    public int timeLongMelody = 300;// длительность работы ОПОВЕЩЕНИЯ звуком (ограниячиваем 300 секунд)
+    public int timeLongMelody = 60;// длительность работы ОПОВЕЩЕНИЯ звуком (ограниячиваем 300 секунд)
     //
     private long timerVibration = 0;// время окончания работы ОПОВЕЩЕНИЯ вибрацией (ограниячиваем 5 секунд)
-    public int timeLongVibration = 5;// длительность работы ОПОВЕЩЕНИЯ вибрацией (ограниячиваем 5 секунд)
+    public int timeLongVibration = 30;// длительность работы ОПОВЕЩЕНИЯ вибрацией (ограниячиваем 5 секунд)
     //
     private  final int typeLevel;//какой тип (логический, флоат)порог контролируем, минимум максимум указанного значения
-    public final int BOOLEAN_FALSE = 0;// срабатывание при логическом значяениии лож
-    public final int BOOLEAN_TRUE = 1;// срабатывание при логическом значяениии лож
-    public final int FLOAT_MIN = 2;// срабатывание достижении и при опускании Флоат значения до указанного уровня и ниже!
-    public final int FLOAT_MAX = 3;// срабатывание достижении и превышении Флоат значения до указанного уровня и ниже!
+    public static final int BOOLEAN_FALSE = 0;// срабатывание при логическом значяениии лож
+    public static  final int BOOLEAN_TRUE = 1;// срабатывание при логическом значяениии лож
+    public static  final int FLOAT_MIN = 2;// срабатывание достижении и при опускании Флоат значения до указанного уровня и ниже!
+    public static  final int FLOAT_MAX = 3;// срабатывание достижении и превышении Флоат значения до указанного уровня и ниже!
     //-----------
     private  final float  threshol = 0.15f;//порог срабатывания- отпускания оповещения
     //
-    private  float  thresholdReset = Float.NaN;//порог срабатывания- отпускания оповещения
+    public float  valueLevel = Float.NaN;//порог срабатывания
     //
-    private float  valueLevel = Float.NaN;//порог срабатывания
+   // private boolean  onLevel = false;//порог срабатывания
     //
-    private boolean  onLevel = false;//порог срабатывания
-    //
-    public NotificationLevel(int typelevel,float level,Activity activity){
+    public NotificationLevel(int typelevel,Activity activity){
         typeLevel = typelevel;
-        valueLevel = level;
-        //определяем порог шмитта, при котором происходит восстановления системы
-        // сигнализации для нового срабатывания
-        if(typelevel == FLOAT_MIN) thresholdReset = valueLevel + threshol;
-        else thresholdReset = valueLevel - threshol;
-    }
-    public NotificationLevel(int typelevel,boolean level,Activity activity){
-        typeLevel = typelevel;
-        onLevel = level;
     }
     //расчет значений и сигнализация звуком, вибрацией
     public void calck(float value){
@@ -72,12 +61,24 @@ public class NotificationLevel {
     }
     private void setNotification() {
         onNotification = true;
-        if(timerMelody == 0)timerMelody = System.currentTimeMillis() + timeLongMelody * 1000;// время окончания работы ОПОВЕЩЕНИЯ звуком (ограниячиваем 300 секунд)
-        if(timerVibration == 0)timerVibration = System.currentTimeMillis() + timeLongVibration * 1000;// время окончания работы ОПОВЕЩЕНИЯ вибрацией (ограниячиваем 5 секунд)
+        long time = System.currentTimeMillis();
+        if(timerMelody == 0){
+            timerMelody = time + timeLongMelody * 1000;// время окончания работы ОПОВЕЩЕНИЯ звуком (ограниячиваем 300 секунд)
+        }
+        if(timerVibration == 0){
+            timerVibration = time + timeLongVibration * 1000;// время окончания работы ОПОВЕЩЕНИЯ вибрацией (ограниячиваем 5 секунд)
+            log(" setNotification= " + onNotification +" activity= " + activity +"  timeVibr" + (timerVibration/1000) % 1000 + "  time= "+(System.currentTimeMillis()/1000 ) % 1000+ "  melody= " + (timerMelody / 1000) % 1000);
+        }
+
     }
     private void notification() {
-        if(timerVibration > System.currentTimeMillis()) Util.playerVibrator(300, activity);
+        log(" onNotf= " + onNotification +"  resetNotf= " + resetNotification +"  timeVibr" + (timerVibration/1000) % 1000 + "  time= "+(System.currentTimeMillis()/1000 ) % 1000+ "  melody= " + (timerMelody / 1000) % 1000);
+        if(timerVibration > System.currentTimeMillis()) {
+            log("---timerVibration");
+            Util.playerVibrator(300, activity);
+        }
         if((melody != null) && (timerMelody > System.currentTimeMillis())) {
+            log("---melody");
             Util.playerRingtone(0f, melody, activity,TAG);
         }
     }
@@ -111,23 +112,26 @@ public class NotificationLevel {
                 }
                 break;
             case FLOAT_MIN:
+                if(Float.isNaN(value)) return;
                 if(value <= valueLevel)  {
                     setNotification();
                     log("FLOAT_MIN Notification");
                 }else{//приводим сигнализацию к новому срабатывания, если предыдущее срабатываение было сброшено!
-                    if(value > thresholdReset) initNotification();
+                    if(value > (valueLevel + threshol)) initNotification();
                 }
                 break;
             case FLOAT_MAX:
+                if(Float.isNaN(value)) return;
                 if(value >= valueLevel)  {
                     setNotification();
                     log("FLOAT_MAX Notification");
                 }else{//приводим сигнализацию к новому срабатывания, если предыдущее срабатываение было сброшено!
-                    if(value < thresholdReset) initNotification();
+                    if(value < (valueLevel - threshol)) initNotification();
                 }
                 break;
         }
         notification();
+    //    log("-- calck--");
     }
 
     private void log(String mess){

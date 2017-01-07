@@ -66,8 +66,10 @@ public class SettingMinMax extends Activity implements View.OnClickListener{
         String value; boolean vibration, notification;
         if(maxValue){
             value = sensor.getStringMaxTemperature(true);
-            notification = sensor.onMaxNotification;
-            vibration = sensor.onMaxVibration;
+// notification = sensor.onMaxNotification;
+//vibration = sensor.onMaxVibration;
+notification = sensor.maxLevelNotification.switchNotification;
+vibration = sensor.maxLevelNotification.switchVibration;
         } else{
             value = sensor.getStringMinTemperature(true);
             notification = sensor.onMinNotification;
@@ -122,9 +124,12 @@ public class SettingMinMax extends Activity implements View.OnClickListener{
                      if (value > max) value = max;
                      if (value < min) value = min;
                      //
-                     if(maxValue) sensor.maxTemperature  = value;
+//if(maxValue) sensor.maxTemperature  = value;
+if(maxValue) sensor.maxLevelNotification.valueLevel = value;
                      else  sensor.minTemperature  = value;
-                     str = "  float= " + str + "  max/min= " + sensor.maxTemperature +" / "+ sensor.minTemperature;
+// str = "  float= " + str + "  max/min= " + sensor.maxTemperature
+str = "  float= " + str + "  max/min= " + sensor.maxLevelNotification.valueLevel
+                             +" / "+ sensor.minTemperature;
                      break;
                  case ACTIVITY_SETTING_URL_MELODI:
                      uri = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
@@ -132,7 +137,8 @@ public class SettingMinMax extends Activity implements View.OnClickListener{
                       if(uri != null){
                          str = uri.toString();
                      } else str = null;
-                     if(maxValue) sensor.maxMelody = str;
+//if(maxValue) sensor.maxMelody = str;
+if(maxValue) sensor.maxLevelNotification.melody = str;
                      else sensor.minMelody = str;
                      str = "   Uri= " + str;
                      break;
@@ -172,7 +178,8 @@ public class SettingMinMax extends Activity implements View.OnClickListener{
             case R.id.imageButtonValue:
                 Log.v(TAG,"imageButtonValue");
                  float value;
-                if(maxValue) value = sensor.maxTemperature;
+//if(maxValue) value = sensor.maxTemperature;
+if(maxValue) value = sensor.maxLevelNotification.valueLevel;
                 else value = sensor.minTemperature;
                 //----НАСТРОЙКА И ЗАПУСК окна ввода ЧИСЛА -----------
                 intent = new Intent(this, SettingName.class);
@@ -193,7 +200,8 @@ public class SettingMinMax extends Activity implements View.OnClickListener{
                 Log.v(TAG,"imageButtonMelody");
                 if(maxValue) {
                     InputBox.pickRingtone(ACTIVITY_SETTING_URL_MELODI, "    BC4"
-                            , sensor.maxMelody,TAG, this);
+ // , sensor.maxMelody,TAG, this);
+ , sensor.maxLevelNotification.melody,TAG, this);
                 } else{
                     InputBox.pickRingtone(ACTIVITY_SETTING_URL_MELODI, "    BC4"
                             , sensor.minMelody,TAG, this);
@@ -201,14 +209,17 @@ public class SettingMinMax extends Activity implements View.OnClickListener{
                 break;
             case R.id.switchNotification:
                 on = ((SwitchButton)findViewById(R.id.switchNotification)).isChecked();
-                if(maxValue) sensor.onMaxNotification = on;
+ //if(maxValue) sensor.onMaxNotification = on;
+ if(maxValue) sensor.maxLevelNotification.switchNotification = on;
                 else sensor.onMinNotification  = on;
-                if(on)Util.playerRingtone(0f, maxValue?sensor.maxMelody:sensor.minMelody
-                        , this,TAG);
+//if(on)Util.playerRingtone(0f, maxValue?sensor.maxMelody
+ if(on)Util.playerRingtone(0f, maxValue?sensor.maxLevelNotification.melody
+                        :sensor.minMelody, this,TAG);
                 break;
             case R.id.switchVibration:
                 on = ((SwitchButton)findViewById(R.id.switchVibration)).isChecked();
-                if(maxValue) sensor.onMaxVibration = on;
+//if(maxValue) sensor.onMaxVibration = on;
+if(maxValue) sensor.maxLevelNotification.switchVibration = on;
                 else sensor.onMinVibration = on;
                 //
                 if(on)Util.playerVibrator(400,this);

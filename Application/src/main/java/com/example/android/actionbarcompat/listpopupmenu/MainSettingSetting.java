@@ -76,7 +76,8 @@ public class MainSettingSetting  extends Activity implements View.OnClickListene
     private void updateTextString(){
         Util.setTextToTextView(sensor.deviceLabel,R.id.textViewName,this,"?");
 
-        if(sensor.onMaxNotification){
+//if(sensor.onMaxNotification){
+if(sensor.maxLevelNotification.switchNotification){
             Util.setTextToTextView(sensor.getStringMaxTemperature(true)
                     ,R.id.textViewTemperaturesAbove,this,"-");
         } else{

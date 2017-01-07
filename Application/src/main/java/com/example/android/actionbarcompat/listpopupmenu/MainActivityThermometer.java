@@ -323,7 +323,8 @@ public class MainActivityThermometer  extends AppCompatActivity {// ActionBarAct
             }
         }
         // СИГНАЛИЗАЦИЯ-- в случае СРАБАТЫВАНИЯ сигнализации меняем фон
-        if(sensor.onMinNotification || sensor.onMaxNotification){
+ // if(sensor.onMinNotification || sensor.onMaxNotification){
+ if(sensor.onMinNotification || sensor.maxLevelNotification.onNotification){
             // меняем фон переодически в маркере
             if((mHandlerLoop & 1) == 0) marker_fon.setLevel(0);
             else marker_fon.setLevel(1);
@@ -386,7 +387,8 @@ public class MainActivityThermometer  extends AppCompatActivity {// ActionBarAct
         thermometer.getRootView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
         //делаем Здесь обновление термометра, чтоб при выходе из настроек сенсора, изменения были учтены
         mThermometerDrawable.setSettingThermometer(getResources().getDisplayMetrics().density
-                ,sensor.minTemperature,sensor.maxTemperature,sensor.onFahrenheit,false);
+//,sensor.minTemperature,sensor.maxTemperature,sensor.onFahrenheit,false);
+,sensor.minTemperature,sensor.maxLevelNotification.valueLevel,sensor.onFahrenheit,false);
         /// тоже что выше НО с ЗАПУСКОМ ТЕСТА ртутного столбика!
 //        mThermometerDrawable.setSettingThermometer(getResources().getDisplayMetrics().density
 //                ,sensor.minTemperature,sensor.maxTemperature,sensor.onFahrenheit,true);
