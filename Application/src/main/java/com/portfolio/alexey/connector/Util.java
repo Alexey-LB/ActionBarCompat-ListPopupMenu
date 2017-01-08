@@ -390,7 +390,7 @@ public class Util {
         }
       //  android.support.v7.app.ActionBar actionBar = getSupportActionBar();
 //установить картинку
-        actionBar.setHomeAsUpIndicator(R.drawable.ic_chevron_left_black_24dp); //gtab.setIcon(R.drawable.ic_add);
+        actionBar.setHomeAsUpIndicator(R.drawable.ic_chevron_left_blue_24dp); //gtab.setIcon(R.drawable.ic_add);
         //разрешить копку доиой
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setHomeButtonEnabled(true);
@@ -420,7 +420,7 @@ public class Util {
         //------------------------------
         //  actionBar.
         //разрешить копку доиой
-        actionBar.setHomeAsUpIndicator(R.drawable.ic_chevron_left_black_24dp);
+        actionBar.setHomeAsUpIndicator(R.drawable.ic_chevron_left_blue_24dp);
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setHomeButtonEnabled(true);//устанавливает надпись и иконку как кнопку домой(не требуется
         // actionBar.setDisplayUseLogoEnabled(true);

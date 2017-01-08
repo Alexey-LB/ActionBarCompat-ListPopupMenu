@@ -43,7 +43,7 @@ android:actionViewClass="android.widget.SearchView"
 
     <item android2:title="@string/add"
         android2:id="@+id/add_a"
-        android2:icon="@drawable/ic_add"
+        android2:icon="@drawable/ic_add_blue_32dp"
         android:showAsAction="always"
         android2:checkable="false"
         android2:visible="true"

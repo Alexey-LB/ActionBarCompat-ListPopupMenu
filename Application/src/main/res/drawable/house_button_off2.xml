@@ -4,12 +4,14 @@
     android:thickness="1dp"
     >
     <gradient
-        android:startColor="#0000FF"
-        android:centerColor="#0000C0"
-        android:endColor="#000000"
+
+        android:startColor="#c0c0c0"
+        android:centerColor="#808080"
+        android:endColor="#404040"
         android:centerX="0.5"
         android:centerY="0.5"
-        android:gradientRadius="80"
+        android:gradientRadius="140dp"
         android:type="radial"/>
+
 
 </shape>

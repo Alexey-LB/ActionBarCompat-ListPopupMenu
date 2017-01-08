@@ -2,7 +2,7 @@
 <transition
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item  android:drawable="@drawable/house_button_on2"/>
-    <item android:drawable="@drawable/house_button_off2"/>
+    <item  android:drawable="@drawable/house_button_off2"/>
+    <item android:drawable="@drawable/house_button_on2"/>
 
 </transition>

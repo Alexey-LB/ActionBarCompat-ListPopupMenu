@@ -184,12 +184,12 @@ public class PopupListFragment extends ListFragmentA  {
          Log.d(TAG,"  getActivity().getActionBar()=" + getActivity().getActionBar());
         //
         //-------------Установка плавающей копки --------------------------------
-        fbButton = View.inflate(getContext(),R.layout.poplist_item_3,null);//породил ИЗ ХМЛ, просто рисунок!!
-      //  fbButton2 = getFloatButton();
+fbButton = View.inflate(getContext(),R.layout.poplist_item_3,null);//породил ИЗ ХМЛ, просто рисунок!!
+// ЗАПРЕТИЛ ПОКА КНОПКУ_+бросаем на экран
+//((ViewGroup)lw.getParent()).addView(fbButton);
 
+        //  fbButton2 = getFloatButton();
         //Log.e(teg,"  fbButton.getHeight()=" + fbButton.getHeight());
-        //бросаем на экран
-        ((ViewGroup)lw.getParent()).addView(fbButton);
 //        //----------ListFragmentA строка 98 там создается скролинг !----------------
 //        View mProgressContainer = root.findViewById(ListFragmentA.INTERNAL_PROGRESS_CONTAINER_ID);//
 //        View mListContainer = root.findViewById(ListFragmentA.INTERNAL_LIST_CONTAINER_ID);
@@ -273,7 +273,7 @@ public class PopupListFragment extends ListFragmentA  {
         menuFragment = menu;//запомил, чтоб потом  изменить меню или удалить ПРИ ВЫХОДЕ из фрейма
 
         menu.add(Menu.NONE,iconActionAdd,Menu.NONE,"Add")
-                .setIcon(R.drawable.ic_add_black_32dp)
+                .setIcon(R.drawable.ic_add_blue_32dp)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
        // menu.clear();
     }
