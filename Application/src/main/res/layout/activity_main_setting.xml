@@ -36,8 +36,16 @@
             <!--ОПОВЕШЕНИЕ-->
             <include layout="@layout/activity_main_setting_item3" />
 
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:background="@color/colorBackground"
+                android:layout_weight="77">
+
+            </FrameLayout>
+
             <!--ОФОРМЛЕНИЕ-->
-            <include layout="@layout/activity_main_setting_item4" />
+            <!--<include layout="@layout/activity_main_setting_item4" />-->
 
         </LinearLayout>
 </ScrollView>

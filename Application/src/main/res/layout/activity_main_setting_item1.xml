@@ -92,7 +92,8 @@
         android:layout_width="match_parent"
         android:background="@color/colorBackground"
         android:layout_height="@dimen/iten_setting_wight"
-        android:layout_marginBottom="@dimen/iten_vertical_gap_wight">
+        android:layout_marginBottom="@dimen/iten_vertical_gap_wight"
+        android:id="@+id/LinearLayoutMeasurementMode">
         <!--measurement mode-->
         <TextView
             android:text="Режим измерения"

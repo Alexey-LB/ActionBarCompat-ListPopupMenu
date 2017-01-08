@@ -67,11 +67,16 @@ public class MainSettingSetting  extends Activity implements View.OnClickListene
         findViewById(R.id.imageButtonTemperaturesAbove).setOnClickListener(this);
         findViewById(R.id.imageButtonTemperaturesBelow).setOnClickListener(this);
         findViewById(R.id.imageButtonMelody).setOnClickListener(this);
-        findViewById(R.id.imageButtonDecor).setOnClickListener(this);
+
+
         //00000
         findViewById(R.id.textViewMeasurementMode).setOnClickListener(this);
         findViewById(R.id.imageButtonName).setOnClickListener(this);
-
+//спрятали МЕДЕЦИНСКОЕ измерение!!
+findViewById(R.id.LinearLayoutMeasurementMode).setVisibility(View.GONE);
+////спрятао выбор фона
+//findViewById(R.id.activity_main_setting_item4).setVisibility(View.GONE);
+ //       findViewById(R.id.imageButtonDecor).setOnClickListener(this);
         updateTextString();
     }
     private void updateTextString(){

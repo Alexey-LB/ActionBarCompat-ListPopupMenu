@@ -2,7 +2,7 @@
 <resources>
     <!-- Цвета для градусника -->
     <color name="colorMaxThermometer">#c0ff0000</color>
-    <color name="colorMinThermometer">#c000c0ff</color>
+    <color name="colorMinThermometer">#c0007aff</color>
     <color name="colorColumnThermometer">#FF404040</color>
     <!-- деления на шкале-->
     <color name="colorScaleDivisionThermometer">#FF000000</color>
