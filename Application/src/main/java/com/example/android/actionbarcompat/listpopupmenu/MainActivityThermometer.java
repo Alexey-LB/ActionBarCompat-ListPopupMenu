@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.portfolio.alexey.connector.BluetoothLeServiceNew;
 import com.portfolio.alexey.connector.Sensor;
@@ -84,11 +85,14 @@ public class MainActivityThermometer  extends AppCompatActivity {// ActionBarAct
                 if(sensor != null) sensor.resetMinMaxValueTemperature();
             }
         });
-        thermometer.findViewById(R.id.bottom_bar).setOnClickListener(new View.OnClickListener() {
+        View v = thermometer.findViewById(R.id.LinearLayoutWarning);
+        v.setVisibility(View.INVISIBLE);//выключаем видимость его, пока не сработало
+        v.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //сброс минимум и максимум
                 if(sensor != null) sensor.resetNotificationVibrationLevelMinMax();
+                v.setVisibility(View.INVISIBLE);//выключаем видимость его, пока не сработало
             }
         });
         //-------- ПЕРЕКЛЮЧАТЕЛИ --- Размеры его можно узнать ТОЛЬко после его отображения,
@@ -337,8 +341,19 @@ public class MainActivityThermometer  extends AppCompatActivity {// ActionBarAct
                 && !sensor.minLevelNotification.resetNotification
                 && !sensor.maxLevelNotification.resetNotification
                 &&  (sensor.minLevelNotification.onNotification
-                    || sensor.maxLevelNotification.onNotification))level = 1;
-        else level = 0;
+                    || sensor.maxLevelNotification.onNotification)){
+            level = 1;
+            //показываем ПРЕДУПРЕЖДЕНИЯ и надпись
+            View v = thermometer.findViewById(R.id.LinearLayoutWarning);
+            v.setVisibility(View.VISIBLE);//выключаем видимость его, пока не сработало
+            String str = sensor.deviceLabel;
+            if(sensor.minLevelNotification.onNotification){
+                str = str + "   Достигнут нижний порог";
+            } else{
+                str = str + "   Достигнут верхний порог";
+            }
+            ((TextView)thermometer.findViewById(R.id.textWarning)).setText(str);
+        }else level = 0;
         if(marker_fon.getLevel() != level)marker_fon.setLevel(level);//
         // фон числа -- если ПРЕВЫШЕНИЕ- весь фон закрываем цветом УРОВНЯ
         // если сброса аларма НЕ БыЛО, а уровень вернулс к норме- ОКАНТОВКА ЧИСЛА цветом сработавшего уровня!

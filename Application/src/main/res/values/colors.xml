@@ -11,7 +11,7 @@
     <!-- цвета для батарейки-->
     <color name="colorBatteryFill">#80000000</color>
     <color name="colorBatteryStrok">#80000000</color>
-    <color name="colorBatteryAlarm">#80FF0000</color>
+    <color name="colorBatteryAlarm">#80ff6600</color>
     <!---->
     <color name="colorPrimary">@color/colorBackground</color>
 
