@@ -380,6 +380,7 @@ public class MainActivityThermometer  extends AppCompatActivity {// ActionBarAct
             sensor.resetMeasurement();//сброс измерения на самом сенсоре
             // для сброса Мин Мах к текущей температуре
             sensor.resetMinMaxValueTemperature();
+
         }
         //ОТОБРАЖЕНИЕ и положение переключателей
         // коннекта ЕСТЬ!

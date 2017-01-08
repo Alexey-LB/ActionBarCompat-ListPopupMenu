@@ -2,6 +2,9 @@ package com.portfolio.alexey.connector;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.bluetooth.BluetoothGattCharacteristic;
+import android.bluetooth.BluetoothGattDescriptor;
+import android.bluetooth.BluetoothGattService;
 import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -30,6 +33,7 @@ import com.example.android.actionbarcompat.listpopupmenu.R;
 import com.example.android.actionbarcompat.listpopupmenu.RunDataHub;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 import static android.content.Context.VIBRATOR_SERVICE;
 import static java.lang.Thread.sleep;
@@ -532,5 +536,32 @@ public class Util {
         } else {
             return context.getResources().getColor(id);
         }
+    }
+    //в этих цифрах оснолвное различие!!, на самом деле во ВТОРЫХх 16битах, их тоже достаточно!
+    public static int getUidMost32Bits(UUID uid){
+        return (int)(uid.getMostSignificantBits() >> 32);
+    }
+    //в этих цифрах оснолвное различие!!, на самом деле во ВТОРЫХ 16битах, их тоже достаточно!
+    public static short getUidMost16Bits(UUID uid){
+        return (short)getUidMost32Bits(uid);
+    }
+    //в этих цифрах оснолвное различие!!, на самом деле во ВТОРЫХ 16битах, их тоже достаточно!
+    public static short getUidMost16Bits(BluetoothGattCharacteristic characteristic){
+        return getUidMost16Bits(characteristic.getUuid());
+    }
+    public static short getUidMost16Bits(BluetoothGattDescriptor descriptor){
+        return getUidMost16Bits(descriptor.getUuid());
+    }
+    public static short getUidMost16Bits(BluetoothGattService service){
+        return getUidMost16Bits(service.getUuid());
+    }
+    public static String getUidStringMost16Bits(BluetoothGattCharacteristic characteristic){
+        return String.format("0x%04X",getUidMost16Bits(characteristic));
+    }
+    public static String getUidStringMost16Bits(BluetoothGattDescriptor descriptor){
+        return String.format("0x%04X",getUidMost16Bits(descriptor));
+    }
+    public static String getUidStringMost16Bits(BluetoothGattService service){
+        return String.format("0x%04X",getUidMost16Bits(service));
     }
 }

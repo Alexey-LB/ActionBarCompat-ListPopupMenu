@@ -163,17 +163,18 @@ public class BluetoothLeServiceNew extends Service {
                 // закончили ЧТЕНИЕ СЕРВИСОВ и характеристик, готовы к работе
                 sensor.rssi = STATE_CONNECTED;//показываем что готовы к работе
                 sensor.mConnectionState = STATE_CONNECTED;
-                sensor.enableTXNotification();
-                Log.i(TAG, "onServicesDiscovered == GATT_SUCCESS  adress= " + sensor.mBluetoothDeviceAddress);
+ sensor.enableTXNotification();
+                Log.w(TAG, "onServicesDiscovered == GATT_SUCCESS  adress= " + sensor.mBluetoothDeviceAddress);
             } else {
-                Log.w(TAG, "onServicesDiscovered received: " + status);
+                Log.e(TAG, "onServicesDiscovered ERROR status: " + status);
             }
         }
 
         @Override
         public void onCharacteristicRead(BluetoothGatt gatt,
                                          BluetoothGattCharacteristic characteristic, int status) {
-            Log.w(TAG, "onCharacteristicRead--------------------");
+           // Log.w(TAG, "onCharacteristicRead--------------------");
+
             //если у нас есть такое устройство
             final Sensor sensor = getBluetoothDevice(gatt.getDevice().getAddress());
             if(sensor == null) return;
@@ -185,13 +186,21 @@ public class BluetoothLeServiceNew extends Service {
 
       sensor.setValue(characteristic, false);
                 sensor.onCharacteristicRead();//постоянно запрашивает характеристику- и обламывает остальное!!
+                Log.w(TAG, "-RCr--onCharacteristicRead gatt= " + gatt.getDevice().getAddress()+"   status= " + status
+                        + "  characteristic= " +  Util.getUidStringMost16Bits(characteristic)
+                        +"  service= " + Util.getUidStringMost16Bits(characteristic.getService()));//characteristic.getUuid().toString());
+            }else{
+                Log.e(TAG, "-RCr--onCharacteristicRead ERROR gatt= " + gatt.getDevice().getAddress()+"   status= " + status
+                        + "  characteristic= " +  Util.getUidStringMost16Bits(characteristic)
+                        +"  service= " + Util.getUidStringMost16Bits(characteristic.getService()));//characteristic.getUuid().toString());
+
             }
         }
 
         @Override
         public void onCharacteristicChanged(BluetoothGatt gatt,
                                             BluetoothGattCharacteristic characteristic) {
-            Log.v(TAG, "onCharacteristicChanged--------------------");
+       //     Log.v(TAG, "onCharacteristicChanged--------------------");
             //если у нас есть такое устройство
 
             final Sensor sensor = getBluetoothDevice(gatt.getDevice().getAddress());
@@ -230,7 +239,9 @@ public class BluetoothLeServiceNew extends Service {
         @Override
         public void onCharacteristicWrite(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status)
         {
-            Log.w(TAG, "----------------------onCharacteristic_Write");
+
+
+          //  Log.w(TAG, "----------------------onCharacteristic_Write");
 //            String deviceName = gatt.getDevice().getName();
 //            String serviceName = BleNamesResolver.resolveServiceName(characteristic.getService().getUuid().toString().toLowerCase(Locale.getDefault()));
 //            String charName = BleNamesResolver.resolveCharacteristicName(characteristic.getUuid().toString().toLowerCase(Locale.getDefault()));
@@ -242,11 +253,15 @@ public class BluetoothLeServiceNew extends Service {
 //            // we got response regarding our request to write new value to the characteristic
 //            // let see if it failed or not
             if(status == BluetoothGatt.GATT_SUCCESS) {
-                Log.v(TAG, "onCharacteristicWrite OK>"+characteristic.toString());
+                Log.w(TAG, "-WCr--onCharacteristicWrite gatt= " + gatt.getDevice().getAddress()+"   status= " + status
+                        + "  characteristic= " + Util.getUidStringMost16Bits(characteristic)
+                        +"  service= " + Util.getUidStringMost16Bits(characteristic.getService()));
    //             mUiCallback.uiSuccessfulWrite(mBluetoothGatt, mBluetoothDevice, mBluetoothSelectedService, characteristic, description);
             } else {
-                Log.e(TAG, "onCharacteristicWrite ERROR>"+characteristic.toString());
-   //             mUiCallback.uiFailedWrite(mBluetoothGatt, mBluetoothDevice, mBluetoothSelectedService, characteristic, description + " STATUS = " + status);
+                Log.e(TAG, "-WCr--onCharacteristicWrite ERROR gatt= " + gatt.getDevice().getAddress()+"   status= " + status
+                        + "  characteristic= " + Util.getUidStringMost16Bits(characteristic)
+                        +"  service= " + Util.getUidStringMost16Bits(characteristic.getService()));
+                //             mUiCallback.uiFailedWrite(mBluetoothGatt, mBluetoothDevice, mBluetoothSelectedService, characteristic, description + " STATUS = " + status);
             }
         }
         /**
@@ -261,8 +276,15 @@ public class BluetoothLeServiceNew extends Service {
         @Override
         public void onDescriptorWrite(BluetoothGatt gatt, BluetoothGattDescriptor descriptor, int status)
         {
-            Log.w(TAG, "-----------onDescriptorWrite");
-
+            if(status == BluetoothGatt.GATT_SUCCESS) {
+                Log.w(TAG, "-WDe--onDescriptorWrite gatt= " + gatt.getDevice().getAddress() + "   status= " + status
+                        + "  descriptor= " + Util.getUidStringMost16Bits(descriptor)
+                        +"  Characteristic= " + Util.getUidStringMost16Bits(descriptor.getCharacteristic()));
+            }else{
+                Log.e(TAG, "-WDe--onDescriptorWrite ERROR gatt= " + gatt.getDevice().getAddress() + "   status= " + status
+                        + "  descriptor= " + Util.getUidStringMost16Bits(descriptor)
+                        +"  Characteristic= " + Util.getUidStringMost16Bits(descriptor.getCharacteristic()));
+            }
             // Ready for next transmission
         //   processTxQueue();
         }

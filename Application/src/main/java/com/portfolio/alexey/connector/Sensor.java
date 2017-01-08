@@ -677,49 +677,52 @@ return getStringValue( maxLevelNotification.valueLevel, onFahrenheit, addType);
                 if( descriptor != null) {
 
                     descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
-                    mBluetoothGatt.writeDescriptor(descriptor);
+                    status = mBluetoothGatt.writeDescriptor(descriptor);
 
-                    mBluetoothGatt.setCharacteristicNotification(characteristic,true);
+                    status2 = mBluetoothGatt.setCharacteristicNotification(characteristic,true);
 
-                    Log.i(TAG, "enableRXNotification: healthThermometerService");
+                    Log.i(TAG, "enableRXNotification: healthThermometerService status= " + status
+                    + "  status2= "+status2);
                 }
             }
         } else {
             Log.w(TAG, "enableRXNotification: HEALTH_THERMOMETER Service not found!");
         }
-        //-------------------------
-        // установка предсказания температуры
-        service = mBluetoothGatt.getService(PartGatt.UUID_RELSIB_SERVICE);
-        if (service != null) {
-            characteristic = service.getCharacteristic(PartGatt.UUID_RELSIB_TEMP);
-            if( characteristic != null){
-                mBluetoothGatt.setCharacteristicNotification(characteristic,true);
-                descriptor =  characteristic.getDescriptor(PartGatt.UUID_CLIENT_CHARACTERISTIC_CONFIG);
-                if( descriptor != null) {
-                    descriptor.setValue(BluetoothGattDescriptor.ENABLE_INDICATION_VALUE);
-                    mBluetoothGatt.writeDescriptor(descriptor);
-                    Log.i(TAG, "enableRXNotification: health_RELSIB_SERVICE ");
-                }
-            }
-        } else {
-            Log.w(TAG, "enableRXNotification: UUID_RELSIB_SERVICE  Service not found!");
-        }
-        //-------------------------
-        service = mBluetoothGatt.getService(PartGatt.UUID_HEART_RATE_SERVICE);
-        if (service != null) {
-            characteristic = service.getCharacteristic(PartGatt.UUID_HEART_RATE_MEASUREMENT);
-            if( characteristic != null){
-                mBluetoothGatt.setCharacteristicNotification(characteristic,true);
-                descriptor =  characteristic.getDescriptor(PartGatt.UUID_CLIENT_CHARACTERISTIC_CONFIG);
-                if( descriptor != null) {
-                    descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
-                    mBluetoothGatt.writeDescriptor(descriptor);
-                    Log.i(TAG, "enableRXNotification: heartRateServiceService");
-                }
-            }
-        } else{
-            Log.w(TAG, "enableRXNotification: HEART_RATE_SERVICE_Service Service not found!");
-        }
+//        //-------------------------
+//        // установка предсказания температуры
+//        service = mBluetoothGatt.getService(PartGatt.UUID_RELSIB_SERVICE);
+//        if (service != null) {
+//            characteristic = service.getCharacteristic(PartGatt.UUID_RELSIB_TEMP);
+//            if( characteristic != null){
+//                status = mBluetoothGatt.setCharacteristicNotification(characteristic,true);
+//                descriptor =  characteristic.getDescriptor(PartGatt.UUID_CLIENT_CHARACTERISTIC_CONFIG);
+//                if( descriptor != null) {
+//                    descriptor.setValue(BluetoothGattDescriptor.ENABLE_INDICATION_VALUE);
+//                    status2 = mBluetoothGatt.writeDescriptor(descriptor);
+//                    Log.i(TAG, "enableRX INDICATION: health_RELSIB_SERVICE status= " + status
+//                            + "  status2= "+status2);
+//                }
+//            }
+//        } else {
+//            Log.w(TAG, "enableRX INDICATION: UUID_RELSIB_SERVICE  Service not found!");
+//        }
+//        //-------------------------
+//        service = mBluetoothGatt.getService(PartGatt.UUID_HEART_RATE_SERVICE);
+//        if (service != null) {
+//            characteristic = service.getCharacteristic(PartGatt.UUID_HEART_RATE_MEASUREMENT);
+//            if( characteristic != null){
+//                status = mBluetoothGatt.setCharacteristicNotification(characteristic,true);
+//                descriptor =  characteristic.getDescriptor(PartGatt.UUID_CLIENT_CHARACTERISTIC_CONFIG);
+//                if( descriptor != null) {
+//                    descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
+//                    status2 = mBluetoothGatt.writeDescriptor(descriptor);
+//                    Log.i(TAG, "enableRXNotification: heartRateServiceService status= " + status
+//                            + "  status2= "+status2);
+//                }
+//            }
+//        } else{
+//            Log.w(TAG, "enableRXNotification: HEART_RATE_SERVICE_Service Service not found!");
+//        }
     }
 
     //если совпадает, то ФАЛЬШ, изменения не вносим

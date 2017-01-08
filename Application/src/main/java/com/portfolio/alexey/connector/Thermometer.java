@@ -297,8 +297,8 @@ public class Thermometer extends Drawable {
         // в зависимости от ЗНАКА, мы идем вперед или догоняем остаток
         shift =  Math.abs(Math.round((bottomTemperatureScale / mstep)) % 10);
         if(bottomTemperatureScale < 0) shift = 10 - shift;
-        Log.v(TAG,"valueTemperature= " +testValueTemperature+ "   shift= " + shift
-                + "   countShift=" + (bottomTemperatureScale / mstep)+ " bottTemp= "+ bottomTemperatureScale);
+//        Log.v(TAG,"valueTemperature= " +testValueTemperature+ "   shift= " + shift
+//                + "   countShift=" + (bottomTemperatureScale / mstep)+ " bottTemp= "+ bottomTemperatureScale);
    //     Log.i(TAG,"minTemp= " + minTemperature + " maxTemp= " + maxTemperature + "  class= " + this);
         for( y = 0, i = shift ; y < height; y += offsetGap, i++){
             if((i % 10) == 0){

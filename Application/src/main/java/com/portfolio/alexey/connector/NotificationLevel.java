@@ -10,7 +10,7 @@ import android.util.Log;
  */
 
 public class NotificationLevel {
-    private  static  final boolean debug = true;
+    private  static  final boolean debug = false;
     private  static  final String TAG = "NOTIF_LEVEL";
     public boolean switchNotification = false;//ПЕРЕКЛЮЧатель разрешение на оповешение звуком или вибрацией
     public boolean switchVibration = false; //ПЕРЕКЛЮЧатель разрешение на оповешение  вибрацией
