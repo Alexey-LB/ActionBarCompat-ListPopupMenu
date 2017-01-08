@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/LayoutMainWork"
     android:layout_width="match_parent"
@@ -32,41 +33,75 @@
             >
         </FrameLayout>
 
-        <LinearLayout
-            android:id="@+id/LinearLayoutFahrenheit"
-            android:orientation="horizontal"
-            android:layout_weight="0"
-            android:gravity="bottom|center_horizontal"
-            android:layout_gravity="bottom|center_horizontal"
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="44dp">
+            android:layout_height="@dimen/iten_setting_wight"
+            android:layout_weight="0">
 
-            <TextView
-                android:text="°C"
-                android:id="@+id/textViewC"
+            <LinearLayout
+                android:id="@+id/LinearLayoutFahrenheit"
+                android:orientation="horizontal"
                 android:layout_weight="0"
-                android:gravity="center_vertical|center_horizontal"
-                android:layout_height="32dp"
-                android:background="@drawable/rectangle_corners_left_5dp"
-                android:layout_gravity="center_vertical|center_horizontal"
-                android:textSize="18sp"
-                android:textStyle="normal|bold"
-                android:textColor="@color/colorTextlight"
-                android:layout_width="96dp" />
+                android:gravity="bottom|center_horizontal"
+                android:layout_gravity="bottom|center_horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
-            <TextView
-                android:text="°F"
-                android:id="@+id/textViewF"
-                android:layout_weight="0"
-                android:gravity="center_vertical|center_horizontal"
-                android:layout_height="32dp"
-                android:background="@drawable/rectangle_line_corners_right_5dp"
-                android:layout_gravity="center_vertical|center_horizontal"
-                android:textSize="18sp"
-                android:textStyle="normal|bold"
-                android:textColor="@color/colorTextlight"
-                android:layout_width="96dp" />
-        </LinearLayout>
+                <TextView
+                    android:text="°C"
+                    android:id="@+id/textViewC"
+                    android:layout_weight="0"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:layout_height="32dp"
+                    android:background="@drawable/rectangle_corners_left_5dp"
+                    android:layout_gravity="center_vertical|center_horizontal"
+                    android:textSize="18sp"
+                    android:textStyle="normal|bold"
+                    android:textColor="@color/colorTextlight"
+                    android:layout_width="96dp" />
+
+                <TextView
+                    android:text="°F"
+                    android:id="@+id/textViewF"
+                    android:layout_weight="0"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:layout_height="32dp"
+                    android:background="@drawable/rectangle_line_corners_right_5dp"
+                    android:layout_gravity="center_vertical|center_horizontal"
+                    android:textSize="18sp"
+                    android:textStyle="normal|bold"
+                    android:textColor="@color/colorTextlight"
+                    android:layout_width="96dp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/LinearLayoutWarning">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/warning"
+                    android:id="@+id/imageViewWarning"
+                    android:layout_weight="0"
+                    android:layout_gravity="left|center_vertical"
+                    android:layout_marginLeft="10dp" />
+
+                <TextView
+                    android:text="TextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/textWarning"
+                    android:layout_weight="10"
+                    android:textSize="18sp"
+                    android:gravity="left|center_vertical"
+                    android:textColor="@color/colorText"
+                    android:textStyle="normal|bold" />
+            </LinearLayout>
+        </FrameLayout>
 
     </LinearLayout>
 </FrameLayout>

@@ -150,6 +150,8 @@ public class SettingMinMax extends Activity implements View.OnClickListener{
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         Log.w(TAG,"onOptionsItemSelected= "+ item);
+        //чтоб музыка не задалбала, всегда останавливаем ее
+Util.playerRingtoneStop();
         Intent intent = new Intent();
    //     intent.putExtra(MainActivity.EXTRAS_DEVICE_NAME, mName);
    //     intent.putExtra(MainActivity.EXTRAS_DEVICE_ADDRESS, mAdress);
@@ -162,7 +164,10 @@ public class SettingMinMax extends Activity implements View.OnClickListener{
         Log.w(TAG,"onClick= "+view);
         Intent intent;boolean on;
         if(sensor == null)  return;
-        //
+
+        //чтоб музыка не задалбала, всегда останавливаем ее
+  Util.playerRingtoneStop();
+
         switch (view.getId()){
             case android.R.id.home:
                 Log.v(TAG,"home");
@@ -175,7 +180,6 @@ public class SettingMinMax extends Activity implements View.OnClickListener{
             case R.id.imageButtonValue:
                 Log.v(TAG,"imageButtonValue");
                  float value;
-
                 if(maxValue) value = sensor.maxLevelNotification.valueLevel;
                 else value = sensor.minLevelNotification.valueLevel;
                 //----НАСТРОЙКА И ЗАПУСК окна ввода ЧИСЛА -----------
@@ -208,9 +212,11 @@ public class SettingMinMax extends Activity implements View.OnClickListener{
 
                 if(maxValue) sensor.maxLevelNotification.switchNotification = on;
                 else sensor.minLevelNotification.switchNotification  = on;
-
-                if(on)Util.playerRingtone(0f, maxValue?sensor.maxLevelNotification.melody
-                        :sensor.minLevelNotification.melody,TAG);
+                //если НУЛЛ - то музыку НЕ играем!!
+                String uriStr;
+                if(maxValue) uriStr = sensor.maxLevelNotification.melody;
+                else uriStr = sensor.minLevelNotification.melody;
+                if(on && (uriStr != null))Util.playerRingtone(0f, uriStr,TAG);
                 break;
             case R.id.switchVibration:
                 on = ((SwitchButton)findViewById(R.id.switchVibration)).isChecked();

@@ -39,6 +39,7 @@ import android.view.animation.OvershootInterpolator;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 import java.util.ArrayList;
 import com.portfolio.alexey.connector.BluetoothLeServiceNew;
@@ -216,6 +217,25 @@ public class PopupListFragment extends ListFragmentA  {
         //if(adapter == null)
             initList();
         //------------------------------
+        View v = root.findViewById(R.id.LinearLayoutWarning);
+        v.setVisibility(View.INVISIBLE);//выключаем видимость его, пока не сработало
+        v.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //сброс минимум и максимум
+                ArrayList<Sensor> sensors = Util.getListSensor();
+                if(sensors != null) {
+                    //сбрасываем все сенсоры
+                    for(int i = 0; i < sensors.size();i++) {
+                        sensors.get(i).resetNotificationVibrationLevelMinMax();
+                    }
+                }
+                v.setVisibility(View.INVISIBLE);//выключаем видимость его, пока не сработало
+                getListView().getRootView().findViewById(R.id.LinearLayoutFahrenheit).setVisibility(View.VISIBLE);
+
+            }
+        });
+        //=======
         Log.e(TAG,"Fragment --- onActivityCreated---END----");
     }
     // ЗАПУСТИЛИ ервис    public BluetoothLeServiceNew mBluetoothLeService = null;
@@ -263,7 +283,8 @@ public class PopupListFragment extends ListFragmentA  {
 
     synchronized private void updateViewItem(Sensor sensor, View view){
         if((sensor == null) || (view == null)) return;
-        String str;int level;Drawable fon;
+        //String str;
+        int level;Drawable fon;
         boolean b = (sensor.mConnectionState == BluetoothLeServiceNew.STATE_CONNECTED);
         //     || (sensor.mBluetoothDeviceAddress == null);//режим ИММИТАЦИИ- отладки
         //
@@ -284,8 +305,21 @@ public class PopupListFragment extends ListFragmentA  {
                 && !sensor.minLevelNotification.resetNotification
                 && !sensor.maxLevelNotification.resetNotification
                 &&  (sensor.minLevelNotification.onNotification
-                || sensor.maxLevelNotification.onNotification))level = 1;
-        else level = 0;
+                || sensor.maxLevelNotification.onNotification)){
+            level = 1;
+            //показываем ПРЕДУПРЕЖДЕНИЯ и надпись
+            View v = getListView().getRootView().findViewById(R.id.LinearLayoutWarning);
+            v.setVisibility(View.VISIBLE);//выключаем видимость его, пока не сработало
+            String str = sensor.deviceLabel;
+            if(sensor.minLevelNotification.onNotification){
+                str = str + "   Достигнут нижний порог";
+            } else{
+                str = str + "   Достигнут верхний порог";
+            }
+            ((TextView)getListView().getRootView().findViewById(R.id.textWarning)).setText(str);
+            getListView().getRootView().findViewById(R.id.LinearLayoutFahrenheit).setVisibility(View.INVISIBLE);
+
+        }else level = 0;
         fon = view.findViewById(R.id.marker_fon).getBackground();
         if(fon.getLevel() != level)fon.setLevel(level);//
         // фон числа -- если ПРЕВЫШЕНИЕ- весь фон закрываем цветом УРОВНЯ
