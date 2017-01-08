@@ -3,10 +3,10 @@
         android:height="24dp"
         android:viewportWidth="100.0"
         android:viewportHeight="100.0">
-
+    <!--android:fillAlpha=".6"-->
     <path
         android:fillColor="@color/colorBatteryFill"
-        android:fillAlpha=".6"
+
         android:pathData="
         M42,70
         h27
@@ -18,10 +18,11 @@
         h13
         z"
         />
+    <!--android:strokeAlpha="0.6"-->
     <path
         android:strokeColor="@color/colorBatteryStrok"
         android:strokeWidth="1.5"
-        android:strokeAlpha="0.6"
+
         android:pathData="
         M42,12
         v-4

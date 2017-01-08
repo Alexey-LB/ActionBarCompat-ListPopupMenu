@@ -45,16 +45,25 @@
             android:id="@+id/lvel2.1"
             android:background="@android:drawable/screen_background_light">
 
-            <ImageView
-
-                android:id="@+id/marker"
-                android:gravity="center_vertical|center_horizontal"
-                android:background="@drawable/marker_white"
-                android:layout_marginLeft="12dp"
-                android:layout_height="24dp"
-                android:layout_width="24dp"
+            <FrameLayout
+                android:layout_height="match_parent"
                 android:layout_weight="0"
-                android:layout_gravity="left|start" />
+                android:layout_width="44dp"
+                android:background="@drawable/marker_fon2"
+                android:layout_marginLeft="20dp"
+                android:id="@+id/marker_fon">
+
+                <ImageView
+
+                    android:id="@+id/marker"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:background="@drawable/marker_white"
+                    android:layout_height="24dp"
+                    android:layout_width="24dp"
+                    android:layout_weight="0"
+                    android:layout_gravity="center_vertical|center_horizontal" />
+            </FrameLayout>
+
             <!--android:background="@drawable/marker_white"-->
             <TextView
                 android:id="@android:id/text1"
@@ -146,7 +155,8 @@
                 android:textColor="@color/common_google_signin_btn_text_dark_focused"
                 android:gravity="center_vertical|center_horizontal"
                 android:textSize="18sp"
-                android:textStyle="normal|bold"/>
+                android:textStyle="normal|bold"
+                android:background="@drawable/temperature_fon" />
 
 
             <TextView

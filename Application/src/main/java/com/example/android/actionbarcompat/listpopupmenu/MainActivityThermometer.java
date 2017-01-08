@@ -43,13 +43,12 @@ public class MainActivityThermometer  extends AppCompatActivity {// ActionBarAct
     private View thermometer;
     private int itemSensor = 0;
     private Sensor sensor;
-    private Thermometer thermometerDrawable;
     private SwitchButton mSwitchOffSensor;
     private SwitchButton mSwitchResetMeasurement;
     private Drawable marker_fon;
     private Drawable numbe_cur_fon;
 
-    Thermometer mThermometerDrawable = new Thermometer(this);
+    private Thermometer mThermometerDrawable = new Thermometer(this);
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -300,7 +299,7 @@ public class MainActivityThermometer  extends AppCompatActivity {// ActionBarAct
 
     synchronized private void updateViewItem(Sensor sensor, View view){
         if((sensor == null) || (view == null)) return;
-        int color;
+        int color,level;
         boolean b = (sensor.mConnectionState == BluetoothLeServiceNew.STATE_CONNECTED);
         //
         Util.setTextToTextView(sensor.getStringTime(),R.id.time, view);
@@ -325,29 +324,34 @@ public class MainActivityThermometer  extends AppCompatActivity {// ActionBarAct
                     , R.id.numbe_cur, view);
             Util.setTextToTextView(sensor.getString_1_ValueTemperature(true),R.id.numbe_min, view);
             Util.setTextToTextView(sensor.getString_3_ValueTemperature(true),R.id.numbe_max, view);
-            if(thermometerDrawable != null){
+            if(mThermometerDrawable != null){
                 // float f = (float)Math.random()*100 - 20;
-                thermometerDrawable.setColumnTemperature
+                mThermometerDrawable.setColumnTemperature
                         //??!!
                                 (b?sensor.getValue(sensor.intermediateValue):-100f); //     fon.invalidate();
             }
         }
         // СИГНАЛИЗАЦИЯ-- в случае СРАБАТЫВАНИЯ сигнализации меняем фон
- // if(sensor.onMinNotification || sensor.onMaxNotification){
-// if(sensor.onMinNotification ||
-         if(sensor.maxLevelNotification.onNotification){
-            // меняем фон переодически в маркере, ЕСЛИ НЕ СБРОШЕНА НОТИФИКАЦИЯ
-            if(((mHandlerLoop & 1) == 0) || (sensor.maxLevelNotification.resetNotification)) {
-                if (marker_fon.getLevel() != 0) marker_fon.setLevel(0);
-            }else if(marker_fon.getLevel() != 1)marker_fon.setLevel(1);
-            // меняем фон под основным измерением, предварительно
-            // проверяем текуший уровень, чтоб НЕ грузить процессор
-            if(sensor.minLevelNotification.switchNotification) {if(numbe_cur_fon.getLevel() != 1)numbe_cur_fon.setLevel(1);}
-            else {if(numbe_cur_fon.getLevel() != 2)numbe_cur_fon.setLevel(2);}
-        }else {
-            if(numbe_cur_fon.getLevel() != 0)numbe_cur_fon.setLevel(0);//
-            if(marker_fon.getLevel() != 0)marker_fon.setLevel(0);//
+        //мигаем фоном
+        if( ((mHandlerLoop & 1) == 0)
+                && !sensor.minLevelNotification.resetNotification
+                && !sensor.maxLevelNotification.resetNotification
+                &&  (sensor.minLevelNotification.onNotification
+                    || sensor.maxLevelNotification.onNotification))level = 1;
+        else level = 0;
+        if(marker_fon.getLevel() != level)marker_fon.setLevel(level);//
+        // фон числа -- если ПРЕВЫШЕНИЕ- весь фон закрываем цветом УРОВНЯ
+        // если сброса аларма НЕ БыЛО, а уровень вернулс к норме- ОКАНТОВКА ЧИСЛА цветом сработавшего уровня!
+        level = 0;
+        if(sensor.minLevelNotification.onLevel) level = 1;//нижний уровень
+        else {
+            if(sensor.maxLevelNotification.onLevel)level = 2;//верхний уровень
+            else{
+                if(sensor.minLevelNotification.onNotification)level = 3;//температура в норме- было НЕ сброшенный аларм мин
+                else if(sensor.maxLevelNotification.onNotification)level = 4;//температура в норме- было НЕ сброшенный аларм Мах
+            }
         }
+        if(numbe_cur_fon.getLevel() != level)numbe_cur_fon.setLevel(level);//
         //---положение переключателей-----положение переключателей-----------------------
         //ловим в сотоянии ВКЛЮЧЕН, запускаем функцию на выполнение и сбрасываем переключатель
         //отключение сенсора

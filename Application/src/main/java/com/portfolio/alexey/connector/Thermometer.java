@@ -218,9 +218,9 @@ public class Thermometer extends Drawable {
         if(n != hightColumn){//если есть изменения
             hightColumn = n;
             invalidateSelf();//Запуск ПЕРЕРИСОВАТЬ!!
-        }
-  //      Log.i(TAG," column= " + column +"  hightC= "+ hightColumn +" minT= " +minTemperature + " maxT= " +maxTemperature
-  //              +"  k_T= " + k_Temperature + " minP= " +minTemperaturePoint + " maxP= " +maxTemperaturePoint);
+      }
+   //     Log.i(TAG,"IN temperature =" + temperature+"  hightColumn= "+ hightColumn +" minT= " +minTemperature + " maxT= " +maxTemperature
+    //            + " minP= " +minTemperaturePoint + " maxP= " +maxTemperaturePoint);
     }
     //вычисление столбика высоты столбика термометра в пикселах
     public  int calckColumnTemperature(float temperature){

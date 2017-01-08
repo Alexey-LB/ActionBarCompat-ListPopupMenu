@@ -9,9 +9,9 @@
     <color name="colorAlarmThermometer">#FFFFFF00</color>
     <!--        =======================            -->
     <!-- цвета для батарейки-->
-    <color name="colorBatteryFill">#FF000000</color>
-    <color name="colorBatteryStrok">#FF000000</color>
-    <color name="colorBatteryAlarm">#FFFF0000</color>
+    <color name="colorBatteryFill">#80000000</color>
+    <color name="colorBatteryStrok">#80000000</color>
+    <color name="colorBatteryAlarm">#80FF0000</color>
     <!---->
     <color name="colorPrimary">@color/colorBackground</color>
 

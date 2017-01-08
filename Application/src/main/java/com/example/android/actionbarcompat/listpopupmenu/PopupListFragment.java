@@ -20,6 +20,7 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothGatt;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
@@ -262,7 +263,7 @@ public class PopupListFragment extends ListFragmentA  {
 
     synchronized private void updateViewItem(Sensor sensor, View view){
         if((sensor == null) || (view == null)) return;
-        String str;int bl,rssi;
+        String str;int level;Drawable fon;
         boolean b = (sensor.mConnectionState == BluetoothLeServiceNew.STATE_CONNECTED);
         //     || (sensor.mBluetoothDeviceAddress == null);//режим ИММИТАЦИИ- отладки
         //
@@ -276,6 +277,30 @@ public class PopupListFragment extends ListFragmentA  {
 
         Util.setLevelToImageView(b? sensor.battery_level: 0, R.id.battery, view);
         Util.setLevelToImageView(sensor.rssi, R.id.signal, view);
+        //--- мигание пределов ---
+        // СИГНАЛИЗАЦИЯ-- в случае СРАБАТЫВАНИЯ сигнализации меняем фон
+        //мигаем фоном
+        if( ((lloop & 1) == 0)
+                && !sensor.minLevelNotification.resetNotification
+                && !sensor.maxLevelNotification.resetNotification
+                &&  (sensor.minLevelNotification.onNotification
+                || sensor.maxLevelNotification.onNotification))level = 1;
+        else level = 0;
+        fon = view.findViewById(R.id.marker_fon).getBackground();
+        if(fon.getLevel() != level)fon.setLevel(level);//
+        // фон числа -- если ПРЕВЫШЕНИЕ- весь фон закрываем цветом УРОВНЯ
+        // если сброса аларма НЕ БыЛО, а уровень вернулс к норме- ОКАНТОВКА ЧИСЛА цветом сработавшего уровня!
+        level = 0;
+        if(sensor.minLevelNotification.onLevel) level = 1;//нижний уровень
+        else {
+            if(sensor.maxLevelNotification.onLevel)level = 2;//верхний уровень
+            else{
+                if(sensor.minLevelNotification.onNotification)level = 3;//температура в норме- было НЕ сброшенный аларм мин
+                else if(sensor.maxLevelNotification.onNotification)level = 4;//температура в норме- было НЕ сброшенный аларм Мах
+            }
+        }
+        fon = view.findViewById(R.id.numbe_cur).getBackground();
+        if(fon.getLevel() != level)fon.setLevel(level);//
     }
     private int lloop = 0;
 
@@ -905,30 +930,45 @@ return null;//fbButton_;
             View view = super.getView(position, convertView, container);
             //-----------------------------------
             //при изменениях, всегда сбрасываем РЕДАКТИРОВАНИЕ!!и убираем ИКОНКУ редактирования!!!
-           /// if(dellItem == true)dellItem = false;// убрал- НЕ понравилось заказчику
-            ViewGroup vg = (ViewGroup)view;
+            /// if(dellItem == true)dellItem = false;// убрал- НЕ понравилось заказчику
+            ViewGroup vg = (ViewGroup) view;
             //гасим рАЗРЕШЕНИЕ редактирования, ЭТО 2 слой!!
-            if(vg != null){//Видимые и не видимые символы РЕДАКТИРОВАНИЯ
-                View v  = vg.getChildAt(2);
-                if(v != null)v.setVisibility(View.GONE);
+            if (vg != null) {//Видимые и не видимые символы РЕДАКТИРОВАНИЯ
+                View v = vg.getChildAt(2);
+                if (v != null) v.setVisibility(View.GONE);
                 //
-     //           v  = vg.getChildAt(1);
-     //           v.setBackgroundColor(0x808080);
+                //           v  = vg.getChildAt(1);
+                //           v.setBackgroundColor(0x808080);
             }
             //-------------------------------------------------
-            if((position + 1) >= adapter.getCount())objectDataToView.moveButton();//позиционируем
+            if ((position + 1) >= adapter.getCount()) objectDataToView.moveButton();//позиционируем
             //сдвигать можнл, но вехний перекрывает нижний итем
-       //     if(convertView != null )convertView.setScrollY((int)(rr *20f));
-       //     rr = rr *(-1f);
+            //     if(convertView != null )convertView.setScrollY((int)(rr *20f));
+            //     rr = rr *(-1f);
 
-          //  Log.d(TAG,"position"+position+"  view"+ view+"  convertView=" + convertView +"  container= " +container);
-            if(adapter.getItem(position) != null){
-              //  ((Cheeses)adapter.getItem(position)).textValue = view.findViewById(R.id.numbe_cur);
+            //  Log.d(TAG,"position"+position+"  view"+ view+"  convertView=" + convertView +"  container= " +container);
+            if (adapter.getItem(position) != null) {
+                //  ((Cheeses)adapter.getItem(position)).textValue = view.findViewById(R.id.numbe_cur);
                 //берем объект
                 //присвоил текущее значение для отображения
                 // по умолчанию из метода toString -> заталкивается в R.id.text1, по этому мы сами это НЕ делаем
                 // ((Sensor)adapter.getItem(position)).deviceLabelView = view.findViewById(R.id.text1);
-               updateViewItem((Sensor) adapter.getItem(position),view);
+                Sensor sensor = (Sensor) adapter.getItem(position);
+                updateViewItem(sensor, view);
+
+                //ищем маркер, и на него цепляем KЛИК для сброса АЛАРМА
+                View fon = view.findViewById(R.id.marker_fon);
+                fon.setTag(sensor);
+                if(fon != null)  {
+                    fon.setOnClickListener(new OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if((v.getTag() != null) || (v.getTag() instanceof Sensor)){
+                                ((Sensor)v.getTag()).resetNotificationVibrationLevelMinMax();
+                            }
+                        }
+                    });
+                }
             }
 //          getActivity().runOnUiThread(new Runnable() { @Override  public void run() {;}});
             return view;

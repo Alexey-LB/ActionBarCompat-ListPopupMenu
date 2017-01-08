@@ -35,8 +35,8 @@ public class NotificationLevel {
     private  final float  threshol = 0.15f;//порог срабатывания- отпускания оповещения
     //
     public float  valueLevel = Float.NaN;//порог срабатывания
-    //
-   // private boolean  onLevel = false;//порог срабатывания
+    //показывает текущее состояние
+    public boolean  onLevel = false;// входное значение равно срабатыванию ПОРОГА
     //
     public NotificationLevel(int typelevel,Activity activity){
         typeLevel = typelevel;
@@ -58,19 +58,21 @@ public class NotificationLevel {
     }
     private void setNotification() {
         onNotification = true;
+        onLevel = true;//показывает текущее состояние
         long time = System.currentTimeMillis();
-        if(timerMelody == 0){
+        if(!switchNotification) return;//БЕЗ оповещения!
+        if((timerMelody == 0)){
             Util.playerRingtoneStop();// на всякий случай сбрасываем предыдущие мелодии
             timerMelody = time + timeLongMelody * 1000;// время окончания работы ОПОВЕЩЕНИЯ звуком (ограниячиваем 300 секунд)
         }
-        if(timerVibration == 0){
+        if((timerVibration == 0) && (switchVibration)){
             timerVibration = time + timeLongVibration * 1000;// время окончания работы ОПОВЕЩЕНИЯ вибрацией (ограниячиваем 5 секунд)
             log(" setNotification= " + onNotification +"  timeVibr" + (timerVibration/1000) % 1000 + "  time= "+(System.currentTimeMillis()/1000 ) % 1000+ "  melody= " + (timerMelody / 1000) % 1000);
         }
 
     }
     private void notification() {
-        if(timerVibration > System.currentTimeMillis()) {
+        if((timerVibration > System.currentTimeMillis()) && (switchVibration)) {
             log("---timerVibration  ");
             Util.playerVibrator(300);
         }
@@ -100,6 +102,7 @@ public class NotificationLevel {
                     log("BOOLEAN_FALSE Notification");
                 }else{//приводим сигнализацию к новому срабатывания, если предыдущее срабатываение было сброшено!
                     initNotification();
+                    onLevel = false;//показывает текущее состояние
                 }
                 break;
             case BOOLEAN_TRUE:
@@ -108,6 +111,7 @@ public class NotificationLevel {
                     log("BOOLEAN_TRUE Notification");
                 }else{//приводим сигнализацию к новому срабатывания, если предыдущее срабатываение было сброшено!
                     initNotification();
+                    onLevel = false;//показывает текущее состояние
                 }
                 break;
             case FLOAT_MIN:
@@ -116,6 +120,7 @@ public class NotificationLevel {
                     setNotification();
                     log("FLOAT_MIN Notification");
                 }else{//приводим сигнализацию к новому срабатывания, если предыдущее срабатываение было сброшено!
+                    onLevel = false;//показывает текущее состояние
                     if(value > (valueLevel + threshol)) initNotification();
                 }
                 break;
@@ -125,6 +130,7 @@ public class NotificationLevel {
                     setNotification();
                     log("FLOAT_MAX Notification");
                 }else{//приводим сигнализацию к новому срабатывания, если предыдущее срабатываение было сброшено!
+                    onLevel = false;//показывает текущее состояние
                     if(value < (valueLevel - threshol)) initNotification();
                 }
                 break;
