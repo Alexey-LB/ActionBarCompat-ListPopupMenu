@@ -428,7 +428,8 @@ return null;//fbButton_;
     // добавить объект данные которого отображаются на листе
     public boolean addObject(Object object){
         Log.i(TAG," addObject------");
-        ArrayList<Sensor> mbleDot = Util.getListSensor(getActivity());
+        //ArrayList<Sensor> mbleDot = Util.getListSensor(getActivity());
+        ArrayList<Sensor> mbleDot = Util.getListSensor();
         if(mbleDot != null){
             mbleDot.add((Sensor) object);
             //adapter.notifyDataSetInvalidated();
@@ -444,7 +445,8 @@ return null;//fbButton_;
     // добавить объект данные которого отображаются на листе
     public boolean DellObject(Object object){
         Log.w(TAG," DellObject------");
-        ArrayList<Sensor> mbleDot = Util.getListSensor(getActivity());
+        //ArrayList<Sensor> mbleDot = Util.getListSensor(getActivity());
+        ArrayList<Sensor> mbleDot = Util.getListSensor();
         if(mbleDot != null){
 
             if((object instanceof Sensor)){

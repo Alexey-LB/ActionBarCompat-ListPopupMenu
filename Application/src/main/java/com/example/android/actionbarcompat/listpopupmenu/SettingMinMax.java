@@ -45,7 +45,8 @@ public class SettingMinMax extends Activity implements View.OnClickListener{
         // все изменения будет писать сразу в сенсор
         //fl = intent.getFloatExtra(Util.EXTRAS_FLOAT_1,0);
         //
-        sensor = Util.getSensor(mItem,this);
+        //sensor = Util.getSensor(mItem,this);
+        sensor = Util.getSensor(mItem);
         if(sensor == null) finish();
         //устанавливаем пределы
         max = sensor.maxInputDeviceTemperature;

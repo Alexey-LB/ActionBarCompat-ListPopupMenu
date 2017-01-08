@@ -43,7 +43,8 @@ public class SettingFon extends Activity implements View.OnClickListener{
         String title = intent.getStringExtra(Util.EXTRAS_BAR_TITLE);
         // все изменения будет писать сразу в сенсор
         //
-        sensor = Util.getSensor(mItem,this);
+        //sensor = Util.getSensor(mItem,this);
+        sensor = Util.getSensor(mItem);
         if(sensor == null) finish();
 
         //-------------------------------------------

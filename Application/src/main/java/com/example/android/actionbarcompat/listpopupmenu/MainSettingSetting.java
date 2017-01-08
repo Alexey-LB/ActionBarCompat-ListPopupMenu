@@ -51,7 +51,8 @@ public class MainSettingSetting  extends Activity implements View.OnClickListene
         //--------------------------
         final Intent intent = getIntent();
         mItem = intent.getIntExtra(MainActivityWork.EXTRAS_DEVICE_ITEM,0);
-        sensor = Util.getSensor(mItem,this);
+        //sensor = Util.getSensor(mItem,this);
+        sensor = Util.getSensor(mItem);
         if(sensor == null) finish();
         Util.setActionBar(getActionBar(),TAG, intent.getStringExtra(Util.EXTRAS_BAR_TITLE));
         //УСТАНАВИЛ флаг изменения, чтоб потом записать в ФАЙЛ на флеш,

@@ -29,8 +29,8 @@ public class RunDataHub extends Application {
         super.onCreate();
         if(dataHub == null)dataHub = DataHubSingleton.getInstance();
         //устанавливаем для работы Контекст ПРИЛОЖЕНИЯ в УТИЛИТАХ(музака вибрация и т д)
-        Util.context = getBaseContext();
-        Util.runDataHub = (RunDataHub)getBaseContext();
+ Util.context = getApplicationContext();//!!--НЕ ПРОХОДИТ!! getBaseContext();-- НЕ ПРОХОДИТ!!
+ Util.runDataHub = this;
         //
         //подключение сервиса//-------------ЗАПУСТИЛИ ервис ---------
         Intent gattServiceIntent = new Intent(this, BluetoothLeServiceNew.class);

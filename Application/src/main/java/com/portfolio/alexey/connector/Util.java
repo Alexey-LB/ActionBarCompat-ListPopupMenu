@@ -106,6 +106,7 @@ public class Util {
         }
         return value;
     }
+//    //---------------------------------------------------------------
 //    //
 //    static public Sensor getSensor(int item,Context context){
 //        BluetoothLeServiceNew bleS = getAppBleService(context);
@@ -144,9 +145,16 @@ public class Util {
 //        }
 //        return null;
 //    }
-//
-    //
-    static public Sensor getSensor(int item,Activity activity){
+//    //
+//    static public BluetoothLeServiceNew getAppBleService(Activity activity){
+//        RunDataHub app = (RunDataHub)activity.getApplicationContext();//activity.getBaseContext()--НЕ ПРОХОДИТ!!
+//        if((app != null) && (app.mBluetoothLeServiceM != null)){
+//            return app.mBluetoothLeServiceM;
+//        }
+//        return null;
+//    }
+//    //----------------------------------------------------------------------
+    static public Sensor getSensor(int item){
         BluetoothLeServiceNew bleS = getAppBleService();
         if((bleS != null) && (bleS.mbleDot != null)
                 && (bleS.mbleDot.size() > item)){
@@ -155,23 +163,27 @@ public class Util {
         return null;
     }
     //
-    static public ArrayList<Sensor> getListSensor(Activity activity){
+    static public ArrayList<Sensor> getListSensor(){
         BluetoothLeServiceNew bleS = getAppBleService();
         if(bleS != null) return bleS.mbleDot;
         return null;
     }
-    //
-    static public BluetoothLeServiceNew getAppBleService(Context context){
-        return getAppBleService();
-    }
-    //
+
+
     static public BluetoothLeServiceNew getAppBleService(){
         if((runDataHub != null) && (runDataHub.mBluetoothLeServiceM != null)){
             return runDataHub.mBluetoothLeServiceM;
         }
         return null;
-    }    //
-
+    }
+//--------------------------------------------------------------------------------
+    //    static public BluetoothLeServiceNew getAppBleService(Context context){
+//        RunDataHub app = (RunDataHub)context;
+//        if((app != null) && (app.mBluetoothLeServiceM != null)){
+//            return app.mBluetoothLeServiceM;
+//        }
+//        return null;
+//    }
     //// https://geektimes.ru/post/232885/-------------------------------------------
     static synchronized public void playerVibrator(int milsec){
         if(context == null) return;
