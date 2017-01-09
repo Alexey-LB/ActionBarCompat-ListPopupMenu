@@ -569,8 +569,11 @@ public class BluetoothLeServiceNew extends Service {
     );
     @Override
     public void onCreate() {
-        super.onCreate();//---------
-        initialize();
+        super.onCreate();
+        //---------
+        // похоже не успевает все устанавить, а коннект уже налаживает, и обламывается
+        //перенесем в инициализацию в приложение!!app
+        //     initialize();
         Log.e(TAG,"Service------START -- onCreate()--------------");
     }
     // это будет именем файла настроек
