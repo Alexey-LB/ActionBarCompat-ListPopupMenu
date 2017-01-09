@@ -49,7 +49,7 @@ public class Sensor {
 
     private static int indexDevace = 0;//для нумерации названий
     private static final String deviceLabelStringDefault = "Монитор";//по умолчанию назначаем имя + номер
-    public RunDataHub app;
+    public  RunDataHub app;
     private Context mContext;
     public float maxInputDeviceTemperature = 125f;// для универсального 70, промышленного +125
     public float minInputDeviceTemperature = -40f;// для универсального -20, промышленного +70
@@ -112,7 +112,7 @@ public class Sensor {
     public NotificationLevel endMeasurementNotification;//КНОПКА разрешение на оповешение звуком по концу измерения
 
     public boolean   goToConnect= false;//Устанавливается после того как отправляется на коннект!!чтоб повторно НЕ коннектить
-//
+//обнуление гата
     public void close() {
         if (mBluetoothGatt == null) return;
         mBluetoothGatt.close();
@@ -496,6 +496,7 @@ return getStringValue( maxLevelNotification.valueLevel, onFahrenheit, addType);
         return false;
     }
     //=================================================================================
+    private boolean queue = true;
     public BluetoothGattCharacteristic getGattCharacteristic(UUID uuidService, UUID uuidCharacteristic, String errorHead) {
         BluetoothGattCharacteristic rez = null;
         if (mBluetoothGatt == null) {
@@ -518,7 +519,11 @@ return getStringValue( maxLevelNotification.valueLevel, onFahrenheit, addType);
         boolean rez = false; BluetoothGattCharacteristic characteristic;
         characteristic = getGattCharacteristic(uuidService, uuidCharacteristic, "readUuidCharacteristic");
         if (characteristic == null) return rez;
-        //
+        //если работаем через очередь
+        if(queue){
+            app.mBluetoothLeServiceM.queueRequestCharacteristicValue(this,characteristic);
+            return true;
+        }
         rez = mBluetoothGatt.readCharacteristic(characteristic);
         Log.i(TAG, "Read characteristic= " +uuidCharacteristic.toString()+"   status=" + rez);
         return rez;
@@ -540,7 +545,11 @@ return getStringValue( maxLevelNotification.valueLevel, onFahrenheit, addType);
         boolean rez = false; BluetoothGattCharacteristic characteristic;
         characteristic = getGattCharacteristic(uuidService, uuidCharacteristic, "writeUuidCharacteristic");
         if (characteristic == null) return rez;
-        //
+        //если работаем через очередь
+        if(queue){
+            app.mBluetoothLeServiceM.queueWriteDataToCharacteristic(this,characteristic, value);
+            return true;
+        }
         characteristic.setValue(value);
         rez = mBluetoothGatt.writeCharacteristic(characteristic);
         Log.i(TAG, "Write characteristic= " +uuidCharacteristic.toString()+"   status=" + rez);
@@ -548,18 +557,28 @@ return getStringValue( maxLevelNotification.valueLevel, onFahrenheit, addType);
     }
     //setNotificationIndication
     public boolean writeUuidDescriptor(byte[] bluetoothGattDescriptorValue, UUID uuidService
-            , UUID uuidCharacteristic, UUID uuidDescriptor) {
-        boolean rez = false; BluetoothGattCharacteristic characteristic;
+            , UUID uuidCharacteristic, UUID uuidDescriptor, boolean enabled) {
+        boolean rez = false; BluetoothGattCharacteristic characteristic;byte[] val;
         characteristic = getGattCharacteristic(uuidService, uuidCharacteristic, "writeUuidDescriptor");
         if (characteristic == null) return rez;
+        //если работаем через очередь
+        if(queue){
+            app.mBluetoothLeServiceM.queueSetNotificationForCharacteristic(this, characteristic
+                    , bluetoothGattDescriptorValue, enabled);
+            return true;
+        }
         //
         BluetoothGattDescriptor descriptor = characteristic.getDescriptor(uuidDescriptor);
         if (descriptor == null) {
             Log.e(TAG,"writeUuidDescriptor> Not found descriptor= "+ uuidDescriptor.toString());
             return rez;
         }
-        descriptor.setValue(bluetoothGattDescriptorValue);
-        mBluetoothGatt.setCharacteristicNotification(characteristic, true);
+        mBluetoothGatt.setCharacteristicNotification(characteristic, enabled);
+        //byte[] val = enabled ? BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE : BluetoothGattDescriptor.DISABLE_NOTIFICATION_VALUE;
+        //если сбросываем, то ЗНАЧЕНИЕ для сброса ОДИНАКОВО ДЛя нотификации и ИДИКАЦИИ ()
+        if(enabled) val = bluetoothGattDescriptorValue;
+        else val = BluetoothGattDescriptor.DISABLE_NOTIFICATION_VALUE;
+        descriptor.setValue(val);
         rez = mBluetoothGatt.writeDescriptor(descriptor);
         //мне кажется лучше так, если запись пройдет, то информирование на с ставим, иначе не надо это нам
         //if(sensor.mBluetoothGatt.writeDescriptor(descriptor)) rez = sensor.mBluetoothGatt.setCharacteristicNotification(characteristic, true);
@@ -599,27 +618,27 @@ return getStringValue( maxLevelNotification.valueLevel, onFahrenheit, addType);
         Log.w(TAG, "SetRead: onCharacteristicRead Maker ---");
             if(softwareRevision == null) {
                 readUuidCharacteristic(PartGatt.UUID_DEVICE_INFORMATION_SERVICE, PartGatt.UUID_SOFTWARE_REVISION_STRING);
-                return;
+                if(!queue) return;// если у нас очередь есть, запрашиваем все подряд быстро и разом
             }
             if(firmwareRevision == null) {
                 readUuidCharacteristic(PartGatt.UUID_DEVICE_INFORMATION_SERVICE, PartGatt.UUID_FIRMWARE_REVISION_STRING);
-                return;
+                if(!queue) return;// если у нас очередь есть, запрашиваем все подряд быстро и разом
             }
             if(hardwareRevision == null) {
                 readUuidCharacteristic(PartGatt.UUID_DEVICE_INFORMATION_SERVICE, PartGatt.UUID_HARDWARE_REVISION_STRING);
-                return;
+                if(!queue) return;// если у нас очередь есть, запрашиваем все подряд быстро и разом
             }
             if(serialNumber == null) {
                 readUuidCharacteristic(PartGatt.UUID_DEVICE_INFORMATION_SERVICE, PartGatt.UUID_SERIAL_NUMBER_STRING);
-                return;
+                if(!queue) return;// если у нас очередь есть, запрашиваем все подряд быстро и разом
             }
             if(modelNumber == null) {
                 readUuidCharacteristic(PartGatt.UUID_DEVICE_INFORMATION_SERVICE, PartGatt.UUID_MODEL_NUMBER_STRING);
-                return;
+                if(!queue)  return;// если у нас очередь есть, запрашиваем все подряд быстро и разом
             }
             if(manufacturerName == null) {
                 readUuidCharacteristic(PartGatt.UUID_DEVICE_INFORMATION_SERVICE, PartGatt.UUID_MANUFACTURER_NAME_STRING);
-                return;
+                if(!queue) return;// если у нас очередь есть, запрашиваем все подряд быстро и разом
             }
         flagRead = true;
     }
@@ -648,15 +667,15 @@ return getStringValue( maxLevelNotification.valueLevel, onFahrenheit, addType);
     {
         //set Notification
         writeUuidDescriptor(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE, PartGatt.UUID_HEALTH_THERMOMETER
-                , PartGatt.UUID_INTERMEDIATE_TEMPERATURE, PartGatt.UUID_CLIENT_CHARACTERISTIC_CONFIG);
+                , PartGatt.UUID_INTERMEDIATE_TEMPERATURE, PartGatt.UUID_CLIENT_CHARACTERISTIC_CONFIG, true);
 
         //set Indication// установка предсказания температуры
         writeUuidDescriptor(BluetoothGattDescriptor.ENABLE_INDICATION_VALUE, PartGatt.UUID_RELSIB_SERVICE
-                , PartGatt.UUID_RELSIB_TEMP, PartGatt.UUID_CLIENT_CHARACTERISTIC_CONFIG);
+                , PartGatt.UUID_RELSIB_TEMP, PartGatt.UUID_CLIENT_CHARACTERISTIC_CONFIG, true);
 
         //set  Notification   СЕРДЦЕБИЕНИЕ!!
         writeUuidDescriptor(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE, PartGatt.UUID_HEART_RATE_SERVICE
-                , PartGatt.UUID_HEART_RATE_MEASUREMENT, PartGatt.UUID_CLIENT_CHARACTERISTIC_CONFIG);
+                , PartGatt.UUID_HEART_RATE_MEASUREMENT, PartGatt.UUID_CLIENT_CHARACTERISTIC_CONFIG, true);
     }
 
     private   int loop_rssi  = 0;

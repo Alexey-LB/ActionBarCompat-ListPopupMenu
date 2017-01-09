@@ -116,13 +116,13 @@ public class PartGatt {
         attributes.put(UUID_GENERIC_ACCESS , "Generic Access");
         attributes.put(UUID_GENERIC_ATTRIBUTE, "Generic Attribute");
         attributes.put(UUID_HEART_RATE_SERVICE, "Heart Rate Service");
-        attributes.put(UUID_HEALTH_THERMOMETER, "Health Thermometer");
+        attributes.put(UUID_HEALTH_THERMOMETER, "Health DrawableThermometer");
         attributes.put(UUID_DEVICE_INFORMATION_SERVICE, "Device Information Service");//--ТОЛЬКО ЧТЕНИЕ---
         attributes.put(UUID_BATTERY_SERVICE, "Battery Service");
 
         // Sample Characteristics.
         attributes.put(UUID_BATTERY_LEVEL, "Battery Level");
-        // "Health Thermometer"
+        // "Health DrawableThermometer"
         attributes.put(UUID_TEMPERATURE_MEASUREMENT, "Temperature measurement");
         attributes.put(UUID_INTERMEDIATE_TEMPERATURE, "Intermediate temperature");
 
@@ -164,7 +164,7 @@ public class PartGatt {
             Log.d(TAG, "Heart rate: " + str + "  Properties= " + flag);
             return str;
         }
-        //----------Health Thermometer-------------------
+        //----------Health DrawableThermometer-------------------
 //
 //        if ((UUID_TEMPERATURE_MEASUREMENT.equals(characteristic.getUuid()))) {
 //

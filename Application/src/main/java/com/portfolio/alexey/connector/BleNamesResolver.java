@@ -72,7 +72,7 @@ public class BleNamesResolver {
         mServices.put("00001800-0000-1000-8000-00805f9b34fb", "Generic Access");
         mServices.put("00001801-0000-1000-8000-00805f9b34fb", "Generic Attribute");
         mServices.put("00001808-0000-1000-8000-00805f9b34fb", "Glucose");
-        mServices.put("00001809-0000-1000-8000-00805f9b34fb", "Health Thermometer");
+        mServices.put("00001809-0000-1000-8000-00805f9b34fb", "Health DrawableThermometer");
         mServices.put("0000180d-0000-1000-8000-00805f9b34fb", "Heart Rate");
         mServices.put("00001812-0000-1000-8000-00805f9b34fb", "Human Interface Device");
         mServices.put("00001802-0000-1000-8000-00805f9b34fb", "Immediate Alert");

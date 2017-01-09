@@ -19,8 +19,8 @@ import com.example.android.actionbarcompat.listpopupmenu.*;
  * Created by lesa on 28.12.2016.
  */
 
-public class Thermometer extends Drawable {
-    static String TAG = "ThermDRAW";
+public class DrawableThermometer extends Drawable {
+    static String TAG = "DrawTHERM";
     //используем как эталон для остальных фигур
     private Paint mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private Path mPath = new Path();
@@ -71,7 +71,7 @@ public class Thermometer extends Drawable {
 
     //private Canvas canvasFon;// = new Canvas();
     private final Activity mActivity;
-    public Thermometer(Activity activity){super(); mActivity = activity ;}
+    public DrawableThermometer(Activity activity){super(); mActivity = activity ;}
     //--
     private float  roundingFloat(float f, float round){
         int i = Math.round(f/round);
