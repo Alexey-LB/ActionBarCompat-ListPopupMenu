@@ -14,6 +14,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Binder;
+import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
 
@@ -310,6 +311,7 @@ public class BluetoothLeServiceNew extends Service {
         byte[] dataToWrite; // Only used for characteristic write
         boolean enabled; // Only used for characteristic notification subscription
         public TxQueueItemType type;
+        public int retry = 0;//количество повторов запроса
     }
 
     /**
@@ -374,31 +376,57 @@ public class BluetoothLeServiceNew extends Service {
             processTxQueue();
         }
     }
-
+    private boolean errorTxQueue = false;
+    private Handler mHandlerTxQueue = new Handler();
+    private Runnable runnable = new Runnable(){
+        public void run() {
+            errorTxQueue = true;
+            processTxQueue();
+            errorTxQueue = false;
+        }
+    };
     /**
      * Call when a transaction has been completed.
      * Will process next transaction if queued
      */
+    TxQueueItem mTxQueueItem;
     private void processTxQueue()
     {
         if (txQueue.size() <= 0)  {
             txQueueProcessing = false;
             return;
         }
-
-        txQueueProcessing = true;
-        TxQueueItem txQueueItem = txQueue.remove();
-        switch (txQueueItem.type) {
+        txQueueProcessing = true;//заблокировались
+        //-----------------------------
+        // продолжаем работать, убираем колбак и заново запускаем его для новой передачи
+        //необходимо всегда УДАЛЯТЬ старые запуски, иначе ОНИ НАЧИНАЮТ ЖИТЬ ВСЕ ВМЕСТЕ!!!
+        mHandlerTxQueue.removeCallbacks(runnable);
+        //-- запускаем контроль запроса по времени, устангавливаем 10 секунд
+        // если не уложились, то текущий запрос возвращяем в очередь и увеличиваем попытку
+        // передачи, передаем 5 раз и облом! ему, запрашиваемому параметру
+        if(errorTxQueue){
+            Log.e(TAG,"processTxQueue ERROR mTxQueueItem.retry= "+ mTxQueueItem.retry
+                    + "  sensor= "+mTxQueueItem.sensor.getAddress() + "   uid= "+mTxQueueItem.characteristic.getUuid());
+            if(mTxQueueItem.retry++ <= 5)addToTxQueue(mTxQueueItem);//повтор запроса
+        }
+        //если очередь НЕ пуста, запускаем контроль по времени снова!
+        if (txQueue.size() > 0)  {
+            mHandlerTxQueue.postDelayed(runnable,10000);//-- запускаем контроль запроса по времени, устангавливаем 10 секунд
+        }
+        errorTxQueue = false;
+        //-----------------------
+        mTxQueueItem = txQueue.remove();
+        switch (mTxQueueItem.type) {
             case WriteCharacteristic:
-                writeDataToCharacteristic(txQueueItem.sensor, txQueueItem.characteristic
-                        , txQueueItem.dataToWrite);
+                writeDataToCharacteristic(mTxQueueItem.sensor, mTxQueueItem.characteristic
+                        , mTxQueueItem.dataToWrite);
                 break;
             case SubscribeCharacteristic:
-                setNotificationForCharacteristic(txQueueItem.sensor,txQueueItem.characteristic,
-                        txQueueItem.dataToWrite, txQueueItem.enabled);
+                setNotificationForCharacteristic(mTxQueueItem.sensor,mTxQueueItem.characteristic,
+                        mTxQueueItem.dataToWrite, mTxQueueItem.enabled);
                 break;
             case ReadCharacteristic:
-                requestCharacteristicValue(txQueueItem.sensor,txQueueItem.characteristic);
+                requestCharacteristicValue(mTxQueueItem.sensor,mTxQueueItem.characteristic);
         }
     }
     /* set new value for particular characteristic */
