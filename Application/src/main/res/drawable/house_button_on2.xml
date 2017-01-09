@@ -11,7 +11,7 @@
         android:endColor="#002e3f"
         android:centerX="0.5"
         android:centerY="0.5"
-        android:gradientRadius="80dp"
+        android:gradientRadius="80"
         android:type="radial"/>
 
 </shape>

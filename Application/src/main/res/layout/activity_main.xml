@@ -20,7 +20,7 @@
             android:layout_height="match_parent"
             android:id="@+id/textView8"
             android:textSize="18sp"
-            android:textColor="@color/colorBackgroundGrey"
+            android:textColor="@color/colorBackground"
             android:textStyle="normal|bold"
 
             android:layout_weight="1"

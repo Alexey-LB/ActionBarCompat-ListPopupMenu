@@ -18,6 +18,7 @@ package com.example.android.actionbarcompat.listpopupmenu;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.AnimationDrawable;
@@ -165,6 +166,8 @@ public class MainActivity extends AppCompatActivity {// ActionBarActivity {
                 mTransitionDrawable.startTransition(300);
             }
         });
+//ПРИНУДИТЕЛЬНО задал ОРИНТАЦИЮ экрана ВНЕ зависимости от положения устройства
+setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         Log.e(TAG, "----onCreate END-----");
 //      //  ImageView iv = (ImageView)findViewById(R.id.imageView2);
 //        TransitionDrawable td = (TransitionDrawable)getResources().getDrawable(R.drawable.marker_transition);
@@ -201,7 +204,7 @@ public class MainActivity extends AppCompatActivity {// ActionBarActivity {
         }
         //переход в следующее окно
         Intent intent = new Intent(this, MainActivityWork.class);
-        intent.putExtra(Util.EXTRAS_BAR_TITLE, "     B1/B3 v2.6.02");
+        intent.putExtra(Util.EXTRAS_BAR_TITLE, "     B1/B3 v2.6.03");
         // все изменения будет писать сразу в сенсор
         // по умолчанию устанавливаем минимум, все остальное делется НАПРЯМУЮ с данными
         //   startActivityForResult(intent,MAIN_ACTIVITY);

@@ -53,7 +53,7 @@
         android:background="@color/colorBackground">
 
         <TextView
-            android:text="Включен"
+            android:text="Сигнализация"
             android:id="@+id/textViewLabelNotification"
             android:layout_height="match_parent"
             android:layout_width="wrap_content"
