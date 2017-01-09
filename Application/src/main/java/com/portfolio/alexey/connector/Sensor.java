@@ -131,6 +131,8 @@ public class Sensor {
         intermediateValue = Float.NaN;//C - работаем с этой темпратурой, точность0.1С, каждую секунду
         minValue = Float.NaN;//минимальное значение текущей измеряемой температуры
         maxValue = Float.NaN;//максимальное значение текущей измеряемой температуры
+        //сбрасываем счетчик времени сенсора
+        time = System.currentTimeMillis();
     }
     //
     private boolean mHandlerWork = false;
