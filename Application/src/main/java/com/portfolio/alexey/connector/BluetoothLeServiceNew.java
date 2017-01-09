@@ -166,7 +166,10 @@ public class BluetoothLeServiceNew extends Service {
                 // закончили ЧТЕНИЕ СЕРВИСОВ и характеристик, готовы к работе
                 sensor.rssi = STATE_CONNECTED;//показываем что готовы к работе
                 sensor.mConnectionState = STATE_CONNECTED;
- sensor.enableTXNotification();
+ //sensor.enableTXNotification();
+ //setNotificationIndication
+ sensor.writeUuidDescriptor(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE, PartGatt.UUID_HEALTH_THERMOMETER
+                        , PartGatt.UUID_INTERMEDIATE_TEMPERATURE, PartGatt.UUID_CLIENT_CHARACTERISTIC_CONFIG);
                 Log.w(TAG, "onServicesDiscovered == GATT_SUCCESS  adress= " + sensor.mBluetoothDeviceAddress);
             } else {
                 Log.e(TAG, "onServicesDiscovered ERROR status: " + status);
@@ -588,92 +591,7 @@ public class BluetoothLeServiceNew extends Service {
         }
         sensor.mBluetoothGatt.readCharacteristic(characteristic);
     }
-    public  static boolean readUuidCharacteristic(Sensor sensor, UUID uuidService, UUID uuidCharacteristic) {
-        boolean rez = false;
-        if (sensor.mBluetoothGatt == null) {
-            Log.e(TAG,"readUuidCharacteristic> mBluetoothGatt == null");
-            return rez;
-        }
-        //СМОТРИМ наличие СЕРВИСА (внутри сервеса характеристики с описателями их)
-        BluetoothGattService service = sensor.mBluetoothGatt.getService(uuidService);
-        if (service == null) {
-            Log.e(TAG,"readUuidCharacteristic> Not found Service= " + uuidService.toString());
-            return rez;
-        }
-        BluetoothGattCharacteristic characteristic = service.getCharacteristic(uuidCharacteristic);
-        if (characteristic == null) {
-            Log.e(TAG,"readUuidCharacteristic>  Not found Charateristic= "+ uuidCharacteristic.toString());
-            return rez;
-        }
-        rez = sensor.mBluetoothGatt.readCharacteristic(characteristic);
-        Log.i(TAG, "Read characteristic= " +uuidCharacteristic.toString()+"   status=" + rez);
-        return rez;
-    }
 
-        //--- Запись характеристики в символах
-    public static boolean writeUuidCharacteristic(Sensor sensor, String  message, UUID uuidService, UUID uuidCharacteristic) {
-        try {
-            byte[] value = message.getBytes("UTF-8");
-            return  writeUuidCharacteristic(sensor, value, uuidService, uuidCharacteristic);
-        } catch (UnsupportedEncodingException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-            return false;
-        }
-    }
-    //--- Запись характеристики в байтах
-    public static boolean writeUuidCharacteristic(Sensor sensor, byte[] value, UUID uuidService, UUID uuidCharacteristic) {
-        boolean rez = false;
-        if (sensor.mBluetoothGatt == null) {
-            Log.e(TAG,"writeUuidCharacteristic> mBluetoothGatt == null");
-            return rez;
-        }
-        BluetoothGattService service = sensor.mBluetoothGatt.getService(uuidService);
-        if (service == null) {
-            Log.e(TAG,"writeUuidCharacteristic> Not found Service= " + uuidService.toString());
-            return rez;
-        }
-        BluetoothGattCharacteristic characteristic = service.getCharacteristic(uuidCharacteristic);
-        if (characteristic == null) {
-            Log.e(TAG,"writeUuidCharacteristic> Not found Charateristic= "+ uuidCharacteristic.toString());
-            return rez;
-        }
-        characteristic.setValue(value);
-        rez = sensor.mBluetoothGatt.writeCharacteristic(characteristic);
-        Log.i(TAG, "Write characteristic= " +uuidCharacteristic.toString()+"   status=" + rez);
-        return rez;
-    }
-    //setNotificationIndication
-    public  static boolean writeUuidDescriptor(Sensor sensor, byte[] bluetoothGattDescriptorValue, UUID uuidService
-            , UUID uuidCharacteristic, UUID uuidDescriptor) {
-        boolean rez = false;
-        if (sensor.mBluetoothGatt == null) {
-            Log.e(TAG,"writeUuidDescriptor> mBluetoothGatt == null");
-            return rez;
-        }
-        BluetoothGattService service = sensor.mBluetoothGatt.getService(uuidService);
-        if (service == null) {
-            Log.e(TAG,"writeUuidDescriptor> Not found Service= " + uuidService.toString());
-            return rez;
-        }
-        BluetoothGattCharacteristic characteristic = service.getCharacteristic(uuidCharacteristic);
-        if (characteristic == null) {
-            Log.e(TAG,"writeUuidDescriptor> Not found Charateristic= "+ uuidCharacteristic.toString());
-            return rez;
-        }
-        BluetoothGattDescriptor descriptor = characteristic.getDescriptor(uuidDescriptor);
-        if (descriptor == null) {
-            Log.e(TAG,"writeUuidDescriptor> Not found descriptor= "+ uuidDescriptor.toString());
-            return rez;
-        }
-        descriptor.setValue(bluetoothGattDescriptorValue);
-        sensor.mBluetoothGatt.setCharacteristicNotification(characteristic, true);
-        rez = sensor.mBluetoothGatt.writeDescriptor(descriptor);
-        //мне кажется лучше так, если запись пройдет, то информирование на с ставим, иначе не надо это нам
-        //if(sensor.mBluetoothGatt.writeDescriptor(descriptor)) rez = sensor.mBluetoothGatt.setCharacteristicNotification(characteristic, true);
-        Log.i(TAG, "writeUuidDescriptor= " +uuidCharacteristic.toString()+"   status=" + rez);
-        return rez;
-    }
     /**
      * Enables or disables notification on a give characteristic.
      *

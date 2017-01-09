@@ -16,8 +16,8 @@ import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.portfolio.alexey.connector.BluetoothLeServiceNew;
+import com.portfolio.alexey.connector.DrawableThermometer;
 import com.portfolio.alexey.connector.Sensor;
-import com.portfolio.alexey.connector.Thermometer;
 import com.portfolio.alexey.connector.Util;
 
 import static java.lang.Thread.sleep;
@@ -47,7 +47,7 @@ public class MainActivityThermometer  extends AppCompatActivity {// ActionBarAct
     private Drawable marker_fon;
     private Drawable numbe_cur_fon;
 
-    private Thermometer mThermometerDrawable = new Thermometer(this);
+    private DrawableThermometer mThermometerDrawable = new DrawableThermometer(this);
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -21,6 +21,7 @@ import com.example.android.actionbarcompat.listpopupmenu.Marker;
 import com.example.android.actionbarcompat.listpopupmenu.R;
 import com.example.android.actionbarcompat.listpopupmenu.RunDataHub;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
@@ -64,7 +65,7 @@ public class Sensor {
 
     // Sample Characteristics.
     public int battery_level = 0;//%
-    // "Health Thermometer"
+    // "Health DrawableThermometer"
     public float temperatureMeasurement = 0f;//C- у релсиба НЕ потдерживается
 
     public float intermediateValue = Float.NaN;//C - работаем с этой темпратурой, точность0.1С, каждую секунду
@@ -379,7 +380,7 @@ return getStringValue( maxLevelNotification.valueLevel, onFahrenheit, addType);
             // sendsendBroadcastPutExtra(action,String.valueOf(heartRate) +" / "+ String.valueOf(heartRR1) +"/"+ String.valueOf(heartRR1));
             return true;
         }
-        //----------Health Thermometer-------------------
+        //----------Health DrawableThermometer-------------------
 //
 //        if ((UUID_TEMPERATURE_MEASUREMENT.equals(characteristic.getUuid()))) {
 //
@@ -494,51 +495,82 @@ return getStringValue( maxLevelNotification.valueLevel, onFahrenheit, addType);
         if (mBluetoothDeviceAddress != null) return true;
         return false;
     }
-    //передача строки С ОДНИМ!! ПАРАМЕТРОМ!!! (ключь=значение), с переделкой в байты и т д
-    //вроде не более 20 символов за раз!!!
-    private   boolean characteristic_Write(String message) {
-        boolean status = false;
-//
-//        try {
-//            byte[] value = message.getBytes("UTF-8");
-//            if ((Tx_Char != null) && (mBluetoothGatt != null)){
-//                Tx_Char.setValue(value);
-//                status = mBluetoothGatt.writeCharacteristic(Tx_Char);
-//            } else  Log.e(TAG,"characteristic_Write: Tx_Char == null or mBluetoothGatt == null");
-//            return status;
-//        } catch (UnsupportedEncodingException e) {
-//            // TODO Auto-generated catch block
-//            e.printStackTrace();
-//            return status;
-//        }
-        return status;
-    }
-    //--- Запись характеристики
-    public boolean uuidCharacteristicWrite(byte[] value, UUID uuidService, UUID uuidCharacteristic) {
-        boolean rez = false;
+    //=================================================================================
+    public BluetoothGattCharacteristic getGattCharacteristic(UUID uuidService, UUID uuidCharacteristic, String errorHead) {
+        BluetoothGattCharacteristic rez = null;
         if (mBluetoothGatt == null) {
-            Log.e(TAG,"mBluetoothGatt == null");
+            Log.e(TAG, errorHead + "> mBluetoothGatt == null");
             return rez;
         }
         BluetoothGattService service = mBluetoothGatt.getService(uuidService);
         if (service == null) {
-            Log.e(TAG,"Not found Service= " + uuidService.toString());
-             return rez;
+            Log.e(TAG, errorHead + "> Not found Service= " + uuidService.toString());
+            return rez;
         }
         BluetoothGattCharacteristic characteristic = service.getCharacteristic(uuidCharacteristic);
         if (characteristic == null) {
-            Log.e(TAG,"Not found Charateristic= "+ uuidCharacteristic.toString());
+            Log.e(TAG, errorHead + "> Not found Charateristic= " + uuidCharacteristic.toString());
             return rez;
         }
+        return characteristic;
+    }
+    public  boolean readUuidCharacteristic( UUID uuidService, UUID uuidCharacteristic) {
+        boolean rez = false; BluetoothGattCharacteristic characteristic;
+        characteristic = getGattCharacteristic(uuidService, uuidCharacteristic, "readUuidCharacteristic");
+        if (characteristic == null) return rez;
+        //
+        rez = mBluetoothGatt.readCharacteristic(characteristic);
+        Log.i(TAG, "Read characteristic= " +uuidCharacteristic.toString()+"   status=" + rez);
+        return rez;
+    }
+
+    //--- Запись характеристики в символах
+    public boolean writeUuidCharacteristic(String  message, UUID uuidService, UUID uuidCharacteristic) {
+        try {
+            final byte[] value = message.getBytes("UTF-8");
+            return  writeUuidCharacteristic(value, uuidService, uuidCharacteristic);
+        } catch (UnsupportedEncodingException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            return false;
+        }
+    }
+    //--- Запись характеристики в байтах
+    public boolean writeUuidCharacteristic(byte[] value, UUID uuidService, UUID uuidCharacteristic) {
+        boolean rez = false; BluetoothGattCharacteristic characteristic;
+        characteristic = getGattCharacteristic(uuidService, uuidCharacteristic, "writeUuidCharacteristic");
+        if (characteristic == null) return rez;
+        //
         characteristic.setValue(value);
         rez = mBluetoothGatt.writeCharacteristic(characteristic);
         Log.i(TAG, "Write characteristic= " +uuidCharacteristic.toString()+"   status=" + rez);
         return rez;
     }
+    //setNotificationIndication
+    public boolean writeUuidDescriptor(byte[] bluetoothGattDescriptorValue, UUID uuidService
+            , UUID uuidCharacteristic, UUID uuidDescriptor) {
+        boolean rez = false; BluetoothGattCharacteristic characteristic;
+        characteristic = getGattCharacteristic(uuidService, uuidCharacteristic, "writeUuidDescriptor");
+        if (characteristic == null) return rez;
+        //
+        BluetoothGattDescriptor descriptor = characteristic.getDescriptor(uuidDescriptor);
+        if (descriptor == null) {
+            Log.e(TAG,"writeUuidDescriptor> Not found descriptor= "+ uuidDescriptor.toString());
+            return rez;
+        }
+        descriptor.setValue(bluetoothGattDescriptorValue);
+        mBluetoothGatt.setCharacteristicNotification(characteristic, true);
+        rez = mBluetoothGatt.writeDescriptor(descriptor);
+        //мне кажется лучше так, если запись пройдет, то информирование на с ставим, иначе не надо это нам
+        //if(sensor.mBluetoothGatt.writeDescriptor(descriptor)) rez = sensor.mBluetoothGatt.setCharacteristicNotification(characteristic, true);
+        Log.i(TAG, "writeUuidDescriptor= " +uuidCharacteristic.toString()+"   status=" + rez);
+        return rez;
+    }
+    //================================================================================
     //с//отключение сенсора  команды на сброс в сервис РЭЛСИБА
     public void switchOffSensor(){
         //Запись 1 приводит к отключению термометра.
-        uuidCharacteristicWrite(new byte[]{1}, PartGatt.UUID_RELSIB_SERVICE, PartGatt.UUID_RELSIB_SHUTDOWN);
+        writeUuidCharacteristic(new byte[]{1}, PartGatt.UUID_RELSIB_SERVICE, PartGatt.UUID_RELSIB_SHUTDOWN);
        // установка термометра медецинского
       //  uuidCharacteristicWrite(new byte[]{1}, PartGatt.UUID_RELSIB_SERVICE, PartGatt.UUID_RELSIB_MODE);
     }
@@ -546,27 +578,12 @@ return getStringValue( maxLevelNotification.valueLevel, onFahrenheit, addType);
     public void resetMeasurement(){
         //Флаг сброса последнего измеренного значения температуры (1 байт чтение/запись)
         //Запись 1 приводит к сбросу последнего измеренного значения температуры,
-        uuidCharacteristicWrite(new byte[]{1}, PartGatt.UUID_RELSIB_SERVICE, PartGatt.UUID_RELSIB_RESET_MEAS_FLAG);
+        writeUuidCharacteristic(new byte[]{1}, PartGatt.UUID_RELSIB_SERVICE, PartGatt.UUID_RELSIB_RESET_MEAS_FLAG);
 //        //-------------------------
-//        BluetoothGattCharacteristic characteristic;
-//        BluetoothGattDescriptor descriptor;
-//        BluetoothGattService service;
 //        // установка предсказания температуры
-//        service = mBluetoothGatt.getService(PartGatt.UUID_RELSIB_SERVICE);
-//        if (service != null) {
-//            characteristic = service.getCharacteristic(PartGatt.UUID_RELSIB_TEMP);
-//            if( characteristic != null){
-//                mBluetoothGatt.setCharacteristicNotification(characteristic,true);
-//                descriptor =  characteristic.getDescriptor(PartGatt.UUID_CLIENT_CHARACTERISTIC_CONFIG);
-//                if( descriptor != null) {
-//                    descriptor.setValue(BluetoothGattDescriptor.ENABLE_INDICATION_VALUE);
-//                    mBluetoothGatt.writeDescriptor(descriptor);
-//                    Log.i(TAG, "enableRXNotification: health_RELSIB_SERVICE ");
-//                }
-//            }
-//        } else {
-//            Log.w(TAG, "enableRXNotification: UUID_RELSIB_SERVICE  Service not found!");
-//        }
+        //set Indication// установка предсказания температуры
+ //       writeUuidDescriptor(BluetoothGattDescriptor.ENABLE_INDICATION_VALUE, PartGatt.UUID_RELSIB_SERVICE
+ //               , PartGatt.UUID_RELSIB_TEMP, PartGatt.UUID_CLIENT_CHARACTERISTIC_CONFIG);
     }
     //--------------
     private boolean flagRead = false;
@@ -578,64 +595,32 @@ return getStringValue( maxLevelNotification.valueLevel, onFahrenheit, addType);
      * сделано так, что Запрашивает по одному (если запрашиваемый парметр отсутствует) и выходит
      */
     public void onCharacteristicRead() {
-
         if(flagRead) return;// если все прочитали, а читаем по одномУ!!иНАЧЕ не получается-= не буферирует запросы!
         Log.w(TAG, "SetRead: onCharacteristicRead Maker ---");
-
-        BluetoothGattService service;
-        BluetoothGattCharacteristic characteristic;
-        if (mBluetoothGatt == null) {
-            Log.e(TAG,"mBluetoothGatt == null");
-            return;
-        }
-        //СМОТРИМ наличие СЕРВИСА (внутри сервеса характеристики с описателями их)
-        service = mBluetoothGatt.getService(PartGatt.UUID_DEVICE_INFORMATION_SERVICE);
-        if (service != null) {
-            //          Log.i(TAG, "SetRead: DEVICE_INFORMATION");
             if(softwareRevision == null) {
-                characteristic = service.getCharacteristic(PartGatt.UUID_SOFTWARE_REVISION_STRING);
-                mBluetoothGatt.readCharacteristic(characteristic);
+                readUuidCharacteristic(PartGatt.UUID_DEVICE_INFORMATION_SERVICE, PartGatt.UUID_SOFTWARE_REVISION_STRING);
                 return;
             }
             if(firmwareRevision == null) {
-                characteristic = service.getCharacteristic(PartGatt.UUID_FIRMWARE_REVISION_STRING);
-                mBluetoothGatt.readCharacteristic(characteristic);
+                readUuidCharacteristic(PartGatt.UUID_DEVICE_INFORMATION_SERVICE, PartGatt.UUID_FIRMWARE_REVISION_STRING);
                 return;
             }
             if(hardwareRevision == null) {
-                characteristic = service.getCharacteristic(PartGatt.UUID_HARDWARE_REVISION_STRING);
-                mBluetoothGatt.readCharacteristic(characteristic);
+                readUuidCharacteristic(PartGatt.UUID_DEVICE_INFORMATION_SERVICE, PartGatt.UUID_HARDWARE_REVISION_STRING);
                 return;
             }
             if(serialNumber == null) {
-                characteristic = service.getCharacteristic(PartGatt.UUID_SERIAL_NUMBER_STRING);
-                mBluetoothGatt.readCharacteristic(characteristic);
+                readUuidCharacteristic(PartGatt.UUID_DEVICE_INFORMATION_SERVICE, PartGatt.UUID_SERIAL_NUMBER_STRING);
                 return;
             }
             if(modelNumber == null) {
-                characteristic = service.getCharacteristic(PartGatt.UUID_MODEL_NUMBER_STRING);
-                mBluetoothGatt.readCharacteristic(characteristic);
+                readUuidCharacteristic(PartGatt.UUID_DEVICE_INFORMATION_SERVICE, PartGatt.UUID_MODEL_NUMBER_STRING);
                 return;
             }
             if(manufacturerName == null) {
-                characteristic = service.getCharacteristic(PartGatt.UUID_MANUFACTURER_NAME_STRING);
-                mBluetoothGatt.readCharacteristic(characteristic);
+                readUuidCharacteristic(PartGatt.UUID_DEVICE_INFORMATION_SERVICE, PartGatt.UUID_MANUFACTURER_NAME_STRING);
                 return;
             }
-        } else {
-            Log.w(TAG, "SetRead: DEVICE_INFORMATION Service not found!");
-        }
-//        service = mBluetoothGatt.getService(PartGatt.UUID_BATTERY_SERVICE);
-//        if (service != null) {
-//            Log.i(TAG, "SetRead: BATTERY");
-//            if(battery_level < 0) {
-//                characteristic = service.getCharacteristic(PartGatt.UUID_BATTERY_LEVEL);
-//                mBluetoothGatt.readCharacteristic(characteristic);
-//                return;
-//            }
-//        } else{
-//            Log.w(TAG, "SetRead: BATTERY Service not found!");
-//        }
         flagRead = true;
     }
     //ЭТО ПРИЕМ ОТ УДАЛЕННОНГО Блутуз устройства!!( TX - ;) !!)
@@ -656,82 +641,22 @@ return getStringValue( maxLevelNotification.valueLevel, onFahrenheit, addType);
     //
     // https://code.google.com/p/android/issues/detail?id=58381   - обсуждение проблем по блутузу
     // https://gist.github.com/SoulAuctioneer/ee4cb9bc0b3785bbdd51  -- пример!
-    public void enableTXNotification()
+
+
+
+    public void setNotification_Indication()
     {
-        boolean status,status2;
-        BluetoothGattCharacteristic characteristic;
-        BluetoothGattDescriptor descriptor;
-        BluetoothGattService service;
-        if (mBluetoothGatt == null) {
-            Log.e(TAG,"mBluetoothGatt == null");
-            return;
-        }
-        // должно быть
-        //enableTXNotification:  //getState: 12 //isDiscovering: false //getScanMode: 21
-        //Log.w(TAG, "enableTXNotification:  "+" //isDiscovering: "+ mBluetoothAdapter.isDiscovering() +" //getScanMode: " + mBluetoothAdapter.getScanMode());
-        //СМОТРИМ наличие СЕРВИСА (внутри сервеса характеристики с описателями их)
-        service = mBluetoothGatt.getService(PartGatt.UUID_HEALTH_THERMOMETER);
-        if (service != null) {
-            characteristic = service.getCharacteristic(PartGatt.UUID_INTERMEDIATE_TEMPERATURE);
-            if( characteristic != null){
-  //???              mBluetoothGatt.setCharacteristicNotification(characteristic,true);
-                descriptor =  characteristic.getDescriptor(PartGatt.UUID_CLIENT_CHARACTERISTIC_CONFIG);
-                if( descriptor != null) {
+        //set Notification
+        writeUuidDescriptor(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE, PartGatt.UUID_HEALTH_THERMOMETER
+                , PartGatt.UUID_INTERMEDIATE_TEMPERATURE, PartGatt.UUID_CLIENT_CHARACTERISTIC_CONFIG);
 
-                    descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
-                    status = mBluetoothGatt.writeDescriptor(descriptor);
+        //set Indication// установка предсказания температуры
+        writeUuidDescriptor(BluetoothGattDescriptor.ENABLE_INDICATION_VALUE, PartGatt.UUID_RELSIB_SERVICE
+                , PartGatt.UUID_RELSIB_TEMP, PartGatt.UUID_CLIENT_CHARACTERISTIC_CONFIG);
 
-                    status2 = mBluetoothGatt.setCharacteristicNotification(characteristic,true);
-
-                    Log.i(TAG, "enableRXNotification: healthThermometerService status= " + status
-                    + "  status2= "+status2);
-                }
-            }
-        } else {
-            Log.w(TAG, "enableRXNotification: HEALTH_THERMOMETER Service not found!");
-        }
-//        //-------------------------
-//        // установка предсказания температуры
-//        service = mBluetoothGatt.getService(PartGatt.UUID_RELSIB_SERVICE);
-//        if (service != null) {
-//            characteristic = service.getCharacteristic(PartGatt.UUID_RELSIB_TEMP);
-//            if( characteristic != null){
-//                status = mBluetoothGatt.setCharacteristicNotification(characteristic,true);
-//                descriptor =  characteristic.getDescriptor(PartGatt.UUID_CLIENT_CHARACTERISTIC_CONFIG);
-//                if( descriptor != null) {
-//                    descriptor.setValue(BluetoothGattDescriptor.ENABLE_INDICATION_VALUE);
-//                    status2 = mBluetoothGatt.writeDescriptor(descriptor);
-//                    Log.i(TAG, "enableRX INDICATION: health_RELSIB_SERVICE status= " + status
-//                            + "  status2= "+status2);
-//                }
-//            }
-//        } else {
-//            Log.w(TAG, "enableRX INDICATION: UUID_RELSIB_SERVICE  Service not found!");
-//        }
-//        //-------------------------
-//        service = mBluetoothGatt.getService(PartGatt.UUID_HEART_RATE_SERVICE);
-//        if (service != null) {
-//            characteristic = service.getCharacteristic(PartGatt.UUID_HEART_RATE_MEASUREMENT);
-//            if( characteristic != null){
-//                status = mBluetoothGatt.setCharacteristicNotification(characteristic,true);
-//                descriptor =  characteristic.getDescriptor(PartGatt.UUID_CLIENT_CHARACTERISTIC_CONFIG);
-//                if( descriptor != null) {
-//                    descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
-//                    status2 = mBluetoothGatt.writeDescriptor(descriptor);
-//                    Log.i(TAG, "enableRXNotification: heartRateServiceService status= " + status
-//                            + "  status2= "+status2);
-//                }
-//            }
-//        } else{
-//            Log.w(TAG, "enableRXNotification: HEART_RATE_SERVICE_Service Service not found!");
-//        }
-    }
-
-    //если совпадает, то ФАЛЬШ, изменения не вносим
-    public boolean setText(TextView textView, String txtDevice){
-        if(textView.getText().toString().compareTo(txtDevice) == 0) return false;
-        textView.setText(txtDevice);
-        return true;
+        //set  Notification   СЕРДЦЕБИЕНИЕ!!
+        writeUuidDescriptor(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE, PartGatt.UUID_HEART_RATE_SERVICE
+                , PartGatt.UUID_HEART_RATE_MEASUREMENT, PartGatt.UUID_CLIENT_CHARACTERISTIC_CONFIG);
     }
 
     private   int loop_rssi  = 0;
@@ -750,16 +675,8 @@ return getStringValue( maxLevelNotification.valueLevel, onFahrenheit, addType);
         //каждые 2 минуты уровень батареи
         if(((loop_rssi & 0x7F) == 3) || ((loop_rssi & 0xFFFFFFF3) == 3)){//Чаше чем 1 раз в 4 секунды НЕ надо, захлебывается
        // if(((loop_rssi & 0x3) == 3)){
-            BluetoothGattCharacteristic characteristic;
-            BluetoothGattService service;
             //читать уровень батареи
-            service = mBluetoothGatt.getService(PartGatt.UUID_BATTERY_SERVICE);
-            if (service == null) {
-                Log.e(TAG, "SetRead: BATTERY Service not found!");
-                return false;//сервиса нет в этом устройстве
-            }//читать уровень батареи
-            characteristic = service.getCharacteristic(PartGatt.UUID_BATTERY_LEVEL);
-            mBluetoothGatt.readCharacteristic(characteristic);
+            readUuidCharacteristic(PartGatt.UUID_BATTERY_SERVICE, PartGatt.UUID_BATTERY_LEVEL);
             Log.e(TAG, "R: BATTERY Service -- ");
             return true;
         }
