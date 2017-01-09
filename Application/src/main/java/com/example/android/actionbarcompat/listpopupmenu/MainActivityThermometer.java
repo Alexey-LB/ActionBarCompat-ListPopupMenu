@@ -427,6 +427,9 @@ public class MainActivityThermometer  extends AppCompatActivity {// ActionBarAct
 //                ,sensor.minTemperature,sensor.maxTemperature,sensor.onFahrenheit,true);
         //вывод ЦВЕТНОГО МАРКЕРА, делаем в резюме- поскольку можем прийти из сеттингов
         Util.setDrawableToImageView(sensor.markerColor,R.id.marker, thermometer);
+        // название ТОЖЕ может поменятся, о этому еще раз
+        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+       if(actionBar != null) actionBar.setTitle("  C1   " + sensor.deviceLabel);
         //---
         mHandlerWork = true;
         //сам заводится и работает
