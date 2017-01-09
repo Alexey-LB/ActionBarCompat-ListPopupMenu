@@ -19,7 +19,6 @@ package com.example.android.actionbarcompat.listpopupmenu;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -116,10 +115,10 @@ public class MainActivityWork extends AppCompatActivity {// ActionBarActivity {
         //--------ПРИМЕМ ЕСЛИ сервис не запущен и нет доступа к сенсорам, выходим!--
         RunDataHub app = ((RunDataHub) getApplicationContext());
         if((app == null) || (app.mBluetoothLeServiceM == null)
-                || (app.mBluetoothLeServiceM.mbleDot == null)){
+                || (app.mBluetoothLeServiceM.arraySensors == null)){
 
             Log.e(TAG,"ERR = ((app == null) || (app.mBluetoothLeServiceM == null)" +
-                    "                || (app.mBluetoothLeServiceM.mbleDot == null))");
+                    "                || (app.mBluetoothLeServiceM.arraySensors == null))");
             finish();
         }//
         app.mainActivityWork = this;
@@ -131,9 +130,9 @@ public class MainActivityWork extends AppCompatActivity {// ActionBarActivity {
         Util.setSupportV7appActionBar(getSupportActionBar(),TAG,
                 intent.getStringExtra(Util.EXTRAS_BAR_TITLE));
         //устанавливаем еденицы измерения
-        if(app.mBluetoothLeServiceM.mbleDot.size() > 0){
+        if(app.mBluetoothLeServiceM.arraySensors.size() > 0){
             //для всех еденицы устанавливаются одинакова, по этому берем первый попавшийся
-            setOnFahrenheit(app.mBluetoothLeServiceM.mbleDot.get(0).onFahrenheit);
+            setOnFahrenheit(app.mBluetoothLeServiceM.arraySensors.get(0).onFahrenheit);
         } else{//по умолчанию ставим целсия
             setOnFahrenheit(false);
         }
@@ -184,10 +183,10 @@ public class MainActivityWork extends AppCompatActivity {// ActionBarActivity {
 //        }
 //        //устанавливаем еденицы измерения
 //        if((app != null) && (app.mBluetoothLeServiceM != null)
-//        && (app.mBluetoothLeServiceM.mbleDot != null)
-//                && (app.mBluetoothLeServiceM.mbleDot.size() > 0)){
+//        && (app.mBluetoothLeServiceM.arraySensors != null)
+//                && (app.mBluetoothLeServiceM.arraySensors.size() > 0)){
 //            //для всех еденицы устанавливаются одинакова, по этому берем первый попавшийся
-//            setOnFahrenheit(app.mBluetoothLeServiceM.mbleDot.get(0).onFahrenheit);
+//            setOnFahrenheit(app.mBluetoothLeServiceM.arraySensors.get(0).onFahrenheit);
 //        } else{//по умолчанию ставим целсия
 //            setOnFahrenheit(false);
 //        }
@@ -213,10 +212,10 @@ public class MainActivityWork extends AppCompatActivity {// ActionBarActivity {
         RunDataHub app = ((RunDataHub) getApplicationContext());
         //если масива сенсоров нет, то и устанавливать значений некому!
         if((app == null) || (app.mBluetoothLeServiceM == null)
-            || (app.mBluetoothLeServiceM.mbleDot == null)
-            || (app.mBluetoothLeServiceM.mbleDot.size() == 0)) return;
+            || (app.mBluetoothLeServiceM.arraySensors == null)
+            || (app.mBluetoothLeServiceM.arraySensors.size() == 0)) return;
         //устанавливаем еденицы измерения ДЛЯ ВСЕХ одинаково!
-        ArrayList <Sensor> als = app.mBluetoothLeServiceM.mbleDot;
+        ArrayList <Sensor> als = app.mBluetoothLeServiceM.arraySensors;
         for(Sensor sensor: als){
             if(sensor.onFahrenheit != fahrenheit){
                 sensor.onFahrenheit = fahrenheit ;
@@ -235,9 +234,9 @@ public class MainActivityWork extends AppCompatActivity {// ActionBarActivity {
 //            } else{
 //                Log.e(TAG, "----init() ---------- ERROR!");
 //            }
-//            if(app.mBluetoothLeServiceM.mbleDot.size() > 0){
+//            if(app.mBluetoothLeServiceM.arraySensors.size() > 0){
 //                //ПРИ первом пуске установили еденицы измерения
-//                setOnFahrenheit(app.mBluetoothLeServiceM.mbleDot.get(0).onFahrenheit);
+//                setOnFahrenheit(app.mBluetoothLeServiceM.arraySensors.get(0).onFahrenheit);
 //            }
 //        }
 // //!!       popupListFragment.initList();

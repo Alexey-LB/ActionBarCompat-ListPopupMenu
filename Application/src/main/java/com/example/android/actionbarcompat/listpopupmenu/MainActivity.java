@@ -16,40 +16,21 @@
 
 package com.example.android.actionbarcompat.listpopupmenu;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.content.res.Resources;
-import android.graphics.Color;
-import android.graphics.drawable.AnimationDrawable;
-import android.graphics.drawable.Drawable;
 import android.graphics.drawable.TransitionDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 //import android.app.FragmentManager;
 //import android.app.Fragment;
-import android.support.constraint.ConstraintLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 
 
-import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
 
-import com.portfolio.alexey.connector.Sensor;
 import com.portfolio.alexey.connector.Util;
-
-import java.util.ArrayList;
 
 import static java.lang.Thread.sleep;
 
@@ -198,7 +179,7 @@ setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         //контроль ВСЕХ настроек и запуска СЕРВИСА,
         RunDataHub app = ((RunDataHub) getApplicationContext());
         if((app == null) || (app.mBluetoothLeServiceM == null)
-                || (app.mBluetoothLeServiceM.mbleDot == null)){
+                || (app.mBluetoothLeServiceM.arraySensors == null)){
             Log.e(TAG,"ERROR app || service || getFile from flash");
             finish();
         }
@@ -249,7 +230,7 @@ setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 //        while (true){
 //            app = ((RunDataHub) getApplicationContext());
 //            if((app != null) && (app.mBluetoothLeServiceM != null)
-//                    && (app.mBluetoothLeServiceM.mbleDot != null))break;
+//                    && (app.mBluetoothLeServiceM.arraySensors != null))break;
 //            //ожидание готовности
 //            try {
 //                sleep(300);

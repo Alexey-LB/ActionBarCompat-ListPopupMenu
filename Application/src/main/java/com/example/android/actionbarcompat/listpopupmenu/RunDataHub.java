@@ -20,10 +20,11 @@ public class RunDataHub extends Application {
     public final   String TAG = getClass().getSimpleName();
     private static DataHubSingleton dataHub;
     public MainActivityWork mainActivityWork;
-    //КОНТРОЛЬначальным, ПЕРВЫМ запуском, без повтора при переворачивании телефона
+    //КОНТРОЛЬ начальным, ПЕРВЫМ запуском, без повтора при переворачивании телефона
     public boolean getStartApp(){return dataHub.getStartApp();}
     public void resetStartApp(){dataHub.resetStartApp();}
-
+    //dataHub -  в нем все ссылки и все наши данные!!
+    public DataHubSingleton getDataHub() {return dataHub;}
     @Override
     public void onCreate() {
         super.onCreate();
@@ -57,11 +58,6 @@ public class RunDataHub extends Application {
 //            // Automatically connects to the device upon successful start-up initialization.
 //            //         mBluetoothLeService.connect(mDeviceAddress,true);
 //            Log.w(TAG, "---initialize ---onServiceConnected-----");
-
-
-
-            //устанавливаем для работы Контекст ПРИЛОЖЕНИЯ в УТИЛИТАХ(музака вибрация и т д)
-
         }
 
         @Override
@@ -71,8 +67,6 @@ public class RunDataHub extends Application {
         }
     };
     //========================================================================
-    //dataHub -  в нем все ссылки и все наши данные!!
-    public DataHubSingleton getDataHub() {return dataHub;}
     //--------ПЕРЕОДИЧЕСКИЙ вызов метода для проверки и УПРАВЛЕНИЯ состояния данных-------
     private void controlState(){
         Log.v(TAG,"controlState\\");

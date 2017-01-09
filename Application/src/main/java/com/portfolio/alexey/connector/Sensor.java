@@ -50,8 +50,8 @@ public class Sensor {
     private static final String deviceLabelStringDefault = "Монитор";//по умолчанию назначаем имя + номер
     public RunDataHub app;
     private Context mContext;
-    public float maxInputDeviceTemperature = 70f;
-    public float minInputDeviceTemperature = -20f;
+    public float maxInputDeviceTemperature = 125f;// для универсального 70, промышленного +125
+    public float minInputDeviceTemperature = -40f;// для универсального -20, промышленного +70
 
     public BluetoothGatt mBluetoothGatt;
     public BluetoothDevice mBluetoothDevice;
@@ -123,7 +123,7 @@ public class Sensor {
     public void disconnect(){
         if (mBluetoothGatt == null) return;
         mBluetoothGatt.disconnect();
-         rssi = 4;
+        rssi = 4;
         battery_level = 0;
     }
     //// для сброса к текущей температуре ОТДЕЛЬНАЯ кнопка
@@ -194,9 +194,9 @@ public class Sensor {
         markerColor = 0x7 & indexDevace;
         //----------
         minLevelNotification = new NotificationLevel(NotificationLevel.FLOAT_MIN,app.mainActivityWork);
-        minLevelNotification.valueLevel = -20f;//C ПРЕДЕЛ для АЛЕРТА ддля монитора температуры
+        minLevelNotification.valueLevel =  -40f;// для универсального -20, промышленного +70
         maxLevelNotification = new NotificationLevel(NotificationLevel.FLOAT_MAX,app.mainActivityWork);
-        maxLevelNotification.valueLevel = +70f;//C ПРЕДЕЛ для АЛЕРТА ддля монитора температуры
+        maxLevelNotification.valueLevel = 125f;// для универсального 70, промышленного +125
         endMeasurementNotification = new NotificationLevel(NotificationLevel.BOOLEAN_TRUE,app.mainActivityWork);
 //
         //----------------------
@@ -490,7 +490,7 @@ return getStringValue( maxLevelNotification.valueLevel, onFahrenheit, addType);
         return false;
     }
     //устройство Зарегестрировано
-    public boolean isExistAdress(){
+    public boolean isAdress(){
         if (mBluetoothDeviceAddress != null) return true;
         return false;
     }

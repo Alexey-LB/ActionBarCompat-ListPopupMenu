@@ -1,11 +1,9 @@
 package com.example.android.actionbarcompat.listpopupmenu;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -32,9 +30,9 @@ public class SettingMaker extends Activity implements View.OnClickListener{
         mItem = intent.getIntExtra(MainActivityWork.EXTRAS_DEVICE_ITEM,0);
         RunDataHub app = ((RunDataHub) getApplicationContext());
         if((app.mBluetoothLeServiceM != null)
-                && (app.mBluetoothLeServiceM.mbleDot != null)
-                && (app.mBluetoothLeServiceM.mbleDot.size() > 0)){
-            sensor = app.mBluetoothLeServiceM.mbleDot.get(mItem);
+                && (app.mBluetoothLeServiceM.arraySensors != null)
+                && (app.mBluetoothLeServiceM.arraySensors.size() > 0)){
+            sensor = app.mBluetoothLeServiceM.arraySensors.get(mItem);
             Log.v(TAG,"sensor item= " + mItem);
         } else {
             finish();

@@ -20,21 +20,16 @@ package com.example.android.actionbarcompat.listpopupmenu;
  * limitations under the License.
  */
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.app.ListActivity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothManager;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.IBinder;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -46,7 +41,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.portfolio.alexey.connector.PartGatt;
 import com.portfolio.alexey.connector.Sensor;
 import com.portfolio.alexey.connector.Util;
 
@@ -77,12 +71,12 @@ public class DeviceScanActivity extends ListActivity {//AppCompatActivity {//Act
         mItem = intent.getIntExtra(MainActivityWork.EXTRAS_DEVICE_ITEM,0);
         RunDataHub app = ((RunDataHub) getApplicationContext());
         if((app.mBluetoothLeServiceM == null)
-                || (app.mBluetoothLeServiceM.mbleDot == null)
-                || (app.mBluetoothLeServiceM.mbleDot.size() <= 0)){
+                || (app.mBluetoothLeServiceM.arraySensors == null)
+                || (app.mBluetoothLeServiceM.arraySensors.size() <= 0)){
             finish();
             Log.e(TAG,"ERROR -- No sensor item= " + mItem);
         }
-        sensor = app.mBluetoothLeServiceM.mbleDot.get(mItem);
+        sensor = app.mBluetoothLeServiceM.arraySensors.get(mItem);
         Util.setActionBar(getActionBar(),TAG, intent.getStringExtra(Util.EXTRAS_BAR_TITLE));//"  BB3"
         //-------------------------------------------
         //74:DA:EA:9F:4C:21-new
@@ -274,10 +268,10 @@ public class DeviceScanActivity extends ListActivity {//AppCompatActivity {//Act
 
             RunDataHub app = ((RunDataHub) getApplicationContext());
             if((app != null) && (app.mBluetoothLeServiceM != null)
-                    && (app.mBluetoothLeServiceM.mbleDot != null)){
+                    && (app.mBluetoothLeServiceM.arraySensors != null)){
                 //смотрим, есть ли у нас уже зарегестрированный такой адрес!!
                 if(getBluetoothDevice(device.getAddress(),
-                        app.mBluetoothLeServiceM.mbleDot) != null) {
+                        app.mBluetoothLeServiceM.arraySensors) != null) {
                     Log.e(TAG, "ПОИСК- НАЙден зарегестрированный УЖЕ термометр!!");
                     return;
                 }
@@ -297,14 +291,14 @@ public class DeviceScanActivity extends ListActivity {//AppCompatActivity {//Act
 
         @Override
         public int getCount() {
-            //  if((mBluetoothLeService == null) || (mBluetoothLeService.mbleDot == null))return 0;
-            //   return mBluetoothLeService.mbleDot.size();
+            //  if((mBluetoothLeService == null) || (mBluetoothLeService.arraySensors == null))return 0;
+            //   return mBluetoothLeService.arraySensors.size();
             return mLeDevices.size();
         }
 
         @Override
         public Object getItem(int i) {
-            //  return mBluetoothLeService.mbleDot.get(i);
+            //  return mBluetoothLeService.arraySensors.get(i);
             return mLeDevices.get(i);
         }
 
@@ -340,7 +334,7 @@ public class DeviceScanActivity extends ListActivity {//AppCompatActivity {//Act
             //
             viewHolder.deviceAddress.setText(device.getAddress());
             //----------------------------------------
-//            Sensor device = mBluetoothLeService.mbleDot.get(i);
+//            Sensor device = mBluetoothLeService.arraySensors.get(i);
 //            final String deviceName = device.getName();
 //            if (deviceName != null && deviceName.length() > 0)
 //                viewHolder.deviceName.setText(deviceName);

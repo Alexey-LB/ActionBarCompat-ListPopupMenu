@@ -2,7 +2,6 @@ package com.example.android.actionbarcompat.listpopupmenu;
 
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.graphics.PointF;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -14,7 +13,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.portfolio.alexey.connector.BluetoothLeServiceNew;
@@ -60,14 +58,14 @@ public class MainActivityThermometer  extends AppCompatActivity {// ActionBarAct
         RunDataHub app = ((RunDataHub) getApplicationContext());
         //--------ПРИМЕМ ЕСЛИ сервис не запущен и нет доступа к сенсорам, выходим!--
         if((app == null) || (app.mBluetoothLeServiceM == null)
-                || (app.mBluetoothLeServiceM.mbleDot == null)
-                || (app.mBluetoothLeServiceM.mbleDot.get(itemSensor) == null)){
+                || (app.mBluetoothLeServiceM.arraySensors == null)
+                || (app.mBluetoothLeServiceM.arraySensors.get(itemSensor) == null)){
 
             Log.e(TAG,"ERR = ((app == null) || (app.mBluetoothLeServiceM == null)" +
-                    "                || (app.mBluetoothLeServiceM.mbleDot == null) || (sensor == null)");
+                    "                || (app.mBluetoothLeServiceM.arraySensors == null) || (sensor == null)");
             finish();
         }//
-        sensor = app.mBluetoothLeServiceM.mbleDot.get(itemSensor);
+        sensor = app.mBluetoothLeServiceM.arraySensors.get(itemSensor);
         //------------------------------
         //настраиваем и включаем тулбар
 

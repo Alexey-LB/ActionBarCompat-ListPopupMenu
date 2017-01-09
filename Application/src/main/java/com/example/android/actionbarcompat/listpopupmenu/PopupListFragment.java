@@ -15,10 +15,6 @@
  */
 package com.example.android.actionbarcompat.listpopupmenu;
 
-import android.app.ActionBar;
-import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothGatt;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -40,13 +36,11 @@ import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
+
 import java.util.ArrayList;
 import com.portfolio.alexey.connector.BluetoothLeServiceNew;
 import com.portfolio.alexey.connector.Sensor;
 import com.portfolio.alexey.connector.Util;
-
-import static android.content.Context.BIND_AUTO_CREATE;
 //Анимация Floating Action Button в Android
 //        https://geektimes.ru/company/nixsolutions/blog/276128/
 //        Design
@@ -243,13 +237,13 @@ fbButton = View.inflate(getContext(),R.layout.poplist_item_3,null);//пород�
         Log.e(TAG, "Activity to frag initList()---");
         //            setListAdapter(pop);//создали адаптер для работы
         //--------ЭТО делать надо  1 раз только иначе падает!!
-        //      ArrayList<Sensor> item =  mBluetoothLeService.mbleDot;
-        //     ArrayList<Sensor> item =  parentActivity.mBluetoothLeServiceM.mbleDot;
+        //      ArrayList<Sensor> item =  mBluetoothLeService.arraySensors;
+        //     ArrayList<Sensor> item =  parentActivity.mBluetoothLeServiceM.arraySensors;
         ArrayList<Object> it = new ArrayList();
         RunDataHub app = ((RunDataHub) getActivity().getApplicationContext());
         if (app.mBluetoothLeServiceM != null) {
-            Log.e(TAG, "Activity to frag initList()--- mbleDot.size= " + app.mBluetoothLeServiceM.mbleDot.size());
-            ArrayList<Sensor> item = app.mBluetoothLeServiceM.mbleDot;
+            Log.e(TAG, "Activity to frag initList()--- arraySensors.size= " + app.mBluetoothLeServiceM.arraySensors.size());
+            ArrayList<Sensor> item = app.mBluetoothLeServiceM.arraySensors;
             it = (ArrayList) (Object) item;
         } else {
             it = new ArrayList();
@@ -487,7 +481,7 @@ return null;//fbButton_;
     // добавить объект данные которого отображаются на листе
     public boolean addObject(Object object){
         Log.i(TAG," addObject------");
-        //ArrayList<Sensor> mbleDot = Util.getListSensor(getActivity());
+        //ArrayList<Sensor> arraySensors = Util.getListSensor(getActivity());
         ArrayList<Sensor> mbleDot = Util.getListSensor();
         if(mbleDot != null){
             mbleDot.add((Sensor) object);
@@ -504,7 +498,7 @@ return null;//fbButton_;
     // добавить объект данные которого отображаются на листе
     public boolean DellObject(Object object){
         Log.w(TAG," DellObject------");
-        //ArrayList<Sensor> mbleDot = Util.getListSensor(getActivity());
+        //ArrayList<Sensor> arraySensors = Util.getListSensor(getActivity());
         ArrayList<Sensor> mbleDot = Util.getListSensor();
         if(mbleDot != null){
 

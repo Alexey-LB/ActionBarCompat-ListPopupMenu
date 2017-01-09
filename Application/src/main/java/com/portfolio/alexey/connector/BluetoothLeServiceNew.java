@@ -19,8 +19,11 @@ import android.util.Log;
 
 import com.example.android.actionbarcompat.listpopupmenu.RunDataHub;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
+
 /**
  * Service for managing connection and data communication with a GATT server hosted on a
  * given Bluetooth LE device.
@@ -53,12 +56,12 @@ public class BluetoothLeServiceNew extends Service {
     public final static String EXTRA_ADRESS =
             "com.example.bluetooth.le.EXTRA_ADRESS";
 
-    public ArrayList<Sensor> mbleDot = new ArrayList<Sensor>();
+    public ArrayList<Sensor> arraySensors = new ArrayList<Sensor>();//arraySensors
     //
     //-----------------------------------
 //    //
 //    private void contrDisconnect(BluetoothGatt gatt){
-//        if((mbleDot.mConnectionState == STATE_DISCONNECTING) || (mbleDot.mConnectionState == STATE_DISCONNECTED)){
+//        if((arraySensors.mConnectionState == STATE_DISCONNECTING) || (arraySensors.mConnectionState == STATE_DISCONNECTED)){
 //            //В зависмости от СОТОЯНИЯ: КОННЕКТ - вызов disconnect(), ЕСЛИ ДИСКОННЕКТ- вызов close()
 //            onCloseConnect(gatt);//ЕСЛИ КОННЕКТ-отключаемся, ЕСЛИ ДИСКОННЕНКТ-закрываем соединение//
 //            return;
@@ -68,9 +71,9 @@ public class BluetoothLeServiceNew extends Service {
 //    // проверяем КОЛБАК на то что он НАШ!! а не чужой// ЕСЛИ МЫ не одни, а прилетает ВСЕМ!!!берем только свое!!!
 //    private boolean onlyMayGattAdr(BluetoothGatt gatt){
 //        //поскольку открывали сами, значит и адрес должен совпадать!
-//        if(mbleDot.mBluetoothGatt != null){
-//            if(mbleDot.mBluetoothGatt.equals(gatt)) return true;
-//            Log.e(TAG, "isMayGatt: mBluetoothGatt != gatt" + mbleDot.mBluetoothGatt.toString() + " = " + gatt.toString());
+//        if(arraySensors.mBluetoothGatt != null){
+//            if(arraySensors.mBluetoothGatt.equals(gatt)) return true;
+//            Log.e(TAG, "isMayGatt: mBluetoothGatt != gatt" + arraySensors.mBluetoothGatt.toString() + " = " + gatt.toString());
 //        }
 //        //проверка адреса
 //        if(isMayAdr(gatt)){//это наш адрес, но не наш Gatt! по этому закрываем это
@@ -83,14 +86,14 @@ public class BluetoothLeServiceNew extends Service {
 //    }
     // проверяем КОЛБАК на то что он НАШ!! а не чужой//если это один и тот же адрес на моем же устройстве!!
 //    private boolean isMayAdr(BluetoothGatt gatt){
-//        if(gatt.getDevice().getAddress().compareTo(mbleDot.mBluetoothDeviceAddress) == 0)return true;
+//        if(gatt.getDevice().getAddress().compareTo(arraySensors.mBluetoothDeviceAddress) == 0)return true;
 //        Log.e(TAG, "isMayGatt: devADRESS != mayADRESS");
 //        return false;
 //    }
 //    private boolean isMayGatt(BluetoothGatt gatt){
 //        //поскольку открывали сами, значит и адрес должен совпадать!
-//        if((mbleDot.mBluetoothGatt != null) && (mbleDot.mBluetoothGatt.equals(gatt))) return true;
-//        Log.e(TAG, "isMayGatt: mBluetoothGatt != gatt" + mbleDot.mBluetoothGatt.toString() + " = " + gatt.toString());
+//        if((arraySensors.mBluetoothGatt != null) && (arraySensors.mBluetoothGatt.equals(gatt))) return true;
+//        Log.e(TAG, "isMayGatt: mBluetoothGatt != gatt" + arraySensors.mBluetoothGatt.toString() + " = " + gatt.toString());
 //        //проверка адреса
 //        return false;
 //    }
@@ -100,17 +103,17 @@ public class BluetoothLeServiceNew extends Service {
 //        if(!isMayAdr(gatt)) return false;
 //        //поскольку открывали сами, значит и адрес должен совпадать!
 //        if(isMayGatt(gatt))return true;
-//        Log.e(TAG, "isMayGatt: mBluetoothGatt != gatt" + mbleDot.mBluetoothGatt.toString() + " = " + gatt.toString());
+//        Log.e(TAG, "isMayGatt: mBluetoothGatt != gatt" + arraySensors.mBluetoothGatt.toString() + " = " + gatt.toString());
 //        return false;
 //    }
 
     /**
      *
-     * @param adr
+     * @param adr поиск сенсора с указанным адресом
      * @return
      */
     private Sensor getBluetoothDevice(final String adr){
-        for(Sensor sensor: mbleDot){
+        for(Sensor sensor: arraySensors){
             if(sensor.mBluetoothDeviceAddress == null) continue;
             if(adr.compareTo(sensor.mBluetoothDeviceAddress) == 0)return sensor;
         }
@@ -290,40 +293,6 @@ public class BluetoothLeServiceNew extends Service {
         }
     };
 
-    private void broadcastUpdate(final String action,final Sensor sensor) {
-        final Intent intent = new Intent(action);
-        intent.putExtra(EXTRA_ADRESS, sensor.mBluetoothDeviceAddress);
-        sendBroadcast(intent);
-    }
-    private void broadcastUpdate(final String action,final Sensor sensor,
-                                 final BluetoothGattCharacteristic characteristic) {
-        final Intent intent = new Intent(action);
-// TODO: 09.12.2016        intent.putExtra(EXTRA_DATA, PartGatt.getValue(characteristic));
-        //    intent.putExtra(EXTRA_DATA, PartGatt.getValue(characteristic));
-     //   intent.putExtra(EXTRA_DATA, sensor.getStringIntermediateValue(false,true));
-        intent.putExtra(EXTRA_ADRESS, sensor.mBluetoothDeviceAddress);
-        sendBroadcast(intent);
-        return;
-    }
-
-    public class LocalBinder extends Binder {
-        public  BluetoothLeServiceNew getService() {
-            return BluetoothLeServiceNew.this;
-        }
-    }
-
-    @Override
-    public IBinder onBind(Intent intent) {
-        return mBinder;
-    }
-
-    @Override
-    public boolean onUnbind(Intent intent) {
-
-        return super.onUnbind(intent);
-    }
-
-    private final IBinder mBinder = new LocalBinder();
 
     /**
      * Initializes a reference to the local Bluetooth adapter.
@@ -366,11 +335,11 @@ public class BluetoothLeServiceNew extends Service {
                     // вызываем метод воспроизведения
                     while (true){
                         //------Здесь цикл обработки и потдержания работы коннекта----------------
-                        if((mbleDot != null) && (mbleDot.size() > 0)){
+                        if((arraySensors != null) && (arraySensors.size() > 0)){
                             //--запускаем на соннект
-                            if(itemSensor >= mbleDot.size()) onStart = false;
+                            if(itemSensor >= arraySensors.size()) onStart = false;
                             if(onStart){
-                                sensor = mbleDot.get(itemSensor);
+                                sensor = arraySensors.get(itemSensor);
                                 if(sensor != null){
                                     if((sensor.goToConnect == false)
                                             && (sensor.mConnectionState < STATE_CONNECTED) //если 1 раз запускаем соннект
@@ -451,7 +420,7 @@ public class BluetoothLeServiceNew extends Service {
 
                     RunDataHub app = ((RunDataHub)getApplicationContext())   ;
                     Sensor sensor = new Sensor(mSettingsDevace, app);
-                    mbleDot.add(sensor);
+                    arraySensors.add(sensor);
                     Log.i(TAG,"onCreate: get sensor from flash= "+i +"   adress= " +sensor.mBluetoothDeviceAddress);
                     //--запускаем на соннект
                     if((sensor.mBluetoothDeviceAddress != null) &&(sensor.mBluetoothDeviceAddress.length() == 17)){
@@ -479,17 +448,17 @@ public class BluetoothLeServiceNew extends Service {
             // это относится к списку устройств, поскольку устройства сами контролируют свои изменения!
             // в первом файле храним количство и адреса блутуз устройств
             SharedPreferences.Editor editor = mSettings.edit();
-            editor.putInt("listSizeBluetooth", mbleDot.size());
+            editor.putInt("listSizeBluetooth", arraySensors.size());
             //Остальные файлы- имена ЭТО БЛУЗ АДРЕСА, в них все настройки
-            for(i= 0; i < mbleDot.size(); i++){
+            for(i= 0; i < arraySensors.size(); i++){
                 defName = "item"+i;
                 //сохраняем УСТРОЙСТВО в файле отдельном
-                sensor = mbleDot.get(i);
+                sensor = arraySensors.get(i);
                 // "74:DA:EA:9F:54:C9"= 17
                 if((sensor.mBluetoothDeviceAddress != null)
                         && (sensor.mBluetoothDeviceAddress.length() == 17)){
                     //занесли в список устройст ЕГО АДРЕС под номером в листе
-                    editor.putString(defName, mbleDot.get(i).mBluetoothDeviceAddress);
+                    editor.putString(defName, arraySensors.get(i).mBluetoothDeviceAddress);
                     //
                     settingsDevace = getSharedPreferences(sensor.mBluetoothDeviceAddress, Context.MODE_PRIVATE);
                     Log.i(TAG,"SettingPutFile item= " +i+ "  name= " + sensor.mBluetoothDeviceAddress);
@@ -545,7 +514,7 @@ public class BluetoothLeServiceNew extends Service {
 
             RunDataHub app = ((RunDataHub)getApplicationContext())   ;
             sensor = new Sensor(address,app);
-            mbleDot.add(sensor);
+            arraySensors.add(sensor);
             Log.w(TAG, " connect: NEW sensor");
         }else{
             sensor = getBluetoothDevice(address);
@@ -555,8 +524,7 @@ public class BluetoothLeServiceNew extends Service {
             Log.w(TAG, " connect: sensor GoTo connect Old");
         }
         // Previously connected device.  Try to reconnect.
-        if (sensor.mBluetoothDeviceAddress != null && address.equals(sensor.mBluetoothDeviceAddress)
-                && sensor.mBluetoothGatt != null) {
+        if (sensor.mBluetoothGatt != null) {
             Log.w(TAG, "Trying to use an existing mBluetoothGatt for connection.");
             if (sensor.mBluetoothGatt.connect()) {
 
@@ -594,7 +562,7 @@ public class BluetoothLeServiceNew extends Service {
             Log.e(TAG, "BluetoothAdapter not initialized");
             return;
         }
-        for(Sensor sensor: mbleDot) sensor.disconnect();
+        for(Sensor sensor: arraySensors) sensor.disconnect();
     }
 
     /**
@@ -602,7 +570,7 @@ public class BluetoothLeServiceNew extends Service {
      * released properly.
      */
     public void close() {
-        for(Sensor sensor: mbleDot) sensor.close();
+        for(Sensor sensor: arraySensors) sensor.close();
     }
 
     /**
@@ -620,7 +588,92 @@ public class BluetoothLeServiceNew extends Service {
         }
         sensor.mBluetoothGatt.readCharacteristic(characteristic);
     }
+    public  static boolean readUuidCharacteristic(Sensor sensor, UUID uuidService, UUID uuidCharacteristic) {
+        boolean rez = false;
+        if (sensor.mBluetoothGatt == null) {
+            Log.e(TAG,"readUuidCharacteristic> mBluetoothGatt == null");
+            return rez;
+        }
+        //СМОТРИМ наличие СЕРВИСА (внутри сервеса характеристики с описателями их)
+        BluetoothGattService service = sensor.mBluetoothGatt.getService(uuidService);
+        if (service == null) {
+            Log.e(TAG,"readUuidCharacteristic> Not found Service= " + uuidService.toString());
+            return rez;
+        }
+        BluetoothGattCharacteristic characteristic = service.getCharacteristic(uuidCharacteristic);
+        if (characteristic == null) {
+            Log.e(TAG,"readUuidCharacteristic>  Not found Charateristic= "+ uuidCharacteristic.toString());
+            return rez;
+        }
+        rez = sensor.mBluetoothGatt.readCharacteristic(characteristic);
+        Log.i(TAG, "Read characteristic= " +uuidCharacteristic.toString()+"   status=" + rez);
+        return rez;
+    }
 
+        //--- Запись характеристики в символах
+    public static boolean writeUuidCharacteristic(Sensor sensor, String  message, UUID uuidService, UUID uuidCharacteristic) {
+        try {
+            byte[] value = message.getBytes("UTF-8");
+            return  writeUuidCharacteristic(sensor, value, uuidService, uuidCharacteristic);
+        } catch (UnsupportedEncodingException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            return false;
+        }
+    }
+    //--- Запись характеристики в байтах
+    public static boolean writeUuidCharacteristic(Sensor sensor, byte[] value, UUID uuidService, UUID uuidCharacteristic) {
+        boolean rez = false;
+        if (sensor.mBluetoothGatt == null) {
+            Log.e(TAG,"writeUuidCharacteristic> mBluetoothGatt == null");
+            return rez;
+        }
+        BluetoothGattService service = sensor.mBluetoothGatt.getService(uuidService);
+        if (service == null) {
+            Log.e(TAG,"writeUuidCharacteristic> Not found Service= " + uuidService.toString());
+            return rez;
+        }
+        BluetoothGattCharacteristic characteristic = service.getCharacteristic(uuidCharacteristic);
+        if (characteristic == null) {
+            Log.e(TAG,"writeUuidCharacteristic> Not found Charateristic= "+ uuidCharacteristic.toString());
+            return rez;
+        }
+        characteristic.setValue(value);
+        rez = sensor.mBluetoothGatt.writeCharacteristic(characteristic);
+        Log.i(TAG, "Write characteristic= " +uuidCharacteristic.toString()+"   status=" + rez);
+        return rez;
+    }
+    //setNotificationIndication
+    public  static boolean writeUuidDescriptor(Sensor sensor, byte[] bluetoothGattDescriptorValue, UUID uuidService
+            , UUID uuidCharacteristic, UUID uuidDescriptor) {
+        boolean rez = false;
+        if (sensor.mBluetoothGatt == null) {
+            Log.e(TAG,"writeUuidDescriptor> mBluetoothGatt == null");
+            return rez;
+        }
+        BluetoothGattService service = sensor.mBluetoothGatt.getService(uuidService);
+        if (service == null) {
+            Log.e(TAG,"writeUuidDescriptor> Not found Service= " + uuidService.toString());
+            return rez;
+        }
+        BluetoothGattCharacteristic characteristic = service.getCharacteristic(uuidCharacteristic);
+        if (characteristic == null) {
+            Log.e(TAG,"writeUuidDescriptor> Not found Charateristic= "+ uuidCharacteristic.toString());
+            return rez;
+        }
+        BluetoothGattDescriptor descriptor = characteristic.getDescriptor(uuidDescriptor);
+        if (descriptor == null) {
+            Log.e(TAG,"writeUuidDescriptor> Not found descriptor= "+ uuidDescriptor.toString());
+            return rez;
+        }
+        descriptor.setValue(bluetoothGattDescriptorValue);
+        sensor.mBluetoothGatt.setCharacteristicNotification(characteristic, true);
+        rez = sensor.mBluetoothGatt.writeDescriptor(descriptor);
+        //мне кажется лучше так, если запись пройдет, то информирование на с ставим, иначе не надо это нам
+        //if(sensor.mBluetoothGatt.writeDescriptor(descriptor)) rez = sensor.mBluetoothGatt.setCharacteristicNotification(characteristic, true);
+        Log.i(TAG, "writeUuidDescriptor= " +uuidCharacteristic.toString()+"   status=" + rez);
+        return rez;
+    }
     /**
      * Enables or disables notification on a give characteristic.
      *
@@ -675,4 +728,39 @@ public class BluetoothLeServiceNew extends Service {
 
         return sensor.mBluetoothGatt.getServices();
     }
+
+    private void broadcastUpdate(final String action,final Sensor sensor) {
+        final Intent intent = new Intent(action);
+        intent.putExtra(EXTRA_ADRESS, sensor.mBluetoothDeviceAddress);
+        sendBroadcast(intent);
+    }
+    private void broadcastUpdate(final String action,final Sensor sensor,
+                                 final BluetoothGattCharacteristic characteristic) {
+        final Intent intent = new Intent(action);
+// TODO: 09.12.2016        intent.putExtra(EXTRA_DATA, PartGatt.getValue(characteristic));
+        //    intent.putExtra(EXTRA_DATA, PartGatt.getValue(characteristic));
+        //   intent.putExtra(EXTRA_DATA, sensor.getStringIntermediateValue(false,true));
+        intent.putExtra(EXTRA_ADRESS, sensor.mBluetoothDeviceAddress);
+        sendBroadcast(intent);
+        return;
+    }
+
+    public class LocalBinder extends Binder {
+        public  BluetoothLeServiceNew getService() {
+            return BluetoothLeServiceNew.this;
+        }
+    }
+
+    @Override
+    public IBinder onBind(Intent intent) {
+        return mBinder;
+    }
+
+    @Override
+    public boolean onUnbind(Intent intent) {
+
+        return super.onUnbind(intent);
+    }
+
+    private final IBinder mBinder = new LocalBinder();
 }

@@ -12,7 +12,6 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Vibrator;
-import android.support.constraint.solver.ArrayLinkedVariables;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 //import android.support.v4.content.ContextCompatApi23;
@@ -21,12 +20,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.AppCompatActivity;
 
 import com.example.android.actionbarcompat.listpopupmenu.Marker;
 import com.example.android.actionbarcompat.listpopupmenu.R;
@@ -114,31 +107,31 @@ public class Util {
 //    //
 //    static public Sensor getSensor(int item,Context context){
 //        BluetoothLeServiceNew bleS = getAppBleService(context);
-//        if((bleS != null) && (bleS.mbleDot != null)
-//                && (bleS.mbleDot.size() > item)){
-//            return bleS.mbleDot.get(item);
+//        if((bleS != null) && (bleS.arraySensors != null)
+//                && (bleS.arraySensors.size() > item)){
+//            return bleS.arraySensors.get(item);
 //        }
 //        return null;
 //    }
 //    //
 //    static public Sensor getSensor(int item,Activity activity){
 //        BluetoothLeServiceNew bleS = getAppBleService(activity);
-//        if((bleS != null) && (bleS.mbleDot != null)
-//                && (bleS.mbleDot.size() > item)){
-//            return bleS.mbleDot.get(item);
+//        if((bleS != null) && (bleS.arraySensors != null)
+//                && (bleS.arraySensors.size() > item)){
+//            return bleS.arraySensors.get(item);
 //        }
 //        return null;
 //    }
 //    //
 //    static public ArrayList<Sensor> getListSensor(Context context){
 //        BluetoothLeServiceNew bleS = getAppBleService(context);
-//        if(bleS != null)  return bleS.mbleDot;
+//        if(bleS != null)  return bleS.arraySensors;
 //        return null;
 //    }
 //    //
 //    static public ArrayList<Sensor> getListSensor(Activity activity){
 //        BluetoothLeServiceNew bleS = getAppBleService(activity);
-//        if(bleS != null) return bleS.mbleDot;
+//        if(bleS != null) return bleS.arraySensors;
 //        return null;
 //    }
 //    //
@@ -160,16 +153,16 @@ public class Util {
 //    //----------------------------------------------------------------------
     static public Sensor getSensor(int item){
         BluetoothLeServiceNew bleS = getAppBleService();
-        if((bleS != null) && (bleS.mbleDot != null)
-                && (bleS.mbleDot.size() > item)){
-            return bleS.mbleDot.get(item);
+        if((bleS != null) && (bleS.arraySensors != null)
+                && (bleS.arraySensors.size() > item)){
+            return bleS.arraySensors.get(item);
         }
         return null;
     }
     //
     static public ArrayList<Sensor> getListSensor(){
         BluetoothLeServiceNew bleS = getAppBleService();
-        if(bleS != null) return bleS.mbleDot;
+        if(bleS != null) return bleS.arraySensors;
         return null;
     }
 
