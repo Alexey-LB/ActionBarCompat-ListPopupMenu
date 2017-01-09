@@ -8,7 +8,8 @@
     android:layout_height="match_parent"
     tools:context="com.example.android.actionbarcompat.listpopupmenu.MainSettingSetting"
     android:weightSum = "100"
-    android:background="@color/colorTextlight">
+    android:background="@color/colorBackground">
+    <!--android:background="@color/colorTextlight">-->
      <!--ОТСТУПЫ - НЕ работает!? почемуто, хотел добапввить разделители-->
     <!--android:divider="@color/colorAccent"-->
     <!--android:dividerPadding="15dp"-->
@@ -22,6 +23,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/colorBackground"
             android:orientation="vertical" >
 
             <!--"ИДЕНТИФИКАЦИЯ"-->
@@ -36,16 +38,10 @@
             <!--ОПОВЕШЕНИЕ-->
             <include layout="@layout/activity_main_setting_item3" />
 
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:background="@color/colorBackground"
-                android:layout_weight="77">
-
-            </FrameLayout>
-
             <!--ОФОРМЛЕНИЕ-->
             <!--<include layout="@layout/activity_main_setting_item4" />-->
 
         </LinearLayout>
+
+
 </ScrollView>
