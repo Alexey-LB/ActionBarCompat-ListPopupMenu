@@ -684,7 +684,8 @@ public class BluetoothLeServiceNew extends Service {
     synchronized public boolean connect(final String address, boolean avtoConnect) {
         // "74:DA:EA:9F:54:C9"= 17
         if (mBluetoothAdapter == null || address == null || address.length() != 17) {
-            Log.e(TAG, "BluetoothAdapter not initialized or unspecified address.");
+            Log.e(TAG, "BluetoothAdapter(" +mBluetoothAdapter +") not initialized("+address
+                    +") or unspecified address("+ address.length()+")");
             return false;
         }
         //если у нас есть такое устройство
