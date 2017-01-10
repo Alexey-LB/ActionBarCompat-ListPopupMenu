@@ -50,10 +50,10 @@ public class RunDataHub extends Application {
             mBluetoothLeServiceM = ((BluetoothLeServiceNew.LocalBinder) service).getService();
    //         if(mainActivityWork != null)mainActivityWork.init();
             Log.e(TAG, "---mBluetoothLeServiceM = getService() OK -----");
-//            if (!mBluetoothLeServiceM.initialize()) {
-//                Log.e(TAG, "Unable to initialize Bluetooth");
+            if (!mBluetoothLeServiceM.initialize()) {
+                Log.e(TAG, "Unable to initialize Bluetooth");
 //                //         finish();
-//            }
+            }
 //            //           if(popupListFragment != null) popupListFragment.initList();
 //            // Automatically connects to the device upon successful start-up initialization.
 //            //         mBluetoothLeService.connect(mDeviceAddress,true);

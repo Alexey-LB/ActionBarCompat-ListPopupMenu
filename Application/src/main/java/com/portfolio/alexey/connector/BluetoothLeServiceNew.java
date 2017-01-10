@@ -183,12 +183,10 @@ public class BluetoothLeServiceNew extends Service {
         public void onCharacteristicRead(BluetoothGatt gatt,
                                          BluetoothGattCharacteristic characteristic, int status) {
            // Log.w(TAG, "onCharacteristicRead--------------------");
-
             //если у нас есть такое устройство
             final Sensor sensor = getBluetoothDevice(gatt.getDevice().getAddress());
             if(sensor == null) return;
             //
-
             if (status == BluetoothGatt.GATT_SUCCESS) {
  // broadcastUpdate(ACTION_DATA_AVAILABLE, sensor, characteristic);
             //    Log.i(TAG, "   adress= " + sensor.mBluetoothDeviceAddress);
@@ -205,7 +203,7 @@ public class BluetoothLeServiceNew extends Service {
 
             }
             // Ready for next transmission
-            processTxQueue();
+            filtrInTxQueue(sensor,TxQueueItemType.ReadCharacteristic, characteristic.getUuid(), status);
         }
 
         @Override
@@ -251,7 +249,6 @@ public class BluetoothLeServiceNew extends Service {
         public void onCharacteristicWrite(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status)
         {
 
-
           //  Log.w(TAG, "----------------------onCharacteristic_Write");
 //            String deviceName = gatt.getDevice().getName();
 //            String serviceName = BleNamesResolver.resolveServiceName(characteristic.getService().getUuid().toString().toLowerCase(Locale.getDefault()));
@@ -274,8 +271,10 @@ public class BluetoothLeServiceNew extends Service {
                         +"  service= " + Util.getUidStringMost16Bits(characteristic.getService()));
                 //             mUiCallback.uiFailedWrite(mBluetoothGatt, mBluetoothDevice, mBluetoothSelectedService, characteristic, description + " STATUS = " + status);
             }
+            final Sensor sensor = getBluetoothDevice(gatt.getDevice().getAddress());
+            if(sensor == null) return;
             // Ready for next transmission
-            processTxQueue();
+            filtrInTxQueue(sensor,TxQueueItemType.WriteCharacteristic, characteristic.getUuid(), status);
         }
         /**
          * Callback indicating the result of a descriptor write operation.
@@ -298,8 +297,11 @@ public class BluetoothLeServiceNew extends Service {
                         + "  descriptor= " + Util.getUidStringMost16Bits(descriptor)
                         +"  Characteristic= " + Util.getUidStringMost16Bits(descriptor.getCharacteristic()));
             }
+            final Sensor sensor = getBluetoothDevice(gatt.getDevice().getAddress());
+            if(sensor == null) return;
             // Ready for next transmission
-            processTxQueue();
+
+            filtrInTxQueue(sensor,TxQueueItemType.WriteDescriptor, descriptor.getCharacteristic().getUuid(), status);
         }
     };
 //==============--------------------------------------------------------------------
@@ -322,9 +324,9 @@ public class BluetoothLeServiceNew extends Service {
     private boolean txQueueProcessing = false;
 
     private enum TxQueueItemType {
-        ReadCharacteristic,
-        WriteCharacteristic,
-        SubscribeCharacteristic
+        ReadCharacteristic,//чтение характеристики
+        WriteCharacteristic,//запись характеристики
+        WriteDescriptor//запись дескриптора
     }
 
     /* queues enables/disables notification for characteristic */
@@ -336,13 +338,14 @@ public class BluetoothLeServiceNew extends Service {
         txQueueItem.characteristic = ch;
         txQueueItem.enabled = enabled;
         txQueueItem.dataToWrite = dataToWrite;
-        txQueueItem.type = TxQueueItemType.SubscribeCharacteristic;
+        txQueueItem.type = TxQueueItemType.WriteDescriptor;
         addToTxQueue(txQueueItem);
     }
 
     /* queues enables/disables notification for characteristic */
     public void queueWriteDataToCharacteristic(final Sensor sens, final BluetoothGattCharacteristic ch, final byte[] dataToWrite)
     {
+
         // Add to queue because shitty Android GATT stuff is only synchronous
         TxQueueItem txQueueItem = new TxQueueItem();
         txQueueItem.sensor = sens;
@@ -385,6 +388,31 @@ public class BluetoothLeServiceNew extends Service {
             errorTxQueue = false;
         }
     };
+    private boolean debug = true;
+    private void log(String str){
+        if(debug) Log.e(TAG, str);
+    }
+    //получает все ответы по блутузу сюда, и если они не соответствуют, блокирует их,
+    // а очередь заново их запускает на выполнение
+
+    private void filtrInTxQueue(Sensor sensor, TxQueueItemType type, UUID uuid, int status){
+        if(status != BluetoothGatt.GATT_SUCCESS) return;
+        if(mTxQueueItem == null) return;
+        if(mTxQueueItem.type != type) {
+            log("mTxQueueItem.type != type");
+            return;
+        }
+        if(mTxQueueItem.sensor.getAddress().compareTo(sensor.getAddress()) != 0) {
+            log("compareTo(sensor.getAddress()) != 0");
+            return;
+        }
+        if(mTxQueueItem.characteristic.getUuid().compareTo(uuid) != 0) {
+            log("getUuid().compareTo(uuid) != 0)");
+            return;
+        }
+        //это то что мы запросили!!
+        processTxQueue();
+    }
     /**
      * Call when a transaction has been completed.
      * Will process next transaction if queued
@@ -421,7 +449,7 @@ public class BluetoothLeServiceNew extends Service {
                 writeDataToCharacteristic(mTxQueueItem.sensor, mTxQueueItem.characteristic
                         , mTxQueueItem.dataToWrite);
                 break;
-            case SubscribeCharacteristic:
+            case WriteDescriptor:
                 setNotificationForCharacteristic(mTxQueueItem.sensor,mTxQueueItem.characteristic,
                         mTxQueueItem.dataToWrite, mTxQueueItem.enabled);
                 break;
