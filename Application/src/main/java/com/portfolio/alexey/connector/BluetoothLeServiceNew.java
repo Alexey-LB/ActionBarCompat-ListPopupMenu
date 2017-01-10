@@ -366,26 +366,19 @@ public class BluetoothLeServiceNew extends Service {
         addToTxQueue(txQueueItem);
     }
 
-    /**
-     * Add a transaction item to transaction queue
-     * @param txQueueItem
-     */
-    private void addToTxQueue(TxQueueItem txQueueItem) {
-
-        txQueue.add(txQueueItem);
-
-        // If there is no other transmission processing, go do this one!
-        if (!txQueueProcessing) {
-            processTxQueue();
-        }
-    }
-    private boolean errorTxQueue = false;
-    private Handler mHandlerTxQueue = new Handler();
+     private Handler mHandlerTxQueue = new Handler();
     private Runnable runnable = new Runnable(){
         public void run() {
-            errorTxQueue = true;
-            processTxQueue();
-            errorTxQueue = false;
+            //-- запускаем контроль запроса по времени, устангавливаем 10 секунд
+            // если не уложились, то текущий запрос возвращяем в очередь и увеличиваем попытку
+            // передачи, передаем 5 раз и облом! ему, запрашиваемому параметру
+            Log.e(TAG,"processTxQueue ERROR mTxQueueItem.retry= "+ mTxQueueItem.retry
+                    + "  sensor= "+mTxQueueItem.sensor.getAddress() + "   uid= "+mTxQueueItem.characteristic.getUuid());
+            if(mTxQueueItem.retry++ <= 5){
+                //добавляем из начала прямо в КОНЕЦ очереди!
+                txQueue.add(mTxQueueItem);//повтор запроса
+            }
+            processTxQueue(false);//тайм аут по ответу КОТОРЫЙ НЕ ПРИШЕЛ!!
         }
     };
     private boolean debug = true;
@@ -410,40 +403,51 @@ public class BluetoothLeServiceNew extends Service {
             log("getUuid().compareTo(uuid) != 0)");
             return;
         }
+
+        if(uuid.compareTo(PartGatt.UUID_BATTERY_LEVEL) == 0) {
+            log("getUuid().UUID_BATTERY_LEVEL");
+            return;
+        }
+        mTxQueueItem = null;
+
+        Log.i(TAG,"Ok adr= " + sensor.getAddress() +"   getUuid()"+ uuid.toString());
         //это то что мы запросили!!
-        processTxQueue();
+        processTxQueue(false);//это обратная связь для сброса переданного значения
+    }
+    /**
+     * Add a transaction item to transaction queue
+     * @param txQueueItem
+     */
+    private void addToTxQueue(TxQueueItem txQueueItem) {
+
+        txQueue.add(txQueueItem);
+
+        // If there is no other transmission processing, go do this one!
+        processTxQueue(true);
     }
     /**
      * Call when a transaction has been completed.
      * Will process next transaction if queued
      */
     TxQueueItem mTxQueueItem;
-    private void processTxQueue()
-    {
+    synchronized private void processTxQueue(boolean init)//false-  если это обратная связь ИЛИ тайм аут по ответу
+    {   //если мы стартуем с новым значением, то это ттолько если не заняты работой по передаче
+        // нового значения
+        if(init && txQueueProcessing) return;//
+        //-----------------------------
+        // продолжаем работать, убираем колбак и заново запускаем его для новой передачи
+        //необходимо всегда УДАЛЯТЬ старые запуски, иначе ОНИ НАЧИНАЮТ ЖИТЬ ВСЕ ВМЕСТЕ!!!
+        mHandlerTxQueue.removeCallbacks(runnable);
+           //-----------------------
         if (txQueue.size() <= 0)  {
             txQueueProcessing = false;
             return;
         }
         txQueueProcessing = true;//заблокировались
-        //-----------------------------
-        // продолжаем работать, убираем колбак и заново запускаем его для новой передачи
-        //необходимо всегда УДАЛЯТЬ старые запуски, иначе ОНИ НАЧИНАЮТ ЖИТЬ ВСЕ ВМЕСТЕ!!!
-        mHandlerTxQueue.removeCallbacks(runnable);
-        //-- запускаем контроль запроса по времени, устангавливаем 10 секунд
-        // если не уложились, то текущий запрос возвращяем в очередь и увеличиваем попытку
-        // передачи, передаем 5 раз и облом! ему, запрашиваемому параметру
-        if(errorTxQueue){
-            Log.e(TAG,"processTxQueue ERROR mTxQueueItem.retry= "+ mTxQueueItem.retry
-                    + "  sensor= "+mTxQueueItem.sensor.getAddress() + "   uid= "+mTxQueueItem.characteristic.getUuid());
-            if(mTxQueueItem.retry++ <= 5)addToTxQueue(mTxQueueItem);//повтор запроса
-        }
-        //если очередь НЕ пуста, запускаем контроль по времени снова!
-        if (txQueue.size() > 0)  {
-            mHandlerTxQueue.postDelayed(runnable,10000);//-- запускаем контроль запроса по времени, устангавливаем 10 секунд
-        }
-        errorTxQueue = false;
-        //-----------------------
         mTxQueueItem = txQueue.remove();
+        //если очередь НЕ пуста, запускаем контроль по времени снова!
+        mHandlerTxQueue.postDelayed(runnable,10000);//-- запускаем контроль запроса по времени, устангавливаем 10 секунд
+        //
         switch (mTxQueueItem.type) {
             case WriteCharacteristic:
                 writeDataToCharacteristic(mTxQueueItem.sensor, mTxQueueItem.characteristic
