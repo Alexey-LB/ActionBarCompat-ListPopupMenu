@@ -52,7 +52,7 @@ public class RunDataHub extends Application {
             Log.e(TAG, "---mBluetoothLeServiceM = getService() OK -----");
             if (!mBluetoothLeServiceM.initialize()) {
                 Log.e(TAG, "Unable to initialize Bluetooth");
-//                //         finish();
+//                // finish();
             }
 //            //           if(popupListFragment != null) popupListFragment.initList();
 //            // Automatically connects to the device upon successful start-up initialization.
