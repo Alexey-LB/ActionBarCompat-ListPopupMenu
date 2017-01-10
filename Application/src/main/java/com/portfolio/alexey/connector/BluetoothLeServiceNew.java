@@ -403,11 +403,11 @@ public class BluetoothLeServiceNew extends Service {
             log("getUuid().compareTo(uuid) != 0)");
             return;
         }
-
-        if(uuid.compareTo(PartGatt.UUID_BATTERY_LEVEL) == 0) {
-            log("getUuid().UUID_BATTERY_LEVEL");
-            return;
-        }
+//для теста блокировал уровень батареи посмотрет повтор запроса, работает
+//        if(uuid.compareTo(PartGatt.UUID_BATTERY_LEVEL) == 0) {
+//            log("getUuid().UUID_BATTERY_LEVEL");
+//            return;
+//        }
         mTxQueueItem = null;
 
         Log.i(TAG,"Ok adr= " + sensor.getAddress() +"   getUuid()"+ uuid.toString());
