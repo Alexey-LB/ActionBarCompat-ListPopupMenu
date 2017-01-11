@@ -58,6 +58,7 @@ public class DeviceScanActivity extends ListActivity {//AppCompatActivity {//Act
     private static final int REQUEST_ENABLE_BT = 1;
     // Stops scanning after 3 seconds.
     private static final long SCAN_PERIOD = 10000;
+    private  String mDeviceNnameFiltr;
       private Sensor sensor;
     private  int mItem= 0;
     @Override// Set up the {@link android.app.ActionBar}, if the API is available.
@@ -69,6 +70,8 @@ public class DeviceScanActivity extends ListActivity {//AppCompatActivity {//Act
         //--------------------------
         final Intent intent = getIntent();
         mItem = intent.getIntExtra(MainActivityWork.EXTRAS_DEVICE_ITEM,0);
+        //фильтр АДВАНСИНГ пакетов при поиске блутуз устройст
+        mDeviceNnameFiltr = intent.getStringExtra(MainActivityWork.EXTRAS_DEVICE_NAME_FILTR);
         RunDataHub app = ((RunDataHub) getApplicationContext());
         if((app.mBluetoothLeServiceM == null)
                 || (app.mBluetoothLeServiceM.arraySensors == null)
@@ -262,13 +265,22 @@ public class DeviceScanActivity extends ListActivity {//AppCompatActivity {//Act
             }
             return null;
         }
-
+        // поиск устройст с СТРОКОЙ В РЕКЛАМЕ которая является фильтром
         public void addDevice(BluetoothDevice device) {
             // TODO: 17.12.2016 контроль всех адресов ЧТО есть, вывод внизу с ЗАТЕМНЕНИЕМ, которые НЕ прошли по филтру 
 
             RunDataHub app = ((RunDataHub) getApplicationContext());
             if((app != null) && (app.mBluetoothLeServiceM != null)
                     && (app.mBluetoothLeServiceM.arraySensors != null)){
+                //фильтр АДВАНСИНГ пакетов при поиске блутуз устройст
+                if((mDeviceNnameFiltr != null) && (mDeviceNnameFiltr.length() > 0)){
+                    //Фильтр указан, сравниваем ПЕРВЫЕ символы В РЕКЛАМНЕ блутуз устройства
+                    String str = device.getName().substring(0, mDeviceNnameFiltr.length());//берем Часть и РЕКЛАМНОГО сообщения, равной размеру ФИЛЬТРА
+                    if(!str.equals(mDeviceNnameFiltr)){
+                        Log.e(TAG, "ПОИСК ищем= \"" +mDeviceNnameFiltr + "\"   Найден= \""+ device.getName()+"\"");
+                        return;
+                    }
+                }
                 //смотрим, есть ли у нас уже зарегестрированный такой адрес!!
                 if(getBluetoothDevice(device.getAddress(),
                         app.mBluetoothLeServiceM.arraySensors) != null) {

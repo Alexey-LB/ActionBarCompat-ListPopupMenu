@@ -34,7 +34,7 @@ public class MainActivityThermometer  extends AppCompatActivity {// ActionBarAct
 //    public  final static String EXTRAS_DEVICE_ADDRESS = "EXTRAS_DEVICE_ADDRESS";
 //    public  final static String EXTRAS_DEVICE_ITEM = "EXTRAS_DEVICE_ITEM";
 //
-// //ОБЯЗАТЕЛЬНО !! ввести в практику передачу тила для порожденного окна!!
+// //ОБЯЗАТЕЛЬНО !! ввести в практику передачу типа для порожденного окна!!
 //    public  final static String EXTRA_BAR_TITLE = "EXTRA_BAR_TITLE";
 //
     public  final static int MAIN_ACTIVITY_THERMOMETER = 0xFFFF1235;
@@ -68,11 +68,8 @@ public class MainActivityThermometer  extends AppCompatActivity {// ActionBarAct
         sensor = app.mBluetoothLeServiceM.arraySensors.get(itemSensor);
         //------------------------------
         //настраиваем и включаем тулбар
-
         Util.setSupportV7appActionBar(getSupportActionBar(),TAG,
                 intent.getStringExtra(Util.EXTRAS_BAR_TITLE));
-
-
         //убираем системный бар
         thermometer = findViewById(R.id.LayoutMainThermometer);
         thermometer.getRootView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
