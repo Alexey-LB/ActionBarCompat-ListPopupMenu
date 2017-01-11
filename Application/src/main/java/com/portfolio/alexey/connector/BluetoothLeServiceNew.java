@@ -131,20 +131,28 @@ public class BluetoothLeServiceNew extends Service {
             final Sensor sensor = getBluetoothDevice(gatt.getDevice().getAddress());
             if(sensor == null) return;
             //
-            String intentAction;
+            String intentAction;boolean ds =false;
             if (newState == BluetoothProfile.STATE_CONNECTED) {
                 intentAction = ACTION_GATT_CONNECTED;
                 // состояние промежуточное-МЫ подключились- но ЕЩЕ НЕ СЧИТАЛИ СЕРВИСЫ доступные на этом устройстве
                 sensor.mConnectionState = STATE_CONNECTING;
                 //для отображения состояния подключения волны расходятся от значка--
                 sensor.rssi = STATE_CONNECTING;//показываем что коннектимся
-//Запускаем считывание СЕРВИСОВ и характеристик (discovery)
- // broadcastUpdate(intentAction, sensor);
+                //Запускаем считывание СЕРВИСОВ и характеристик (discovery)
+                 // broadcastUpdate(intentAction, sensor);
                 // Attempts to discover services after successful connection.
-                boolean ds = sensor.mBluetoothGatt.discoverServices();
 
-                Log.v(TAG, "Attempting to start service discovery:" + ds
-                        +"  adress= "+sensor.mBluetoothDeviceAddress);
+//   пытался без дисковери запросить характеристику НЕ получилось, не отвечает сенсор!
+//                // BluetoothGattService#SERVICE_TYPE_SECONDARY
+//                BluetoothGattCharacteristic ch;BluetoothGattService sv;
+//                sv = new BluetoothGattService(PartGatt.UUID_BATTERY_SERVICE,0);
+//                ch  = new BluetoothGattCharacteristic(PartGatt.UUID_BATTERY_LEVEL,0,0);
+//                sv.addCharacteristic(ch);
+//                ch = sv.getCharacteristic(PartGatt.UUID_BATTERY_LEVEL);
+//                queueRequestCharacteristicValue(sensor,ch);
+ queueSetDiscover(sensor);
+// ds= sensor.mBluetoothGatt.discoverServices();
+// Log.v(TAG, "Attempting to start service discovery:" + ds +"  adress= "+sensor.mBluetoothDeviceAddress);
 
             } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
                 // просто отключение-оБлом
@@ -162,7 +170,7 @@ public class BluetoothLeServiceNew extends Service {
             //если у нас есть такое устройство
             final Sensor sensor = getBluetoothDevice(gatt.getDevice().getAddress());
             if(sensor == null) return;
-
+            filtrInTxQueue(sensor, TxQueueItemType.DiscoverServices, null, status);
             //
             if (status == BluetoothGatt.GATT_SUCCESS) {
  // broadcastUpdate(ACTION_GATT_SERVICES_DISCOVERED, sensor);
@@ -326,9 +334,34 @@ public class BluetoothLeServiceNew extends Service {
     private enum TxQueueItemType {
         ReadCharacteristic,//чтение характеристики
         WriteCharacteristic,//запись характеристики
-        WriteDescriptor//запись дескриптора
+        WriteDescriptor,//запись дескриптора
+        DiscoverServices,//запрос у сенсора сервисов и характеристик
+        Connect,//запрос коннекта
+        Disconnect//запрос дисконнекта
     }
-
+    /* queues  */
+    public void queueSetConnectionState(final Sensor sens,final TxQueueItemType type)
+    {
+        // Add to queue because shitty Android GATT stuff is only synchronous
+        TxQueueItem txQueueItem = new TxQueueItem();
+        txQueueItem.sensor = sens;
+        if(type == TxQueueItemType.Connect){
+            txQueueItem.type = TxQueueItemType.Connect;
+        } else{
+            txQueueItem.type = TxQueueItemType.Disconnect;
+        }
+        addToTxQueue(txQueueItem);
+    }
+    /* queues  */
+    public void queueSetDiscover(final Sensor sens)
+    {
+        // Add to queue because shitty Android GATT stuff is only synchronous
+        TxQueueItem txQueueItem = new TxQueueItem();
+        txQueueItem.sensor = sens;
+        txQueueItem.type = TxQueueItemType.DiscoverServices;
+        Log.v(TAG, "-Start service discovery! adr= "+sens.mBluetoothDeviceAddress);
+        addToTxQueue(txQueueItem);
+    }
     /* queues enables/disables notification for characteristic */
     public void queueSetNotificationForCharacteristic(final Sensor sens, BluetoothGattCharacteristic ch, final byte[] dataToWrite, boolean enabled)
     {
@@ -372,8 +405,10 @@ public class BluetoothLeServiceNew extends Service {
             //-- запускаем контроль запроса по времени, устангавливаем 10 секунд
             // если не уложились, то текущий запрос возвращяем в очередь и увеличиваем попытку
             // передачи, передаем 5 раз и облом! ему, запрашиваемому параметру
+            String str= "";
+            if(mTxQueueItem.characteristic != null) str = "   uid= "+mTxQueueItem.characteristic.getUuid();
             Log.e(TAG,"processTxQueue ERROR mTxQueueItem.retry= "+ mTxQueueItem.retry
-                    + "  sensor= "+mTxQueueItem.sensor.getAddress() + "   uid= "+mTxQueueItem.characteristic.getUuid());
+                    + "  sensor= "+mTxQueueItem.sensor.getAddress()+str);
             if(mTxQueueItem.retry++ <= 5){
                 //добавляем из начала прямо в КОНЕЦ очереди!
                 txQueue.add(mTxQueueItem);//повтор запроса
@@ -399,18 +434,18 @@ public class BluetoothLeServiceNew extends Service {
             log("compareTo(sensor.getAddress()) != 0");
             return;
         }
-        if(mTxQueueItem.characteristic.getUuid().compareTo(uuid) != 0) {
-            log("getUuid().compareTo(uuid) != 0)");
-            return;
-        }
+        if(type != TxQueueItemType.DiscoverServices){
+            if(mTxQueueItem.characteristic.getUuid().compareTo(uuid) != 0) {
+                log("getUuid().compareTo(uuid) != 0)");
+                return;
+            }
+            Log.i(TAG,"Ok adr= " + sensor.getAddress() +"   getUuid()"+ uuid.toString());
+        } else return;
 //для теста блокировал уровень батареи посмотрет повтор запроса, работает
 //        if(uuid.compareTo(PartGatt.UUID_BATTERY_LEVEL) == 0) {
 //            log("getUuid().UUID_BATTERY_LEVEL");
 //            return;
 //        }
-        mTxQueueItem = null;
-
-        Log.i(TAG,"Ok adr= " + sensor.getAddress() +"   getUuid()"+ uuid.toString());
         //это то что мы запросили!!
         processTxQueue(false);//это обратная связь для сброса переданного значения
     }
@@ -459,6 +494,10 @@ public class BluetoothLeServiceNew extends Service {
                 break;
             case ReadCharacteristic:
                 requestCharacteristicValue(mTxQueueItem.sensor,mTxQueueItem.characteristic);
+                break;
+            case DiscoverServices:
+                mTxQueueItem.sensor.mBluetoothGatt.discoverServices();
+                break;
         }
     }
     /* set new value for particular characteristic */

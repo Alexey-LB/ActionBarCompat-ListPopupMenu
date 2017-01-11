@@ -521,6 +521,9 @@ return getStringValue( maxLevelNotification.valueLevel, onFahrenheit, addType);
         if (characteristic == null) return rez;
         //если работаем через очередь
         if(queue){
+            Log.i("-- "," characteristic= "+characteristic.getUuid()+"  servic= " + characteristic.getService().getUuid()
+                    + "  getService().getType()= " + characteristic.getService().getType()
+            + "  Permissions()= " + characteristic.getPermissions() + "   getInstanceId()=" +characteristic.getInstanceId());
             app.mBluetoothLeServiceM.queueRequestCharacteristicValue(this,characteristic);
             return true;
         }

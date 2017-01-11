@@ -194,8 +194,8 @@ public class DeviceScanActivity extends ListActivity {//AppCompatActivity {//Act
         setResult(RESULT_OK, intent);
 
         if (mScanning) {
-            mBluetoothAdapter.stopLeScan(mLeScanCallback);
             mScanning = false;
+            mBluetoothAdapter.stopLeScan(mLeScanCallback);
             sleep(1000);//для того чтоб закончилося останов поиска окончательно
         }
         ///-- теперь подключаем ЗДЕСЬ!!..
@@ -231,8 +231,10 @@ public class DeviceScanActivity extends ListActivity {//AppCompatActivity {//Act
             mHandler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    mScanning = false;
-                    mBluetoothAdapter.stopLeScan(mLeScanCallback);
+                    if(mScanning) {
+                        mScanning = false;
+                        mBluetoothAdapter.stopLeScan(mLeScanCallback);
+                    }
                     invalidateOptionsMenu();
                 }
             }, SCAN_PERIOD);
@@ -240,8 +242,11 @@ public class DeviceScanActivity extends ListActivity {//AppCompatActivity {//Act
             mScanning = true;
             mBluetoothAdapter.startLeScan(mLeScanCallback);
         } else {
-            mScanning = false;
-            mBluetoothAdapter.stopLeScan(mLeScanCallback);
+            if(mScanning) {
+                mScanning = false;
+                // mBluetoothAdapter.getScanMode()
+                mBluetoothAdapter.stopLeScan(mLeScanCallback);
+            }
         }
         //декларирует что Меню ИМЕНИЛОСЬ!!*? чтоб заново его прорисовали!!?? класс активити
         invalidateOptionsMenu();
