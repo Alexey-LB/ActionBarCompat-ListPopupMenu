@@ -133,6 +133,7 @@ public class BluetoothLeServiceNew extends Service {
             //
             String intentAction;boolean ds =false;
             if (newState == BluetoothProfile.STATE_CONNECTED) {
+                Log.w(TAG, "--- STATE_CONNECTED --- (state_connecting) GATT_SUCCESS  adress= " + sensor.mBluetoothDeviceAddress);
                 intentAction = ACTION_GATT_CONNECTED;
                 // состояние промежуточное-МЫ подключились- но ЕЩЕ НЕ СЧИТАЛИ СЕРВИСЫ доступные на этом устройстве
                 sensor.mConnectionState = STATE_CONNECTING;
@@ -157,7 +158,7 @@ public class BluetoothLeServiceNew extends Service {
             } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
                 // просто отключение-оБлом
                 sensor.mConnectionState = STATE_DISCONNECTED;
-                Log.w(TAG, "Disconnected from GATT server   adress= " + sensor.mBluetoothDeviceAddress);
+                Log.w(TAG, "--- STATE_DISCONNECTED ---  from GATT server   adress= " + sensor.mBluetoothDeviceAddress);
 
                 sensor.rssi = STATE_DISCONNECTED;//показываем что отключились
    //             intentAction = ACTION_GATT_DISCONNECTED;
@@ -181,9 +182,9 @@ public class BluetoothLeServiceNew extends Service {
  //setNotificationIndication
  sensor.writeUuidDescriptor(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE, PartGatt.UUID_HEALTH_THERMOMETER
                         , PartGatt.UUID_INTERMEDIATE_TEMPERATURE, PartGatt.UUID_CLIENT_CHARACTERISTIC_CONFIG, true);
-                Log.w(TAG, "onServicesDiscovered == GATT_SUCCESS  adress= " + sensor.mBluetoothDeviceAddress);
+                Log.w(TAG, "--- STATE_DISCOVERED_OK ---  GATT_SUCCESS  adress= " + sensor.mBluetoothDeviceAddress);
             } else {
-                Log.e(TAG, "onServicesDiscovered ERROR status: " + status);
+                Log.e(TAG, "--- STATE_DISCOVERED_ERROR ---  ERROR status: " + status);
             }
         }
 
@@ -332,12 +333,12 @@ public class BluetoothLeServiceNew extends Service {
     private boolean txQueueProcessing = false;
 
     private enum TxQueueItemType {
-        ReadCharacteristic,//чтение характеристики
-        WriteCharacteristic,//запись характеристики
-        WriteDescriptor,//запись дескриптора
-        DiscoverServices,//запрос у сенсора сервисов и характеристик
-        Connect,//запрос коннекта
-        Disconnect//запрос дисконнекта
+        ReadCharacteristic//чтение характеристики
+        ,WriteCharacteristic//запись характеристики
+        ,WriteDescriptor//запись дескриптора
+        ,DiscoverServices//запрос у сенсора сервисов и характеристик
+        ,Connect//запрос коннекта
+        ,Disconnect//запрос дисконнекта
     }
     /* queues  */
     public void queueSetConnectionState(final Sensor sens,final TxQueueItemType type)
@@ -408,8 +409,23 @@ public class BluetoothLeServiceNew extends Service {
             String str= "";
             if(mTxQueueItem.characteristic != null) str = "   uid= "+mTxQueueItem.characteristic.getUuid();
             Log.e(TAG,"processTxQueue ERROR mTxQueueItem.retry= "+ mTxQueueItem.retry
-                    + "  sensor= "+mTxQueueItem.sensor.getAddress()+str);
+                    + "  sensor= "+mTxQueueItem.sensor.getAddress()+str + "  type= "+ mTxQueueItem.type.toString());
             if(mTxQueueItem.retry++ <= 5){
+                //---------------------------------------
+                //если после поиска, подождать кода закончатся адвансинг пакеты передавать!
+                // то есть сенсор отключится, в этот момент запустиь коннект, то соединение
+                // адаптер зафиксирует, даст КОННЕКТ, но дисковери команда ОБЛОМИТСЯ, и в таком состоянии КОННЕКТ
+                // будет висеть, подачи команд дисковери не вызовут колбак дисковери! п
+                // ПО ЭТОМУ!!--
+                //дисковери сервис, если он не прошел  3 раза, считаем что разрыв связи,
+                //рвем соннект ставим ДИСКОННЕКТ, - ?! а потом коннект?
+                if(mTxQueueItem.retry >= 3) {
+                    mTxQueueItem.sensor.close();
+ //здесь добавить соннект
+  // в ОЧЕРЕДЬ!!!
+                    Log.v(TAG,"DiscoverServices ERROR >=3 count  adress= " + mTxQueueItem.sensor.getAddress());
+                }
+                //---------------------------------------
                 //добавляем из начала прямо в КОНЕЦ очереди!
                 txQueue.add(mTxQueueItem);//повтор запроса
             }
@@ -440,7 +456,7 @@ public class BluetoothLeServiceNew extends Service {
                 return;
             }
             Log.i(TAG,"Ok adr= " + sensor.getAddress() +"   getUuid()"+ uuid.toString());
-        } else return;
+        }
 //для теста блокировал уровень батареи посмотрет повтор запроса, работает
 //        if(uuid.compareTo(PartGatt.UUID_BATTERY_LEVEL) == 0) {
 //            log("getUuid().UUID_BATTERY_LEVEL");
@@ -473,13 +489,19 @@ public class BluetoothLeServiceNew extends Service {
         // продолжаем работать, убираем колбак и заново запускаем его для новой передачи
         //необходимо всегда УДАЛЯТЬ старые запуски, иначе ОНИ НАЧИНАЮТ ЖИТЬ ВСЕ ВМЕСТЕ!!!
         mHandlerTxQueue.removeCallbacks(runnable);
-           //-----------------------
-        if (txQueue.size() <= 0)  {
-            txQueueProcessing = false;
-            return;
+        //-работаем если есть подключения, те что в отключке-игнорируем!!-------
+        while (true){
+            if (txQueue.size() <= 0)  {//если очередь пуста выходим С готовность работать
+                txQueueProcessing = false;
+                return;
+            }
+            mTxQueueItem = txQueue.remove();
+            if((mTxQueueItem.sensor.mConnectionState  != STATE_DISCONNECTED)
+                || (mTxQueueItem.type == TxQueueItemType.Connect))break;
+            else Log.w(TAG,"Remove TxQueueItem, STATE_DISCONNECTED, adress= "+ mTxQueueItem.sensor.getAddress());
         }
+        //----------------
         txQueueProcessing = true;//заблокировались
-        mTxQueueItem = txQueue.remove();
         //если очередь НЕ пуста, запускаем контроль по времени снова!
         mHandlerTxQueue.postDelayed(runnable,10000);//-- запускаем контроль запроса по времени, устангавливаем 10 секунд
         //
@@ -779,7 +801,6 @@ public class BluetoothLeServiceNew extends Service {
         if (sensor.mBluetoothGatt != null) {
             Log.w(TAG, "Trying to use an existing mBluetoothGatt for connection.");
             if (sensor.mBluetoothGatt.connect()) {
-
                 return true;
             } else {
                 return false;

@@ -125,6 +125,7 @@ public class DeviceScanActivity extends ListActivity {//AppCompatActivity {//Act
         switch (item.getItemId()) {
             case R.id.menu_scan:
                 mLeDeviceListAdapter.clear();
+                mLeDeviceListAdapter.notifyDataSetChanged();
                 scanLeDevice(true);
                 break;
             case R.id.menu_stop:
@@ -174,6 +175,7 @@ public class DeviceScanActivity extends ListActivity {//AppCompatActivity {//Act
         super.onPause();
         scanLeDevice(false);
         mLeDeviceListAdapter.clear();
+        mLeDeviceListAdapter.notifyDataSetChanged();
     }
     @Override
     protected void onDestroy() {
@@ -303,7 +305,9 @@ public class DeviceScanActivity extends ListActivity {//AppCompatActivity {//Act
         }
 
         public void clear() {
+
             mLeDevices.clear();
+            mLeDeviceListAdapter.notifyDataSetChanged();
         }
 
         @Override
