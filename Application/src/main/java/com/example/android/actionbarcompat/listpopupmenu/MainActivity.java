@@ -185,7 +185,7 @@ setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         }
         //переход в следующее окно
         Intent intent = new Intent(this, MainActivityWork.class);
-        intent.putExtra(Util.EXTRAS_BAR_TITLE, "     B1/B3 v2.6.08");
+        intent.putExtra(Util.EXTRAS_BAR_TITLE, "     B1/B3 v2.6.09");//
         // все изменения будет писать сразу в сенсор
         // по умолчанию устанавливаем минимум, все остальное делется НАПРЯМУЮ с данными
         //   startActivityForResult(intent,MAIN_ACTIVITY);
