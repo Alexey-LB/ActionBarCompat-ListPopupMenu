@@ -16,6 +16,8 @@
 
 package com.example.android.actionbarcompat.listpopupmenu;
 
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.drawable.TransitionDrawable;
@@ -30,6 +32,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 
+import com.portfolio.alexey.connector.BluetoothLeServiceNew;
 import com.portfolio.alexey.connector.Util;
 
 import static java.lang.Thread.sleep;
@@ -202,6 +205,7 @@ setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         //быстро возвращяем назад кнопку в  OFF, рисунк ON -> off button
         mTransitionDrawable.resetTransition();
        // mTransitionDrawable.reverseTransition(500);//resetTransition();
+
         Log.e(TAG, "----onResume() ----------");
     }
     @Override

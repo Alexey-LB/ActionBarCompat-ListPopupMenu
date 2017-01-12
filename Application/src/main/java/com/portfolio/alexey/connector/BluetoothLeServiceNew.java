@@ -35,14 +35,14 @@ public class BluetoothLeServiceNew extends Service {
     private final static String TAG = BluetoothLeServiceNew.class.getSimpleName();
 
     private BluetoothManager mBluetoothManager;
-    private BluetoothAdapter mBluetoothAdapter;
+    public   BluetoothAdapter mBluetoothAdapter;
 
     // private String mBluetoothDeviceAddress;
 
     // private BluetoothGatt mBluetoothGatt;
     //private int mConnectionState = STATE_DISCONNECTED;
 
-    public  static final int STATE_DISCONNECTED = 0;
+    static final int STATE_DISCONNECTED = 0;
     public  static final int STATE_CONNECTING = 1;
     public  static final int STATE_CONNECTED = 2;
 
@@ -115,7 +115,7 @@ public class BluetoothLeServiceNew extends Service {
      * @param adr поиск сенсора с указанным адресом
      * @return
      */
-    private Sensor getBluetoothDevice(final String adr){
+    public Sensor getBluetoothDevice(final String adr){
         for(Sensor sensor: arraySensors){
             if(sensor.mBluetoothDeviceAddress == null) continue;
             if(adr.compareTo(sensor.mBluetoothDeviceAddress) == 0)return sensor;

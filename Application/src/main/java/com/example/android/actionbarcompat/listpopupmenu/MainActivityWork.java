@@ -17,6 +17,8 @@
 package com.example.android.actionbarcompat.listpopupmenu;
 
 import android.app.Activity;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -27,6 +29,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.portfolio.alexey.connector.BluetoothLeServiceNew;
 import com.portfolio.alexey.connector.Sensor;
 import com.portfolio.alexey.connector.Util;
 
@@ -241,6 +244,30 @@ public class MainActivityWork extends AppCompatActivity {// ActionBarActivity {
 //        }
 // //!!       popupListFragment.initList();
 //    }
+// Device scan callback.
+private BluetoothAdapter.LeScanCallback mLeScanCallback =
+        new BluetoothAdapter.LeScanCallback() {
+
+            @Override
+            public void onLeScan(final BluetoothDevice device, int rssi, byte[] scanRecord) {
+                final int mrssi = rssi;
+                final byte[] mscanRecord = scanRecord;
+                Log.v("NAIN", "Rssi= " + mrssi + "   scanRecord= " + mscanRecord);
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Log.w(TAG,"FIND ---------- device= " + device);
+                        BluetoothLeServiceNew bs = Util.getAppBleService();
+                        if(bs.mBluetoothAdapter != null){
+                            Sensor sensor = bs.getBluetoothDevice(device.getAddress());
+                            if(sensor != null) bs.connect(sensor.getAddress(),true);
+                        }
+
+                    }
+                });
+            }
+        };
     @Override
     protected void onResume() {
         super.onResume();
@@ -257,6 +284,11 @@ public class MainActivityWork extends AppCompatActivity {// ActionBarActivity {
 //          } else{
 //            getSupportActionBar().show();
 //        }
+        //--
+        if(Util.getAppBleService().mBluetoothAdapter != null){
+            Util.getAppBleService().mBluetoothAdapter.startLeScan(mLeScanCallback);
+
+        }
     }
 
 //Develop API Guides User Interface Меню
