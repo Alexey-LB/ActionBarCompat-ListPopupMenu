@@ -505,12 +505,12 @@ return getStringValue( maxLevelNotification.valueLevel, onFahrenheit, addType);
         }
         BluetoothGattService service = mBluetoothGatt.getService(uuidService);
         if (service == null) {
-            Log.e(TAG, errorHead + "> Not found Service= " + uuidService.toString());
+            Log.e(TAG, errorHead + "> Not found Service= " + Util.getUidStringMost16Bits(uuidService));
             return rez;
         }
         BluetoothGattCharacteristic characteristic = service.getCharacteristic(uuidCharacteristic);
         if (characteristic == null) {
-            Log.e(TAG, errorHead + "> Not found Charateristic= " + uuidCharacteristic.toString());
+            Log.e(TAG, errorHead + "> Not found Charateristic= " + Util.getUidStringMost16Bits(uuidCharacteristic));
             return rez;
         }
         return characteristic;
@@ -521,14 +521,15 @@ return getStringValue( maxLevelNotification.valueLevel, onFahrenheit, addType);
         if (characteristic == null) return rez;
         //если работаем через очередь
         if(queue){
-            Log.i("-- "," characteristic= "+characteristic.getUuid()+"  servic= " + characteristic.getService().getUuid()
+            Log.i(TAG," characteristic= "+Util.getUidStringMost16Bits(characteristic)
+                    +"  servic= " + Util.getUidStringMost16Bits(characteristic.getService())
                     + "  getService().getType()= " + characteristic.getService().getType()
             + "  Permissions()= " + characteristic.getPermissions() + "   getInstanceId()=" +characteristic.getInstanceId());
             app.mBluetoothLeServiceM.queueRequestCharacteristicValue(this,characteristic);
             return true;
         }
         rez = mBluetoothGatt.readCharacteristic(characteristic);
-        Log.i(TAG, "Read characteristic= " +uuidCharacteristic.toString()+"   status=" + rez);
+        Log.i(TAG, "Read characteristic= " +Util.getUidStringMost16Bits(uuidCharacteristic)+"   status=" + rez);
         return rez;
     }
 
@@ -555,7 +556,7 @@ return getStringValue( maxLevelNotification.valueLevel, onFahrenheit, addType);
         }
         characteristic.setValue(value);
         rez = mBluetoothGatt.writeCharacteristic(characteristic);
-        Log.i(TAG, "Write characteristic= " +uuidCharacteristic.toString()+"   status=" + rez);
+        Log.i(TAG, "Write characteristic= " +Util.getUidStringMost16Bits(uuidCharacteristic)+"   status=" + rez);
         return rez;
     }
     //setNotificationIndication

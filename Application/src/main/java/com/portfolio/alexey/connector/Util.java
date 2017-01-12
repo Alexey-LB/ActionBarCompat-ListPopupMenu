@@ -557,4 +557,7 @@ public class Util {
     public static String getUidStringMost16Bits(BluetoothGattService service){
         return String.format("0x%04X",getUidMost16Bits(service));
     }
+    public static String getUidStringMost16Bits(UUID uid){
+        return String.format("0x%04X",getUidMost16Bits(uid));
+    }
 }
