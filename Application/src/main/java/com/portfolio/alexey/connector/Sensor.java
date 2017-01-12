@@ -690,14 +690,16 @@ return getStringValue( maxLevelNotification.valueLevel, onFahrenheit, addType);
 
         //каждые 16 сек смотрим уровень сигнала
         loop_rssi++;
-        if(((loop_rssi & 0x0F) == 1) || ((loop_rssi & 0xFFFFFFF3) == 1)) {
+       // if(((loop_rssi & 0x0F) == 1) || ((loop_rssi & 0xFFFFFFF3) == 1)) {
+        //каждые 2 секунды запрашиваем показания
+        if ((loop_rssi & 0x1) == 1) {
             mBluetoothGatt.readRemoteRssi();
             return true;
             //           Log.w(TAG, "enableRXNotification: loop_rssi -- ");
         }
         //каждые 2 минуты уровень батареи
-        if(((loop_rssi & 0x7F) == 3) || ((loop_rssi & 0xFFFFFFF3) == 3)){//Чаше чем 1 раз в 4 секунды НЕ надо, захлебывается
-       // if(((loop_rssi & 0x3) == 3)){
+       // if(((loop_rssi & 0x7F) == 3) || ((loop_rssi & 0xFFFFFFF3) == 3)){//Чаше чем 1 раз в 4 секунды НЕ надо, захлебывается
+        if(((loop_rssi & 0xF) == 3)){
             //читать уровень батареи
             readUuidCharacteristic(PartGatt.UUID_BATTERY_SERVICE, PartGatt.UUID_BATTERY_LEVEL);
             Log.e(TAG, "R: BATTERY Service -- ");

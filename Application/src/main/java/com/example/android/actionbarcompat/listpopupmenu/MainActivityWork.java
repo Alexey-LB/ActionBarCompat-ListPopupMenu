@@ -245,29 +245,29 @@ public class MainActivityWork extends AppCompatActivity {// ActionBarActivity {
 // //!!       popupListFragment.initList();
 //    }
 // Device scan callback.
-private BluetoothAdapter.LeScanCallback mLeScanCallback =
-        new BluetoothAdapter.LeScanCallback() {
-
-            @Override
-            public void onLeScan(final BluetoothDevice device, int rssi, byte[] scanRecord) {
-                final int mrssi = rssi;
-                final byte[] mscanRecord = scanRecord;
-                Log.v("NAIN", "Rssi= " + mrssi + "   scanRecord= " + mscanRecord);
-
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Log.w(TAG,"FIND ---------- device= " + device);
-                        BluetoothLeServiceNew bs = Util.getAppBleService();
-                        if(bs.mBluetoothAdapter != null){
-                            Sensor sensor = bs.getBluetoothDevice(device.getAddress());
-                            if(sensor != null) bs.connect(sensor.getAddress(),true);
-                        }
-
-                    }
-                });
-            }
-        };
+//private BluetoothAdapter.LeScanCallback mLeScanCallback =
+//        new BluetoothAdapter.LeScanCallback() {
+//
+//            @Override
+//            public void onLeScan(final BluetoothDevice device, int rssi, byte[] scanRecord) {
+//                final int mrssi = rssi;
+//                final byte[] mscanRecord = scanRecord;
+//                Log.v("NAIN", "Rssi= " + mrssi + "   scanRecord= " + mscanRecord);
+//
+//                runOnUiThread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        Log.w(TAG,"FIND ---------- device= " + device);
+//                        BluetoothLeServiceNew bs = Util.getAppBleService();
+//                        if(bs.mBluetoothAdapter != null){
+//                            Sensor sensor = bs.getBluetoothDevice(device.getAddress());
+//                            if(sensor != null) bs.connect(sensor.getAddress(),true);
+//                        }
+//
+//                    }
+//                });
+//            }
+//        };
     @Override
     protected void onResume() {
         super.onResume();
@@ -285,10 +285,10 @@ private BluetoothAdapter.LeScanCallback mLeScanCallback =
 //            getSupportActionBar().show();
 //        }
         //--
-        if(Util.getAppBleService().mBluetoothAdapter != null){
-            Util.getAppBleService().mBluetoothAdapter.startLeScan(mLeScanCallback);
-
-        }
+//        if(Util.getAppBleService().mBluetoothAdapter != null){
+//            Util.getAppBleService().mBluetoothAdapter.startLeScan(mLeScanCallback);
+//
+//        }
     }
 
 //Develop API Guides User Interface Меню

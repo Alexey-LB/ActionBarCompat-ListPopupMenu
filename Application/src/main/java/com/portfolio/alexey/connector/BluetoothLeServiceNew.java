@@ -234,9 +234,9 @@ public class BluetoothLeServiceNew extends Service {
             //       sensor.onCharacteristicRead();
             // на каждый 16 запрашиваем RSSI (запрос каждые примерно 16 секунды)
 
-    if(sensor.readRSSIandBatteryLevel() == false){
+   sensor.readRSSIandBatteryLevel();
         sensor.onCharacteristicRead();
-    }
+
 
         //ЗАПРАШИВАТЬ (или записыват) ЗА 1 РАЗ можно только 1 характеристику
         // или свойства - иначе НЕ отвечает
@@ -590,6 +590,9 @@ public class BluetoothLeServiceNew extends Service {
                 mTxQueueItem.sensor.close();
                 break;
             case Connect:
+                // время ожидания соединения уменьшаем до 3 секунд пока может надо будет оставить 10
+                mHandlerTxQueue.removeCallbacks(runnable);
+                mHandlerTxQueue.postDelayed(runnable,3000);
                 //запускем на коннект, если он есть в таблице работаем с ним, если нет ГАТТ то создаем его
                 connect(mTxQueueItem.sensor.getAddress(),true);
                 break;
@@ -618,7 +621,7 @@ public class BluetoothLeServiceNew extends Service {
         if (mBluetoothAdapter == null || sensor.mBluetoothGatt == null) return;
         boolean success = sensor.mBluetoothGatt.setCharacteristicNotification(ch, enabled);
         if(!success) {
-            Log.e("------", "Seting proper notification status for characteristic failed!");
+            Log.e(TAG, "Seting proper notification status for characteristic failed!");
         }
         // This is also sometimes required (e.g. for heart rate monitors) to enable notifications/indications
         // see: https://developer.bluetooth.org/gatt/descriptors/Pages/DescriptorViewer.aspx?u=org.bluetooth.descriptor.gatt.client_characteristic_configuration.xml
@@ -759,7 +762,7 @@ public class BluetoothLeServiceNew extends Service {
             int i;
             for(i= 0; i < listSizeBluetooth;i++){
                 String devAdr = mSettings.getString("item"+i, null);
-                Log.v(TAG,"onCreate: get sensor from flash= "+i +"   devAdr= " +devAdr + "  size= "+listSizeBluetooth);
+                Log.i(TAG,"onCreate: -- get sensor from flash= "+i +"   devAdr= " +devAdr + "  size= "+listSizeBluetooth);
                 if (devAdr != null) {
                     //читаем УСТРОЙСТВО в файле отдельном
                     SharedPreferences mSettingsDevace =
@@ -770,16 +773,15 @@ public class BluetoothLeServiceNew extends Service {
                     RunDataHub app = ((RunDataHub)getApplication())   ;
                     Sensor sensor = new Sensor(mSettingsDevace, app);
                     arraySensors.add(sensor);
-                    Log.i(TAG,"onCreate: get sensor from flash= "+i +"   adress= " +sensor.mBluetoothDeviceAddress);
+                    Log.i(TAG,"onCreate: -- get sensor from flash= "+i +"   adress= " +sensor.mBluetoothDeviceAddress);
                     //--запускаем на соннект
                     if((sensor.mBluetoothDeviceAddress != null) &&(sensor.mBluetoothDeviceAddress.length() == 17)){
                         // запускаем на соннект
-
+        //  небольшую паузу впереди 3 секунды пауза
+     queueSetTimer(sensor, 2000);
    //connect(sensor.mBluetoothDeviceAddress, true);
     queueSetConnect(sensor);
-    // коннект потом 3 секунды пауза
-    queueSetTimer(sensor, 3000);
-                        Log.w(TAG,"connect sensor= "+i+ "  adress= " + sensor.mBluetoothDeviceAddress);
+                        Log.i(TAG,"onCreate: -- connect sensor= "+i+ "  adress= " + sensor.mBluetoothDeviceAddress);
                     }
                 }
             }
