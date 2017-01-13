@@ -5,23 +5,25 @@
         android:viewportHeight="100.0">
 
     <!--<path-->
-        <!--android:fillColor="@color/colorBatteryAlarm"-->
-        <!--android:fillAlpha=".6"-->
+        <!--android:fillColor="#80000000"-->
+        <!--android:strokeWidth="8.0"-->
         <!--android:pathData="-->
-        <!--M40,90-->
+        <!--M40,40-->
         <!--h27-->
-        <!--v0-->
+        <!--v40-->
         <!--c0,2 -2,4 -4,4-->
         <!--h-26-->
         <!--c-2,0 -4,-2 -4,-4-->
-        <!--v-0-->
+        <!--v-40-->
         <!--h13-->
         <!--z"-->
         <!--/>-->
     <!--android:strokeAlpha="0.2"-->
+
+    <!--android:strokeColor="@color/colorBatteryStrok"-->
     <path
-        android:strokeColor="@color/colorBatteryStrok"
-        android:strokeWidth="1.5"
+        android:strokeColor="#80000000"
+        android:strokeWidth="8.0"
 
         android:pathData="
         M42,12

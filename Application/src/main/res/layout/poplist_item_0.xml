@@ -15,7 +15,7 @@ editbox_dropdown_light_frame,[sym_contact_card](screen_background_light)screen_b
 
     <TextView
         android:text="Удалить"
-        android:layout_height="match_parent"
+        android:layout_height="60dp"
         android:id="@+id/img_dell"
         android:contentDescription="@android:string/cut"
 
@@ -31,7 +31,7 @@ editbox_dropdown_light_frame,[sym_contact_card](screen_background_light)screen_b
 
     <TextView
         android:layout_width="100dp"
-        android:layout_height="match_parent"
+        android:layout_height="60dp"
         android:id="@+id/img_setting"
         android:background="@color/colorTextlight"
         android:layout_alignParentTop="true"
@@ -43,7 +43,7 @@ editbox_dropdown_light_frame,[sym_contact_card](screen_background_light)screen_b
 
     <TextView
         android:text="Изменить"
-        android:layout_height="match_parent"
+        android:layout_height="60dp"
 
         android:id="@+id/img_goto"
 

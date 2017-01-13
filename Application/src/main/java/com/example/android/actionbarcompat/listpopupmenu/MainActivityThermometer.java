@@ -415,8 +415,11 @@ public class MainActivityThermometer  extends AppCompatActivity {// ActionBarAct
         thermometer.getRootView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
         //делаем Здесь обновление термометра, чтоб при выходе из настроек сенсора, изменения были учтены
         mThermometerDrawable.setSettingThermometer(getResources().getDisplayMetrics().density
-                ,sensor.minLevelNotification.valueLevel,
-                sensor.maxLevelNotification.valueLevel,sensor.onFahrenheit,false);
+                ,sensor.minLevelNotification.valueLevel
+                ,sensor.maxLevelNotification.valueLevel
+                ,sensor.minLevelNotification.switchNotification
+                ,sensor.maxLevelNotification.switchNotification
+                ,sensor.onFahrenheit,false);
         /// тоже что выше НО с ЗАПУСКОМ ТЕСТА ртутного столбика!
 //        mThermometerDrawable.setSettingThermometer(getResources().getDisplayMetrics().density
 //                ,sensor.minTemperature,sensor.maxTemperature,sensor.onFahrenheit,true);

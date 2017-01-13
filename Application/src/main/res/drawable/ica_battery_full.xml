@@ -5,8 +5,9 @@
         android:viewportHeight="100.0">
     <!--android:fillAlpha=".6"-->
     <path
-
-        android:fillColor="@color/colorBatteryFill"
+        android:fillColor="#80000000"
+        android:strokeColor="#80000000"
+        android:strokeWidth="8.0"
         android:pathData="
         M42,12
         v-4

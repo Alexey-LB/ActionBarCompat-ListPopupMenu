@@ -74,9 +74,9 @@
                 android:maxLines="1"
                 android:gravity="center_vertical|center_horizontal"
                 android:textSize="18sp"
-                android:textStyle="normal|bold"
                 android:layout_gravity="right|end"
-                android:layout_width="match_parent" />
+                android:layout_width="match_parent"
+                android:fontFamily="sans-serif" />
             <!--android:background="@drawable/rounded_a"
                             android:paddingLeft="20dp"
                             android:paddingRight="20dp"
@@ -125,14 +125,14 @@
                 android:layout_weight="0"
                 android:maxLines="1"
                 android:layout_height="match_parent"
-                android:textColor="@color/colorTextlight"
-
                 android:gravity="bottom|center_horizontal"
 
-                android:ellipsize="end"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textSize="18sp"
-                android:layout_width="88dp" />
+                android:background="@android:drawable/screen_background_light"
+                android:textColor="@color/colorTextlight"
+                android:layout_width="88dp"
+                android:fontFamily="sans-serif" />
+
+            <!--android:ellipsize="end"-->
 
             <!--e49948e Alexey_B on 18.12.2016 at 17:13-->
             <!--Перестал доходить короткий клик мышкой и-->
@@ -156,7 +156,8 @@
                 android:gravity="bottom|center_horizontal"
                 android:textSize="18sp"
                 android:textStyle="normal|bold"
-                android:background="@drawable/temperature_fon" />
+                android:background="@drawable/temperature_fon"
+                android:fontFamily="sans-serif" />
 
 
             <TextView
@@ -169,7 +170,8 @@
                 android:gravity="bottom|center_horizontal"
                 android:textSize="18sp"
                 android:background="@android:drawable/screen_background_light"
-                android:layout_width="88dp" />
+                android:layout_width="88dp"
+                android:fontFamily="sans-serif" />
 
         </LinearLayout>
 
@@ -178,7 +180,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/colorBackground"
-            android:layout_weight="0">
+            android:layout_weight="0"
+            android:gravity="bottom"
+            android:layout_gravity="bottom">
 
             <ImageView
                 android:layout_width="5dp"
@@ -199,8 +203,9 @@
                 android:layout_weight="0"
                 android:textSize="12sp"
                 android:textColor="@color/colorTextlight"
-                android:gravity="center_vertical|center_horizontal"
-                android:background="@color/colorBackground" />
+                android:gravity="bottom|center_horizontal"
+                android:background="@color/colorBackground"
+                android:layout_gravity="bottom|center_horizontal" />
             <ImageView
                 android:layout_width="5dp"
                 android:id="@+id/imageView3"
@@ -217,11 +222,13 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/textView6"
                 android:layout_weight="0"
-                android:gravity="center_vertical|center_horizontal"
+                android:gravity="bottom|center_horizontal"
                 android:textSize="12sp"
                 android:fontFamily="sans-serif"
                 android:textColor="@color/colorTextlight"
-                android:background="@color/colorBackground" />
+                android:background="@color/colorBackground"
+                android:layout_gravity="bottom|center_horizontal" />
+
             <ImageView
                 android:layout_width="5dp"
                 android:id="@+id/imageView4"
@@ -239,8 +246,10 @@
                 android:layout_weight="0"
                 android:textSize="12sp"
                 android:textColor="@color/colorTextlight"
-                android:gravity="center_vertical|center_horizontal"
-                android:background="@color/colorBackground" />
+                android:gravity="bottom|center_horizontal"
+                android:background="@color/colorBackground"
+                android:layout_gravity="bottom|center_horizontal"
+                android:fontFamily="sans-serif" />
             <ImageView
                 android:layout_width="5dp"
                 android:id="@+id/imageView5"

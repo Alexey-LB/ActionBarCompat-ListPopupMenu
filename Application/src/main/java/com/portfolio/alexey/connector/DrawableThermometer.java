@@ -43,6 +43,9 @@ public class DrawableThermometer extends Drawable {
     private final int offsetXFinal = 5;// смещение от края по Х в др
     private int offsetX = offsetXFinal;// смещение от края по Х в
 
+    public boolean minSwitch = false;//ПЕРЕКЛЮЧатель разрешение
+    public boolean maxSwitch = false;//ПЕРЕКЛЮЧатель разрешение
+
     private float minTemperature; //минимальная температура, при которой срабатывает сигнализация
     private float maxTemperature;//максимальная температура, при которой срабатывает сигнализация
 
@@ -146,8 +149,12 @@ public class DrawableThermometer extends Drawable {
         }
     }
 
-    public void setSettingThermometer(float density_,float minTemperature_,float maxTemperature_, boolean fahrenheit,boolean test){
+    public void setSettingThermometer(float density_,float minTemperature_,float maxTemperature_
+            , boolean minSwitchTemperature, boolean maxSwitchTemperature
+            , boolean fahrenheit,boolean test){
         onFahrenheit = fahrenheit;
+        minSwitch = minSwitchTemperature;
+        maxSwitch = maxSwitchTemperature;
         if(fahrenheit){
             minTemperature = Util.getFahrenheit(minTemperature_);
             maxTemperature = Util.getFahrenheit(maxTemperature_);
@@ -284,13 +291,17 @@ public class DrawableThermometer extends Drawable {
 //        }else {
 //            yourTitle.setTextColor(getActivity().getResources().getColor(android.R.color.white));
 //        }
-        // MIN
-        drawRect(startX,0 ,endX,minTemperaturePoint,mPath);
-        drawCanvas(canvas, res.getColor(R.color.colorMinThermometer), mPath,  Paint.Style.FILL);//Paint.Style.STROKE
-        //MAX
-        drawRect(startX,maxTemperaturePoint,endX,height,mPath);
-        drawCanvas(canvas,res.getColor( R.color.colorMaxThermometer), mPath, Paint.Style.FILL);//80ffc0c0 Paint.Style.STROKE
-       //-----------
+        if(minSwitch) {
+            // MIN
+            drawRect(startX, 0, endX, minTemperaturePoint, mPath);
+            drawCanvas(canvas, res.getColor(R.color.colorMinThermometer), mPath, Paint.Style.FILL);//Paint.Style.STROKE
+        }
+        if(maxSwitch) {
+            //MAX
+            drawRect(startX, maxTemperaturePoint, endX, height, mPath);
+            drawCanvas(canvas, res.getColor(R.color.colorMaxThermometer), mPath, Paint.Style.FILL);//80ffc0c0 Paint.Style.STROKE
+        }
+        //-----------
         // mPath.reset();values/colors.xml
         mPaint.setColor(res.getColor(R.color.colorScaleDivisionThermometer));
         mPaint.setTextSize(res.getDimension(R.dimen.TextScaleDivisionThermometerSize));

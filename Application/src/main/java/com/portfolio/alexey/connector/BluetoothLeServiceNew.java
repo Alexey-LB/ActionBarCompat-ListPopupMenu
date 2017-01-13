@@ -592,7 +592,7 @@ public class BluetoothLeServiceNew extends Service {
             case Connect:
                 // время ожидания соединения уменьшаем до 3 секунд пока может надо будет оставить 10
                 mHandlerTxQueue.removeCallbacks(runnable);
-                mHandlerTxQueue.postDelayed(runnable,3000);
+                mHandlerTxQueue.postDelayed(runnable,5000);
                 //запускем на коннект, если он есть в таблице работаем с ним, если нет ГАТТ то создаем его
                 connect(mTxQueueItem.sensor.getAddress(),true);
                 break;

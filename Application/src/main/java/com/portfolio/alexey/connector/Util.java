@@ -415,6 +415,7 @@ public class Util {
         //разрешить копку доиой
         actionBar.setHomeAsUpIndicator(R.drawable.ic_chevron_left_blue_24dp);
         actionBar.setDisplayHomeAsUpEnabled(true);
+   //     actionBar.getThemedContext().getTheme()
         actionBar.setHomeButtonEnabled(true);//устанавливает надпись и иконку как кнопку домой(не требуется
         // actionBar.setDisplayUseLogoEnabled(true);
         //    actionBar.setHomeButtonEnabled(true); метод - actionBar.setDisplayHomeAsUpEnabled(true);)
@@ -423,6 +424,7 @@ public class Util {
         actionBar.setIcon(null);//actionBar.setIcon(R.drawable.ic_language_black_24dp);
         actionBar.setDisplayUseLogoEnabled(false);
         actionBar.setTitle(title);
+
         actionBar.setDisplayShowTitleEnabled(true);
 //------------------------------------------------------
         //actionBar.setCustomView(null);

@@ -94,7 +94,9 @@ public class PopupListFragment extends ListFragmentA  {
     private View fbButton = null;
     private View fbButton2 = null;
     private ArrayAdapter adapter;//хранитель обектоа и их манипуляции с ними
-    private final int dividerHeight = 3;//расстояние в dp  между ЭЛЕМЕНТАИ списка в попЛист
+//делителем сделал текст "-- мин -- текущее -- мах --"
+//private final int dividerHeight = 3;//расстояние в dp  между ЭЛЕМЕНТАИ списка в попЛист
+private final int dividerHeight = 0;//расстояние в dp  между ЭЛЕМЕНТАИ списка в попЛист
     private final int OverFloatButton = 3;// наезд Плавающей кнопки на ЭЛЕМЕНТ списка попЛиста в dp
     private final int hightPopListItem = 64;//высота Элемента попЛиста в Dp
     private final int hightButton = 40;//высота (диаметр) ПЛАВАЮЩЕЙ кнопки в Dp
@@ -211,24 +213,24 @@ fbButton = View.inflate(getContext(),R.layout.poplist_item_3,null);//пород�
         //if(adapter == null)
             initList();
         //------------------------------
-        View v = root.findViewById(R.id.LinearLayoutWarning);
-        v.setVisibility(View.INVISIBLE);//выключаем видимость его, пока не сработало
-        v.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //сброс минимум и максимум
-                ArrayList<Sensor> sensors = Util.getListSensor();
-                if(sensors != null) {
-                    //сбрасываем все сенсоры
-                    for(int i = 0; i < sensors.size();i++) {
-                        sensors.get(i).resetNotificationVibrationLevelMinMax();
-                    }
-                }
-                v.setVisibility(View.INVISIBLE);//выключаем видимость его, пока не сработало
-                getListView().getRootView().findViewById(R.id.LinearLayoutFahrenheit).setVisibility(View.VISIBLE);
-
-            }
-        });
+//!!        View v = root.findViewById(R.id.LinearLayoutWarning);
+//!!        v.setVisibility(View.INVISIBLE);//выключаем видимость его, пока не сработало
+//        v.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                //сброс минимум и максимум
+//                ArrayList<Sensor> sensors = Util.getListSensor();
+//                if(sensors != null) {
+//                    //сбрасываем все сенсоры
+//                    for(int i = 0; i < sensors.size();i++) {
+//                        sensors.get(i).resetNotificationVibrationLevelMinMax();
+//                    }
+//                }
+//                v.setVisibility(View.INVISIBLE);//выключаем видимость его, пока не сработало
+//                getListView().getRootView().findViewById(R.id.LinearLayoutFahrenheit).setVisibility(View.VISIBLE);
+//
+//            }
+//        });
         //=======
         Log.e(TAG,"Fragment --- onActivityCreated---END----");
     }
@@ -301,17 +303,17 @@ fbButton = View.inflate(getContext(),R.layout.poplist_item_3,null);//пород�
                 &&  (sensor.minLevelNotification.onNotification
                 || sensor.maxLevelNotification.onNotification)){
             level = 1;
-            //показываем ПРЕДУПРЕЖДЕНИЯ и надпись
-            View v = getListView().getRootView().findViewById(R.id.LinearLayoutWarning);
-            v.setVisibility(View.VISIBLE);//выключаем видимость его, пока не сработало
-            String str = sensor.deviceLabel;
-            if(sensor.minLevelNotification.onNotification){
-                str = str + "   Достигнут нижний порог";
-            } else{
-                str = str + "   Достигнут верхний порог";
-            }
-            ((TextView)getListView().getRootView().findViewById(R.id.textWarning)).setText(str);
-            getListView().getRootView().findViewById(R.id.LinearLayoutFahrenheit).setVisibility(View.INVISIBLE);
+//!!            //показываем ПРЕДУПРЕЖДЕНИЯ и надпись
+// !!           View v = getListView().getRootView().findViewById(R.id.LinearLayoutWarning);
+//  !!          v.setVisibility(View.VISIBLE);//выключаем видимость его, пока не сработало
+//            String str = sensor.deviceLabel;
+//            if(sensor.minLevelNotification.onNotification){
+//                str = str + "   Достигнут нижний порог";
+//            } else{
+//                str = str + "   Достигнут верхний порог";
+//            }
+//            ((TextView)getListView().getRootView().findViewById(R.id.textWarning)).setText(str);
+//            getListView().getRootView().findViewById(R.id.LinearLayoutFahrenheit).setVisibility(View.INVISIBLE);
 
         }else level = 0;
         fon = view.findViewById(R.id.marker_fon).getBackground();

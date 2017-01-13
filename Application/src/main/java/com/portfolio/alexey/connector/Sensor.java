@@ -699,7 +699,7 @@ return getStringValue( maxLevelNotification.valueLevel, onFahrenheit, addType);
         }
         //каждые 2 минуты уровень батареи
        // if(((loop_rssi & 0x7F) == 3) || ((loop_rssi & 0xFFFFFFF3) == 3)){//Чаше чем 1 раз в 4 секунды НЕ надо, захлебывается
-        if(((loop_rssi & 0xF) == 3)){
+        if(((loop_rssi & 0xF) == 0)){
             //читать уровень батареи
             readUuidCharacteristic(PartGatt.UUID_BATTERY_SERVICE, PartGatt.UUID_BATTERY_LEVEL);
             Log.e(TAG, "R: BATTERY Service -- ");

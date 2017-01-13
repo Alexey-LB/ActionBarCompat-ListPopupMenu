@@ -26,6 +26,14 @@
         <!--android:name="com.example.android.actionbarcompat.listpopupmenu.PopupListFragment"-->
         <!--/>-->
         <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_weight="0"
+            android:id="@+id/gapundebar"
+            android:layout_height="6dp">
+
+        </FrameLayout>
+
+        <FrameLayout
             android:id="@+id/mainFragmentWork"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -75,32 +83,32 @@
 
             </LinearLayout>
 
-            <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:id="@+id/LinearLayoutWarning">
+            <!--<LinearLayout-->
+                <!--android:orientation="horizontal"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:id="@+id/LinearLayoutWarning">-->
 
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:srcCompat="@drawable/warning"
-                    android:id="@+id/imageViewWarning"
-                    android:layout_weight="0"
-                    android:layout_gravity="left|center_vertical"
-                    android:layout_marginLeft="10dp" />
+                <!--<ImageView-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--app:srcCompat="@drawable/warning"-->
+                    <!--android:id="@+id/imageViewWarning"-->
+                    <!--android:layout_weight="0"-->
+                    <!--android:layout_gravity="left|center_vertical"-->
+                    <!--android:layout_marginLeft="10dp" />-->
 
-                <TextView
-                    android:text="TextView"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:id="@+id/textWarning"
-                    android:layout_weight="10"
-                    android:textSize="18sp"
-                    android:gravity="left|center_vertical"
-                    android:textColor="@color/colorText"
-                    android:textStyle="normal|bold" />
-            </LinearLayout>
+                <!--<TextView-->
+                    <!--android:text="TextView"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="match_parent"-->
+                    <!--android:id="@+id/textWarning"-->
+                    <!--android:layout_weight="10"-->
+                    <!--android:textSize="18sp"-->
+                    <!--android:gravity="left|center_vertical"-->
+                    <!--android:textColor="@color/colorText"-->
+                    <!--android:textStyle="normal|bold" />-->
+            <!--</LinearLayout>-->
         </FrameLayout>
 
     </LinearLayout>
