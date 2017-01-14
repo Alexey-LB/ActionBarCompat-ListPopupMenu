@@ -128,15 +128,25 @@ public class BluetoothLeServiceNew extends Service {
         @Override
         public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
             //если у нас есть такое устройство
+            String intentAction, str;boolean ds =false;
             final Sensor sensor = getBluetoothDevice(gatt.getDevice().getAddress());
             if(sensor == null) return;
+            str = " status= " +status+"   adress= " + sensor.mBluetoothDeviceAddress;
             //
-            String intentAction;boolean ds =false;
             if (newState == BluetoothProfile.STATE_CONNECTED) {
+
+                if(status == 133){
+                    Log.e(TAG,"---ERROR -- STATE_CONNECTED go to STATE_DISCONNECTED" + str);
+                    queueSetDisconnectClose(sensor);
+                    queueSetConnect(sensor);
+                    return;
+                } else {
+                    Log.w(TAG,"-- STATE_CONNECTED " +str);
+                }
+
 // сбрасываем запрос на коннект, он выполнен
  filtrInTxQueue(sensor,TxQueueItemType.Connect, null, status);
 
-                Log.w(TAG, "--- STATE_CONNECTED --- (state_connecting) status= " +status+"   adress= " + sensor.mBluetoothDeviceAddress);
                 intentAction = ACTION_GATT_CONNECTED;
                 // состояние промежуточное-МЫ подключились- но ЕЩЕ НЕ СЧИТАЛИ СЕРВИСЫ доступные на этом устройстве
                 sensor.mConnectionState = STATE_CONNECTING;
@@ -161,7 +171,7 @@ public class BluetoothLeServiceNew extends Service {
             } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
                 // просто отключение-оБлом
                 sensor.mConnectionState = STATE_DISCONNECTED;
-                Log.w(TAG, "--- STATE_DISCONNECTED ---   status= " +status+"    adress= " + sensor.mBluetoothDeviceAddress);
+                Log.w(TAG, "--- STATE_DISCONNECTED --- " + str);
 
                 sensor.rssi = STATE_DISCONNECTED;//показываем что отключились
                 //intentAction = ACTION_GATT_DISCONNECTED;

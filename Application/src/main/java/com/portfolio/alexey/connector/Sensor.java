@@ -589,6 +589,18 @@ return getStringValue( maxLevelNotification.valueLevel, onFahrenheit, addType);
         Log.i(TAG, "writeUuidDescriptor= " +uuidCharacteristic.toString()+"   status=" + rez);
         return rez;
     }
+    //set Notification
+    public boolean setNotification_WriteUuidDescriptor(UUID uuidService
+            , UUID uuidCharacteristic, UUID uuidDescriptor, boolean enabled) {
+            return writeUuidDescriptor(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE, PartGatt.UUID_HEALTH_THERMOMETER
+                    , PartGatt.UUID_INTERMEDIATE_TEMPERATURE, PartGatt.UUID_CLIENT_CHARACTERISTIC_CONFIG, true);
+    }
+    //set Indication
+    public boolean setIndication_WriteUuidDescriptor(UUID uuidService
+            , UUID uuidCharacteristic, UUID uuidDescriptor, boolean enabled) {
+        return writeUuidDescriptor(BluetoothGattDescriptor.ENABLE_INDICATION_VALUE, PartGatt.UUID_HEALTH_THERMOMETER
+                , PartGatt.UUID_INTERMEDIATE_TEMPERATURE, PartGatt.UUID_CLIENT_CHARACTERISTIC_CONFIG, true);
+    }
     //================================================================================
     //с//отключение сенсора  команды на сброс в сервис РЭЛСИБА
     public void switchOffSensor(){
