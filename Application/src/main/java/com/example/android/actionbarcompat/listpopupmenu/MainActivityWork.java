@@ -126,7 +126,7 @@ public class MainActivityWork extends AppCompatActivity {// ActionBarActivity {
         }//
         app.mainActivityWork = this;
          //------------------------------
-        Util.changeFragment(mainIdFragmentWork, new PopupListFragment(), getSupportFragmentManager());
+//!!??  УБРАЛ в РЕЗЮМЕ и удаление в паузе-, ИНАЧЕ В ФОНЕ РАБОТАЛО!! Util.changeFragment(mainIdFragmentWork, new PopupListFragment(), getSupportFragmentManager());
         // установка ИЗОБРАЖЕНИЕ на всь экран, УБИРАЕМ СВЕРХУ И СНИЗУ панели системные
         findViewById(mainIdFragmentWork).getRootView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
         //настраиваем и включаем тулбар
@@ -273,6 +273,8 @@ public class MainActivityWork extends AppCompatActivity {// ActionBarActivity {
         super.onResume();
         //при возвращениие из других окон, может быть системный бар, по этому еще раз его отменяем
         findViewById(mainIdFragmentWork).getRootView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
+ Util.changeFragment(mainIdFragmentWork, new PopupListFragment(), getSupportFragmentManager());
+
         Log.e(TAG, "----onResume() ----------");
 //        RunDataHub app = ((RunDataHub) getApplicationContext());
 //        //а первый запуск показываем заставку несколько секунд, там и потом убираем системный бар
@@ -289,6 +291,12 @@ public class MainActivityWork extends AppCompatActivity {// ActionBarActivity {
 //            Util.getAppBleService().mBluetoothAdapter.startLeScan(mLeScanCallback);
 //
 //        }
+    }
+    @Override
+    public  void onPause() {
+        super.onPause();
+        //УДАЛЕНИЕ фрагмента , используем библиотеку потдержки старых устройств (4.4)
+        Util.removeFragment(getSupportFragmentManager());
     }
 
 //Develop API Guides User Interface Меню

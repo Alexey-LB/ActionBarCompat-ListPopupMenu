@@ -12,6 +12,7 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Vibrator;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 //import android.support.v4.content.ContextCompatApi23;
@@ -26,6 +27,7 @@ import com.example.android.actionbarcompat.listpopupmenu.R;
 import com.example.android.actionbarcompat.listpopupmenu.RunDataHub;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import static android.content.Context.VIBRATOR_SERVICE;
@@ -76,6 +78,17 @@ public class Util {
         // Replace the contents of the container with the new fragment
         ft.replace(distIdFragment, srcFragment);
         // Complete the changes added above
+        ft.commit();
+    }
+    //УДАЛЕНИЕ фрагмента , используем библиотеку потдержки старых устройств (4.4)
+    // http://developer.alexanderklimov.ru/android/theory/fragments.php
+    static public void removeFragment(android.support.v4.app.FragmentManager fm) {
+        // удалить все фрагменты
+        FragmentTransaction ft = fm.beginTransaction();
+        List<Fragment> frL= fm.getFragments();
+        for(Fragment fr: frL){
+            ft.remove(fr);
+        }
         ft.commit();
     }
     //ввод ФЛОАТ из строки В ЛЮБОЙ ЛОКАЛИ!!!(обрабатывает 10 разделитель ТОЧКУ или ЗАПЯТУЮ!!)
@@ -561,5 +574,20 @@ public class Util {
     }
     public static String getUidStringMost16Bits(UUID uid){
         return String.format("0x%04X",getUidMost16Bits(uid));
+    }
+    public static  void logE(boolean debug, String tag, String str){
+        if(debug) Log.e(tag, str);
+    }
+    public static  void logI(boolean debug, String tag, String str){
+        if(debug) Log.i(tag, str);
+    }
+    public static  void logW(boolean debug, String tag, String str){
+        if(debug) Log.w(tag, str);
+    }
+    public static  void logD(boolean debug, String tag, String str){
+        if(debug) Log.d(tag, str);
+    }
+    public static  void logV(boolean debug, String tag, String str){
+        if(debug) Log.v(tag, str);
     }
 }

@@ -244,7 +244,7 @@ public class BluetoothLeServiceNew extends Service {
             //       sensor.onCharacteristicRead();
             // на каждый 16 запрашиваем RSSI (запрос каждые примерно 16 секунды)
 
-   sensor.readRSSIandBatteryLevel();
+//!!??   sensor.readRSSIandBatteryLevel();
         sensor.onCharacteristicRead();
 
 
