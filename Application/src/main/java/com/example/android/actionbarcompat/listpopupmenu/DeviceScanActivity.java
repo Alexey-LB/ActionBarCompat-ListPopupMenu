@@ -20,6 +20,7 @@ package com.example.android.actionbarcompat.listpopupmenu;
  * limitations under the License.
  */
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.ListActivity;
 import android.bluetooth.BluetoothAdapter;
@@ -30,6 +31,8 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -45,6 +48,10 @@ import com.portfolio.alexey.connector.Sensor;
 import com.portfolio.alexey.connector.Util;
 
 import java.util.ArrayList;
+
+import static android.support.v4.content.PermissionChecker.PERMISSION_GRANTED;
+import static java.security.AccessController.getContext;
+
 /**
  * Activity for scanning and displaying available Bluetooth LE devices.
  */
@@ -225,7 +232,10 @@ public class DeviceScanActivity extends ListActivity {//AppCompatActivity {//Act
                         sensor.deviceLabel = sensor.deviceLabelStringDefault + " "
                                 + sensor.mBluetoothDeviceAddress.substring(i-2);
                     }
-                    app.mBluetoothLeServiceM.connect(sensor.mBluetoothDeviceAddress,true);
+                    //это запуск напрямую, работает хреново
+                   // app.mBluetoothLeServiceM.connect(sensor.mBluetoothDeviceAddress,true);
+                    //запуск на коннект через очередь!
+                    app.mBluetoothLeServiceM.queueSetConnect(sensor);
                     Log.v(TAG,"sensor item= " + mItem + "  connectAdress= " + sensor.mBluetoothDeviceAddress);
                 }
         }
@@ -233,7 +243,27 @@ public class DeviceScanActivity extends ListActivity {//AppCompatActivity {//Act
        // startActivity(intent);//на подклшючение к устройству
     }
 
+//    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+//        switch (requestCode) {
+//            case REQUEST_PERMISSION_REQ_CODE:
+//                if (grantResults == null || grantResults.length <= 0 || grantResults[0] != PERMISSION_GRANTED) {
+//                    Snackbar.make(getView(), (int) R.string.rationale_location_permission_denied, Snackbar.LENGTH_LONG).show();
+//                } else {
+//                    //startScan();
+//                    scanLeDevice(true);
+//                }
+//                break;
+//            default:
+//        }
+//    }
     private void scanLeDevice(final boolean enable) {
+//        //проверяем а разрешения доступа сканирования ДОЛЖНО БАТЬ РАЗРЕШЕНИЕ НА ЛОКАЦИЮ
+//        if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PERMISSION_GRANTED) {
+//            // разрешения нет, запрашиваем у пользователя
+//            requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, REQUEST_PERMISSION_REQ_CODE);
+//            return;
+//        }
+        // разрешение есть, начинаем сканирование
         if (enable) {
             // Stops scanning after a pre-defined scan period.
             mHandler.postDelayed(new Runnable() {

@@ -10,13 +10,18 @@ import android.bluetooth.BluetoothGattDescriptor;
 import android.bluetooth.BluetoothGattService;
 import android.bluetooth.BluetoothManager;
 import android.bluetooth.BluetoothProfile;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.location.LocationManager;
 import android.os.Binder;
 import android.os.Handler;
 import android.os.IBinder;
+import android.support.design.widget.Snackbar;
 import android.util.Log;
+import android.view.View;
 
 import com.example.android.actionbarcompat.listpopupmenu.RunDataHub;
 
@@ -27,11 +32,15 @@ import java.util.List;
 import java.util.Queue;
 import java.util.UUID;
 
+import static com.portfolio.alexey.connector.Util.context;
+import static java.security.AccessController.getContext;
+
 /**
  * Service for managing connection and data communication with a GATT server hosted on a
  * given Bluetooth LE device.
  */
 public class BluetoothLeServiceNew extends Service {
+    private boolean debug = true;
     private final static String TAG = BluetoothLeServiceNew.class.getSimpleName();
 
     private BluetoothManager mBluetoothManager;
@@ -127,6 +136,8 @@ public class BluetoothLeServiceNew extends Service {
     private final BluetoothGattCallback mGattCallback = new BluetoothGattCallback() {
         @Override
         public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
+ super.onConnectionStateChange(gatt, status, newState);
+
             //если у нас есть такое устройство
             String intentAction, str;boolean ds =false;
             final Sensor sensor = getBluetoothDevice(gatt.getDevice().getAddress());
@@ -182,6 +193,7 @@ public class BluetoothLeServiceNew extends Service {
 
         @Override
         public void onServicesDiscovered(BluetoothGatt gatt, int status) {
+super.onServicesDiscovered(gatt, status);
             //если у нас есть такое устройство
             final Sensor sensor = getBluetoothDevice(gatt.getDevice().getAddress());
             if(sensor == null) return;
@@ -205,6 +217,7 @@ public class BluetoothLeServiceNew extends Service {
         @Override
         public void onCharacteristicRead(BluetoothGatt gatt,
                                          BluetoothGattCharacteristic characteristic, int status) {
+ super.onCharacteristicRead(gatt,characteristic, status);
            // Log.w(TAG, "onCharacteristicRead--------------------");
             //если у нас есть такое устройство
             final Sensor sensor = getBluetoothDevice(gatt.getDevice().getAddress());
@@ -232,6 +245,7 @@ public class BluetoothLeServiceNew extends Service {
         @Override
         public void onCharacteristicChanged(BluetoothGatt gatt,
                                             BluetoothGattCharacteristic characteristic) {
+ super.onCharacteristicChanged(gatt, characteristic);
        //     Log.v(TAG, "onCharacteristicChanged--------------------");
             //если у нас есть такое устройство
 
@@ -257,7 +271,8 @@ public class BluetoothLeServiceNew extends Service {
         //
         @Override
         public void onReadRemoteRssi(BluetoothGatt gatt, int rssi, int status) {
-            super.onReadRemoteRssi(gatt, rssi, status);
+
+ super.onReadRemoteRssi(gatt, rssi, status);
             //если у нас есть такое устройство//входной контроль
             final Sensor sensor = getBluetoothDevice(gatt.getDevice().getAddress());
             if(sensor == null) return;
@@ -271,6 +286,7 @@ public class BluetoothLeServiceNew extends Service {
         @Override
         public void onCharacteristicWrite(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status)
         {
+super.onCharacteristicWrite(gatt, characteristic, status);
 
           //  Log.w(TAG, "----------------------onCharacteristic_Write");
 //            String deviceName = gatt.getDevice().getName();
@@ -311,6 +327,8 @@ public class BluetoothLeServiceNew extends Service {
         @Override
         public void onDescriptorWrite(BluetoothGatt gatt, BluetoothGattDescriptor descriptor, int status)
         {
+ super.onDescriptorWrite(gatt, descriptor,status);
+
             if(status == BluetoothGatt.GATT_SUCCESS) {
                 Log.w(TAG, "-- onDescriptorWrite -- gatt= " + gatt.getDevice().getAddress() + "   status= " + status
                         + "  descriptor= " + Util.getUidStringMost16Bits(descriptor)
@@ -502,7 +520,7 @@ public class BluetoothLeServiceNew extends Service {
             processTxQueue(false);//тайм аут по ответу КОТОРЫЙ НЕ ПРИШЕЛ!!
         }
     };
-    private boolean debug = true;
+
     private void log(String str){
         if(debug) Log.e(TAG, str);
     }
@@ -606,6 +624,7 @@ public class BluetoothLeServiceNew extends Service {
                 // время ожидания соединения уменьшаем до 3 секунд пока может надо будет оставить 10
                 mHandlerTxQueue.removeCallbacks(runnable);
                 mHandlerTxQueue.postDelayed(runnable,5000);
+   //             mHandlerTxQueue.postDelayed(runnable,1000);
                 //запускем на коннект, если он есть в таблице работаем с ним, если нет ГАТТ то создаем его
                 connect(mTxQueueItem.sensor.getAddress(),true);
                 break;
@@ -760,6 +779,16 @@ public class BluetoothLeServiceNew extends Service {
         // похоже не успевает все устанавить, а коннект уже налаживает, и обламывается
         //перенесем в инициализацию в приложение!!app
         //     initialize();
+
+        //getActivity().registerReceiver(this.mBluetoothStateBroadcastReceiver, new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED));
+        //getActivity().registerReceiver(mGpsReceiver, new IntentFilter("android.location.PROVIDERS_CHANGED"));
+        // обработка слушателей в самом низу
+        //слушаем изменеия РАРЕШЕНИЯ К ДОСТУПУ по блутузу 1)вкл/выкл адвптер БЛУТУЗ, 2) локация GPS тоже нужно для блутуза
+        getApplicationContext().registerReceiver(this.mBluetoothStateBroadcastReceiver
+                ,new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED));
+        getApplicationContext().registerReceiver(mGpsReceiver
+                ,new IntentFilter("android.location.PROVIDERS_CHANGED"));
+
         Log.e(TAG,"Service------START -- onCreate()--------------");
     }
     // это будет именем файла настроек
@@ -767,8 +796,15 @@ public class BluetoothLeServiceNew extends Service {
     private SharedPreferences mSettings;
 
     public void settingGetFileGoToConnect(){
+//        connect("74:DA:EA:9F:54:C9",true);
+//        connect("74:DA:EA:9F:54:E6",true);
+//        connect("74:DA:EA:9F:44:3A",true);
+//        connect("B4:99:4C:30:41:BA",true);
+//        if(true) return;
+//
         // SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         if(mSettings == null)  mSettings = getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
+      //  if(mSettings == null)  mSettings = getApplicationContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
         // Читаем данные
         if(mSettings != null){
             int listSizeBluetooth = mSettings.getInt("listSizeBluetooth", 0);
@@ -799,17 +835,21 @@ public class BluetoothLeServiceNew extends Service {
                 }
             }
             //если нет никого то Пишем своего
-            if(i == 0){
-               ;// connect("74:DA:EA:9F:54:C9",true);
-                //  connect("B4:99:4C:30:41:BA",true);
-            }
+//            if(i == 0){
+//                connect("74:DA:EA:9F:54:C9",true);
+//                connect("74:DA:EA:9F:54:E6",true);
+//                connect("74:DA:EA:9F:44:3A",true);
+//                connect("B4:99:4C:30:41:BA",true);
+//            }
         }else{
             Log.e(TAG,"getSharedPreferences= null!");
         }
     }
     public void settingPutFile(){
         // Запоминаем данные
+
         if(mSettings == null) mSettings = getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
+       // if(mSettings == null) mSettings = getApplicationContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
         if(mSettings != null){
             Sensor sensor;int i;SharedPreferences settingsDevace;String defName;
             // TODO: 09.12.2016 ОБЯЗАТЕЛЬНО ввести контроль изменения!! и толко при наличие изменений Записывать данные
@@ -978,4 +1018,59 @@ public class BluetoothLeServiceNew extends Service {
     }
 
     private final IBinder mBinder = new LocalBinder();
+
+    // ========================================================
+    //слушаем изменеия РАРЕШЕНИЯ К ДОСТУПУ по блутузу 1)вкл/выкл адвптер БЛУТУЗ, 2) локация GPS тоже нужно для блутуза
+
+    private final BroadcastReceiver mBluetoothStateBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            final String action = intent.getAction();
+            if (action.equals(BluetoothAdapter.ACTION_STATE_CHANGED)) {
+                final int state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.ERROR);
+
+           //     View view = DataFragment.this.getView();
+
+                switch (state) {
+                    case BluetoothAdapter.STATE_OFF:
+                    case BluetoothAdapter.STATE_TURNING_OFF:
+                        if(debug) Log.e(TAG, "???------ BluetoothAdapter.STATE_TURNING_OFF ----???");
+//                        if (view != null) {
+//                            Snackbar.make(view, "Bluetooth Выключен", Snackbar.LENGTH_LONG).show();
+//                        }
+                        break;
+                    case BluetoothAdapter.STATE_TURNING_ON:
+                    case BluetoothAdapter.STATE_ON:
+                        if(debug) Log.v(TAG, "!!!------ BluetoothAdapter.STATE_TURNING_ON ----!!!");
+//                        if (view != null) {
+//                            Snackbar.make(view, "Bluetooth Включен", Snackbar.LENGTH_LONG).show();
+//                        }
+                        break;
+                }
+            }
+        }
+    };
+
+    private final BroadcastReceiver mGpsReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+    //        View view = DataFragment.this.getView();
+            if (intent.getAction().equals("android.location.PROVIDERS_CHANGED")) {
+               // LocationManager lm = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
+                LocationManager lm = (LocationManager) getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
+                List<String> providers = lm.getProviders(true);
+                if (providers != null && providers.size() > 0) {
+                    if(debug) Log.v(TAG, "!!!------ Определение местоположения ВКЛючено ----!!!");
+//                    if (view != null) {
+//                        Snackbar.make(view, "Определение местоположения включено", Snackbar.LENGTH_LONG).show();
+//                    }
+                } else {
+                    if(debug) Log.e(TAG, "???------ Определение местоположения ВЫКЛючено ----???");
+//                    if (view != null) {
+//                        Snackbar.make(view, "Определение местоположения выключено", Snackbar.LENGTH_LONG).show();
+//                    }
+                }
+            }
+        }
+    };
 }
