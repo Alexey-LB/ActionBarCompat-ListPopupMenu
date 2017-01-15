@@ -48,7 +48,7 @@ public class Sensor {
 //    public static final int STATE_FIND_DEVICE = 6;//advertising
 
     private static int indexDevace = 0;//для нумерации названий
-    private static final String deviceLabelStringDefault = "Монитор";//по умолчанию назначаем имя + номер
+    public static final String deviceLabelStringDefault = "Monitor";//по умолчанию назначаем имя + номер
     public  RunDataHub app;
     private Context mContext;
     public float maxInputDeviceTemperature = 125f;// для универсального 70, промышленного +125
@@ -191,7 +191,7 @@ public class Sensor {
     //
     private void initSensor (RunDataHub app_){
         app = app_;
-        deviceLabel = deviceLabelStringDefault + " " + indexDevace++;
+        deviceLabel = deviceLabelStringDefault;// + " " + indexDevace++;
         markerColor = 0x7 & indexDevace;
         //----------
         minLevelNotification = new NotificationLevel(NotificationLevel.FLOAT_MIN,app.mainActivityWork);

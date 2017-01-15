@@ -136,12 +136,12 @@ public class BluetoothLeServiceNew extends Service {
             if (newState == BluetoothProfile.STATE_CONNECTED) {
 
                 if(status == 133){
-                    Log.e(TAG,"---ERROR -- STATE_CONNECTED go to STATE_DISCONNECTED" + str);
+                    Log.e(TAG,"---ERROR -- STATE_CONNECTED -- go to STATE_DISCONNECTED" + str);
                     queueSetDisconnectClose(sensor);
                     queueSetConnect(sensor);
                     return;
                 } else {
-                    Log.w(TAG,"-- STATE_CONNECTED " +str);
+                    Log.w(TAG,"-- STATE_CONNECTED --" +str);
                 }
 
 // сбрасываем запрос на коннект, он выполнен
@@ -216,11 +216,11 @@ public class BluetoothLeServiceNew extends Service {
 
       sensor.setValue(characteristic, false);
                 sensor.onCharacteristicRead();//постоянно запрашивает характеристику- и обламывает остальное!!
-                Log.w(TAG, "-RCr--onCharacteristicRead gatt= " + gatt.getDevice().getAddress()+"   status= " + status
+                Log.w(TAG, "-- onCharacteristicRead -- gatt= " + gatt.getDevice().getAddress()+"   status= " + status
                         + "  characteristic= " +  Util.getUidStringMost16Bits(characteristic)
                         +"  service= " + Util.getUidStringMost16Bits(characteristic.getService()));//characteristic.getUuid().toString());
             }else{
-                Log.e(TAG, "-RCr--onCharacteristicRead ERROR gatt= " + gatt.getDevice().getAddress()+"   status= " + status
+                Log.e(TAG, "-- onCharacteristicRead --  ERROR gatt= " + gatt.getDevice().getAddress()+"   status= " + status
                         + "  characteristic= " +  Util.getUidStringMost16Bits(characteristic)
                         +"  service= " + Util.getUidStringMost16Bits(characteristic.getService()));//characteristic.getUuid().toString());
 
@@ -284,12 +284,12 @@ public class BluetoothLeServiceNew extends Service {
 //            // we got response regarding our request to write new value to the characteristic
 //            // let see if it failed or not
             if(status == BluetoothGatt.GATT_SUCCESS) {
-                Log.w(TAG, "-WCr--onCharacteristicWrite gatt= " + gatt.getDevice().getAddress()+"   status= " + status
+                Log.w(TAG, "-- onCharacteristicWrite -- gatt= " + gatt.getDevice().getAddress()+"   status= " + status
                         + "  characteristic= " + Util.getUidStringMost16Bits(characteristic)
                         +"  service= " + Util.getUidStringMost16Bits(characteristic.getService()));
    //             mUiCallback.uiSuccessfulWrite(mBluetoothGatt, mBluetoothDevice, mBluetoothSelectedService, characteristic, description);
             } else {
-                Log.e(TAG, "-WCr--onCharacteristicWrite ERROR gatt= " + gatt.getDevice().getAddress()+"   status= " + status
+                Log.e(TAG, "-- onCharacteristicWrite -- ERROR gatt= " + gatt.getDevice().getAddress()+"   status= " + status
                         + "  characteristic= " + Util.getUidStringMost16Bits(characteristic)
                         +"  service= " + Util.getUidStringMost16Bits(characteristic.getService()));
                 //             mUiCallback.uiFailedWrite(mBluetoothGatt, mBluetoothDevice, mBluetoothSelectedService, characteristic, description + " STATUS = " + status);
@@ -312,11 +312,11 @@ public class BluetoothLeServiceNew extends Service {
         public void onDescriptorWrite(BluetoothGatt gatt, BluetoothGattDescriptor descriptor, int status)
         {
             if(status == BluetoothGatt.GATT_SUCCESS) {
-                Log.w(TAG, "-WDe--onDescriptorWrite gatt= " + gatt.getDevice().getAddress() + "   status= " + status
+                Log.w(TAG, "-- onDescriptorWrite -- gatt= " + gatt.getDevice().getAddress() + "   status= " + status
                         + "  descriptor= " + Util.getUidStringMost16Bits(descriptor)
                         +"  Characteristic= " + Util.getUidStringMost16Bits(descriptor.getCharacteristic()));
             }else{
-                Log.e(TAG, "-WDe--onDescriptorWrite ERROR gatt= " + gatt.getDevice().getAddress() + "   status= " + status
+                Log.e(TAG, "-- onDescriptorWrite -- ERROR gatt= " + gatt.getDevice().getAddress() + "   status= " + status
                         + "  descriptor= " + Util.getUidStringMost16Bits(descriptor)
                         +"  Characteristic= " + Util.getUidStringMost16Bits(descriptor.getCharacteristic()));
             }
@@ -342,7 +342,7 @@ public class BluetoothLeServiceNew extends Service {
         @Override
         public String toString() {
             //return super.toString();
-            String str= "   adress= "+ sensor.getAddress() + "   type= " + type + "   retry= "+retry;
+            String str= "   adress= "+ Util.getAddress16Bits(sensor.getAddress()) + "   type= " + type + "   retry= "+retry;
             if(characteristic == null) return str;
             else    return str + "   characteristic"+Util.getUidStringMost16Bits(characteristic);
         }
@@ -513,16 +513,19 @@ public class BluetoothLeServiceNew extends Service {
         if(status != BluetoothGatt.GATT_SUCCESS) return;
         if(mTxQueueItem == null) return;
         if(mTxQueueItem.type != type) {
-            log("mTxQueueItem.type != type");
+            log("mTxQueueItem.type != type  (input  adress= "+ Util.getAddress16Bits(sensor.getAddress())
+            +"  type= "+type.toString()+ ")   current= "+mTxQueueItem.toString());
             return;
         }
         if(mTxQueueItem.sensor.getAddress().compareTo(sensor.getAddress()) != 0) {
-            log("compareTo(sensor.getAddress()) != 0");
+            log("compareTo(sensor.getAddress()) != 0  (input  adress= "+ Util.getAddress16Bits(sensor.getAddress())
+                    +"  type= "+type.toString()+ ")   current= "+mTxQueueItem.toString());
             return;
         }
         if(mTxQueueItem.characteristic != null){
             if(mTxQueueItem.characteristic.getUuid().compareTo(uuid) != 0) {
-                log("getUuid().compareTo(uuid) != 0)");
+                log("getUuid().compareTo(uuid) != 0)  (input  adress= "+ Util.getAddress16Bits(sensor.getAddress())
+                        +"  type= "+type.toString()+ ")   current= "+mTxQueueItem.toString());
                 return;
             }
         }

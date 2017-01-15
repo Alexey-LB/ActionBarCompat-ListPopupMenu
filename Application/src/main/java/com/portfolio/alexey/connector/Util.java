@@ -575,6 +575,11 @@ public class Util {
     public static String getUidStringMost16Bits(UUID uid){
         return String.format("0x%04X",getUidMost16Bits(uid));
     }
+    public static String getAddress16Bits(String address){
+        if((address == null) || (address.length() <= 5)) return "?";
+        int i = address.length();
+        return address.substring(i-5);
+    }
     public static  void logE(boolean debug, String tag, String str){
         if(debug) Log.e(tag, str);
     }

@@ -218,7 +218,13 @@ public class DeviceScanActivity extends ListActivity {//AppCompatActivity {//Act
                 sensor.mBluetoothDeviceAddress = device.getAddress();
                 //
                 RunDataHub app = ((RunDataHub) getApplicationContext());
-                if(app.mBluetoothLeServiceM != null){
+                if((app.mBluetoothLeServiceM != null) && (sensor.mBluetoothDeviceAddress != null)){
+                    if(sensor.deviceLabel.compareTo(sensor.deviceLabelStringDefault) == 0){
+                        int i = sensor.mBluetoothDeviceAddress.length();
+                        //берем 2 символа последних из адреса устройства (16 адрес блутуз)
+                        sensor.deviceLabel = sensor.deviceLabelStringDefault + " "
+                                + sensor.mBluetoothDeviceAddress.substring(i-2);
+                    }
                     app.mBluetoothLeServiceM.connect(sensor.mBluetoothDeviceAddress,true);
                     Log.v(TAG,"sensor item= " + mItem + "  connectAdress= " + sensor.mBluetoothDeviceAddress);
                 }
