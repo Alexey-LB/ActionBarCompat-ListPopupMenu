@@ -69,14 +69,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="left|start"
-                    android:layout_weight="1.9" />
+                    android:layout_weight="2" />
 
                 <ImageView
                     android:id="@+id/imageView6"
                     android:layout_weight="0"
                     android:background="@drawable/logo_relsib_white"
-                    android:layout_height="64dp"
-                    android:layout_width="52dp" />
+                    android:layout_height="54dp"
+                    android:layout_width="46dp" />
 
                 <LinearLayout
                     android:orientation="vertical"
@@ -88,51 +88,55 @@
                         android:text="ООО НПК Рэлсиб"
                         android:layout_width="wrap_content"
                         android:id="@+id/textView11"
-                        android:textSize="12sp"
+                        android:textSize="10sp"
                         android:textColor="@color/colorBackground"
                         android:layout_gravity="left"
-                        android:layout_marginTop="5dp"
+                        android:layout_marginTop="3dp"
                         android:layout_marginLeft="4dp"
                         android:fontFamily="sans-serif"
-                        android:layout_height="13dp" />
+                        android:layout_height="11dp"
+                        android:textStyle="normal|bold" />
 
                     <TextView
                         android:text="www.relsib.com"
                         android:layout_width="wrap_content"
                         android:id="@+id/textView16"
                         android:layout_weight="0"
-                        android:textSize="12sp"
+                        android:textSize="10sp"
                         android:textColor="@color/colorBackground"
                         android:layout_gravity="left"
                         android:layout_marginLeft="4dp"
                         android:fontFamily="sans-serif"
                         android:lineSpacingExtra="8sp"
-                        android:layout_height="13dp" />
+                        android:layout_height="11dp"
+                        android:textStyle="normal|bold" />
 
                     <TextView
                         android:text="tech@relsib.com"
                         android:layout_width="wrap_content"
                         android:id="@+id/textView13"
-                        android:textSize="12sp"
+                        android:textSize="10sp"
                         android:textColor="@color/colorBackground"
                         android:layout_gravity="left"
                         android:layout_marginLeft="4dp"
                         android:fontFamily="sans-serif"
                         android:lineSpacingExtra="8sp"
-                        android:layout_height="13dp" />
+                        android:layout_height="11dp"
+                        android:textStyle="normal|bold" />
 
                     <TextView
                         android:text="v 1.0.0                    2017"
                         android:layout_width="wrap_content"
                         android:id="@+id/textView17"
                         android:layout_weight="0"
-                        android:textSize="12sp"
+                        android:textSize="10sp"
                         android:textColor="@color/colorBackground"
                         android:layout_gravity="left"
                         android:layout_marginLeft="4dp"
                         android:fontFamily="sans-serif"
                         android:lineSpacingExtra="8sp"
-                        android:layout_height="13dp" />
+                        android:layout_height="11dp"
+                        android:textStyle="normal|bold" />
 
                 </LinearLayout>
 
