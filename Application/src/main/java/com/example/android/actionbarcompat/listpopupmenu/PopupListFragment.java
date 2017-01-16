@@ -416,11 +416,11 @@ fbButton = View.inflate(getContext(),R.layout.poplist_item_3,null);//пород�
         switch (item.getItemId()) {
             case android.R.id.home:
                 Log.i(TAG,"android.R.id.home");
-     //сохранение в файл
-                RunDataHub app = ((RunDataHub) getActivity().getApplicationContext());
-                if(app.mBluetoothLeServiceM != null){
-                    app.mBluetoothLeServiceM.settingPutFile();
-                }
+     //сохранение в файл Сделано в АКтивити!мэйн
+//                RunDataHub app = ((RunDataHub) getActivity().getApplicationContext());
+//                if(app.mBluetoothLeServiceM != null){
+//                    app.mBluetoothLeServiceM.settingPutFile();
+//                }
 
  //               adapter.notifyDataSetChanged();
                 return true;

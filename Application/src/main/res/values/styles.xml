@@ -63,6 +63,9 @@
         <!--&lt;!&ndash;<item name="dividerHeight">5dp</item>&ndash;&gt;-->
 
         <!--<item name="divider">@drawable/action_bar_divider</item>-->
+<!-- чтоб на 6 версии исчезли деления в ПОПЛИСТ, зрительно- там была токая линия, хотя я установил 0-->
+        <item name="android:listDivider">@color/colorBackground</item>
+
 
         <item name="actionBarSize">@dimen/actionBarSize</item>
         <item name="android:actionBarSize">@dimen/actionBarSize</item>

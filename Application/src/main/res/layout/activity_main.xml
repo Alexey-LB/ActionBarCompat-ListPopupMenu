@@ -25,8 +25,7 @@
 
             android:layout_weight="1"
             android:layout_centerHorizontal="true"
-            android:gravity="top|center_horizontal"
-            android:layout_marginTop="30dp" />
+            android:gravity="center_vertical|center_horizontal" />
 
         <FrameLayout
             android:id="@+id/frame_button"
@@ -52,10 +51,97 @@
                 android:layout_gravity="center_vertical|center" />
         </FrameLayout>
 
-        <Space
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1"/>
+            android:layout_weight="1">
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:gravity="center_vertical|center_horizontal"
+                android:layout_gravity="bottom|center_horizontal"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp">
+
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="left|start"
+                    android:layout_weight="1.9" />
+
+                <ImageView
+                    android:id="@+id/imageView6"
+                    android:layout_weight="0"
+                    android:background="@drawable/logo_relsib_white"
+                    android:layout_height="64dp"
+                    android:layout_width="52dp" />
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0">
+
+                    <TextView
+                        android:text="ООО НПК Рэлсиб"
+                        android:layout_width="wrap_content"
+                        android:id="@+id/textView11"
+                        android:textSize="12sp"
+                        android:textColor="@color/colorBackground"
+                        android:layout_gravity="left"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginLeft="4dp"
+                        android:fontFamily="sans-serif"
+                        android:layout_height="13dp" />
+
+                    <TextView
+                        android:text="www.relsib.com"
+                        android:layout_width="wrap_content"
+                        android:id="@+id/textView16"
+                        android:layout_weight="0"
+                        android:textSize="12sp"
+                        android:textColor="@color/colorBackground"
+                        android:layout_gravity="left"
+                        android:layout_marginLeft="4dp"
+                        android:fontFamily="sans-serif"
+                        android:lineSpacingExtra="8sp"
+                        android:layout_height="13dp" />
+
+                    <TextView
+                        android:text="tech@relsib.com"
+                        android:layout_width="wrap_content"
+                        android:id="@+id/textView13"
+                        android:textSize="12sp"
+                        android:textColor="@color/colorBackground"
+                        android:layout_gravity="left"
+                        android:layout_marginLeft="4dp"
+                        android:fontFamily="sans-serif"
+                        android:lineSpacingExtra="8sp"
+                        android:layout_height="13dp" />
+
+                    <TextView
+                        android:text="v 1.0.0                    2017"
+                        android:layout_width="wrap_content"
+                        android:id="@+id/textView17"
+                        android:layout_weight="0"
+                        android:textSize="12sp"
+                        android:textColor="@color/colorBackground"
+                        android:layout_gravity="left"
+                        android:layout_marginLeft="4dp"
+                        android:fontFamily="sans-serif"
+                        android:lineSpacingExtra="8sp"
+                        android:layout_height="13dp" />
+
+                </LinearLayout>
+
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2" />
+            </LinearLayout>
+        </FrameLayout>
 
     </LinearLayout>
 

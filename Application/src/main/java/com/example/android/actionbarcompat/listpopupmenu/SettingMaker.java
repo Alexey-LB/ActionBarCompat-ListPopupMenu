@@ -151,7 +151,8 @@ public class SettingMaker extends Activity implements View.OnClickListener{
 
                 intent = new Intent(this, DeviceScanActivity.class);
                 // фильтр поиска устройств
-                intent.putExtra(MainActivityWork.EXTRAS_DEVICE_NAME_FILTR, "WT ");
+              //  intent.putExtra(MainActivityWork.EXTRAS_DEVICE_NAME_FILTR, "WT ");
+                intent.putExtra(MainActivityWork.EXTRAS_DEVICE_NAME_FILTR, "W");
                 intent.putExtra(MainActivityWork.EXTRAS_DEVICE_ITEM,mItem);
                 intent.putExtra(Util.EXTRAS_BAR_TITLE,"  BB3   " + sensor.deviceLabel);
                 startActivity(intent);//на поиск к устройству
