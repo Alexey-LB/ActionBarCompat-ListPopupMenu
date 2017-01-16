@@ -16,7 +16,7 @@
 -->
 
 <resources>
-    <string name="app_name">B1/B3</string>
+    <string name="app_name">Thermometer</string>
     <string name="intro_message">
         <![CDATA[
         

@@ -51,8 +51,10 @@
 
     <!--для записи пользовательских настроек-->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+
+    <!--android:icon="@android:drawable/ic_menu_revert"-->
     <application
-        android:icon="@android:drawable/ic_menu_revert"
+        android:icon="@mipmap/ic_logo_relsib"
         android:label="@string/app_name"
         android:allowBackup="true"
         android:theme="@style/Theme.AppCompat.Light"

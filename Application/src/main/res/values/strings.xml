@@ -30,4 +30,164 @@
     <string name="menu_scan">Scan</string>
     <string name="menu_stop">Stop</string>
 
+    <!---->
+    <!--/* Initial view strings */-->
+    <!--"App title" = "Домашний диагностический центр HOME-DC";-->
+    <string name="app_title">App title</string>
+    <!--"Version" = "Версия";-->
+    <string name="version">Version</string>
+    <!--"Temperature measuring" = "Измерение температуры";-->
+
+    <!--/* Notifications */-->
+    <!--"Top threshold has been reached" = "Достигнут верхний порог";-->
+    <!--"Bottom threshold has been reached" = "Достигнут нижний порог";-->
+    <!--"Measuring finished" = "Измерение завершено";-->
+
+    <!--/* Image picker controller strings */-->
+    <!--"Color" = "Цвет";-->
+    <!--"Picture" = "Изображение";-->
+    <!--"iPhone collection" = "Коллекция iPhone";-->
+    <!--"Camera" = "Камера";-->
+
+    <!--/* Ringtone picker controller strings */-->
+    <!--"ALERTS" = "ЗВУКИ ОПОВЕЩЕНИЯ";-->
+    <!--"MEDIA LIBRARY" = "МЕДИАТЕКА";-->
+
+    <!--"Intruder alert" = "Нарушитель";-->
+    <!--"Message alert" = "Тревожное сообщение";-->
+    <!--"Red alert" = "Красная тревога";-->
+    <!--"Siren alert" = "Сирена";-->
+
+    <!--/* Views titles */-->
+    <!--"Temperature" = "Температура";-->
+    <!--"History" = "История";-->
+
+    <!--/* Navigation buttons names */-->
+
+
+    <!--/* Temperature controller strings */-->
+    <!--"Monitors" = "Мониторы";-->
+    <!--"Sensors" = "Сенсоры";-->
+    <!--"Measuring" = "Измерение";-->
+
+    <!--/* Sensors list controller */-->
+    <!--"Add sensors" = "Добавить сенсоры";-->
+
+    <!--/* Temperature monitor strings */-->
+    <!--"Current" = "Текущая";-->
+    <!--"Maximum" = "Максимальная";-->
+    <!--"Minimum" = "Минимальная";-->
+    <!--"Predicted" = "Прогнозируемая";-->
+
+    <!--/* Sensor's status */-->
+    <!--"Unavailable" = "Недоступен";-->
+    <!--"Discovery..." = "Поиск...";-->
+    <!--"Disconnected" = "Не подключен";-->
+    <!--"Connecting..." = "Подключение...";-->
+    <!--"Connected" = "Подключен";-->
+    <!--"Measurement time" = "Время измерения";-->
+
+    <!--/* Monitor common settings strings */-->
+    <!--"MonitorSettingsTitleNew" = "Новый монитор";-->
+    <!--"MonitorSettingsTitle" = "Монитор";-->
+
+    <!--"IDENTIFICATION" = "ИДЕНТИФИКАЦИЯ";-->
+    <!--"Name" = "Имя";-->
+    <!--"Marker" = "Маркер";-->
+
+    <!--"THERMOMETER" = "ТЕРМОМЕТЕР";-->
+    <!--"Thermometer" = "Термометер";-->
+    <!--"Measuring mode" = "Режим измерения";-->
+
+    <!--"NOTIFICATION" = "ОПОВЕЩЕНИЕ";-->
+    <!--"MEASURING IS COMPLETE" = "ИЗМЕРЕНИЕ ЗАКОНЧЕНО";-->
+    <!--"Temperature greater than" = "Температура выше";-->
+    <!--"Temperature less than" = "Температура ниже";-->
+
+    <!--"DESIGN" = "ОФОРМЛЕНИЕ";-->
+    <!--"Background" = "Фон";-->
+
+    <!--/* Temperature monitor settings strings */-->
+    <!--"Universal" = "Универсальный";-->
+    <!--"Medical" = "Медицинский";-->
+
+    <!--/* Sensor settings string */-->
+    <!--"Discover" = "Поиск";-->
+    <!--"INFORMATION" = "ИНФОРМАЦИЯ";-->
+    <!--"Model number" = "Номер модели";-->
+    <!--"Serial number" = "Серийный номер";-->
+    <!--"Firmware revision" = "Версия прошивки";-->
+    <!--"Hardware revision" = "Аппаратная версия";-->
+    <!--"Software revision" = "Версия ПО";-->
+    <!--"Manufacturer name" = "Производитель";-->
+
+    <!--/* Threshold settings strings */-->
+    <!--"Enabled" = "Включен";-->
+    <!--"Value" = "Значение";-->
+    <!--"Melody" = "Мелодия";-->
+    <!--"Vibration" = "Вибрация";-->
+
+    <!--/* Diagram export strings */-->
+    <!--"Export" = "Экспорт";-->
+    <!--"Temperature diagram" = "График температуры";-->
+    <!--"Time, s" = "Время, с";-->
+    <!--"Temperature, ˚C" = "Температура, ˚C";-->
+    <!--"Temperature, ˚F" = "Температура, ˚F";-->
+    <!--"Export diagram" = "Экспорт графика";-->
+    <!--"Diagram successfully exported as" = "График успешно экспортирован как";-->
+
+    <!--/* Diagram mailing strings */-->
+    <!--"Home-DC table" = "Home-DC таблица";-->
+    <!--"Mailing" = "Отправка почтой";-->
+    <!--"Message send failed" = "Не удалось отправить сообщение";-->
+
+    <!--/* Other strings */-->
+    <!--"Monitor" = "Монитор";-->
+    <!--"Sensor" = "Сенсор";-->
+    <!--"Unknown" = "Неизвестно";-->
+    <!--"Settings" = "Настройка";-->
+
+    <!--"Cancel" = "Отменить";-->
+    <!--"Accept" = "Принять";-->
+    <!--"Clear" = "Очистить";-->
+    <!--"Edit" = "Изменить";-->
+    <!--"Done" = "Готово";-->
+
+    <!--"Clear operation" = "Операция очиски";-->
+    <!--"This operation will remove all records in this list" = "Эта операция удалит все записи из этого списка";-->
+
+    <!--"Disconnect" = "Отключить";-->
+    <!--"Reset" = "Сброс";-->
+
+    <!--"None" = "Нет";-->
+
+    <!--"SUN" = "ВС";-->
+    <!--"MON" = "ПН";-->
+    <!--"TUE" = "ВТ";-->
+    <!--"WED" = "СР";-->
+    <!--"THU" = "ЧТ";-->
+    <!--"FRI" = "ПТ";-->
+    <!--"SAT" = "СБ";-->
+
+    <!--"January" = "Январь";-->
+    <!--"February" = "Февраль";-->
+    <!--"March" = "Март";-->
+    <!--"April" = "Апрель";-->
+    <!--"May" = "Май";-->
+    <!--"June" = "Июнь";-->
+    <!--"July" = "Июль";-->
+    <!--"August" = "Август";-->
+    <!--"September" = "Сентябрь";-->
+    <!--"October" = "Октябрь";-->
+    <!--"November" = "Ноябрь";-->
+    <!--"December" = "Декабрь";-->
+
+    <!--"Alarm" = "Тревога";-->
+    <!--"Alien" = "Пришелец";-->
+    <!--"Metal room" = "Металлическая комната";-->
+
+    <!--"t, m:ss" = "t, м:сс";-->
+    <!--"t, h:mm" = "t, ч:мм";-->
+    <!--"t, h" = "t, ч";-->
+
 </resources>

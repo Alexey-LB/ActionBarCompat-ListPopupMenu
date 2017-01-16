@@ -3,8 +3,7 @@
     android:shape="oval"
     android:thickness="1dp"
     >
-    <solid
-        android:color="#ffffff" >
-    </solid>
+    <!--<solid  android:color="#808080" />-->
+    <solid  android:color="#ffffff" />
 
 </shape>
