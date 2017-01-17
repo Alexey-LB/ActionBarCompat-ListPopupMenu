@@ -2,6 +2,7 @@
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="item_setting_height">80dp</dimen>
     <dimen name="iten_setting_wight">48dp</dimen>
     <dimen name="iten_img_size">42dp</dimen>
     <dimen name="ic_img_size">28dp</dimen>
@@ -13,6 +14,7 @@
     <dimen name="iten_text_size">18sp</dimen>
     <!--ширина рисунка градусника-->
     <dimen name="frame_thermometer_wigth">64dp</dimen>
+
     <dimen name="TextScaleDivisionThermometerSize">18sp</dimen>
     <!--размер переключателя на термеметре- сборос и отключение-!!! связан с вычислением размеров пеереключателя!!-->
     <dimen name="switch_button_size">45dp</dimen>
