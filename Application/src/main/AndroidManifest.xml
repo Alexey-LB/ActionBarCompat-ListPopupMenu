@@ -54,7 +54,7 @@
 
     <!--android:icon="@android:drawable/ic_menu_revert"-->
     <application
-        android:icon="@mipmap/ic_logo_relsib"
+        android:icon="@mipmap/ic_logo_relsib3"
         android:label="@string/app_name"
         android:allowBackup="true"
         android:theme="@style/Theme.AppCompat.Light"

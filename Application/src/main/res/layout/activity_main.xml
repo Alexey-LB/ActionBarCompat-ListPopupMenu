@@ -35,13 +35,18 @@
             android:layout_width="170dp"
             android:layout_height="170dp">
 
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
-            <ImageView
-                android:layout_width="140dp"
-                android:layout_height="140dp"
-                android:id="@+id/button_transition"
-                android:layout_gravity="center_vertical|center_horizontal"
-                android:background="@drawable/house_button_transition" />
+                <Button
+                    android:id="@+id/buttonMain"
+                    android:text=""
+                    android:layout_width="140dp"
+                    android:layout_height="140dp"
+                    android:layout_gravity="center_vertical|center_horizontal"
+                    android:background="@drawable/house_button_selector" />
+            </FrameLayout>
 
             <ImageView
                 android:layout_width="100dp"
@@ -49,6 +54,8 @@
                 app:srcCompat="@drawable/house_relsib_logo"
                 android:id="@+id/imageView3"
                 android:layout_gravity="center_vertical|center" />
+
+
         </FrameLayout>
 
         <FrameLayout
@@ -142,8 +149,8 @@
 
                 <Space
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="2" />
+                    android:layout_weight="2"
+                    android:layout_height="match_parent" />
             </LinearLayout>
         </FrameLayout>
 

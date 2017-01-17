@@ -31,6 +31,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 
 import com.portfolio.alexey.connector.BluetoothLeServiceNew;
 import com.portfolio.alexey.connector.Util;
@@ -117,37 +118,46 @@ public class MainActivity extends AppCompatActivity {// ActionBarActivity {
         mLayoutMain = findViewById(R.id.LayoutMain);
         mLayoutMain.getRootView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
         getSupportActionBar().hide();
-        //переходы и АНИМАЦИИ примеры ---------
-        //http://startandroid.ru/ru/uroki/vse-uroki-spiskom/392-urok-164-grafika-drawable-level-list-transition-inset-clip-scale.html
-        //http://androidfanclub.ru/programming/%D0%BA%D0%BB%D0%B0%D1%81%D1%81-transitiondrawable
-        //http://developer.alexanderklimov.ru/android/theory/drawable.php#layer-list
-       // mImageButtonTransition = findViewById(R.id.imeg_button_transition);
-        mImageButtonTransition = findViewById(R.id.button_transition);//frame_button
-        //TransitionDrawable td = (TransitionDrawable)getResources().getDrawable(R.drawable.marker_transition);
-        //mImageButtonTransition.setBackground(td);
-        //УСТАНОВЛЕН ДОЛЖЕН БЫТЬ ИМЕННО TransitionDrawable, ИНЧЕ ОБЛОМ В ЭТОМ МЕСТЕ
-        mTransitionDrawable = (TransitionDrawable)mImageButtonTransition.getBackground();
-        //
-        mImageButtonTransition.setOnClickListener(new View.OnClickListener() {
-            private Handler mHandler;
-            private Runnable runnable = new Runnable() {
-                @Override
-                public void run() {
-                    //переход в следующее окно
-                    go();
-                }
-            };
+//        //переходы и АНИМАЦИИ примеры ---------
+//        //http://startandroid.ru/ru/uroki/vse-uroki-spiskom/392-urok-164-grafika-drawable-level-list-transition-inset-clip-scale.html
+//        //http://androidfanclub.ru/programming/%D0%BA%D0%BB%D0%B0%D1%81%D1%81-transitiondrawable
+//        //http://developer.alexanderklimov.ru/android/theory/drawable.php#layer-list
+//       // mImageButtonTransition = findViewById(R.id.imeg_button_transition);
+//        mImageButtonTransition = findViewById(R.id.button_transition);//frame_button
+//        //TransitionDrawable td = (TransitionDrawable)getResources().getDrawable(R.drawable.marker_transition);
+//        //mImageButtonTransition.setBackground(td);
+//        //УСТАНОВЛЕН ДОЛЖЕН БЫТЬ ИМЕННО TransitionDrawable, ИНЧЕ ОБЛОМ В ЭТОМ МЕСТЕ
+//        mTransitionDrawable = (TransitionDrawable)mImageButtonTransition.getBackground();
+//        //
+//        mImageButtonTransition.setOnClickListener(new View.OnClickListener() {
+//            private Handler mHandler;
+//            private Runnable runnable = new Runnable() {
+//                @Override
+//                public void run() {
+//                    //переход в следующее окно
+//                    go();
+//                }
+//            };
+//            @Override
+//            public void onClick(View v) {
+//                if(mHandler == null){
+//                    mHandler = new Handler();
+//                } else {//удаляем старые запуски, чтоб небло повторов вызовов
+//                    mHandler.removeCallbacks(runnable);
+//                }
+//                //переход в следующее окно
+//                mHandler.postDelayed(runnable,250);
+//                //красиво переключемем (ПЕРЕХОД)между рисунком off -> on button
+//                mTransitionDrawable.startTransition(300);
+//            }
+//        });
+        findViewById(R.id.buttonMain).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(mHandler == null){
-                    mHandler = new Handler();
-                } else {//удаляем старые запуски, чтоб небло повторов вызовов
-                    mHandler.removeCallbacks(runnable);
-                }
+               // Button bt = (Button)v;bt.setPressed(b);
+                Log.i(TAG, "----buttonMain-----" );
                 //переход в следующее окно
-                mHandler.postDelayed(runnable,250);
-                //красиво переключемем (ПЕРЕХОД)между рисунком off -> on button
-                mTransitionDrawable.startTransition(300);
+                go();
             }
         });
 //ПРИНУДИТЕЛЬНО задал ОРИНТАЦИЮ экрана ВНЕ зависимости от положения устройства
@@ -177,6 +187,7 @@ setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 //            Log.e(TAG,"-------------unscheduleDrawable");
 //        }
 //    };
+
 //переход в следующее окно
     private void go() {
         //контроль ВСЕХ настроек и запуска СЕРВИСА,
@@ -203,7 +214,7 @@ setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         //а первый запуск показываем заставку,убираем системный бар
         getSupportActionBar().hide();
         //быстро возвращяем назад кнопку в  OFF, рисунк ON -> off button
-        mTransitionDrawable.resetTransition();
+//        mTransitionDrawable.resetTransition();
        // mTransitionDrawable.reverseTransition(500);//resetTransition();
 
         Log.e(TAG, "----onResume() ----------");
