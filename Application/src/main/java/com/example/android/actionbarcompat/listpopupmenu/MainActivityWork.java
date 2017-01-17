@@ -215,8 +215,8 @@ public class MainActivityWork extends AppCompatActivity {// ActionBarActivity {
         RunDataHub app = ((RunDataHub) getApplicationContext());
         //если масива сенсоров нет, то и устанавливать значений некому!
         if((app == null) || (app.mBluetoothLeServiceM == null)
-            || (app.mBluetoothLeServiceM.arraySensors == null)
-            || (app.mBluetoothLeServiceM.arraySensors.size() == 0)) return;
+                || (app.mBluetoothLeServiceM.arraySensors == null)
+                || (app.mBluetoothLeServiceM.arraySensors.size() == 0)) return;
         //устанавливаем еденицы измерения ДЛЯ ВСЕХ одинаково!
         ArrayList <Sensor> als = app.mBluetoothLeServiceM.arraySensors;
         for(Sensor sensor: als){
@@ -311,6 +311,7 @@ final int iconActionEdit = 12345678;
 //        menu.add(Menu.NONE,iconActionEdit,Menu.NONE,"Edit")
 //                .setIcon(R.drawable.ic_clear_black_24dp)
 //                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+ //       menu.add(Menu.NONE,iconActionEdit,Menu.NONE,"Ed").setIcon(R.drawable.rectangle_line_corners_left_5dp);
         return super.onCreateOptionsMenu(menu);
     }
     @Override//сюда прилетают ответы при возвращении из других ОКОН активити

@@ -118,7 +118,24 @@ public class BluetoothLeServiceNew extends Service {
 //        Log.e(TAG, "isMayGatt: mBluetoothGatt != gatt" + arraySensors.mBluetoothGatt.toString() + " = " + gatt.toString());
 //        return false;
 //    }
-
+    public boolean setFahrenheit(Boolean fahren){
+        //если масива сенсоров нет, то и устанавливать значений некому!
+        if((arraySensors == null) || (arraySensors.size() == 0)) return false;
+        //устанавливаем еденицы измерения ДЛЯ ВСЕХ одинаково!
+        for(Sensor sensor: arraySensors){
+            if(sensor.onFahrenheit != fahren){
+                sensor.onFahrenheit = fahren ;
+                sensor.changeConfig = true;//установили изменеие сонфигурации ДЛЯ сохранения во ФЛЕШИ телефона
+            }
+        }
+        return fahren;
+    }
+    public boolean getFahrenheit(){
+        //если масива сенсоров нет, то и устанавливать значений некому!
+        if((arraySensors == null) || (arraySensors.size() <= 0)) return false;
+        // У всех еденицы измерения одинаковы берем первый!
+        return arraySensors.get(0).onFahrenheit;
+    }
     /**
      *
      * @param adr поиск сенсора с указанным адресом

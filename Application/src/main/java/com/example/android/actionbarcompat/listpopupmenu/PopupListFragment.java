@@ -258,7 +258,8 @@ fbButton = View.inflate(getContext(),R.layout.poplist_item_3,null);//пород�
     ///--------------------------------------------------------------------------------------
 
     final int iconActionAdd = 23456789;
-
+    final int iconF = 234567890;
+    final int iconC = 234567891;
     //http://developer.alexanderklimov.ru/android/theory/fragments.php
     //ДОБАВЛЕНИЯ СВОЕГО МЕНЮ ИЗ ФРАГМЕНТА!!
     //вызывается при построениии и после вызова метода invalidateOptionsMenu();
@@ -267,14 +268,38 @@ fbButton = View.inflate(getContext(),R.layout.poplist_item_3,null);//пород�
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menuFragment = menu;//запомил, чтоб потом  изменить меню или удалить ПРИ ВЫХОДЕ из фрейма
-
+        onPrepareOptionsMenu(menu);
+//        menu.add(Menu.NONE,iconF,Menu.NONE,"C/F")
+//                .setIcon(R.drawable.ic_c)
+//                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+//
+//        menu.add(Menu.NONE,iconActionAdd,Menu.NONE,"Add")
+//                .setIcon(R.drawable.ic_add_blue_32dp)
+//                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+//       // menu.clear();
+    }
+    @Override
+    public void onPrepareOptionsMenu(Menu menu){
+        if(menu == null) return;
+        menu.clear();
+        boolean onFahrenheit = false;
+        RunDataHub app = ((RunDataHub) getActivity().getApplicationContext());
+        if (app.mBluetoothLeServiceM != null) {
+            onFahrenheit = app.mBluetoothLeServiceM.getFahrenheit();
+        }
+        if (onFahrenheit) {
+            menu.add(Menu.NONE, iconC, Menu.NONE, "C")
+                    .setIcon(R.drawable.ic_c)
+                    .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        } else{
+            menu.add(Menu.NONE, iconF, Menu.NONE, "F")
+                    .setIcon(R.drawable.ic_f)
+                    .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        }
         menu.add(Menu.NONE,iconActionAdd,Menu.NONE,"Add")
                 .setIcon(R.drawable.ic_add_blue_32dp)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-       // menu.clear();
     }
-    @Override
-    public void onPrepareOptionsMenu(Menu menu){}
     //
 
     synchronized private void updateViewItem(Sensor sensor, View view){
@@ -412,7 +437,7 @@ fbButton = View.inflate(getContext(),R.layout.poplist_item_3,null);//пород�
     // СЮДА прилетают ВСЕ клики по меню, также и кнопка назад!!
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
+        boolean onFahrenheit;RunDataHub app;
         switch (item.getItemId()) {
             case android.R.id.home:
                 Log.i(TAG,"android.R.id.home");
@@ -435,6 +460,24 @@ fbButton = View.inflate(getContext(),R.layout.poplist_item_3,null);//пород�
                 Log.i(TAG,"ADD+");
                 addNoInitObject();
               //  if(menuFragment != null)menuFragment.clear();
+                return true;
+            case iconC://установить целсий
+                onFahrenheit = false;
+                app = ((RunDataHub) getActivity().getApplicationContext());
+                if (app.mBluetoothLeServiceM != null) {
+                    app.mBluetoothLeServiceM.setFahrenheit(onFahrenheit);
+                }
+               //внести изменения
+                onPrepareOptionsMenu(menuFragment);
+                return true;
+            case iconF://установить фаренгейт
+                onFahrenheit = true;
+                app = ((RunDataHub) getActivity().getApplicationContext());
+                if (app.mBluetoothLeServiceM != null) {
+                    app.mBluetoothLeServiceM.setFahrenheit(onFahrenheit);
+                }
+                //внести изменения
+                onPrepareOptionsMenu(menuFragment);
                 return true;
             default:
                 // Not one of ours. Perform default menu processing

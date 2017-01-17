@@ -32,10 +32,11 @@
     <color name="cardview_light_background">#ffffff</color>
     <color name="cardview_shadow_end_color">#03000000</color>
 
+    <color name="colorBackground">#ffffff</color>
     <color name="colorBackgroundGrey">#e8e8e8</color>
-    <color name="colorBackground">@android:color/background_light</color>
+    <color name="colorTextlight2">#a0a0a0</color>
     <color name="colorTextlight">#606060</color>
-    <color name="colorText" >@android:color/black</color>
+    <color name="colorText" >#000000</color>
 
     <color name="common_google_signin_btn_text_dark_default">@android:color/white</color>
     <color name="common_google_signin_btn_text_dark_disabled">#1F000000</color>
