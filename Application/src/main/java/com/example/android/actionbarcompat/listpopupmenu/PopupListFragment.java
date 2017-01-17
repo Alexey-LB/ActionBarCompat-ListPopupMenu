@@ -395,7 +395,10 @@ fbButton = View.inflate(getContext(),R.layout.poplist_item_3,null);//пород�
         super.onResume();
         ListView lw = getListView();
         // Принудительное обновление отображения списка ПЕРЕ каждым выводом
-        if(adapter != null) adapter.notifyDataSetChanged();
+        if(adapter != null) {
+  adapter.notifyDataSetInvalidated();
+ // adapter.notifyDataSetChanged();
+        }
         //убрать системный бар----------------
         //if(root.getSystemUiVisibility() != View.SYSTEM_UI_FLAG_FULLSCREEN)
         lw.getRootView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
@@ -530,8 +533,8 @@ return null;//fbButton_;
         ArrayList<Sensor> mbleDot = Util.getListSensor();
         if(mbleDot != null){
             mbleDot.add((Sensor) object);
-            //adapter.notifyDataSetInvalidated();
-            adapter.notifyDataSetChanged();
+ adapter.notifyDataSetInvalidated();
+ //  adapter.notifyDataSetChanged();
             // переходим в ОКНО настройки
            // goToSetting(adapter.getPosition(object));//один вариант
             //второй вариант, добавление в лист идет в конец, поэтому берем длинну лиcта -1
@@ -552,8 +555,14 @@ return null;//fbButton_;
                 Log.w(TAG,"Dell sensor -- disconnect() GATT --");
             }
             mbleDot.remove(object);
-            //adapter.notifyDataSetInvalidated();
-            adapter.notifyDataSetChanged();
+ adapter.notifyDataSetInvalidated();
+ ///adapter.notifyDataSetChanged();
+
+            //сохранение в файл Сделано в АКтивити!мэйн
+                RunDataHub app = ((RunDataHub) getActivity().getApplicationContext());
+                if(app.mBluetoothLeServiceM != null){
+                    app.mBluetoothLeServiceM.settingPutFile();
+                }
         }
         objectDataToView.moveButton();//позиционируем
         return true;
@@ -575,7 +584,12 @@ return null;//fbButton_;
     private void goToSetting(int i) {
         final Intent intent = new Intent(getActivity(), MainSettingSetting.class);
         intent.putExtra(MainActivityWork.EXTRAS_DEVICE_ITEM, i);
-        intent.putExtra(Util.EXTRAS_BAR_TITLE, "  B4/B5");
+        String title = "   Термометр";
+//        ArrayList<Sensor> listSensor = Util.getListSensor();
+//        if((listSensor != null) && (listSensor.get(i) != null)){
+//            title = listSensor.get(i).deviceLabel;
+//        }
+        intent.putExtra(Util.EXTRAS_BAR_TITLE, "  " + title);
         //startActivityForResult(intent,MainActivityWork.MAINACTIVITY);//
         startActivity(intent);//
     }
@@ -758,10 +772,11 @@ return null;//fbButton_;
                             //-------Setting --
                             final Intent intent = new Intent(getActivity(), MainActivityThermometer.class);
                             intent.putExtra(MainActivityWork.EXTRAS_DEVICE_ITEM, i);
-                            String title = "  C1   ";
+                            String title = "  ";
                             if(obj instanceof  Sensor){
                                 title += ((Sensor) obj).deviceLabel;
                             }
+
                             intent.putExtra(Util.EXTRAS_BAR_TITLE, title);
                            // startActivityForResult(intent,MainActivityWork.MAINACTIVITY);//
                             startActivity(intent);//

@@ -68,8 +68,9 @@ public class MainActivityThermometer  extends AppCompatActivity {// ActionBarAct
         sensor = app.mBluetoothLeServiceM.arraySensors.get(itemSensor);
         //------------------------------
         //настраиваем и включаем тулбар
-        Util.setSupportV7appActionBar(getSupportActionBar(),TAG,
-                intent.getStringExtra(Util.EXTRAS_BAR_TITLE));
+       // Util.setSupportV7appActionBar(getSupportActionBar(),TAG, intent.getStringExtra(Util.EXTRAS_BAR_TITLE));
+        //в тулбаре ничего нЕ пишем здесь, все заносим в резюие, поскольку там идет обновления после сетингов
+        Util.setSupportV7appActionBar(getSupportActionBar(),TAG,"");
         //убираем системный бар
         thermometer = findViewById(R.id.LayoutMainThermometer);
         thermometer.getRootView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
@@ -427,7 +428,7 @@ public class MainActivityThermometer  extends AppCompatActivity {// ActionBarAct
         Util.setDrawableToImageView(sensor.markerColor,R.id.marker, thermometer);
         // название ТОЖЕ может поменятся, о этому еще раз
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
-       if(actionBar != null) actionBar.setTitle("  C1   " + sensor.deviceLabel);
+       if(actionBar != null) actionBar.setTitle("  " + sensor.deviceLabel);
         //---
         mHandlerWork = true;
         //сам заводится и работает
