@@ -66,15 +66,15 @@
                 android:id="@android:id/text1"
                 android:text="Температура 1"
                 android:textColor="@color/colorTextlight"
-                android:layout_width="40dp"
                 android:layout_height="match_parent"
                 android:maxLines="1"
                 android:gravity="center_vertical|center_horizontal"
                 android:textSize="18sp"
                 android:fontFamily="sans-serif"
                 android:paddingLeft="10dp"
-                android:layout_weight="20"
-                android:elevation="1dp" />
+                android:layout_weight="200"
+                android:elevation="1dp"
+                android:layout_width="400dp" />
 
             <ImageView
                 android:layout_width="44dp"

@@ -125,6 +125,8 @@ public class MainActivityWork extends AppCompatActivity {// ActionBarActivity {
             finish();
         }//
         app.mainActivityWork = this;
+
+
          //------------------------------
 //!!??  УБРАЛ в РЕЗЮМЕ и удаление в паузе-, ИНАЧЕ В ФОНЕ РАБОТАЛО!! Util.changeFragment(mainIdFragmentWork, new PopupListFragment(), getSupportFragmentManager());
         // установка ИЗОБРАЖЕНИЕ на всь экран, УБИРАЕМ СВЕРХУ И СНИЗУ панели системные
@@ -139,6 +141,8 @@ public class MainActivityWork extends AppCompatActivity {// ActionBarActivity {
         } else{//по умолчанию ставим целсия
             setOnFahrenheit(false);
         }
+  //выключил нижний бар переключения ЦЕЛСИЙ/фаренгейт
+  findViewById(R.id.FrameLayoutFahrenheit).setVisibility(View.GONE);
    //     updateView();
         //-------------КНОПКИ УСТАНОВКИ ЕДЕНИЦ ИЗМЕРЕНИЯ --
         findViewById(R.id.textViewC).setOnClickListener(new View.OnClickListener() {
