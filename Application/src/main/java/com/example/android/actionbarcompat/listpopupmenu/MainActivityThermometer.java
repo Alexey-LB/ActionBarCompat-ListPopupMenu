@@ -332,26 +332,6 @@ public class MainActivityThermometer  extends AppCompatActivity {// ActionBarAct
             }
         }
         // СИГНАЛИЗАЦИЯ-- в случае СРАБАТЫВАНИЯ сигнализации меняем фон
-//        //мигаем фоном
-//        if( ((mHandlerLoop & 1) == 0)
-//                && !sensor.minLevelNotification.resetNotification
-//                && !sensor.maxLevelNotification.resetNotification
-//                &&  (sensor.minLevelNotification.onNotification
-//                    || sensor.maxLevelNotification.onNotification)){
-//            level = 1;
-//            //показываем ПРЕДУПРЕЖДЕНИЯ и надпись
-//            View v = thermometer.findViewById(R.id.LinearLayoutWarning);
-//            v.setVisibility(View.VISIBLE);//выключаем видимость его, пока не сработало
-//            String str = sensor.deviceLabel;
-//            if(sensor.minLevelNotification.onNotification){
-//                str = str + "   Достигнут нижний порог";
-//            } else{
-//                str = str + "   Достигнут верхний порог";
-//            }
-//            ((TextView)thermometer.findViewById(R.id.textWarning)).setText(str);
-//        }else level = 0;
-//        if(marker_fon.getLevel() != level)marker_fon.setLevel(level);//
-
         //мигаем фоном ПОКА ОТКЛЮЧИЛИ!!
 //        Util.alarmFonViewFon(sensor, view.findViewById(R.id.marker_fon).getBackground()
 //                ,0,1,(lloop & 1) == 1?true:false);
@@ -370,7 +350,9 @@ public class MainActivityThermometer  extends AppCompatActivity {// ActionBarAct
                 else if(sensor.maxLevelNotification.onNotification)level = 4;//температура в норме- было НЕ сброшенный аларм Мах
             }
         }
+
         if(numbe_cur_fon.getLevel() != level)numbe_cur_fon.setLevel(level);//
+
         //---положение переключателей-----положение переключателей-----------------------
         //ловим в сотоянии ВКЛЮЧЕН, запускаем функцию на выполнение и сбрасываем переключатель
         //отключение сенсора

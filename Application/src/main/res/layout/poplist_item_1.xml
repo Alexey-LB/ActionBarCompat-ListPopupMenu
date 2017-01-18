@@ -114,7 +114,8 @@
                 android:textColor="@color/colorTextlight"
                 android:layout_width="88dp"
                 android:fontFamily="sans-serif"
-                android:paddingBottom="2dp" />
+                android:paddingBottom="2dp"
+                android:textSize="18sp" />
 
             <!--android:ellipsize="end"-->
 
@@ -136,7 +137,7 @@
                 android:layout_height="match_parent"
                 android:id="@+id/numbe_cur"
                 android:maxLines="1"
-                android:textColor="@color/common_google_signin_btn_text_dark_focused"
+                android:textColor="@color/colorText"
                 android:gravity="bottom|center_horizontal"
                 android:textSize="18sp"
                 android:textStyle="normal|bold"

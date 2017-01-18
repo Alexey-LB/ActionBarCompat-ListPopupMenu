@@ -343,8 +343,23 @@ fbButton = View.inflate(getContext(),R.layout.poplist_item_3,null);//пород�
                 else if(sensor.maxLevelNotification.onNotification)level = 4;//температура в норме- было НЕ сброшенный аларм Мах
             }
         }
-        fon = view.findViewById(R.id.numbe_cur).getBackground();
-        if(fon.getLevel() != level)fon.setLevel(level);//
+        if(view.findViewById(R.id.numbe_cur) instanceof TextView){
+            TextView tv = (TextView)view.findViewById(R.id.numbe_cur);
+            int color = R.color.colorText;
+            if(level != 0){
+                if((level & 2) != 0){//max
+                    color = R.color.colorMaxThermometer;
+                } else{//min
+                    color = R.color.colorMinThermometer;
+                }
+            }
+            if(tv.getCurrentTextColor() != color) tv.setTextColor(R.color.colorMinThermometer);
+            else tv.setTextColor(R.color.colorMaxThermometer);
+        }
+        ((TextView)view.findViewById(R.id.numbe_cur)).setTextColor(R.color.colorMaxThermometer);
+
+//        fon = view.findViewById(R.id.numbe_cur).getBackground();
+//        if(fon.getLevel() != level)fon.setLevel(level);//
     }
     private int lloop = 0;
 
