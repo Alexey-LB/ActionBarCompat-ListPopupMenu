@@ -137,13 +137,13 @@
                 android:layout_height="match_parent"
                 android:id="@+id/numbe_cur"
                 android:maxLines="1"
-                android:textColor="@color/colorText"
                 android:gravity="bottom|center_horizontal"
                 android:textSize="18sp"
                 android:textStyle="normal|bold"
                 android:background="@drawable/temperature_fon"
                 android:fontFamily="sans-serif"
-                android:paddingBottom="2dp" />
+                android:paddingBottom="2dp"
+                android:textColor="@color/colorText" />
 
 
             <TextView

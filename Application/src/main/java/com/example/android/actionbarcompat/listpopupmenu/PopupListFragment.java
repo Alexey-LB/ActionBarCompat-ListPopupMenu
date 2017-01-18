@@ -345,20 +345,17 @@ fbButton = View.inflate(getContext(),R.layout.poplist_item_3,null);//пород�
         }
         if(view.findViewById(R.id.numbe_cur) instanceof TextView){
             TextView tv = (TextView)view.findViewById(R.id.numbe_cur);
-            int color = R.color.colorText;
+            int color = getResources().getColor(R.color.colorText);
             if(level != 0){
-                if((level & 2) != 0){//max
-                    color = R.color.colorMaxThermometer;
-                } else{//min
-                    color = R.color.colorMinThermometer;
+                if((level & 1) == 1){//min
+                    color = getResources().getColor(R.color.colorMinThermometer);
+                } else{//max
+                    color = getResources().getColor(R.color.colorMaxThermometer);
                 }
             }
-            if(tv.getCurrentTextColor() != color) tv.setTextColor(R.color.colorMinThermometer);
-            else tv.setTextColor(R.color.colorMaxThermometer);
+            if(tv.getCurrentTextColor() != color) tv.setTextColor(color);
         }
-        ((TextView)view.findViewById(R.id.numbe_cur)).setTextColor(R.color.colorMaxThermometer);
-
-//        fon = view.findViewById(R.id.numbe_cur).getBackground();
+ //        fon = view.findViewById(R.id.numbe_cur).getBackground();
 //        if(fon.getLevel() != level)fon.setLevel(level);//
     }
     private int lloop = 0;

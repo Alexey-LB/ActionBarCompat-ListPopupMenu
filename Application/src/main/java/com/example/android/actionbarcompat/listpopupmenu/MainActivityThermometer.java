@@ -350,8 +350,19 @@ public class MainActivityThermometer  extends AppCompatActivity {// ActionBarAct
                 else if(sensor.maxLevelNotification.onNotification)level = 4;//температура в норме- было НЕ сброшенный аларм Мах
             }
         }
-
-        if(numbe_cur_fon.getLevel() != level)numbe_cur_fon.setLevel(level);//
+        if(view.findViewById(R.id.numbe_cur) instanceof TextView){
+            TextView tv = (TextView)view.findViewById(R.id.numbe_cur);
+            color = getResources().getColor(R.color.colorText);
+            if(level != 0){
+                if((level & 1) == 1){//min
+                    color = getResources().getColor(R.color.colorMinThermometer);
+                } else{//max
+                    color = getResources().getColor(R.color.colorMaxThermometer);
+                }
+            }
+            if(tv.getCurrentTextColor() != color) tv.setTextColor(color);
+        }
+     //   if(numbe_cur_fon.getLevel() != level)numbe_cur_fon.setLevel(level);//
 
         //---положение переключателей-----положение переключателей-----------------------
         //ловим в сотоянии ВКЛЮЧЕН, запускаем функцию на выполнение и сбрасываем переключатель
