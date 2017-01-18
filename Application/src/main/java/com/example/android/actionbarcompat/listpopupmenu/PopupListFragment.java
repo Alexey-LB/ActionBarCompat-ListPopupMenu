@@ -533,7 +533,14 @@ return null;//fbButton_;
         //ArrayList<Sensor> arraySensors = Util.getListSensor(getActivity());
         ArrayList<Sensor> mbleDot = Util.getListSensor();
         if(mbleDot != null){
+
             mbleDot.add((Sensor) object);
+            //если сенсор не первый, ставим ему маркер следующий по цвету
+            int i = mbleDot.size();
+            if(i > 1){
+                //берем предыдущий маркер прибавляем 1 - и брезаем (у нас 8 уровней цветов маркера)
+                mbleDot.get(i -1).markerColor = (mbleDot.get(i -2).markerColor + 1) & 0x7;
+            }
 adapter.notifyDataSetChanged();
  adapter.notifyDataSetInvalidated();
             // переходим в ОКНО настройки
