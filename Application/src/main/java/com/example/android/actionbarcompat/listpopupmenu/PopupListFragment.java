@@ -313,7 +313,7 @@ fbButton = View.inflate(getContext(),R.layout.poplist_item_3,null);//пород�
         Util.setDrawableToImageView(sensor.markerColor,R.id.marker, view);
 
         Util.setTextToTextView(sensor.getString_1_ValueTemperature(true),R.id.numbe_min, view);
-        Util.setTextToTextView(b? sensor.getString_2_ValueTemperature(true):"Нет подкл."
+        Util.setTextToTextView(b? sensor.getString_2_ValueTemperature(true):getString(R.string.sDisconnected)
                 , R.id.numbe_cur, view);
         Util.setTextToTextView(sensor.getString_3_ValueTemperature(true),R.id.numbe_max, view);
 
@@ -584,12 +584,8 @@ return null;//fbButton_;
     private void goToSetting(int i) {
         final Intent intent = new Intent(getActivity(), MainSettingSetting.class);
         intent.putExtra(MainActivityWork.EXTRAS_DEVICE_ITEM, i);
-        String title = "   Термометр";
-//        ArrayList<Sensor> listSensor = Util.getListSensor();
-//        if((listSensor != null) && (listSensor.get(i) != null)){
-//            title = listSensor.get(i).deviceLabel;
-//        }
-        intent.putExtra(Util.EXTRAS_BAR_TITLE, "  " + title);
+
+        intent.putExtra(Util.EXTRAS_BAR_TITLE, "  " + getString(R.string.title_Thermometer));
         //startActivityForResult(intent,MainActivityWork.MAINACTIVITY);//
         startActivity(intent);//
     }

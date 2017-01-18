@@ -98,7 +98,7 @@ public class MainActivityThermometer  extends AppCompatActivity {// ActionBarAct
                 .findViewById(R.id.switchOffSensor);
         mSwitchOffSensor.setTextColor(getResources()
                 .getColor(R.color.colorTextlight));//  sw.setBackColor(android.content.res.ColorStateList.valueOf(0xFFd0d0d0));
-        mSwitchOffSensor.setText("","Откл.");//
+        mSwitchOffSensor.setText("",getString(R.string.sDisconnect));//
       //  mSwitchOffSensor.setMinWidth(200);
         //размер по ШИРИНЕ переключателя можно определить примерно ТАК
         //Ratio(2f) * ThumbSize(45f,45f) + 20dp = 110dp, + layout_marginRight(3dp)== 113dp!!
@@ -118,7 +118,7 @@ public class MainActivityThermometer  extends AppCompatActivity {// ActionBarAct
                 .findViewById(R.id.switchResetMeasurement);
         mSwitchResetMeasurement.setTextColor(getResources()
                 .getColor(R.color.colorTextlight));//  sw.setBackColor(android.content.res.ColorStateList.valueOf(0xFFd0d0d0));
-        mSwitchResetMeasurement.setText("","Сброс");//
+        mSwitchResetMeasurement.setText("",getString(R.string.sReset));//
         /////       sw.setThumbSize(50f,50f);//размер круга- большлго пальца
         //ловит касания и перемещение ЗДЕСЬ обработка сдвига переключателя
         // и фиксация во включенром сотоянии, в обновлении мы возвращяем его назад и
@@ -320,7 +320,7 @@ public class MainActivityThermometer  extends AppCompatActivity {// ActionBarAct
                     ,R.id.numbe_max, view);
         } else{
             // ЭТО НОРМАЛЬНАЯ РАБОТА  - тест сброшен -
-            Util.setTextToTextView(b? sensor.getString_2_ValueTemperature(true):"Нет подкл."
+            Util.setTextToTextView(b? sensor.getString_2_ValueTemperature(true):getString(R.string.sDisconnected)
                     , R.id.numbe_cur, view);
             Util.setTextToTextView(sensor.getString_1_ValueTemperature(true),R.id.numbe_min, view);
             Util.setTextToTextView(sensor.getString_3_ValueTemperature(true),R.id.numbe_max, view);
@@ -476,7 +476,7 @@ public class MainActivityThermometer  extends AppCompatActivity {// ActionBarAct
                   //-------Setting --
                   final Intent intent = new Intent(this, MainSettingSetting.class);
                   intent.putExtra(MainActivityWork.EXTRAS_DEVICE_ITEM, itemSensor);
-                  intent.putExtra(Util.EXTRAS_BAR_TITLE, "  B4/B5");
+                  intent.putExtra(Util.EXTRAS_BAR_TITLE,"  " + getString(R.string.title_Thermometer));
                   startActivity(intent);//
                // startActivityForResult(intent,MainActivityThermometer.MAIN_ACTIVITY_THERMOMETER);//
                 return true;

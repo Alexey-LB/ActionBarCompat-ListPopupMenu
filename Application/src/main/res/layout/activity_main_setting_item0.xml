@@ -30,7 +30,7 @@
         android:background="@color/colorBackgroundGrey"
         android:layout_marginBottom="@dimen/iten_vertical_gap_wight">
         <TextView
-            android:text="ИДЕНТИФИКАЦИЯ"
+            android:text="@string/sIDENTIFICATION"
             android:id="@+id/textViewGroupIdentefication"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
@@ -67,7 +67,7 @@
         <!--И!! android:minWidth="100dp", если он больше чем android:layout_width="wrap_content"!!-->
  <!--NAME-->
         <TextView
-            android:text="Имя"
+            android:text="@string/sName"
             android:id="@+id/textViewLabelName"
             android:layout_height="match_parent"
             android:layout_width="wrap_content"
@@ -85,7 +85,6 @@
             android:id="@+id/textViewName"
             android:inputType="textAutoComplete"
 
-            android:text="Монитор 1"
             android:layout_height="match_parent"
             android:layout_width="match_parent"
             android:layout_marginLeft="7dp"
@@ -101,7 +100,7 @@
             android:focusable="false"
             android:focusableInTouchMode="false"
             android:enabled="true"
-            />
+            android:text="@string/sSensors" />
         <!--"@dimen/iten_setting_wight"-->
         <ImageButton
             android:layout_width="wrap_content"
@@ -132,7 +131,7 @@
         <!--android:showDividers="beginning|middle|end"-->
 <!--MARKER -->
         <TextView
-            android:text="Маркер"
+            android:text="@string/sMarker"
             android:id="@+id/textViewLabelMarker"
             android:layout_height="match_parent"
             android:layout_width="wrap_content"

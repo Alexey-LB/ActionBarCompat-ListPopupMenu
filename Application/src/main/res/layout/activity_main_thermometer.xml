@@ -118,7 +118,7 @@
                                 android:layout_height="match_parent">
 
                                 <TextView
-                                    android:text="Время"
+                                    android:text="@string/sTime"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:id="@+id/textView15"
@@ -218,7 +218,7 @@
                                             android:layout_height="wrap_content" />
 
                                         <TextView
-                                            android:text="Максимальная"
+                                            android:text="@string/sMaximum"
                                             android:layout_weight="1"
                                             android:layout_width="match_parent"
                                             android:layout_height="wrap_content"
@@ -270,7 +270,7 @@
                                         android:layout_weight="1" />
 
                                     <TextView
-                                        android:text="Текущая"
+                                        android:text="@string/sCurrent"
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
                                         android:id="@+id/textView12"
@@ -329,7 +329,7 @@
                                             android:layout_weight="1" />
 
                                         <TextView
-                                            android:text="Минимальная"
+                                            android:text="@string/sMinimum"
                                             android:layout_width="match_parent"
                                             android:layout_height="wrap_content"
                                             android:id="@+id/textView14"

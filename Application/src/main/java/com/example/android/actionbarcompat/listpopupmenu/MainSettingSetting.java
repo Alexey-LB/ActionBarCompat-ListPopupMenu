@@ -214,9 +214,9 @@ findViewById(R.id.LinearLayoutMeasurementMode).setVisibility(View.GONE);
                 intent = new Intent(this, SettingName.class);
                 intent.putExtra(SettingName.EXTRAS_VALUE, str);
                 intent.putExtra(SettingName.EXTRAS_TYPE, SettingName.VALUE_TYPE_STRING);
-                intent.putExtra(Util.EXTRAS_LABEL, "Имя");
-                intent.putExtra(SettingName.EXTRAS_HINT,"Введите имя");
-                intent.putExtra(Util.EXTRAS_BAR_TITLE, "   BB1");
+                intent.putExtra(Util.EXTRAS_LABEL, getString(R.string.sName));
+                intent.putExtra(SettingName.EXTRAS_HINT,getString(R.string.sEnterName));
+                intent.putExtra(Util.EXTRAS_BAR_TITLE, "   " + getString(R.string.sName));
 
                 startActivityForResult(intent,ACTIVITY_SETTING_EDIT);
                 break;
@@ -240,6 +240,7 @@ findViewById(R.id.LinearLayoutMeasurementMode).setVisibility(View.GONE);
                 Log.v(TAG,"imageButtonTermometer");
                 intent = new Intent(this, SettingMaker.class);
                 intent.putExtra(MainActivityWork.EXTRAS_DEVICE_ITEM , mItem);
+                intent.putExtra(Util.EXTRAS_BAR_TITLE, "   " + getString(R.string.sDiscover));
                 startActivityForResult(intent,ACTIVITY_SETTING_DEVICE);
                 break;
             //case R.id.imageButtonMeasurementMode:
@@ -248,7 +249,7 @@ findViewById(R.id.LinearLayoutMeasurementMode).setVisibility(View.GONE);
                 break;
             case R.id.imageButtonMelody:
                 Log.v(TAG,"imageButtonMelody");
-                InputBox.pickRingtone(ACTIVITY_SETTING_URL_MELODI, "  BB4"
+                InputBox.pickRingtone(ACTIVITY_SETTING_URL_MELODI, "   " + getString(R.string.sMelody)
                         ,sensor.endMeasurementNotification.melody,TAG, this);
                 //pickRingtone();
                 break;
@@ -266,7 +267,7 @@ findViewById(R.id.LinearLayoutMeasurementMode).setVisibility(View.GONE);
 
                 intent = new Intent(this, SettingMinMax.class);
                 intent.putExtra(Util.EXTRAS_ITEM, mItem);
-                intent.putExtra(Util.EXTRAS_BAR_TITLE, "   BC1    Max");
+                intent.putExtra(Util.EXTRAS_BAR_TITLE, "   " + getString(R.string.sTemperatureGreaterThan));
                 // все изменения будет писать сразу в сенсор
                 //указали флаг установки максимума, все остальное делется НАПРЯМУЮ с данными
                 intent.putExtra(SettingMinMax.EXTRAS_MAX, SettingMinMax.EXTRAS_MAX);
@@ -276,7 +277,7 @@ findViewById(R.id.LinearLayoutMeasurementMode).setVisibility(View.GONE);
                 Log.v(TAG,"imageButtonTemperaturesBelow");
                 intent = new Intent(this, SettingMinMax.class);
                 intent.putExtra(Util.EXTRAS_ITEM, mItem);
-                intent.putExtra(Util.EXTRAS_BAR_TITLE, "   BC2 Min");
+                intent.putExtra(Util.EXTRAS_BAR_TITLE, "   " + getString(R.string.sTemperatureLessThan));
                 // все изменения будет писать сразу в сенсор
                 // по умолчанию устанавливаем минимум, все остальное делется НАПРЯМУЮ с данными
                 startActivityForResult(intent,ACTIVITY_SETTING_MIN);
@@ -288,7 +289,7 @@ findViewById(R.id.LinearLayoutMeasurementMode).setVisibility(View.GONE);
                 Log.v(TAG,"imageButtonDecor");
                 //----НАСТРОЙКА И ЗАПУСК окна ввода ЧИСЛА -----------
                 intent = new Intent(this, SettingFon.class);
-                intent.putExtra(Util.EXTRAS_BAR_TITLE, "   BA1");
+                intent.putExtra(Util.EXTRAS_BAR_TITLE, "   " + getString(R.string.sDESIGN));
                 startActivityForResult(intent,ACTIVITY_SETTING_DECOR);
 //                  if(sensor != null){
 //                    Util.playerRingtone(1f, sensor.endMelody , this,TAG);

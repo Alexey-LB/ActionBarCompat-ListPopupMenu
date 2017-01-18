@@ -33,6 +33,7 @@ public class SettingMinMax extends Activity implements View.OnClickListener{
     private boolean maxValue = false;
     private  float max = 70f;
     private  float min = -20f;
+    private  String title;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,7 +42,7 @@ public class SettingMinMax extends Activity implements View.OnClickListener{
         final Intent intent = getIntent();
        // Log.w(TAG, "getParentActivityIntent()= " +getParentActivityIntent());
         mItem = intent.getIntExtra(Util.EXTRAS_ITEM,0);
-        String title = intent.getStringExtra(Util.EXTRAS_BAR_TITLE);
+        title = intent.getStringExtra(Util.EXTRAS_BAR_TITLE);
         // все изменения будет писать сразу в сенсор
         //fl = intent.getFloatExtra(Util.EXTRAS_FLOAT_1,0);
         //
@@ -187,12 +188,12 @@ Util.playerRingtoneStop();
                 //с учетом ЦЕЛСИЯ или фаренгейта
                 intent.putExtra(SettingName.EXTRAS_VALUE, sensor.getStringValue( value, false));
                 intent.putExtra(SettingName.EXTRAS_TYPE, SettingName.VALUE_TYPE_FLOAT);
-                intent.putExtra(Util.EXTRAS_LABEL, "Уровень");
-                intent.putExtra(SettingName.EXTRAS_HINT,"Введите число");
+                intent.putExtra(Util.EXTRAS_LABEL, getString(R.string.sLevel));
+                intent.putExtra(SettingName.EXTRAS_HINT,getString(R.string.sEnterTheNumber));
                 //с учетом ЦЕЛСИЯ или фаренгейта
                 intent.putExtra(SettingName.EXTRAS_FLOAT_MAX,sensor.getStringValue( max, false));
                 intent.putExtra(SettingName.EXTRAS_FLOAT_MIN,sensor.getStringValue( min, false));
-                intent.putExtra(Util.EXTRAS_BAR_TITLE, "   BC3");
+                intent.putExtra(Util.EXTRAS_BAR_TITLE, title);
 
                 startActivityForResult(intent,ACTIVITY_SETTING_MIN_MAX_VALUE);
                 //-----------------------------------
@@ -200,10 +201,10 @@ Util.playerRingtoneStop();
             case R.id.imageButtonMelody:
                 Log.v(TAG,"imageButtonMelody");
                 if(maxValue) {
-                    InputBox.pickRingtone(ACTIVITY_SETTING_URL_MELODI, "    BC4"
+                    InputBox.pickRingtone(ACTIVITY_SETTING_URL_MELODI, "   "+ getString(R.string.sMelody)
                         , sensor.maxLevelNotification.melody,TAG, this);
                 } else{
-                    InputBox.pickRingtone(ACTIVITY_SETTING_URL_MELODI, "    BC4"
+                    InputBox.pickRingtone(ACTIVITY_SETTING_URL_MELODI, "   "+ getString(R.string.sMelody)
                             , sensor.minLevelNotification.melody,TAG, this);
                 }
                 break;

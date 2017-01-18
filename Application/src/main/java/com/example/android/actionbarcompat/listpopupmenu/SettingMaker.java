@@ -40,7 +40,7 @@ public class SettingMaker extends Activity implements View.OnClickListener{
         //-------------------------------------------
         updateTextString();
         findViewById(R.id.imageButtonFind).setOnClickListener(this);
-        Util.setActionBar(getActionBar(),TAG, "  BB2");
+        Util.setActionBar(getActionBar(),TAG, intent.getStringExtra(Util.EXTRAS_BAR_TITLE));
     }
 
     private void updateTextString(){
@@ -60,6 +60,7 @@ public class SettingMaker extends Activity implements View.OnClickListener{
             Util.setTextToTextView(sensor.firmwareRevision,R.id.textViewFirmwareRevision, this);
             Util.setTextToTextView(sensor.hardwareRevision,R.id.textViewHardwareRevision, this);
             Util.setTextToTextView(sensor.softwareRevision,R.id.textViewSoftwareRevision, this);
+            Util.setTextToTextView(sensor.manufacturerName,R.id.textViewManufacturerName, this);
     }
     @Override
     protected void onPause() {
@@ -154,7 +155,7 @@ public class SettingMaker extends Activity implements View.OnClickListener{
               //  intent.putExtra(MainActivityWork.EXTRAS_DEVICE_NAME_FILTR, "WT ");
                 intent.putExtra(MainActivityWork.EXTRAS_DEVICE_NAME_FILTR, "W");
                 intent.putExtra(MainActivityWork.EXTRAS_DEVICE_ITEM,mItem);
-                intent.putExtra(Util.EXTRAS_BAR_TITLE,"  BB3   " + sensor.deviceLabel);
+                intent.putExtra(Util.EXTRAS_BAR_TITLE, "   "+getString(R.string.sDiscover));
                 startActivity(intent);//на поиск к устройству
 //                startActivityForResult(intent, MainActivityWork.ACTIVITY_SETTING_MAKER);//на поиск к устройству
 

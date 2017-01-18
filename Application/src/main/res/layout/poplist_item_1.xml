@@ -64,7 +64,7 @@
 
             <TextView
                 android:id="@android:id/text1"
-                android:text="Температура 1"
+                android:text="@string/sTemperature"
                 android:textColor="@color/colorTextlight"
                 android:layout_height="match_parent"
                 android:maxLines="1"
@@ -180,7 +180,7 @@
                 android:layout_height="1dp" />
 
             <TextView
-                android:text=" минимальная"
+                android:text="@string/sMinimum"
                 android:textAllCaps="false"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -202,7 +202,7 @@
                 android:layout_marginBottom="6dp" />
 
             <TextView
-                android:text=" текущая"
+                android:text="@string/sCurrent"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/textView6"
@@ -224,7 +224,7 @@
                 android:layout_height="1dp"
                 android:layout_marginBottom="6dp" />
             <TextView
-                android:text=" максимальная"
+                android:text="@string/sMaximum"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/textView2"

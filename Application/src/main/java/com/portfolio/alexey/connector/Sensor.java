@@ -317,8 +317,9 @@ return getStringValue( maxLevelNotification.valueLevel, onFahrenheit, addType);
 //    }
     //режим 0 - медецинский Или 1 - универсальный
     public String getStringMeasurementMode(){
-        if(measurementMode == 0) return "Медицинский";
-        return "Универсальный";
+        if(app ==  null) return"";
+        if(measurementMode == 0) return app.getString(R.string.sMedical);
+        return app.getString(R.string.sUniversal);
     }
     //режим медецинский Или универсальный
     public int changeMeasurementMode(){

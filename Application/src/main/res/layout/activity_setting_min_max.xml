@@ -53,7 +53,7 @@
         android:background="@color/colorBackground">
 
         <TextView
-            android:text="Оповещение"
+            android:text="@string/sNotification"
             android:id="@+id/textViewLabelNotification"
             android:layout_height="match_parent"
             android:layout_width="wrap_content"
@@ -106,7 +106,7 @@
         android:background="@color/colorBackground">
 
         <TextView
-            android:text="Значение"
+            android:text="@string/sValue"
             android:id="@+id/textViewLabelValue"
             android:layout_height="match_parent"
             android:layout_width="wrap_content"
@@ -155,7 +155,7 @@
         android:background="@color/colorBackground">
 
         <TextView
-            android:text="Мелодия"
+            android:text="@string/sMelody"
             android:id="@+id/textViewLabelMelody"
             android:layout_height="match_parent"
             android:layout_width="wrap_content"
@@ -206,7 +206,7 @@
         android:background="@color/colorBackground">
 
         <TextView
-            android:text="Вибрация"
+            android:text="@string/sVibration"
             android:id="@+id/textViewLabelVibration"
             android:layout_height="match_parent"
             android:layout_width="wrap_content"

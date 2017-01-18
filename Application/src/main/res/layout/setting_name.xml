@@ -42,7 +42,7 @@
         <!--И!! android:minWidth="100dp", если он больше чем android:layout_width="wrap_content"!!-->
 
         <TextView
-            android:text="Имя"
+            android:text="@string/sName"
             android:id="@+id/textViewLabelName"
             android:layout_height="@dimen/iten_setting_wight"
             android:layout_width="wrap_content"
@@ -65,7 +65,7 @@
             android:id="@+id/editTextName"
             android:inputType="textAutoComplete"
 
-            android:hint="Введите имя..."
+            android:hint="@string/sEnterName"
             android:layout_height="@dimen/iten_setting_wight"
             android:layout_width="wrap_content"
             android:layout_marginLeft="7dp"

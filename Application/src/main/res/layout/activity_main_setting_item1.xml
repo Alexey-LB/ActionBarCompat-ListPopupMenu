@@ -32,7 +32,7 @@
         android:layout_marginBottom="@dimen/iten_vertical_gap_wight">
 
         <TextView
-            android:text="ТЕРМОМЕТР"
+            android:text="@string/sTHERMOMETER"
             android:id="@+id/textViewGroupThermometer"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
@@ -52,7 +52,7 @@
         android:layout_marginBottom="@dimen/iten_vertical_gap_wight">
         <!--TERMOMETER-->
         <TextView
-            android:text="Термометр"
+            android:text="@string/sThermometer"
             android:id="@+id/textViewLabelTermometer"
             android:layout_height="match_parent"
             android:layout_width="wrap_content"
@@ -97,7 +97,7 @@
         android:id="@+id/LinearLayoutMeasurementMode">
         <!--measurement mode-->
         <TextView
-            android:text="Режим измерения"
+            android:text="@string/sMeasuringMode"
             android:id="@+id/textViewLabelMeasurementMode"
             android:layout_height="match_parent"
             android:layout_width="wrap_content"
@@ -110,7 +110,7 @@
 
         <TextView
             android:id="@+id/textViewMeasurementMode"
-            android:text="Медицинский"
+            android:text="@string/sUniversal"
             android:layout_height="match_parent"
             android:layout_width="match_parent"
             android:layout_marginLeft="7dp"

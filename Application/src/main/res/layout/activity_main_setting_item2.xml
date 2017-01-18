@@ -33,7 +33,7 @@
         android:layout_marginBottom="@dimen/iten_vertical_gap_wight">
 
         <TextView
-            android:text="ИЗМЕРЕНИЕ ЗАКОЧЕНО"
+            android:text="@string/sMEASURING_IS_COMPLETE"
             android:id="@+id/textViewGroupMeasurementEnd"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
@@ -53,7 +53,7 @@
         android:layout_marginBottom="@dimen/iten_vertical_gap_wight">
         <!--temperatures above-->
         <TextView
-            android:text="Мелодия"
+            android:text="@string/sMelody"
             android:id="@+id/textViewLabelMelody"
             android:layout_height="match_parent"
             android:layout_width="wrap_content"
@@ -99,7 +99,7 @@
         android:layout_gravity="center_vertical|fill_vertical|center_horizontal|fill_horizontal">
         <!--temperatures below-->
         <TextView
-            android:text="Вибрация"
+            android:text="@string/sVibration"
             android:id="@+id/textViewLabelVibration"
             android:layout_height="match_parent"
             android:layout_width="wrap_content"

@@ -31,7 +31,7 @@
         android:layout_marginBottom="@dimen/iten_vertical_gap_wight">
 
         <TextView
-            android:text="ОФОРМЛЕНИЕ"
+            android:text="@string/sDESIGN"
             android:id="@+id/textViewGroupDecor"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
@@ -51,7 +51,7 @@
         android:layout_marginBottom="@dimen/iten_vertical_gap_wight">
         <!--temperatures above-->
         <TextView
-            android:text="Фон"
+            android:text="@string/sBackground"
             android:id="@+id/textViewLabelDecor"
             android:layout_height="match_parent"
             android:layout_width="wrap_content"

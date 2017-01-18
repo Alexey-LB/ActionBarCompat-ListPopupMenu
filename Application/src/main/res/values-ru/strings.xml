@@ -29,7 +29,140 @@
     <string name="menu_disconnect">Отключение</string>
     <string name="menu_scan">Поиск</string>
     <string name="menu_stop">Стоп</string>
-    <string name="app_name">Термометр</string>
     <string name="intro_message">сообщение</string>
+    <!---->
+    <!--"Version" = "Версия";-->
+    <string name="version">Версия</string>
+
+    <!--/* Initial view strings */-->
+    <!--"App title" = "Домашний диагностический центр HOME-DC";-->
+
+ <string name="app_title">App title</string>
+ <string name="app_name">Термометр</string>
+ <string name="titleTHERMOMETER_RELSIB">THERMOMETER RELSIB</string>
+
+    <!-- ООО НПК Рэлсиб-->
+    <string name="sNPK_Relsib">ООО НПК Рэлсиб</string>
+    <!--"Thermometer" = "Термометер";-->
+    <string name="title_Thermometer">Термометер</string>
+    <string name="sThermometer">Термометер</string>
+
+    <!--"IDENTIFICATION" = "ИДЕНТИФИКАЦИЯ";-->
+    <string name="sIDENTIFICATION">ИДЕНТИФИКАЦИЯ</string>
+    <!--"Name" = "Имя";-->
+    <string name="sName">Имя</string>
+    <string name="sEnterName">Введите имя</string>
+    <!--"Sensors" = "Сенсоры";-->
+    <string name="sSensors">Сенсоры</string>
+    <!--"Marker" = "Маркер";-->
+    <string name="sMarker">Маркер</string>
+    <!--"THERMOMETER" = "ТЕРМОМЕТЕР";-->
+    <string name="sTHERMOMETER">ТЕРМОМЕТЕР</string>
+    <!--"Temperature" = "Температура";-->
+    <string name="sTemperature">Температура</string>
+
+    <!--"Measuring" = "Измерение";-->
+    <string name="sMeasuring">Измерение</string>
+
+    <!--/* Temperature monitor settings strings */-->
+    <!--"Universal" = "Универсальный";-->
+    <string name="sUniversal">Универсальный</string>
+    <!--"Medical" = "Медицинский";-->
+    <string name="sMedical">Медицинский</string>
+    <!--"Measuring mode" = "Режим измерения";-->
+    <string name="sMeasuringMode">Режим измерения</string>
+    <!--"MEASURING IS COMPLETE" = "ИЗМЕРЕНИЕ ЗАКОНЧЕНО";-->
+    <string name="sMEASURING_IS_COMPLETE">ИЗМЕРЕНИЕ ЗАКОНЧЕНО</string>
+    <!--/* Threshold settings strings */-->
+    <!--"Enabled" = "Включен";-->
+    <string name="sEnabled">Включен</string>
+    <!--"Value" = "Значение";-->
+    <string name="sValue">Значение</string>
+    <!--"Melody" = "Мелодия";-->
+    <string name="sMelody">Мелодия</string>
+    <!--"Vibration" = "Вибрация";-->
+    <string name="sVibration">Вибрация</string>
+
+
+    <!--"NOTIFICATION" = "ОПОВЕЩЕНИЕ";-->
+    <string name="sNOTIFICATION">ОПОВЕЩЕНИЕ</string>
+    <string name="sNotification">Оповещение</string>
+    <!--"Temperature greater than" = "Температура выше";-->
+    <string name="sTemperatureGreaterThan">Температура выше</string>
+    <!--"Temperature less than" = "Температура ниже";-->
+    <string name="sTemperatureLessThan">Температура ниже</string>
+    <!--"Temperature measuring" = "Измерение температуры";-->
+    <string name="sTemperatureMeasuring">Измерение температуры</string>
+
+    <!--"DESIGN" = "ОФОРМЛЕНИЕ";-->
+    <string name="sDESIGN">ОФОРМЛЕНИЕ</string>
+    <!--"Background" = "Фон";-->
+    <string name="sBackground">Фон</string>
+
+    <!--/* Temperature monitor strings */-->
+    <!--"Current" = "Текущая";-->
+    <string name="sCurrent">текущая</string>
+    <!--"Maximum" = "Максимальная";-->
+    <string name="sMaximum">максимальная</string>
+    <!--"Minimum" = "Минимальная";-->
+    <string name="sMinimum">минимальная</string>
+    <!--"Predicted" = "Прогнозируемая";-->
+    <string name="sPredicted">прогнозируемая</string>
+
+    <!--"Time, s" = "Время, с";-->
+    <string name="sTime">Время</string>
+
+    <!--"Cancel" = "Отменить";-->
+    <string name="sCancel">Отменить</string>
+    <!--"Accept" = "Принять";-->
+    <string name="sAccept">Принять</string>
+    <!--"Clear" = "Очистить";-->
+    <string name="sClear">Очистить</string>
+    <!--"Edit" = "Изменить";-->
+    <string name="sEdit">Изменить</string>
+    <!--"Done" = "Готово";-->
+    <string name="sDone">Готово</string>
+    <!--"Delete" = "Удалить";-->
+    <string name="sDelete">Удалить</string>
+    <!--"Disconnect" = "Отключить";-->
+    <string name="sDisconnect">Отключить</string>
+    <!--"Reset" = "Сброс";-->
+    <string name="sReset">Сброс</string>
+    <!--Level= уровень-->
+    <string name="sLevel">Уровень</string>
+    <!--Enter the number= введите число-->
+    <string name="sEnterTheNumber">Введите число</string>
+
+    <!--/* Sensor's status */-->
+    <!--"Unavailable" = "Недоступен";-->
+    <string name="sUnavailable">Недоступен</string>
+    <!--"Discover" = "Поиск";-->
+    <string name="sDiscover">Поиск</string>
+    <!--"Disconnected" = "Не подключен";-->
+    <string name="sDisconnected">Не подключен</string>
+    <!--"Connecting..." = "Подключение...";-->
+    <string name="sConnecting">Подключение</string>
+    <!--"Connected" = "Подключен";-->
+    <string name="sConnected">Подключен</string>
+    <!--"Measurement time" = "Время измерения";-->
+    <string name="sMeasurementTime">Время измерения</string>
+
+    <!--"Discover" = "Поиск";-->
+    <!--"INFORMATION" = "ИНФОРМАЦИЯ";-->
+    <string name="sINFORMATION">ИНФОРМАЦИЯ</string>
+    <!--"Model number" = "Номер модели";-->
+    <string name="sModelNumber">Номер модели</string>
+    <!--"Serial number" = "Серийный номер";-->
+    <string name="sSerialNumber">Серийный номер</string>
+    <!--"Firmware revision" = "Версия прошивки";-->
+    <string name="sFirmwareRevision">Версия прошивки</string>
+    <!--"Hardware revision" = "Аппаратная версия";-->
+    <string name="sHardwareRevision">Аппаратная версия</string>
+    <!--"Software revision" = "Версия ПО";-->
+    <string name="sSoftwareRevision">Версия ПО</string>
+    <!--"Manufacturer name" = "Производитель";-->
+    <string name="sManufacturerName">Производитель</string>
+
+    //2017-01-17 -----------------------------
 
 </resources>

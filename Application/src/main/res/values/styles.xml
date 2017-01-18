@@ -93,12 +93,18 @@
         <item name="android:actionBarSize">@dimen/actionBarSize</item>
         <item name="actionBarSize">@dimen/actionBarSize</item>
 
-        <!--<item name="android:dividerHeight">5dp</item>-->
-        <!--<item name="actionBarDivider">@drawable/house_button_on</item>-->
-
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <!--<item name="android:panelColorForeground">#ffffff</item>-->
+        <!--<item name="android:panelColorBackground">#ffffff</item>-->
+        <!--<item name="android:panelBackground">#ffffff</item>-->
+        <!--&lt;!&ndash;<item name="android:dividerHeight">5dp</item>&ndash;&gt;-->
+        <!--&lt;!&ndash;<item name="actionBarDivider">@drawable/house_button_on</item>&ndash;&gt;-->
+        <!--<item name="android:colorForeground">#ffffff</item>-->
+        <!--<item name="android:colorBackground">#ffffff</item>-->
+        <!--<item name="android:headerBackground">#ffffff</item>-->
+        <!--<item name="android:windowBackg">#ffffff</item>-->
+        <!--<item name="android:colorPrimary">#ffffff</item>-->
+        <!--<item name="colorPrimaryDark">@color/colorPrimaryDark</item>-->
+        <!--<item name="colorAccent">@color/colorAccent</item>-->
     </style>
 
     <!--пример использования без акшин бара-->
