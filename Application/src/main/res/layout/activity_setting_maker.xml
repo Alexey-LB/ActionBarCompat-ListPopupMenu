@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:background="@color/colorBackground"
+    android:layout_height="match_parent"
+    >
+<ScrollView
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorTextlight">
+    android:background="@color/colorBackground">
     <!--tools:context="com.example.android.actionbarcompat.listpopupmenu.MainSettingSetting"-->
 
 <LinearLayout
@@ -17,25 +24,9 @@
 
     android:background="@color/colorTextlight"
     android:visibility="visible"
+    android:layout_weight="0"
     >
     <!--android:weightSum = "100"-->
-    <!--<LinearLayout-->
-        <!--android:id="@+id/activity_main_setting_item1"-->
-        <!--xmlns:android="http://schemas.android.com/apk/res/android"-->
-        <!--xmlns:app="http://schemas.android.com/apk/res-auto"-->
-        <!--xmlns:tools="http://schemas.android.com/tools"-->
-        <!--android:orientation="vertical"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:weightSum = "100"-->
-        <!--android:background="@color/colorTextlight"-->
-        <!--android:visibility="visible"-->
-        <!--&gt;-->
-     <!--ОТСТУПЫ - НЕ работает!? почемуто, хотел добапввить разделители-->
-    <!--android:divider="@color/colorAccent"-->
-    <!--android:dividerPadding="15dp"-->
-    <!--android:showDividers="beginning|middle|end">-->
-    <!---->
 
     <!--Также можно указать атрибут android:weightSum. Если атрибуту присвоить значение 100, то -->
     <!--можно указывать вес дочерних элементов в удобном виде, как в процентах. Такой способ широко -->
@@ -48,7 +39,8 @@
         android:layout_width="match_parent"
         android:background="@color/colorBackgroundGrey"
         android:layout_height="@dimen/iten_setting_wight"
-        android:layout_marginBottom="@dimen/iten_vertical_gap_wight">
+        android:layout_marginBottom="@dimen/iten_vertical_gap_wight"
+        android:layout_weight="0">
 
         <TextView
             android:text=""
@@ -68,7 +60,8 @@
         android:layout_width="match_parent"
         android:background="@color/colorBackground"
         android:layout_height="@dimen/iten_setting_wight"
-        android:layout_marginBottom="@dimen/iten_vertical_gap_wight">
+        android:layout_marginBottom="@dimen/iten_vertical_gap_wight"
+        android:layout_weight="0">
         <!--TERMOMETER-->
         <TextView
             android:text="@string/sDiscover"
@@ -149,7 +142,8 @@
         android:layout_width="match_parent"
         android:background="@color/colorBackgroundGrey"
         android:layout_height="@dimen/iten_setting_wight"
-        android:layout_marginBottom="@dimen/iten_vertical_gap_wight">
+        android:layout_marginBottom="@dimen/iten_vertical_gap_wight"
+        android:layout_weight="0">
 
     <!--"ИНФОРМАЦИЯ"-->
         <TextView
@@ -170,7 +164,8 @@
         android:layout_width="match_parent"
         android:background="@color/colorBackground"
         android:layout_height="@dimen/iten_setting_wight"
-        android:layout_marginBottom="@dimen/iten_vertical_gap_wight">
+        android:layout_marginBottom="@dimen/iten_vertical_gap_wight"
+        android:layout_weight="0">
 
         <TextView
             android:text="@string/sModelNumber"
@@ -205,7 +200,8 @@
         android:layout_width="match_parent"
         android:background="@color/colorBackground"
         android:layout_height="@dimen/iten_setting_wight"
-        android:layout_marginBottom="@dimen/iten_vertical_gap_wight">
+        android:layout_marginBottom="@dimen/iten_vertical_gap_wight"
+        android:layout_weight="0">
 
         <TextView
             android:text="@string/sSerialNumber"
@@ -239,7 +235,8 @@
         android:layout_width="match_parent"
         android:background="@color/colorBackground"
         android:layout_height="@dimen/iten_setting_wight"
-        android:layout_marginBottom="@dimen/iten_vertical_gap_wight">
+        android:layout_marginBottom="@dimen/iten_vertical_gap_wight"
+        android:layout_weight="0">
 
         <TextView
             android:text="@string/sFirmwareRevision"
@@ -273,7 +270,8 @@
         android:layout_width="match_parent"
         android:background="@color/colorBackground"
         android:layout_height="@dimen/iten_setting_wight"
-        android:layout_marginBottom="@dimen/iten_vertical_gap_wight">
+        android:layout_marginBottom="@dimen/iten_vertical_gap_wight"
+        android:layout_weight="0">
 
         <TextView
             android:text="@string/sHardwareRevision"
@@ -307,7 +305,8 @@
         android:layout_width="match_parent"
         android:background="@color/colorBackground"
         android:layout_height="@dimen/iten_setting_wight"
-        android:layout_marginBottom="@dimen/iten_vertical_gap_wight">
+        android:layout_marginBottom="@dimen/iten_vertical_gap_wight"
+        android:layout_weight="0">
 
         <TextView
             android:text="@string/sSoftwareRevision"
@@ -342,7 +341,8 @@
         android:layout_width="match_parent"
         android:background="@color/colorBackground"
         android:layout_height="@dimen/iten_setting_wight"
-        android:layout_marginBottom="@dimen/iten_vertical_gap_wight">
+        android:layout_marginBottom="@dimen/iten_vertical_gap_wight"
+        android:layout_weight="0">
 
         <TextView
             android:text="@string/sManufacturerName"
@@ -370,12 +370,9 @@
             android:textStyle="normal|bold"
             android:gravity="right|center_vertical" />
     </LinearLayout>
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:background="@color/colorBackground"
-        android:layout_height="1dp"
-        android:layout_marginBottom="@dimen/iten_vertical_gap_wight"
-        android:layout_weight="100"/>
+
+    <!---->
 </LinearLayout>
 </ScrollView>
+
+</LinearLayout>
