@@ -9,5 +9,5 @@
     <item android:maxLevel="5"  android:drawable="@drawable/marker_blue"/>
     <item android:maxLevel="6"  android:drawable="@drawable/marker_purple"/>
     <item android:maxLevel="7"  android:drawable="@drawable/marker_black"/>
-
+    <item android:minLevel="8" android:maxLevel="100"  android:drawable="@drawable/marker_none"/>
 </level-list>

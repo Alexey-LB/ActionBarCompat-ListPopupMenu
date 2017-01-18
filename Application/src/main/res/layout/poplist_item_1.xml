@@ -54,7 +54,7 @@
                 <ImageView
 
                     android:id="@+id/marker"
-                    android:background="@drawable/marker_white"
+                    android:background="@drawable/marker_level"
                     android:layout_height="24dp"
                     android:layout_width="24dp"
                     android:layout_gravity="center_vertical|center_horizontal"

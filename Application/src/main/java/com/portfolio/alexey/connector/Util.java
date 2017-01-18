@@ -6,6 +6,7 @@ import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattDescriptor;
 import android.bluetooth.BluetoothGattService;
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.RingtoneManager;
@@ -594,5 +595,32 @@ public class Util {
     }
     public static  void logV(boolean debug, String tag, String str){
         if(debug) Log.v(tag, str);
+    }
+
+    public static   void alarmFonViewFon(Sensor sensor, Drawable viewLevel,int currentLevel, int alarmLevel,boolean alarm){
+        int level;
+        //--- мигание пределов ---
+        // СИГНАЛИЗАЦИЯ-- в случае СРАБАТЫВАНИЯ сигнализации меняем Уровень У РИСУНКА ОТОБРАЖЕНИЯ на заданный
+        //мигаем
+        if(alarm
+                && !sensor.minLevelNotification.resetNotification
+                && !sensor.maxLevelNotification.resetNotification
+                &&  (sensor.minLevelNotification.onNotification
+                || sensor.maxLevelNotification.onNotification)){
+            level = alarmLevel;
+//!!            //показываем ПРЕДУПРЕЖДЕНИЯ и надпись
+// !!           View v = getListView().getRootView().findViewById(R.id.LinearLayoutWarning);
+//  !!          v.setVisibility(View.VISIBLE);//выключаем видимость его, пока не сработало
+//            String str = sensor.deviceLabel;
+//            if(sensor.minLevelNotification.onNotification){
+//                str = str + "   Достигнут нижний порог";
+//            } else{
+//                str = str + "   Достигнут верхний порог";
+//            }
+//            ((TextView)getListView().getRootView().findViewById(R.id.textWarning)).setText(str);
+//            getListView().getRootView().findViewById(R.id.LinearLayoutFahrenheit).setVisibility(View.INVISIBLE);
+
+        }else level = currentLevel;
+        if(viewLevel.getLevel() != level)viewLevel.setLevel(level);//
     }
 }

@@ -332,25 +332,33 @@ public class MainActivityThermometer  extends AppCompatActivity {// ActionBarAct
             }
         }
         // СИГНАЛИЗАЦИЯ-- в случае СРАБАТЫВАНИЯ сигнализации меняем фон
-        //мигаем фоном
-        if( ((mHandlerLoop & 1) == 0)
-                && !sensor.minLevelNotification.resetNotification
-                && !sensor.maxLevelNotification.resetNotification
-                &&  (sensor.minLevelNotification.onNotification
-                    || sensor.maxLevelNotification.onNotification)){
-            level = 1;
-            //показываем ПРЕДУПРЕЖДЕНИЯ и надпись
-            View v = thermometer.findViewById(R.id.LinearLayoutWarning);
-            v.setVisibility(View.VISIBLE);//выключаем видимость его, пока не сработало
-            String str = sensor.deviceLabel;
-            if(sensor.minLevelNotification.onNotification){
-                str = str + "   Достигнут нижний порог";
-            } else{
-                str = str + "   Достигнут верхний порог";
-            }
-            ((TextView)thermometer.findViewById(R.id.textWarning)).setText(str);
-        }else level = 0;
-        if(marker_fon.getLevel() != level)marker_fon.setLevel(level);//
+//        //мигаем фоном
+//        if( ((mHandlerLoop & 1) == 0)
+//                && !sensor.minLevelNotification.resetNotification
+//                && !sensor.maxLevelNotification.resetNotification
+//                &&  (sensor.minLevelNotification.onNotification
+//                    || sensor.maxLevelNotification.onNotification)){
+//            level = 1;
+//            //показываем ПРЕДУПРЕЖДЕНИЯ и надпись
+//            View v = thermometer.findViewById(R.id.LinearLayoutWarning);
+//            v.setVisibility(View.VISIBLE);//выключаем видимость его, пока не сработало
+//            String str = sensor.deviceLabel;
+//            if(sensor.minLevelNotification.onNotification){
+//                str = str + "   Достигнут нижний порог";
+//            } else{
+//                str = str + "   Достигнут верхний порог";
+//            }
+//            ((TextView)thermometer.findViewById(R.id.textWarning)).setText(str);
+//        }else level = 0;
+//        if(marker_fon.getLevel() != level)marker_fon.setLevel(level);//
+
+        //мигаем фоном ПОКА ОТКЛЮЧИЛИ!!
+//        Util.alarmFonViewFon(sensor, view.findViewById(R.id.marker_fon).getBackground()
+//                ,0,1,(lloop & 1) == 1?true:false);
+        //мигание маркером
+        Util.alarmFonViewFon(sensor, view.findViewById(R.id.marker).getBackground()
+                ,sensor.markerColor,8,(mHandlerLoop & 1) == 1?true:false);
+
         // фон числа -- если ПРЕВЫШЕНИЕ- весь фон закрываем цветом УРОВНЯ
         // если сброса аларма НЕ БыЛО, а уровень вернулс к норме- ОКАНТОВКА ЧИСЛА цветом сработавшего уровня!
         level = 0;
@@ -424,8 +432,12 @@ public class MainActivityThermometer  extends AppCompatActivity {// ActionBarAct
         /// тоже что выше НО с ЗАПУСКОМ ТЕСТА ртутного столбика!
 //        mThermometerDrawable.setSettingThermometer(getResources().getDisplayMetrics().density
 //                ,sensor.minTemperature,sensor.maxTemperature,sensor.onFahrenheit,true);
-        //вывод ЦВЕТНОГО МАРКЕРА, делаем в резюме- поскольку можем прийти из сеттингов
-        Util.setDrawableToImageView(sensor.markerColor,R.id.marker, thermometer);
+
+
+ //вывод ЦВЕТНОГО МАРКЕРА, делаем в резюме- поскольку можем прийти из сеттингов
+ //Util.setDrawableToImageView(sensor.markerColor,R.id.marker, thermometer);
+ thermometer.findViewById(R.id.marker).getBackground().setLevel(sensor.markerColor);
+
         // название ТОЖЕ может поменятся, о этому еще раз
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
        if(actionBar != null) actionBar.setTitle("  " + sensor.deviceLabel);

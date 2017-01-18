@@ -310,8 +310,6 @@ fbButton = View.inflate(getContext(),R.layout.poplist_item_3,null);//пород�
         //     || (sensor.mBluetoothDeviceAddress == null);//режим ИММИТАЦИИ- отладки
         //
         // по умолчанию из метода toString -> заталкивается в R.id.text1, по этому мы сами это НЕ делаем
-        Util.setDrawableToImageView(sensor.markerColor,R.id.marker, view);
-
         Util.setTextToTextView(sensor.getString_1_ValueTemperature(true),R.id.numbe_min, view);
         Util.setTextToTextView(b? sensor.getString_2_ValueTemperature(true):getString(R.string.sDisconnected)
                 , R.id.numbe_cur, view);
@@ -321,28 +319,19 @@ fbButton = View.inflate(getContext(),R.layout.poplist_item_3,null);//пород�
         Util.setLevelToImageView(sensor.rssi, R.id.signal, view);
         //--- мигание пределов ---
         // СИГНАЛИЗАЦИЯ-- в случае СРАБАТЫВАНИЯ сигнализации меняем фон
-        //мигаем фоном
-        if( ((lloop & 1) == 0)
-                && !sensor.minLevelNotification.resetNotification
-                && !sensor.maxLevelNotification.resetNotification
-                &&  (sensor.minLevelNotification.onNotification
-                || sensor.maxLevelNotification.onNotification)){
-            level = 1;
-//!!            //показываем ПРЕДУПРЕЖДЕНИЯ и надпись
-// !!           View v = getListView().getRootView().findViewById(R.id.LinearLayoutWarning);
-//  !!          v.setVisibility(View.VISIBLE);//выключаем видимость его, пока не сработало
-//            String str = sensor.deviceLabel;
-//            if(sensor.minLevelNotification.onNotification){
-//                str = str + "   Достигнут нижний порог";
-//            } else{
-//                str = str + "   Достигнут верхний порог";
-//            }
-//            ((TextView)getListView().getRootView().findViewById(R.id.textWarning)).setText(str);
-//            getListView().getRootView().findViewById(R.id.LinearLayoutFahrenheit).setVisibility(View.INVISIBLE);
 
-        }else level = 0;
-        fon = view.findViewById(R.id.marker_fon).getBackground();
-        if(fon.getLevel() != level)fon.setLevel(level);//
+        //мигаем фоном ПОКА ОТКЛЮЧИЛИ!!
+//        Util.alarmFonViewFon(sensor, view.findViewById(R.id.marker_fon).getBackground()
+//                ,0,1,(lloop & 1) == 1?true:false);
+        //мигание маркером
+        Util.alarmFonViewFon(sensor, view.findViewById(R.id.marker).getBackground()
+                ,sensor.markerColor,8,(lloop & 1) == 1?true:false);
+
+//        if((lloop & 1) == 0){
+//            Util.setDrawableToImageView(sensor.markerColor,R.id.marker, view);
+//        } else{
+//            Util.setDrawableToImageView(8,R.id.marker, view);
+//        }
         // фон числа -- если ПРЕВЫШЕНИЕ- весь фон закрываем цветом УРОВНЯ
         // если сброса аларма НЕ БыЛО, а уровень вернулс к норме- ОКАНТОВКА ЧИСЛА цветом сработавшего уровня!
         level = 0;

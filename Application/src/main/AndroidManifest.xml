@@ -101,12 +101,7 @@ http://www.fandroid.info/nastrojka-paneli-dejstvij-actionbar/
             </intent-filter>
         </activity>
 
-        <activity android:name=".MainSettingSetting"
-            android:theme="@style/AppThemeM">
-            <intent-filter>
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+        <activity android:name=".MainSettingSetting" android:theme="@style/AppThemeM"/>
         <!--android:windowSoftInputMode="stateAlwaysVisible" -  задал клавиатуру видимой всегда в этой активности-->
 
         <activity android:name=".SettingName" android:theme="@style/AppThemeM">
@@ -116,8 +111,7 @@ http://www.fandroid.info/nastrojka-paneli-dejstvij-actionbar/
             </intent-filter>
         </activity>
         <activity android:name=".MainActivityThermometer"
-            android:configChanges="orientation|screenSize"
-            android:theme="@style/AppThemeN"/>
+            android:configChanges="orientation|screenSize" android:theme="@style/AppThemeN"/>
 
         <activity android:name=".SettingMaker" android:theme="@style/AppThemeM"/>
         <activity android:name=".SettingMinMax" android:theme="@style/AppThemeM"/>
