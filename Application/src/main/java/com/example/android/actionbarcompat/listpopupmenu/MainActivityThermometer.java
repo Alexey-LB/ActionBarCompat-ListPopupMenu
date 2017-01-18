@@ -267,7 +267,7 @@ public class MainActivityThermometer  extends AppCompatActivity {// ActionBarAct
         width  = width/2;
         //дополнительный значения внутри переключателя, компенсируем
         //делим на размер кнопки (радиуса)// по ЭТОМУ РАСЧЕТ В ПИКСЕЛАЙ!!
-        width = (width - 20 * density) / getResources().getDimension(R.dimen.switch_button_size);
+        width = (width - 22 * density) / getResources().getDimension(R.dimen.switch_button_size);
 
         if (width > 7) width = 7;//ограничим длинну переключателя максимом
         if(mSwitchOffSensor != null)mSwitchOffSensor.setBackMeasureRatio(width);
