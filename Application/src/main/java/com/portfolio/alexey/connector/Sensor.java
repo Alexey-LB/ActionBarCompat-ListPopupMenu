@@ -700,7 +700,9 @@ return getStringValue( maxLevelNotification.valueLevel, onFahrenheit, addType);
     // ПРИНИМАЕМ, что вызов идит через каждые 2 секунды!!
     // тогда: батарею будем опрашивать каждые 2 минуты
     public void readRSSIandBatteryLevel(){
-        if(mBluetoothGatt == null) return;
+        //только если работаем и очердь НЕ занята!!
+        if((mBluetoothGatt == null) || (mConnectionState < BluetoothLeServiceNew.STATE_CONNECTED)
+            || (app.mBluetoothLeServiceM.getSizeTxQueue() > 0))return;
         //каждые 2 минуты уровень батареи
          if(((loop_rssi++ & 0x3F) == 1)){
             //читать уровень батареи

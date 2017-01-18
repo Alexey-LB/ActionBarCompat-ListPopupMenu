@@ -377,6 +377,8 @@ super.onCharacteristicWrite(gatt, characteristic, status);
     int loopRssiBatteryLevelSensor = 0;
     //последователно опрашивает все сенсоры
     public void readRssiBatteryLevel(){
+        //запрашиваем только когда есть свободный интервал времени
+        if(txQueue.size() > 0)return;
         Sensor sensor = getSensor(loopRssiBatteryLevelSensor);
         if(sensor == null){
             loopRssiBatteryLevelSensor = 0;
@@ -412,6 +414,9 @@ super.onCharacteristicWrite(gatt, characteristic, status);
      * The queue of pending transmissions
      */
     private Queue<TxQueueItem> txQueue = new LinkedList<TxQueueItem>();
+    public int getSizeTxQueue(){
+        return txQueue.size();
+    }
 
     private boolean txQueueProcessing = false;
 

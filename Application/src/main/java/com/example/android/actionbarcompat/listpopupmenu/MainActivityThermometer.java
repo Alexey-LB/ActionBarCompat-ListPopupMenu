@@ -439,7 +439,7 @@ public class MainActivityThermometer  extends AppCompatActivity {// ActionBarAct
         //сам заводится и работает
         mHandler.postDelayed(new Runnable() {
             public void run() {
-                // Log.v(TAG,"mHandler --");
+            //    Log.v(TAG,"mHandler --");
                 updateViewItem(sensor, thermometer);
                 mHandlerLoop++;
                 // повторяем через каждые 300 миллисекунд
