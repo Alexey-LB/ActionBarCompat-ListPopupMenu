@@ -172,7 +172,7 @@ public class BluetoothLeServiceNew extends Service {
                     Log.w(TAG,"-- STATE_CONNECTED --" +str);
                 }
 
-// сбрасываем запрос на коннект, он выполнен
+// сбрасываем запрос на коннект, он выполнен//сброс команды
  filtrInTxQueue(sensor,TxQueueItemType.Connect, null, status);
 
                 intentAction = ACTION_GATT_CONNECTED;
@@ -203,7 +203,7 @@ public class BluetoothLeServiceNew extends Service {
 
                 sensor.rssi = STATE_DISCONNECTED;//показываем что отключились
                 //intentAction = ACTION_GATT_DISCONNECTED;
-                // broadcastUpdate(intentAction, sensor);
+                // broadcastUpdate(intentAction, sensor);//сброс команды
                 filtrInTxQueue(sensor, TxQueueItemType.DisconnectClose,null, BluetoothGatt.GATT_SUCCESS);
             }
         }
@@ -214,6 +214,7 @@ super.onServicesDiscovered(gatt, status);
             //если у нас есть такое устройство
             final Sensor sensor = getBluetoothDevice(gatt.getDevice().getAddress());
             if(sensor == null) return;
+            //сброс команды
             filtrInTxQueue(sensor, TxQueueItemType.DiscoverServices, null, status);
             //
             if (status == BluetoothGatt.GATT_SUCCESS) {
@@ -255,7 +256,7 @@ super.onServicesDiscovered(gatt, status);
                         +"  service= " + Util.getUidStringMost16Bits(characteristic.getService()));//characteristic.getUuid().toString());
 
             }
-            // Ready for next transmission
+            // Ready for next transmission//сброс команды
             filtrInTxQueue(sensor,TxQueueItemType.ReadCharacteristic, characteristic.getUuid(), status);
         }
 
@@ -273,8 +274,9 @@ super.onServicesDiscovered(gatt, status);
 
             //постоянно запрашивает характеристику- и обламывает остальное!! убираем
             //       sensor.onCharacteristicRead();
-            // на каждый 16 запрашиваем RSSI (запрос каждые примерно 16 секунды)
 
+//последователно опрашивает все сенсоры
+readRssiBatteryLevel();
 //!!??   sensor.readRSSIandBatteryLevel();
         sensor.onCharacteristicRead();
 
@@ -295,6 +297,9 @@ super.onServicesDiscovered(gatt, status);
             if(sensor == null) return;
             //
             sensor.rssi = rssi;
+            //сброс команды
+            filtrInTxQueue(sensor,TxQueueItemType.ReadRSSI, null, status);
+
           //  Log.i(TAG, "onReadRemoteRssi= " + rssi);
             //sensor.mBluetoothGatt.readRemoteRssi();
 
@@ -329,7 +334,7 @@ super.onCharacteristicWrite(gatt, characteristic, status);
             }
             final Sensor sensor = getBluetoothDevice(gatt.getDevice().getAddress());
             if(sensor == null) return;
-            // Ready for next transmission
+            // Ready for next transmission//сброс команды
             filtrInTxQueue(sensor,TxQueueItemType.WriteCharacteristic, characteristic.getUuid(), status);
         }
         /**
@@ -363,6 +368,26 @@ super.onCharacteristicWrite(gatt, characteristic, status);
         }
     };
 //==============--------------------------------------------------------------------
+    private Sensor getSensor(int i){
+        final Sensor sensor;
+        if(i >= arraySensors.size()) return null;
+        sensor = arraySensors.get(i);
+        return  sensor;
+    }
+    int loopRssiBatteryLevelSensor = 0;
+    //последователно опрашивает все сенсоры
+    public void readRssiBatteryLevel(){
+        Sensor sensor = getSensor(loopRssiBatteryLevelSensor);
+        if(sensor == null){
+            loopRssiBatteryLevelSensor = 0;
+            sensor = getSensor(loopRssiBatteryLevelSensor);
+            if(sensor == null) return;
+        }
+        sensor.readRSSIandBatteryLevel();//читаем уровень сигнала или батареи
+        //циклический перебор
+        loopRssiBatteryLevelSensor++;
+        if(loopRssiBatteryLevelSensor >= arraySensors.size())loopRssiBatteryLevelSensor = 0;
+    }
        /* An enqueueable write operation - notification subscription or characteristic write */
     private class TxQueueItem
     {
@@ -398,6 +423,7 @@ super.onCharacteristicWrite(gatt, characteristic, status);
         ,Connect//запрос коннекта
         ,DisconnectClose//запрос дисконнекта
         ,Timer //временная пауза - используется для окончания переходных процессов или состояний
+        ,ReadRSSI //чтение амплитуды сигнала сенсора
     }
     /* queues  */
     public void queueSetTimer(final Sensor sens, int timer)
@@ -438,6 +464,18 @@ super.onCharacteristicWrite(gatt, characteristic, status);
         txQueueItem.sensor = sens;
         txQueueItem.type = TxQueueItemType.DiscoverServices;
         Log.v(TAG, "-Start service discovery! adr= "+sens.mBluetoothDeviceAddress);
+        addToTxQueue(txQueueItem);
+    }
+    // ЧТЕНИЕ уровня сгнала СЕНСОРА, время ожидания не более 2 сек
+    // установили Тайм аут
+    public void queueReadRSSI(final Sensor sens)
+    {
+        // Add to queue because shitty Android GATT stuff is only synchronous
+        TxQueueItem txQueueItem = new TxQueueItem();
+        txQueueItem.sensor = sens;
+        txQueueItem.type = TxQueueItemType.ReadRSSI;
+        txQueueItem.timer = 2000;//время ожидания не более 2 сек
+        Log.v(TAG, "-Start ReadRSSI adr= "+sens.mBluetoothDeviceAddress);
         addToTxQueue(txQueueItem);
     }
     /* queues enables/disables notification for characteristic */
@@ -646,6 +684,12 @@ super.onCharacteristicWrite(gatt, characteristic, status);
                 connect(mTxQueueItem.sensor.getAddress(),true);
                 break;
             case Timer://установили Тайм аут для конкртного сенсора
+                mHandlerTxQueue.removeCallbacks(runnable);
+                mHandlerTxQueue.postDelayed(runnable,mTxQueueItem.timer);//-- запускаем тайм аут,
+                break;
+            case ReadRSSI:// ЧТЕНИЕ уровня сгнала СЕНСОРА, время ожидания не более 2 сек
+                // установили Тайм аут
+                mTxQueueItem.sensor.mBluetoothGatt.readRemoteRssi();
                 mHandlerTxQueue.removeCallbacks(runnable);
                 mHandlerTxQueue.postDelayed(runnable,mTxQueueItem.timer);//-- запускаем тайм аут,
                 break;
