@@ -137,6 +137,7 @@
         <!--android:paddingRight="10dp"-->
         <!--app:srcCompat="@drawable/ic_chevron_right_black_24dp"-->
     </LinearLayout>
+
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"

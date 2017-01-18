@@ -81,7 +81,13 @@ findViewById(R.id.LinearLayoutMeasurementMode).setVisibility(View.GONE);
     }
     private void updateTextString(){
         Util.setTextToTextView(sensor.deviceLabel,R.id.textViewName,this,"?");
-
+        String str = sensor.getAddress();
+        //берем кусочек адреса
+        if((str != null) && (str.length() > 5)) str = ", ID:"+ str.substring(str.length()-5);
+        else str ="";
+        ////имя в широковещятельных пакетах
+        str = sensor.mDeviceName + str;
+        Util.setTextToTextView(str,R.id.textViewTermometer,this,"");
 
         if(sensor.maxLevelNotification.switchNotification){
             Util.setTextToTextView(sensor.getStringMaxTemperature(true)

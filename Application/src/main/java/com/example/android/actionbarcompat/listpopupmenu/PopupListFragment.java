@@ -397,8 +397,8 @@ fbButton = View.inflate(getContext(),R.layout.poplist_item_3,null);//пород�
         ListView lw = getListView();
         // Принудительное обновление отображения списка ПЕРЕ каждым выводом
         if(adapter != null) {
-  adapter.notifyDataSetInvalidated();
- // adapter.notifyDataSetChanged();
+ adapter.notifyDataSetChanged();
+ adapter.notifyDataSetInvalidated();
         }
         //убрать системный бар----------------
         //if(root.getSystemUiVisibility() != View.SYSTEM_UI_FLAG_FULLSCREEN)
@@ -534,8 +534,8 @@ return null;//fbButton_;
         ArrayList<Sensor> mbleDot = Util.getListSensor();
         if(mbleDot != null){
             mbleDot.add((Sensor) object);
+adapter.notifyDataSetChanged();
  adapter.notifyDataSetInvalidated();
- //  adapter.notifyDataSetChanged();
             // переходим в ОКНО настройки
            // goToSetting(adapter.getPosition(object));//один вариант
             //второй вариант, добавление в лист идет в конец, поэтому берем длинну лиcта -1
@@ -556,8 +556,8 @@ return null;//fbButton_;
                 Log.w(TAG,"Dell sensor -- disconnect() GATT --");
             }
             mbleDot.remove(object);
- adapter.notifyDataSetInvalidated();
- ///adapter.notifyDataSetChanged();
+adapter.notifyDataSetChanged();
+  adapter.notifyDataSetInvalidated();
 
             //сохранение в файл Сделано в АКтивити!мэйн
                 RunDataHub app = ((RunDataHub) getActivity().getApplicationContext());

@@ -45,7 +45,7 @@ public class SettingMaker extends Activity implements View.OnClickListener{
 
     private void updateTextString(){
         if((sensor == null)  || ( mHandlerWork == false))return;
-            Util.setTextToTextView(sensor.deviceName,R.id.textViewFindName, this);
+            Util.setTextToTextView(sensor.mDeviceName,R.id.textViewFindName, this);
 //показывем только последних 5 цифр адреса
             String str = sensor.mBluetoothDeviceAddress;
             //в шаблон  ХМЛ встроил свойство автокомплект И ОН сам отрезал слева лишнее!!

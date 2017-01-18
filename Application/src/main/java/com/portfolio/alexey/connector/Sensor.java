@@ -89,7 +89,7 @@ public class Sensor {
     public String mBluetoothDeviceAddress = null;//64 bita
     public String deviceLabel = "";
 
-    public String deviceName = "";
+    public String mDeviceName = "";//имя в широковещятельных пакетах
 
     private long mBluetoothDeviceAddressLong = 0;//64 bita
     //
@@ -179,7 +179,7 @@ public class Sensor {
         return deviceLabel;
     }
     private String name(){
-        return deviceName;
+        return mDeviceName;
     }
     // для совместиости с блутуз классом
     public String getName(){
@@ -728,7 +728,7 @@ return getStringValue( maxLevelNotification.valueLevel, onFahrenheit, addType);
         mBluetoothDeviceAddress = mSettings.getString("mBluetoothDeviceAddress", mBluetoothDeviceAddress);
         avtoConnect = mSettings.getBoolean("avtoConnect", avtoConnect);
         deviceLabel = mSettings.getString("deviceLabel", deviceLabel);//имя назначаемое пользоватлем
-        deviceName = mSettings.getString("deviceName", deviceName);
+        mDeviceName = mSettings.getString("mDeviceName", mDeviceName);
         deviceItem = mSettings.getInt("deviceItem", deviceItem);
         markerColor = mSettings.getInt("markerColor", markerColor);
         //
@@ -772,7 +772,7 @@ return getStringValue( maxLevelNotification.valueLevel, onFahrenheit, addType);
         editor.putString("mBluetoothDeviceAddress", mBluetoothDeviceAddress);
         editor.putBoolean("avtoConnect", avtoConnect);
         editor.putString("deviceLabel", deviceLabel);//имя назначаемое пользоватлем
-        editor.putString("deviceName", deviceName);
+        editor.putString("mDeviceName", mDeviceName);
         editor.putInt("deviceItem", deviceItem);
         editor.putInt("markerColor", markerColor);
         //

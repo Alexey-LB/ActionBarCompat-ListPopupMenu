@@ -132,7 +132,7 @@ public class DeviceScanActivity extends ListActivity {//AppCompatActivity {//Act
         switch (item.getItemId()) {
             case R.id.menu_scan:
                 mLeDeviceListAdapter.clear();
-// mLeDeviceListAdapter.notifyDataSetChanged();
+ mLeDeviceListAdapter.notifyDataSetChanged();
 mLeDeviceListAdapter.notifyDataSetInvalidated();
                 scanLeDevice(true);
                 break;
@@ -183,7 +183,7 @@ mLeDeviceListAdapter.notifyDataSetInvalidated();
         super.onPause();
         scanLeDevice(false);
         mLeDeviceListAdapter.clear();
-// mLeDeviceListAdapter.notifyDataSetChanged();
+ mLeDeviceListAdapter.notifyDataSetChanged();
  mLeDeviceListAdapter.notifyDataSetInvalidated();
     }
     @Override
@@ -225,6 +225,7 @@ mLeDeviceListAdapter.notifyDataSetInvalidated();
                     sensor.manufacturerName = null;
                 }
                 sensor.mBluetoothDeviceAddress = device.getAddress();
+                sensor.mDeviceName = device.getName();
                 //
                 RunDataHub app = ((RunDataHub) getApplicationContext());
                 if((app.mBluetoothLeServiceM != null) && (sensor.mBluetoothDeviceAddress != null)){
@@ -345,7 +346,7 @@ mLeDeviceListAdapter.notifyDataSetInvalidated();
         public void clear() {
 
             mLeDevices.clear();
-// mLeDeviceListAdapter.notifyDataSetChanged();
+ mLeDeviceListAdapter.notifyDataSetChanged();
 mLeDeviceListAdapter.notifyDataSetInvalidated();
         }
 
@@ -422,7 +423,7 @@ mLeDeviceListAdapter.notifyDataSetInvalidated();
                         public void run() {
                             Log.w(TAG,"FIND device= " + device);
                             mLeDeviceListAdapter.addDevice(device);
-// mLeDeviceListAdapter.notifyDataSetChanged();
+ mLeDeviceListAdapter.notifyDataSetChanged();
  mLeDeviceListAdapter.notifyDataSetInvalidated();
                         }
                     });
