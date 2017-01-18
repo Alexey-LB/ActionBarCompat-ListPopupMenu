@@ -45,7 +45,7 @@
                     android:layout_width="140dp"
                     android:layout_height="140dp"
                     android:layout_gravity="center_vertical|center_horizontal"
-                    android:background="@drawable/house_button_selector" />
+                    android:background="@drawable/house_button_selector3" />
             </FrameLayout>
 
             <ImageView
