@@ -367,29 +367,7 @@ super.onCharacteristicWrite(gatt, characteristic, status);
         }
     };
 //==============--------------------------------------------------------------------
-    private Sensor getSensor(int i){
-        final Sensor sensor;
-        if(i >= arraySensors.size()) return null;
-        sensor = arraySensors.get(i);
-        return  sensor;
-    }
-    int loopRssiBatteryLevelSensor = 0;
-    //последователно опрашивает все сенсоры
-    public void readRssiBatteryLevel(){
-        //запрашиваем только когда есть свободный интервал времени
-        if(txQueue.size() > 0)return;
-        Sensor sensor = getSensor(loopRssiBatteryLevelSensor);
-        if(sensor == null){
-            loopRssiBatteryLevelSensor = 0;
-            sensor = getSensor(loopRssiBatteryLevelSensor);
-            if(sensor == null) return;
-        }
-        sensor.readRSSIandBatteryLevel();//читаем уровень сигнала или батареи
-        //циклический перебор
-        loopRssiBatteryLevelSensor++;
-        if(loopRssiBatteryLevelSensor >= arraySensors.size())loopRssiBatteryLevelSensor = 0;
-    }
-       /* An enqueueable write operation - notification subscription or characteristic write */
+    /* An enqueueable write operation - notification subscription or characteristic write */
     private class TxQueueItem
     {
         Sensor sensor;

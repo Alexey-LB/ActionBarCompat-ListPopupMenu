@@ -699,22 +699,26 @@ return getStringValue( maxLevelNotification.valueLevel, onFahrenheit, addType);
     //каждый вызов этого метода запрашивает RSSI или BatteryLevel
     // ПРИНИМАЕМ, что вызов идит через каждые 2 секунды!!
     // тогда: батарею будем опрашивать каждые 2 минуты
-    public void readRSSIandBatteryLevel(){
+    public boolean readRSSIandBatteryLevel(){
+        //контролтруем в каком мы состоянии, только при конекте работаем
+        if((mBluetoothGatt == null)
+                || (mConnectionState < BluetoothLeServiceNew.STATE_CONNECTED))return false;
         //только если работаем и очердь НЕ занята!!
-        if((mBluetoothGatt == null) || (mConnectionState < BluetoothLeServiceNew.STATE_CONNECTED)
-            || (app.mBluetoothLeServiceM.getSizeTxQueue() > 0))return;
+        if(app.mBluetoothLeServiceM.getSizeTxQueue() > 0)return false;
+
         //каждые 2 минуты уровень батареи
          if(((loop_rssi++ & 0x3F) == 1)){
             //читать уровень батареи
             readUuidCharacteristic(PartGatt.UUID_BATTERY_SERVICE, PartGatt.UUID_BATTERY_LEVEL);
             Log.e(TAG, "R: BATTERY Service -- ");
-            return;
+            return true;
         }
         if(queue){
             app.mBluetoothLeServiceM.queueReadRSSI(this);
-            return;
+            return true;
         }
         mBluetoothGatt.readRemoteRssi();
+        return true;
     }
 
     //-------------------------------
@@ -732,12 +736,14 @@ return getStringValue( maxLevelNotification.valueLevel, onFahrenheit, addType);
         fonColor = mSettings.getInt("fonColor", fonColor);
         fonImg = mSettings.getInt("fonImg", fonImg);
         //"Device Information Service":-character--
+//Log.v(TAG," "+softwareRevision+" "+firmwareRevision+" "+hardwareRevision+" " +serialNumber+" "+manufacturerName);
         softwareRevision = mSettings.getString("softwareRevision", softwareRevision);
         firmwareRevision = mSettings.getString("firmwareRevision", firmwareRevision);
         hardwareRevision = mSettings.getString("hardwareRevision", hardwareRevision);
         serialNumber = mSettings.getString("serialNumber", serialNumber);
         modelNumber = mSettings.getString("modelNumber",modelNumber);
         manufacturerName = mSettings.getString("manufacturerName", manufacturerName);
+//Log.i(TAG," "+softwareRevision+" "+firmwareRevision+" "+hardwareRevision+" " +serialNumber+" "+manufacturerName);
         //
         minLevelNotification.valueLevel = mSettings.getFloat("minTemperature", minLevelNotification.valueLevel);
         maxLevelNotification.valueLevel = mSettings.getFloat("maxTemperature", maxLevelNotification.valueLevel);

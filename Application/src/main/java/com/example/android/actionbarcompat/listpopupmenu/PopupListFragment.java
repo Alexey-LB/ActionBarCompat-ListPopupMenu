@@ -236,7 +236,7 @@ fbButton = View.inflate(getContext(),R.layout.poplist_item_3,null);//пород�
     }
     // ЗАПУСТИЛИ ервис    public BluetoothLeServiceNew mBluetoothLeService = null;
     public void initList() {
-        Log.e(TAG, "Activity to frag initList()---");
+        Log.e(TAG, "Activity to frag initList() Start---");
         //            setListAdapter(pop);//создали адаптер для работы
         //--------ЭТО делать надо  1 раз только иначе падает!!
         //      ArrayList<Sensor> item =  mBluetoothLeService.arraySensors;
@@ -254,6 +254,7 @@ fbButton = View.inflate(getContext(),R.layout.poplist_item_3,null);//пород�
         setListAdapter(pop);//создали адаптер для работы
         //final ArrayAdapter
         adapter = (ArrayAdapter) getListAdapter();//int count = adapter.getCount();
+        Log.e(TAG, "Activity to frag initList() End---");
     }
     ///--------------------------------------------------------------------------------------
 
@@ -365,10 +366,14 @@ fbButton = View.inflate(getContext(),R.layout.poplist_item_3,null);//пород�
         if((adapter == null) || (adapter.getCount() == 0) || ( mHandlerWork == false)) return;
         int i; String str = "Sensor>";
         for(i = 0; i < adapter.getCount();i++){
-            updateViewItem((Sensor)adapter.getItem(i), getListView().getChildAt(i));
+
             Sensor sensor = (Sensor)adapter.getItem(i);
             if(sensor != null) {
-                int con = 0;
+                updateViewItem(sensor, getListView().getChildAt(i));
+
+                //читаем уровень сигнала для каждого в отведенное время для него
+                if((lloop & 0x7) == i)sensor.readRSSIandBatteryLevel();
+ //                   int con = 0;
 //                BluetoothGatt bleGatt = sensor.mBluetoothGatt;
 //                BluetoothDevice bd = sensor.mBluetoothGatt.getDevice();
 //                ;
