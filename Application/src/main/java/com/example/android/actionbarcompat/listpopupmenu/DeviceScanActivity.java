@@ -104,7 +104,7 @@ public class DeviceScanActivity extends ListActivity {//AppCompatActivity {//Act
 
         // Checks if Bluetooth is supported on the device.
         if (mBluetoothAdapter == null) {
-            Toast.makeText(this, R.string.error_bluetooth_not_supported, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.error_bluetooth_not_supported, Toast.LENGTH_LONG).show();
             finish();
         }
        ////--------
@@ -183,9 +183,9 @@ mLeDeviceListAdapter.notifyDataSetInvalidated();
     protected void onPause() {
         super.onPause();
         scanLeDevice(false);
-        mLeDeviceListAdapter.clear();
- mLeDeviceListAdapter.notifyDataSetChanged();
- mLeDeviceListAdapter.notifyDataSetInvalidated();
+//        mLeDeviceListAdapter.clear();
+// mLeDeviceListAdapter.notifyDataSetChanged();
+// mLeDeviceListAdapter.notifyDataSetInvalidated();
     }
     @Override
     protected void onDestroy() {
@@ -208,14 +208,14 @@ mLeDeviceListAdapter.notifyDataSetInvalidated();
         if (mScanning) {
             mScanning = false;
             mBluetoothAdapter.stopLeScan(mLeScanCallback);
-            sleep(1000);//для того чтоб закончилося останов поиска окончательно
         }
         ///-- теперь подключаем ЗДЕСЬ!!..
         if(sensor != null){
-                // TODO: 19.12.2016 МОЖЕТ задержку сдесь сделать? если былл коннект
+                // TODO: 19.12.2016 может реализовать запрос на поиск через очередь?
                 // со старым устройством //если был коннект- отключаем нафиг
-                if(sensor.mBluetoothGatt != null){
-                    sensor.close();
+                if((sensor.mBluetoothDeviceAddress == null)
+                        || (sensor.mBluetoothDeviceAddress.length() < 15)){//длинна адреса 17
+                    if(sensor.mBluetoothGatt != null)sensor.close();
                     //сбрасываем все строковые значения которые касаются модели и номеров прошивок
                     //все считываемпотом заново!
                     sensor.softwareRevision = null;
@@ -230,6 +230,7 @@ mLeDeviceListAdapter.notifyDataSetInvalidated();
                 //
                 RunDataHub app = ((RunDataHub) getApplicationContext());
                 if((app.mBluetoothLeServiceM != null) && (sensor.mBluetoothDeviceAddress != null)){
+                    // ПО умолчанию к имени уустройства дописываем 2 последние цифры адреса
                     if(sensor.deviceLabel.compareTo(sensor.deviceLabelStringDefault) == 0){
                         int i = sensor.mBluetoothDeviceAddress.length();
                         //берем 2 символа последних из адреса устройства (16 адрес блутуз)
@@ -317,23 +318,32 @@ mLeDeviceListAdapter.notifyDataSetInvalidated();
             // TODO: 17.12.2016 контроль всех адресов ЧТО есть, вывод внизу с ЗАТЕМНЕНИЕМ, которые НЕ прошли по филтру 
 
             RunDataHub app = ((RunDataHub) getApplicationContext());
-            if((app != null) && (app.mBluetoothLeServiceM != null)
-                    && (app.mBluetoothLeServiceM.arraySensors != null)){
-                //фильтр АДВАНСИНГ пакетов при поиске блутуз устройст
-                if((mDeviceNnameFiltr != null) && (mDeviceNnameFiltr.length() > 0)){
+            if((app == null) || (device == null))  return;
+            if(app.mBluetoothLeServiceM == null) return;
+            if(app.mBluetoothLeServiceM.arraySensors == null)return;
+            //ОКАЗЫВАЕТСЯ прилетает че попало и при фильтрации возникают ошибки!!когда мы берем подстроку длиннее чем есть!
+            if((device.getName() == null) || (device.getName().length() < 2))return;
+
+            //фильтр АДВАНСИНГ пакетов при поиске блутуз устройст
+            if((mDeviceNnameFiltr != null) && (mDeviceNnameFiltr.length() > 0)){
+                //устройство можно сравнивать, если длинна фильта по имени не больше !
+                if(device.getName().length() >= mDeviceNnameFiltr.length()){
                     //Фильтр указан, сравниваем ПЕРВЫЕ символы В РЕКЛАМНЕ блутуз устройства
                     String str = device.getName().substring(0, mDeviceNnameFiltr.length());//берем Часть и РЕКЛАМНОГО сообщения, равной размеру ФИЛЬТРА
                     if(!str.equals(mDeviceNnameFiltr)){
                         Log.e(TAG, "ПОИСК ищем= \"" +mDeviceNnameFiltr + "\"   Найден= \""+ device.getName()+"\"");
                         return;
                     }
-                }
-                //смотрим, есть ли у нас уже зарегестрированный такой адрес!!
-                if(getBluetoothDevice(device.getAddress(),
-                        app.mBluetoothLeServiceM.arraySensors) != null) {
-                    Log.e(TAG, "ПОИСК- НАЙден зарегестрированный УЖЕ термометр!!");
+                } else {
+                    Log.e(TAG, "ПОИСК ищем= \"" +mDeviceNnameFiltr + "\"   Найден= \""+ device.getName()+"\"");
                     return;
                 }
+            }
+            //смотрим, есть ли у нас уже зарегестрированный такой адрес!!
+            if(getBluetoothDevice(device.getAddress(),
+                    app.mBluetoothLeServiceM.arraySensors) != null) {
+                Log.e(TAG, "ПОИСК- НАЙден зарегестрированный УЖЕ термометр!!");
+                return;
             }
             if(!mLeDevices.contains(device)) {
                 mLeDevices.add(device);
@@ -414,10 +424,15 @@ mLeDeviceListAdapter.notifyDataSetInvalidated();
             new BluetoothAdapter.LeScanCallback() {
 
                 @Override
-                public void onLeScan(final BluetoothDevice device, int rssi, byte[] scanRecord) {
+                public void onLeScan(BluetoothDevice device_, int rssi, byte[] scanRecord) {
                     final int mrssi = rssi;
                     final byte[] mscanRecord = scanRecord;
-                    Log.v("NAIN", "Rssi= " + mrssi + "   scanRecord= " + mscanRecord);
+                    final BluetoothDevice device = device_;
+
+                    Log.v(TAG, " --- LeScanCallback --- device= "+(device_==null?"null":device_.getAddress()) + "   Rssi= " + mrssi
+                            + "   scanRecord= " + (mscanRecord==null?"null":mscanRecord));
+
+                    if(device == null) return;//иногда прилетает непогятно что!!контролтируем!!
 
                     runOnUiThread(new Runnable() {
                         @Override
