@@ -124,6 +124,8 @@
     <string name="sDelete">Delete</string>
     <!--"Disconnect" = "Отключить";-->
     <string name="sDisconnect">Disconnect</string>
+    <!--"Discon" = "Откл";-->
+    <string name="sDiscon">Discon</string>
     <!--"Reset" = "Сброс";-->
     <string name="sReset">Reset</string>
     <!--Level= уровень-->

@@ -163,6 +163,7 @@ mLeDeviceListAdapter.notifyDataSetInvalidated();
 
         // Initializes list view adapter.
         mLeDeviceListAdapter = new LeDeviceListAdapter();
+
         setListAdapter(mLeDeviceListAdapter);
         scanLeDevice(true);
 

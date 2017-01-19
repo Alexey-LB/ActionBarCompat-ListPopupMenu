@@ -98,7 +98,9 @@ public class MainActivityThermometer  extends AppCompatActivity {// ActionBarAct
                 .findViewById(R.id.switchOffSensor);
         mSwitchOffSensor.setTextColor(getResources()
                 .getColor(R.color.colorTextlight));//  sw.setBackColor(android.content.res.ColorStateList.valueOf(0xFFd0d0d0));
-        mSwitchOffSensor.setText("",getString(R.string.sDisconnect));//
+        //!!ВНИМАНИЕ размер кнопки-ЗАВИСИТ ОТ ДЛИННЫ ТЕКСТА!!!,
+        // если тест длиннее указаний размера кнопки- равнение на длинну текста!
+        mSwitchOffSensor.setText("",getString(R.string.sDiscon));//
       //  mSwitchOffSensor.setMinWidth(200);
         //размер по ШИРИНЕ переключателя можно определить примерно ТАК
         //Ratio(2f) * ThumbSize(45f,45f) + 20dp = 110dp, + layout_marginRight(3dp)== 113dp!!
@@ -118,6 +120,8 @@ public class MainActivityThermometer  extends AppCompatActivity {// ActionBarAct
                 .findViewById(R.id.switchResetMeasurement);
         mSwitchResetMeasurement.setTextColor(getResources()
                 .getColor(R.color.colorTextlight));//  sw.setBackColor(android.content.res.ColorStateList.valueOf(0xFFd0d0d0));
+        //!!ВНИМАНИЕ размер кнопки-ЗАВИСИТ ОТ ДЛИННЫ ТЕКСТА!!!,
+        // если тест длиннее указаний размера кнопки- равнение на длинну текста!
         mSwitchResetMeasurement.setText("",getString(R.string.sReset));//
         /////       sw.setThumbSize(50f,50f);//размер круга- большлго пальца
         //ловит касания и перемещение ЗДЕСЬ обработка сдвига переключателя
@@ -267,9 +271,11 @@ public class MainActivityThermometer  extends AppCompatActivity {// ActionBarAct
         width  = width/2;
         //дополнительный значения внутри переключателя, компенсируем
         //делим на размер кнопки (радиуса)// по ЭТОМУ РАСЧЕТ В ПИКСЕЛАЙ!!
-        width = (width - 25 * density) / getResources().getDimension(R.dimen.switch_button_size);
+        width = (width - 20 * density) / getResources().getDimension(R.dimen.switch_button_size);
 
         if (width > 7) width = 7;//ограничим длинну переключателя максимом
+        //!!ВНИМАНИЕ размер кнопки-ЗАВИСИТ ОТ ДЛИННЫ ТЕКСТА!!!,
+        // если тест длиннее указаний размера кнопки- равнение на длинну текста!
         if(mSwitchOffSensor != null)mSwitchOffSensor.setBackMeasureRatio(width);
         if(mSwitchResetMeasurement != null)mSwitchResetMeasurement.setBackMeasureRatio(width);
         //--

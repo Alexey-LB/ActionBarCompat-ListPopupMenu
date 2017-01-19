@@ -140,6 +140,8 @@
     <string name="sDiscover">Поиск</string>
     <!--"Disconnected" = "Не подключен";-->
     <string name="sDisconnected">Не подключен</string>
+    <!--"Discon." = "Откл.";-->
+    <string name="sDiscon">Откл</string>
     <!--"Connecting..." = "Подключение...";-->
     <string name="sConnecting">Подключение</string>
     <!--"Connected" = "Подключен";-->
