@@ -165,8 +165,7 @@ public class BluetoothLeServiceNew extends Service {
 
                 if(status == 133){
                     Log.e(TAG,"---ERROR -- STATE_CONNECTED -- go to STATE_DISCONNECTED" + str);
-                    queueSetDisconnectClose(sensor);
-                    queueSetConnect(sensor);
+                    queueSetDisconnectClose(sensor);//в дисконнекте есть востановление коннекта
                     return;
                 } else {
                     Log.w(TAG,"-- STATE_CONNECTED --" +str);
@@ -204,7 +203,7 @@ public class BluetoothLeServiceNew extends Service {
                 sensor.rssi = STATE_DISCONNECTED;//показываем что отключились
                 //intentAction = ACTION_GATT_DISCONNECTED;
                 // broadcastUpdate(intentAction, sensor);//сброс команды
-                filtrInTxQueue(sensor, TxQueueItemType.DisconnectClose,null, BluetoothGatt.GATT_SUCCESS);
+                filtrInTxQueue(sensor, TxQueueItemType.DisconnectClose,null, status);//BluetoothGatt.GATT_SUCCESS);
             }
         }
 
@@ -276,7 +275,7 @@ super.onServicesDiscovered(gatt, status);
             //       sensor.onCharacteristicRead();
 
 //последователно опрашивает все сенсоры
-readRssiBatteryLevel();
+//readRssiBatteryLevel();
 //!!??   sensor.readRSSIandBatteryLevel();
         sensor.onCharacteristicRead();
 
@@ -459,6 +458,7 @@ super.onCharacteristicWrite(gatt, characteristic, status);
         TxQueueItem txQueueItem = new TxQueueItem();
         txQueueItem.sensor = sens;
         txQueueItem.type = TxQueueItemType.DisconnectClose;
+   Log.e(TAG,"=========DISCONNEKT!!========== -------- go to connekt ADD to Queue command // " );
         addToTxQueue(txQueueItem);
     }
     /* queues  */
@@ -588,8 +588,25 @@ super.onCharacteristicWrite(gatt, characteristic, status);
     // а очередь заново их запускает на выполнение
 
     private void filtrInTxQueue(Sensor sensor, TxQueueItemType type, UUID uuid, int status){
-        if(status != BluetoothGatt.GATT_SUCCESS) return;
+        // если прилетает дисконнект по сенсору
+        if(TxQueueItemType.DisconnectClose == type){
+            Log.v(TAG,"=========DISCONNEKT!!==");
+            //никого нет на очереди ставим в очередь дисконнект
+            if(mTxQueueItem == null)queueSetDisconnectClose(sensor);
+            else{
+                // в очереди другой сенсор, просто ставим себя в очередь дисконнект
+                if(mTxQueueItem.sensor.getAddress().compareTo(sensor.getAddress()) != 0)queueSetDisconnectClose(sensor);
+                else{
+                    // если текущий в очереди это Этот сенсор, НО с другой командой, ставим в очередь дисконнект
+                    if(mTxQueueItem.type != type)queueSetDisconnectClose(sensor);
+                    //если текущая команда и есть сброс, просто ее пропускаем на сброс
+                    else processTxQueue(false);//это обратная связь для сброса переданного значения
+                }
+            }
+        }
+        // обычная обработка-----------------
         if(mTxQueueItem == null) return;
+        if(status != BluetoothGatt.GATT_SUCCESS) return;
         if(mTxQueueItem.type != type) {
             log("mTxQueueItem.type != type  (input  adress= "+ Util.getAddress16Bits(sensor.getAddress())
             +"  type= "+type.toString()+ ")   current= "+mTxQueueItem.toString());
@@ -649,8 +666,10 @@ super.onCharacteristicWrite(gatt, characteristic, status);
             }
             mTxQueueItem = txQueue.remove();
             if((mTxQueueItem.sensor.mConnectionState  == STATE_DISCONNECTED)
-                && (mTxQueueItem.type != TxQueueItemType.Connect)
-                && (mTxQueueItem.type != TxQueueItemType.Timer)){
+                && (mTxQueueItem.type != TxQueueItemType.DisconnectClose)//выполнения последовательности закрытия канала
+                && (mTxQueueItem.type != TxQueueItemType.Connect)//выполнения коннекта
+                && (mTxQueueItem.type != TxQueueItemType.Timer)// ожидания выполнения команды, чтоб она прошла полностью
+                    ){
                 Log.w(TAG,"Remove TxQueueItem, STATE_DISCONNECTED, "+ mTxQueueItem.toString());
             } else break;
         }
@@ -675,10 +694,16 @@ super.onCharacteristicWrite(gatt, characteristic, status);
                 mTxQueueItem.sensor.mBluetoothGatt.discoverServices();
                 break;
             case DisconnectClose:
+                // время ожидания соединения уменьшаем до 2 секунд пока может надо будет оставить 10
+                mHandlerTxQueue.removeCallbacks(runnable);
+                mHandlerTxQueue.postDelayed(runnable,2000);
                 // сенсора нет на связи, для сброса зависшего состоянияя, переводим в
                 // полное отключение КЛОУС и заново порождаем соединение, оно переходит в состояние дисконнект
-                // если просто закрыть- останется в коннекте!
+                // если просто закрыть- поставим на коннект!
                 mTxQueueItem.sensor.close();
+                //стваим в очередь, поставим на коннект
+                queueSetConnect(mTxQueueItem.sensor);
+                Log.e(TAG," --- DisconnectClose --->> .START ==> postDelayed ==>>  connect ---");
                 break;
             case Connect:
                 // время ожидания соединения уменьшаем до 3 секунд пока может надо будет оставить 10
