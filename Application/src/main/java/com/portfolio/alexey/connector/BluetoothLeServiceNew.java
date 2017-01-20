@@ -31,6 +31,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 import java.util.UUID;
+import java.util.concurrent.Semaphore;
 
 import static com.portfolio.alexey.connector.Util.context;
 import static java.security.AccessController.getContext;
@@ -69,6 +70,7 @@ public class BluetoothLeServiceNew extends Service {
             "com.example.bluetooth.le.EXTRA_ADRESS";
 
     public ArrayList<Sensor> arraySensors = new ArrayList<Sensor>();//arraySensors
+    Semaphore semaphore = new Semaphore(1); // 1 разрешение
     //
     //-----------------------------------
 //    //
@@ -148,13 +150,34 @@ public class BluetoothLeServiceNew extends Service {
         }
         return null;
     }
+//!!!ПОКА СЕМАФОРЫ ОТКЛЮЧИЛ!!
+    // http://movejava.blogspot.ru/2013/06/javautilconcurrentsemaphore.html
+    // http://metanit.com/java/tutorial/8.6.php
+    //ожидание разрешения у семафора
+    private void blocking() {
+//        try {
+//            semaphore.acquire();
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
+    }
+    //освобождение семафора
+    private void release() {
+//        semaphore.release();
+    }
+    //blocking();release();
     // Implements callback methods for GATT events that the app cares about.  For example,
     // connection change and services discovered.
     private final BluetoothGattCallback mGattCallback = new BluetoothGattCallback() {
         @Override
         public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
- super.onConnectionStateChange(gatt, status, newState);
+            blocking();
+            super.onConnectionStateChange(gatt, status, newState);
+            onConnectionStateChangeWork(gatt, status, newState);
+           release();
+        }
 
+        private void onConnectionStateChangeWork(BluetoothGatt gatt, int status, int newState) {
             //если у нас есть такое устройство
             String intentAction, str;boolean ds =false;
             final Sensor sensor = getBluetoothDevice(gatt.getDevice().getAddress());
@@ -172,7 +195,7 @@ public class BluetoothLeServiceNew extends Service {
                 }
 
 // сбрасываем запрос на коннект, он выполнен//сброс команды
- filtrInTxQueue(sensor,TxQueueItemType.Connect, null, status);
+                filtrInTxQueue(sensor,TxQueueItemType.Connect, null, status);
 
                 intentAction = ACTION_GATT_CONNECTED;
                 // состояние промежуточное-МЫ подключились- но ЕЩЕ НЕ СЧИТАЛИ СЕРВИСЫ доступные на этом устройстве
@@ -180,7 +203,7 @@ public class BluetoothLeServiceNew extends Service {
                 //для отображения состояния подключения волны расходятся от значка--
                 sensor.rssi = STATE_CONNECTING;//показываем что коннектимся
                 //Запускаем считывание СЕРВИСОВ и характеристик (discovery)
-                 // broadcastUpdate(intentAction, sensor);
+                // broadcastUpdate(intentAction, sensor);
                 // Attempts to discover services after successful connection.
 
 //   пытался без дисковери запросить характеристику НЕ получилось, не отвечает сенсор!
@@ -191,7 +214,7 @@ public class BluetoothLeServiceNew extends Service {
 //                sv.addCharacteristic(ch);
 //                ch = sv.getCharacteristic(PartGatt.UUID_BATTERY_LEVEL);
 //                queueRequestCharacteristicValue(sensor,ch);
- queueSetDiscover(sensor);
+                queueSetDiscover(sensor);
 // ds= sensor.mBluetoothGatt.discoverServices();
 // Log.v(TAG, "Attempting to start service discovery:" + ds +"  adress= "+sensor.mBluetoothDeviceAddress);
 
@@ -206,10 +229,16 @@ public class BluetoothLeServiceNew extends Service {
                 filtrInTxQueue(sensor, TxQueueItemType.DisconnectClose,null, status);//BluetoothGatt.GATT_SUCCESS);
             }
         }
-
+        //-------------------------------------------------------------------------------------------------------
         @Override
         public void onServicesDiscovered(BluetoothGatt gatt, int status) {
-super.onServicesDiscovered(gatt, status);
+            blocking();
+            super.onServicesDiscovered(gatt, status);
+            onServicesDiscoveredWork(gatt, status);
+            release();
+        }
+
+        private void onServicesDiscoveredWork(BluetoothGatt gatt, int status) {
             //если у нас есть такое устройство
             final Sensor sensor = getBluetoothDevice(gatt.getDevice().getAddress());
             if(sensor == null) return;
@@ -217,34 +246,45 @@ super.onServicesDiscovered(gatt, status);
             filtrInTxQueue(sensor, TxQueueItemType.DiscoverServices, null, status);
             //
             if (status == BluetoothGatt.GATT_SUCCESS) {
- // broadcastUpdate(ACTION_GATT_SERVICES_DISCOVERED, sensor);
+                // broadcastUpdate(ACTION_GATT_SERVICES_DISCOVERED, sensor);
                 // закончили ЧТЕНИЕ СЕРВИСОВ и характеристик, готовы к работе
                 sensor.rssi = STATE_CONNECTED;//показываем что готовы к работе
                 sensor.mConnectionState = STATE_CONNECTED;
- //sensor.enableTXNotification();
- //setNotificationIndication
- sensor.writeUuidDescriptor(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE, PartGatt.UUID_HEALTH_THERMOMETER
+                //sensor.enableTXNotification();
+                //setNotificationIndication
+                sensor.writeUuidDescriptor(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE, PartGatt.UUID_HEALTH_THERMOMETER
                         , PartGatt.UUID_INTERMEDIATE_TEMPERATURE, PartGatt.UUID_CLIENT_CHARACTERISTIC_CONFIG, true);
+                //после нотификации, даем паузу, а то на некторых устройствах
+                // ПИШЕТ С ОШИБКОЙ дескрипотр и переходит дисконнект И ТАК ЦИКЛИТ НЕСКОЛЬКО РАЗ
+                //  при тестировании хватило 100мкс, на всякий случай поставим 500мкс
+                queueSetTimer(sensor,500);
                 Log.w(TAG, "--- STATE_DISCOVERED_OK ---  GATT_SUCCESS  adress= " + sensor.mBluetoothDeviceAddress);
             } else {
                 Log.e(TAG, "--- STATE_DISCOVERED_ERROR ---  ERROR status: " + status);
             }
         }
-
+        //-------------------------------------------------------------------------------------------------------
         @Override
         public void onCharacteristicRead(BluetoothGatt gatt,
                                          BluetoothGattCharacteristic characteristic, int status) {
- super.onCharacteristicRead(gatt,characteristic, status);
-           // Log.w(TAG, "onCharacteristicRead--------------------");
+            blocking();
+            super.onCharacteristicRead(gatt,characteristic, status);
+            onCharacteristicReadWork(gatt, characteristic,status);
+            release();
+        }
+
+        private void onCharacteristicReadWork(BluetoothGatt gatt,
+                                         BluetoothGattCharacteristic characteristic, int status) {
+            // Log.w(TAG, "onCharacteristicRead--------------------");
             //если у нас есть такое устройство
             final Sensor sensor = getBluetoothDevice(gatt.getDevice().getAddress());
             if(sensor == null) return;
             //
             if (status == BluetoothGatt.GATT_SUCCESS) {
- // broadcastUpdate(ACTION_DATA_AVAILABLE, sensor, characteristic);
-            //    Log.i(TAG, "   adress= " + sensor.mBluetoothDeviceAddress);
+                // broadcastUpdate(ACTION_DATA_AVAILABLE, sensor, characteristic);
+                //    Log.i(TAG, "   adress= " + sensor.mBluetoothDeviceAddress);
 
-      sensor.setValue(characteristic, false);
+                sensor.setValue(characteristic, false);
                 sensor.onCharacteristicRead();//постоянно запрашивает характеристику- и обламывает остальное!!
                 Log.w(TAG, "-- onCharacteristicRead -- gatt= " + gatt.getDevice().getAddress()+"   status= " + status
                         + "  characteristic= " +  Util.getUidStringMost16Bits(characteristic)
@@ -258,17 +298,24 @@ super.onServicesDiscovered(gatt, status);
             // Ready for next transmission//сброс команды
             filtrInTxQueue(sensor,TxQueueItemType.ReadCharacteristic, characteristic.getUuid(), status);
         }
-
+        //----------------------------------------------------------------------------------------------
         @Override
         public void onCharacteristicChanged(BluetoothGatt gatt,
                                             BluetoothGattCharacteristic characteristic) {
- super.onCharacteristicChanged(gatt, characteristic);
-       //     Log.v(TAG, "onCharacteristicChanged--------------------");
+            blocking();
+            super.onCharacteristicChanged(gatt, characteristic);
+            onCharacteristicChangedWork(gatt,characteristic);
+            release();
+        }
+
+        private void onCharacteristicChangedWork(BluetoothGatt gatt,
+                                            BluetoothGattCharacteristic characteristic) {
+            //     Log.v(TAG, "onCharacteristicChanged--------------------");
             //если у нас есть такое устройство
 
             final Sensor sensor = getBluetoothDevice(gatt.getDevice().getAddress());
             if(sensor == null) return;
-    sensor.goToConnect = false;//подключение закончилочсь УДАЧНО!!
+            sensor.goToConnect = false;//подключение закончилочсь УДАЧНО!!
             sensor.setValue(characteristic, false);
 
             //постоянно запрашивает характеристику- и обламывает остальное!! убираем
@@ -277,20 +324,25 @@ super.onServicesDiscovered(gatt, status);
 //последователно опрашивает все сенсоры
 //readRssiBatteryLevel();
 //!!??   sensor.readRSSIandBatteryLevel();
-        sensor.onCharacteristicRead();
+            sensor.onCharacteristicRead();
 
 
-        //ЗАПРАШИВАТЬ (или записыват) ЗА 1 РАЗ можно только 1 характеристику
-        // или свойства - иначе НЕ отвечает
+            //ЗАПРАШИВАТЬ (или записыват) ЗА 1 РАЗ можно только 1 характеристику
+            // или свойства - иначе НЕ отвечает
             //
- // broadcastUpdate(ACTION_DATA_AVAILABLE, sensor, characteristic);
-     //       Log.i(TAG, "   adress= " + sensor.mBluetoothDeviceAddress);
+            // broadcastUpdate(ACTION_DATA_AVAILABLE, sensor, characteristic);
+            //       Log.i(TAG, "   adress= " + sensor.mBluetoothDeviceAddress);
         }
-        //
+        //----------------------------------------------------------------------------------------------
         @Override
         public void onReadRemoteRssi(BluetoothGatt gatt, int rssi, int status) {
+            blocking();
+            super.onReadRemoteRssi(gatt, rssi, status);
+            onReadRemoteRssiWork(gatt,rssi, status);
+            release();
+        }
 
- super.onReadRemoteRssi(gatt, rssi, status);
+        private void onReadRemoteRssiWork(BluetoothGatt gatt, int rssi, int status) {
             //если у нас есть такое устройство//входной контроль
             final Sensor sensor = getBluetoothDevice(gatt.getDevice().getAddress());
             if(sensor == null) return;
@@ -299,32 +351,28 @@ super.onServicesDiscovered(gatt, status);
             //сброс команды
             filtrInTxQueue(sensor,TxQueueItemType.ReadRSSI, null, status);
 
-          //  Log.i(TAG, "onReadRemoteRssi= " + rssi);
+            //  Log.i(TAG, "onReadRemoteRssi= " + rssi);
             //sensor.mBluetoothGatt.readRemoteRssi();
-
         }
+        //-------------------------------------------------------------------------
         //.. https://gist.github.com/SoulAuctioneer/ee4cb9bc0b3785bbdd51 -- пример
         @Override
-        public void onCharacteristicWrite(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status)
-        {
-super.onCharacteristicWrite(gatt, characteristic, status);
+        public void onCharacteristicWrite(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
+            blocking();
+            super.onCharacteristicWrite(gatt, characteristic, status);
+            onCharacteristicWriteWork(gatt, characteristic, status);
+            release();
+        }
 
-          //  Log.w(TAG, "----------------------onCharacteristic_Write");
-//            String deviceName = gatt.getDevice().getName();
-//            String serviceName = BleNamesResolver.resolveServiceName(characteristic.getService().getUuid().toString().toLowerCase(Locale.getDefault()));
-//            String charName = BleNamesResolver.resolveCharacteristicName(characteristic.getUuid().toString().toLowerCase(Locale.getDefault()));
-//            String description = "Device: " + deviceName + " Service: " + serviceName + " Characteristic: " + charName;
-//
-//            // Ready for next transmission
-//            processTxQueue();
-//
+        private void onCharacteristicWriteWork(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
+            //  Log.w(TAG, "----------------------onCharacteristic_Write");
 //            // we got response regarding our request to write new value to the characteristic
 //            // let see if it failed or not
             if(status == BluetoothGatt.GATT_SUCCESS) {
                 Log.w(TAG, "-- onCharacteristicWrite -- gatt= " + gatt.getDevice().getAddress()+"   status= " + status
                         + "  characteristic= " + Util.getUidStringMost16Bits(characteristic)
                         +"  service= " + Util.getUidStringMost16Bits(characteristic.getService()));
-   //             mUiCallback.uiSuccessfulWrite(mBluetoothGatt, mBluetoothDevice, mBluetoothSelectedService, characteristic, description);
+                //             mUiCallback.uiSuccessfulWrite(mBluetoothGatt, mBluetoothDevice, mBluetoothSelectedService, characteristic, description);
             } else {
                 Log.e(TAG, "-- onCharacteristicWrite -- ERROR gatt= " + gatt.getDevice().getAddress()+"   status= " + status
                         + "  characteristic= " + Util.getUidStringMost16Bits(characteristic)
@@ -336,6 +384,7 @@ super.onCharacteristicWrite(gatt, characteristic, status);
             // Ready for next transmission//сброс команды
             filtrInTxQueue(sensor,TxQueueItemType.WriteCharacteristic, characteristic.getUuid(), status);
         }
+        //-------------------------------------------------------------------------
         /**
          * Callback indicating the result of a descriptor write operation.
          *
@@ -348,8 +397,13 @@ super.onCharacteristicWrite(gatt, characteristic, status);
         @Override
         public void onDescriptorWrite(BluetoothGatt gatt, BluetoothGattDescriptor descriptor, int status)
         {
- super.onDescriptorWrite(gatt, descriptor,status);
+            blocking();
+            super.onDescriptorWrite(gatt, descriptor,status);
+            onDescriptorWriteWork(gatt,  descriptor, status);
+            release();
+        }
 
+        private void onDescriptorWriteWork(BluetoothGatt gatt, BluetoothGattDescriptor descriptor, int status) {
             if(status == BluetoothGatt.GATT_SUCCESS) {
                 Log.w(TAG, "-- onDescriptorWrite -- gatt= " + gatt.getDevice().getAddress() + "   status= " + status
                         + "  descriptor= " + Util.getUidStringMost16Bits(descriptor)
@@ -362,7 +416,6 @@ super.onCharacteristicWrite(gatt, characteristic, status);
             final Sensor sensor = getBluetoothDevice(gatt.getDevice().getAddress());
             if(sensor == null) return;
             // Ready for next transmission
-
             filtrInTxQueue(sensor,TxQueueItemType.WriteDescriptor, descriptor.getCharacteristic().getUuid(), status);
         }
     };
@@ -628,7 +681,13 @@ super.onCharacteristicWrite(gatt, characteristic, status);
      * Will process next transaction if queued
      */
     TxQueueItem mTxQueueItem;
-    synchronized private void processTxQueue(boolean init)//false-  если это обратная связь ИЛИ тайм аут по ответу
+    synchronized private void processTxQueue(boolean init){
+        //blocking();
+        processTxQueueWork(init);
+       // release();
+    }
+
+    private void processTxQueueWork(boolean init)//false-  если это обратная связь ИЛИ тайм аут по ответу
     {   //если мы стартуем с новым значением, то это ттолько если не заняты работой по передаче
         // нового значения
         if(init && txQueueProcessing) return;//

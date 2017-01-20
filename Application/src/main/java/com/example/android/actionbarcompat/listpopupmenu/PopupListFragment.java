@@ -308,7 +308,7 @@ fbButton = View.inflate(getContext(),R.layout.poplist_item_3,null);//пород�
     //
 
     synchronized private void updateViewItem(Sensor sensor, View view){
-        if((sensor == null) || (view == null)) return;
+        if((sensor == null) || (view == null) || (mHandlerWork == false)) return;
         //String str;
         int level;Drawable fon;
         boolean b = (sensor.mConnectionState == BluetoothLeServiceNew.STATE_CONNECTED);

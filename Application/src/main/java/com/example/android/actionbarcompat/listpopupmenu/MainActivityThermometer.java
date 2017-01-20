@@ -304,7 +304,7 @@ public class MainActivityThermometer  extends AppCompatActivity {// ActionBarAct
     }
 
     synchronized private void updateViewItem(Sensor sensor, View view){
-        if((sensor == null) || (view == null)) return;
+        if((sensor == null) || (view == null) || (mHandlerWork == false)) return;
         int color,level;
         boolean b = (sensor.mConnectionState == BluetoothLeServiceNew.STATE_CONNECTED);
         //читаем уровень сигнала для каждого в отведенное время для него
