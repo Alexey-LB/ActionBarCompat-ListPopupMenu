@@ -393,11 +393,11 @@ public class MainActivityThermometer  extends AppCompatActivity {// ActionBarAct
         if(sensor.mConnectionState > 0){
             if(!mSwitchOffSensor.isEnabled() || !mSwitchResetMeasurement.isEnabled()){
                 color = getResources().getColor(R.color.colorTextlight);
-                mSwitchOffSensor.setEnabled(true);
                 mSwitchOffSensor.setTextColor(color);
-                //
-                mSwitchResetMeasurement.setEnabled(true);
+                mSwitchOffSensor.setEnabled(true);
+                //устанавливает цвет, иначе цвет СРАЗУ НЕ установить!(setEnabled()-инициирует обновление)
                 mSwitchResetMeasurement.setTextColor(color);
+                mSwitchResetMeasurement.setEnabled(true);
             }
         } else{
             //если установлн то сбрасываем
@@ -405,7 +405,7 @@ public class MainActivityThermometer  extends AppCompatActivity {// ActionBarAct
                 color = getResources().getColor(R.color.colorBackgroundGrey);
                 mSwitchOffSensor.setTextColor(color);
                 mSwitchOffSensor.setEnabled(false);
-                //устанавливает цвет, иначе после СБРОСА цвет НЕ установить!
+                //устанавливает цвет, иначе цвет СРАЗУ НЕ установить!(setEnabled()-инициирует обновление)
                 mSwitchResetMeasurement.setTextColor(color);
                 mSwitchResetMeasurement.setEnabled(false);
             }
