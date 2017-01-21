@@ -1,5 +1,6 @@
 package com.portfolio.alexey.connector;
 
+import android.app.Activity;
 import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -15,6 +16,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.location.LocationManager;
 import android.os.Binder;
 import android.os.Handler;
@@ -22,7 +24,9 @@ import android.os.IBinder;
 import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
+import com.example.android.actionbarcompat.listpopupmenu.R;
 import com.example.android.actionbarcompat.listpopupmenu.RunDataHub;
 
 import java.io.UnsupportedEncodingException;
@@ -44,7 +48,7 @@ public class BluetoothLeServiceNew extends Service {
     private boolean debug = true;
     private final static String TAG = BluetoothLeServiceNew.class.getSimpleName();
 
-    private BluetoothManager mBluetoothManager;
+    private  BluetoothManager mBluetoothManager;
     public   BluetoothAdapter mBluetoothAdapter;
 
     // private String mBluetoothDeviceAddress;
@@ -254,10 +258,10 @@ public class BluetoothLeServiceNew extends Service {
                 //setNotificationIndication
                 sensor.writeUuidDescriptor(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE, PartGatt.UUID_HEALTH_THERMOMETER
                         , PartGatt.UUID_INTERMEDIATE_TEMPERATURE, PartGatt.UUID_CLIENT_CHARACTERISTIC_CONFIG, true);
-                //после нотификации, даем паузу, а то на некторых устройствах
-                // ПИШЕТ С ОШИБКОЙ дескрипотр и переходит дисконнект И ТАК ЦИКЛИТ НЕСКОЛЬКО РАЗ
-                //  при тестировании хватило 100мкс, на всякий случай поставим 500мкс
-                queueSetTimer(sensor,500);
+//                после нотификации, даем паузу, а то на некторых устройствах
+//                 ПИШЕТ С ОШИБКОЙ дескрипотр и переходит дисконнект И ТАК ЦИКЛИТ НЕСКОЛЬКО РАЗ
+//                  при тестировании хватило 100мкс, на всякий случай поставим 500мкс
+ //перенес в метод нотификации               queueSetTimer(sensor,500);
                 Log.w(TAG, "--- STATE_DISCOVERED_OK ---  GATT_SUCCESS  adress= " + sensor.mBluetoothDeviceAddress);
             } else {
                 Log.e(TAG, "--- STATE_DISCOVERED_ERROR ---  ERROR status: " + status);
@@ -481,6 +485,12 @@ public class BluetoothLeServiceNew extends Service {
         TxQueueItem txQueueItem = new TxQueueItem();
         txQueueItem.sensor = sens;
         txQueueItem.type = TxQueueItemType.Connect;
+        //контроль адреса
+        if((sens.mBluetoothDeviceAddress == null)
+                || (sens.mBluetoothDeviceAddress.length() != 17)) {
+            Log.e(TAG,"queueSetConnect() Adress= ERROR");
+            return;
+        }
         addToTxQueue(txQueueItem);
     }
     public void queueSetDisconnectClose(final Sensor sens)
@@ -525,6 +535,10 @@ public class BluetoothLeServiceNew extends Service {
         txQueueItem.dataToWrite = dataToWrite;
         txQueueItem.type = TxQueueItemType.WriteDescriptor;
         addToTxQueue(txQueueItem);
+        //после нотификации, даем паузу, а то на некторых устройствах
+        // ПИШЕТ С ОШИБКОЙ дескрипотр и переходит дисконнект И ТАК ЦИКЛИТ НЕСКОЛЬКО РАЗ
+        //  при тестировании хватило 100мкс, на всякий случай поставим 500мкс
+        queueSetTimer(sens,500);
     }
 
     /* queues enables/disables notification for characteristic */
@@ -538,6 +552,8 @@ public class BluetoothLeServiceNew extends Service {
         txQueueItem.dataToWrite = dataToWrite;
         txQueueItem.type = TxQueueItemType.WriteCharacteristic;
         addToTxQueue(txQueueItem);
+        //  на всякий случай, в нотификации это оказалось важным!здесь остановимся на 100мкс
+        queueSetTimer(sens,100);
     }
 
     /* request to fetch newest value stored on the remote device for particular characteristic */
@@ -765,7 +781,7 @@ public class BluetoothLeServiceNew extends Service {
     /* set new value for particular characteristic */
     public void writeDataToCharacteristic(final Sensor sensor,final BluetoothGattCharacteristic ch, final byte[] dataToWrite)
     {
-        if (mBluetoothAdapter == null || sensor.mBluetoothGatt == null || ch == null) return;
+        if (Util.isBluetoothAdapterOff() || sensor.mBluetoothGatt == null || ch == null) return;
         // first set it locally....
         ch.setValue(dataToWrite);
         // ... and then "commit" changes to the peripheral
@@ -778,7 +794,7 @@ public class BluetoothLeServiceNew extends Service {
     //BluetoothGattDescriptor.ENABLE_INDICATION_VALUE
     public void setNotificationForCharacteristic(final Sensor sensor,BluetoothGattCharacteristic ch,final  byte[] bluetoothGattDescriptorValue, boolean enabled)
     {
-        if (mBluetoothAdapter == null || sensor.mBluetoothGatt == null) return;
+        if (Util.isBluetoothAdapterOff() || sensor.mBluetoothGatt == null) return;
         boolean success = sensor.mBluetoothGatt.setCharacteristicNotification(ch, enabled);
         if(!success) {
             Log.e(TAG, "Seting proper notification status for characteristic failed!");
@@ -796,44 +812,12 @@ public class BluetoothLeServiceNew extends Service {
     }
     /* request to fetch newest value stored on the remote device for particular characteristic */
     public void requestCharacteristicValue(final Sensor sensor,BluetoothGattCharacteristic ch) {
-        if (mBluetoothAdapter == null || sensor.mBluetoothGatt == null) return;
+        if (Util.isBluetoothAdapterOff() || sensor.mBluetoothGatt == null) return;
 
         sensor.mBluetoothGatt.readCharacteristic(ch);
         // new value available will be notified in Callback Object
     }
 //===================================================================================================
-    /**
-     * Initializes a reference to the local Bluetooth adapter.
-     *
-     * @return Return true if the initialization is successful.
-     */
-   synchronized public boolean initialize() {
-       //если мы прошли ХОТЬ 1 инициализацию- болше НЕ надо
-       // все заново делать и ЧИТАТЬ НАСТРОЙКИ сенсоров
-       if(mBluetoothAdapter != null ) return true;
-       // For API level 18 and above, get a reference to BluetoothAdapter through
-       // BluetoothManager.
-       if (mBluetoothManager == null) {
-           mBluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
-           if (mBluetoothManager == null) {
-               Log.e(TAG, "Service--- Unable to initialize BluetoothManager.");
-               return false;
-           }
-       }
-       mBluetoothAdapter = mBluetoothManager.getAdapter();
-       if (mBluetoothAdapter == null) {
-           Log.e(TAG, "Service--- Unable to obtain a BluetoothAdapter.");
-           return false;
-       }
-       Log.e(TAG,"Service------get BluetoothAdapter = OK----");
-       //---// Читаем сеттинги из фалов НА флеши------------------
-       settingGetFileGoToConnect();
-       //myThread.setPriority(10);
-       myThread.setDaemon(true);// Указывает на то чтоб убивать когда будет прибито ПРИЛОЖЕНИЕ его породившее
-    //   myThread.start();
-        Log.e(TAG,"Servise------init-- init-- OK");
-        return true;
-    }
     private int loopI = 0;
     Thread myThread = new Thread( // создаём новый поток
             new Runnable() { // описываем объект Runnable в конструкторе
@@ -900,14 +884,53 @@ public class BluetoothLeServiceNew extends Service {
                 }
             }
     );
+    /**
+     * Initializes a reference to the local Bluetooth adapter.
+     *
+     * @return Return true if the initialization is successful.
+     */
+    public boolean initialize() {
+        boolean rez = false;
+        Log.e(TAG,"Service------START --- initialize() --- ");
+        //---// Читаем сеттинги из фалов НА флеши------------------
+        settingGetFileGoToConnect();
+        //myThread.setPriority(10);
+        myThread.setDaemon(true);// Указывает на то чтоб убивать когда будет прибито ПРИЛОЖЕНИЕ его породившее
+        //   myThread.start();
+        if(mBluetoothAdapter != null) rez = true;
+        Log.e(TAG,"Service------END --- initialize()--- Status=" + (rez?"OK":"ERROR"));
+        return rez;
+    }
     @Override
     public void onCreate() {
         super.onCreate();
+        Log.e(TAG,"Service------START -- onCreate()");
+        // Initializes a Bluetooth adapter.  For API level 18 and above, get a reference to
+        // BluetoothAdapter through BluetoothManager.
+        mBluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
+        mBluetoothAdapter = null;
+        // Checks if Bluetooth is supported on the device.
+        if (mBluetoothManager == null) {
+            Toast.makeText(this, R.string.error_bluetooth_not_supported, Toast.LENGTH_LONG).show();
+            Log.e(TAG, "Service ------ END -- onCreate()--" + getString(R.string.error_bluetooth_not_supported));
+            return;
+        }
+        //проверяем потдержку блутуз адаптером ЛЕ блутуза
+        if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
+            Toast.makeText(this, R.string.ble_not_supported, Toast.LENGTH_LONG).show();
+            Log.e(TAG, "Service ------ END -- onCreate()--" + getString(R.string.ble_not_supported));
+            return;
+        }
+        mBluetoothAdapter = mBluetoothManager.getAdapter();
+        if (mBluetoothAdapter == null) {
+            Toast.makeText(this, "Unable to obtain a BluetoothAdapter.", Toast.LENGTH_LONG).show();
+            Log.e(TAG, "Service ------ END -- onCreate()----- Unable to obtain a BluetoothAdapter.");
+            return;
+        }
         //---------
         // похоже не успевает все устанавить, а коннект уже налаживает, и обламывается
         //перенесем в инициализацию в приложение!!app
         //     initialize();
-
         //getActivity().registerReceiver(this.mBluetoothStateBroadcastReceiver, new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED));
         //getActivity().registerReceiver(mGpsReceiver, new IntentFilter("android.location.PROVIDERS_CHANGED"));
         // обработка слушателей в самом низу
@@ -916,8 +939,7 @@ public class BluetoothLeServiceNew extends Service {
                 ,new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED));
         getApplicationContext().registerReceiver(mGpsReceiver
                 ,new IntentFilter("android.location.PROVIDERS_CHANGED"));
-
-        Log.e(TAG,"Service------START -- onCreate()--------------");
+        Log.e(TAG,"Service ------ END -- onCreate()------ BluetoothAdapter ON= " + mBluetoothAdapter.isEnabled());
     }
     // это будет именем файла настроек
     public static final String APP_PREFERENCES = "mySettings";
@@ -1040,11 +1062,13 @@ public class BluetoothLeServiceNew extends Service {
      */
     synchronized public boolean connect(final String address, boolean avtoConnect) {
         // "74:DA:EA:9F:54:C9"= 17
-        if (mBluetoothAdapter == null || address == null || address.length() != 17) {
+        //контроль наличия адаптера и его сотояния (ВКЛ/ВЫКЛ)
+        if (Util.isBluetoothAdapterOff() || address == null || address.length() != 17) {
             Log.e(TAG, "BluetoothAdapter(" +mBluetoothAdapter +") not initialized("+address
                     +") or unspecified address("+ address.length()+")");
             return false;
         }
+
         //если у нас есть такое устройство
         final Sensor sensor;
         if(getBluetoothDevice(address) == null) {
@@ -1161,15 +1185,36 @@ public class BluetoothLeServiceNew extends Service {
 
                 switch (state) {
                     case BluetoothAdapter.STATE_OFF:
+//                        final BluetoothDevice device = mBluetoothAdapter.getRemoteDevice("74:DA:EA:9F:54:C9");
+//                        BluetoothGatt bg = device.connectGatt(getApplicationContext(), true, mGattCallback);
+                        if(debug) Log.e(TAG, "???------ BluetoothAdapter.STATE_OFF ----???"
+                                + mBluetoothAdapter.isEnabled()
+                                +"  "+mBluetoothAdapter.getState());
+//                                +"  device= "+device
+//                                +"  gatt= "+(bg==null?"null":"No null"));
+                        break;
                     case BluetoothAdapter.STATE_TURNING_OFF:
-                        if(debug) Log.e(TAG, "???------ BluetoothAdapter.STATE_TURNING_OFF ----???");
+                        if(debug) Log.e(TAG, "???------ BluetoothAdapter.STATE_TURNING_OFF ----???"+ BluetoothAdapter.getDefaultAdapter().isEnabled());
 //                        if (view != null) {
 //                            Snackbar.make(view, "Bluetooth Выключен", Snackbar.LENGTH_LONG).show();
 //                        }
                         break;
                     case BluetoothAdapter.STATE_TURNING_ON:
+                        if(debug) Log.v(TAG, "!!!------ BluetoothAdapter.STATE_TURNING_ON ----!!!"+ BluetoothAdapter.getDefaultAdapter().isEnabled());
+
+                         break;
                     case BluetoothAdapter.STATE_ON:
-                        if(debug) Log.v(TAG, "!!!------ BluetoothAdapter.STATE_TURNING_ON ----!!!");
+                        if(debug) Log.v(TAG, "!!!------ BluetoothAdapter.STATE_ON ----!!!"
+                                + mBluetoothAdapter.isEnabled()
+                        +"  "+mBluetoothAdapter.getState());
+                        //перебираем все сеносры и запускаем их
+                        for(Sensor sens: arraySensors){
+                            // запускаем на соннект
+                            //  небольшую паузу впереди 3 секунды пауза
+                            queueSetTimer(sens, 2000);
+                            //connect(sensor.mBluetoothDeviceAddress, true);
+                            queueSetConnect(sens);
+                        }
 //                        if (view != null) {
 //                            Snackbar.make(view, "Bluetooth Включен", Snackbar.LENGTH_LONG).show();
 //                        }

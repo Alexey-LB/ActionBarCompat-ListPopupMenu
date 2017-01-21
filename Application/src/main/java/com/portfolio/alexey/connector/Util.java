@@ -2,6 +2,7 @@ package com.portfolio.alexey.connector;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattDescriptor;
 import android.bluetooth.BluetoothGattService;
@@ -622,5 +623,12 @@ public class Util {
 
         }else level = currentLevel;
         if(viewLevel.getLevel() != level)viewLevel.setLevel(level);//
+    }
+    public static   boolean isBluetoothAdapterOff(){
+          if((runDataHub.mBluetoothLeServiceM.mBluetoothAdapter == null)
+                || (runDataHub.mBluetoothLeServiceM.mBluetoothAdapter.getState() != BluetoothAdapter.STATE_ON)){
+              return true;
+          }
+        return false;
     }
 }
