@@ -15,7 +15,6 @@
  */
 package com.example.android.actionbarcompat.listpopupmenu;
 
-import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -294,16 +293,16 @@ fbButton = View.inflate(getContext(),R.layout.poplist_item_3,null);//пород�
             onFahrenheit = app.mBluetoothLeServiceM.getFahrenheit();
         }
         if (onFahrenheit) {
-            menu.add(Menu.NONE, iconC, Menu.NONE, "C")
+            menu.add(Menu.NONE, iconC, Menu.NONE, "°C")
                     .setIcon(R.drawable.ic_c)
                     .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         } else{
-            menu.add(Menu.NONE, iconF, Menu.NONE, "F")
+            menu.add(Menu.NONE, iconF, Menu.NONE, "°F")
                     .setIcon(R.drawable.ic_f)
                     .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         }
         menu.add(Menu.NONE,iconActionAdd,Menu.NONE,"Add")
-                .setIcon(R.drawable.ic_add_blue_32dp)
+                .setIcon(R.drawable.ic_add_blue_26dp_new)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
     }
     //

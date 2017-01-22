@@ -50,12 +50,13 @@
     <!--<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />-->
 
     <!--для записи пользовательских настроек-->
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <!--<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>-->
+
 
     <!--android:icon="@android:drawable/ic_menu_revert"-->
     <!--android:icon="@mipmap/ic_logo_relsib3"-->
     <application
-        android:icon="@drawable/logo_relsib3"
+        android:icon="@drawable/logo_relsib4"
         android:label="@string/app_name"
         android:allowBackup="true"
         android:theme="@style/Theme.AppCompat.Light"

@@ -20,12 +20,7 @@ public class RunDataHub extends Application {
     public final   String TAG = getClass().getSimpleName();
     private static DataHubSingleton dataHub;
     public MainActivityWork mainActivityWork;
-    RunDataHub  (){
-        super();
-//        //устанавливаем для работы Контекст ПРИЛОЖЕНИЯ в УТИЛИТАХ(музака вибрация и т д)
-//        Util.context = getApplicationContext();//!!--НЕ ПРОХОДИТ!! getBaseContext();-- НЕ ПРОХОДИТ!!
-//        Util.runDataHub = this;
-    }
+
     //КОНТРОЛЬ начальным, ПЕРВЫМ запуском, без повтора при переворачивании телефона
     public boolean getStartApp(){return dataHub.getStartApp();}
     public void resetStartApp(){dataHub.resetStartApp();}
