@@ -1,5 +1,7 @@
 package com.example.android.actionbarcompat.listpopupmenu;
 
+import android.app.Activity;
+import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
@@ -14,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.portfolio.alexey.connector.BluetoothLeServiceNew;
 import com.portfolio.alexey.connector.DrawableThermometer;
@@ -46,6 +49,7 @@ public class MainActivityThermometer  extends AppCompatActivity {// ActionBarAct
     private SwitchButton mSwitchResetMeasurement;
     private Drawable marker_fon;
     private Drawable numbe_cur_fon;
+    RunDataHub app;
 
     private DrawableThermometer mThermometerDrawable = new DrawableThermometer(this);
     @Override
@@ -55,7 +59,7 @@ public class MainActivityThermometer  extends AppCompatActivity {// ActionBarAct
         //-------------------------------------------------------
         final Intent intent = getIntent();
         itemSensor = getIntent().getIntExtra(MainActivityWork.EXTRAS_DEVICE_ITEM, itemSensor);
-        RunDataHub app = ((RunDataHub) getApplicationContext());
+        app = ((RunDataHub) getApplicationContext());
         //--------ПРИМЕМ ЕСЛИ сервис не запущен и нет доступа к сенсорам, выходим!--
         if((app == null) || (app.mBluetoothLeServiceM == null)
                 || (app.mBluetoothLeServiceM.arraySensors == null)
@@ -456,11 +460,27 @@ public class MainActivityThermometer  extends AppCompatActivity {// ActionBarAct
             }
         },500);
         Log.e(TAG, "----onResume() ----------");// + mSwitchOffSensor.getWidth());
+        //--
+        //если блутуз не существует то и включать нечего!
+        if(!app.mBluetoothLeServiceM.isBluetoothAdapterExist()) return;//выходим на запрос ВКЛ блутуза 2 раза!!
+        //вызываем окно включения блутуз модуля
+        if (!app.mBluetoothLeServiceM.mBluetoothAdapter.isEnabled()) {
+            // Ensures Bluetooth is enabled on the device.  If Bluetooth is not currently enabled,
+            // fire an intent to display a dialog asking the user to grant permission to enable it.
+            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
+        }
     }
-
+    public static final int REQUEST_ENABLE_BT = 15;
     @Override//сюда прилетают ответы при возвращении из других ОКОН активити
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_ENABLE_BT && resultCode == Activity.RESULT_CANCELED) {
+            Toast.makeText(this, getString(R.string.bluetooth_adapter_is_turned_off), Toast.LENGTH_LONG).show();
+            Log.e(TAG, getString(R.string.bluetooth_adapter_is_turned_off));
+            finish();
+            return;
+        }
     }
 
     @Override

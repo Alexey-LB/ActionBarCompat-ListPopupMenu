@@ -7,6 +7,8 @@ import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattDescriptor;
 import android.bluetooth.BluetoothGattService;
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -80,6 +82,7 @@ public class Util {
         // Replace the contents of the container with the new fragment
         ft.replace(distIdFragment, srcFragment);
         // Complete the changes added above
+        if((ft == null) || (ft.isEmpty())) return;
         ft.commit();
     }
     //УДАЛЕНИЕ фрагмента , используем библиотеку потдержки старых устройств (4.4)
@@ -88,9 +91,11 @@ public class Util {
         // удалить все фрагменты
         FragmentTransaction ft = fm.beginTransaction();
         List<Fragment> frL= fm.getFragments();
+        if((frL == null) || (frL.size() <= 0)) return;
         for(Fragment fr: frL){
             ft.remove(fr);
         }
+        if(ft.isEmpty()) return;
         ft.commit();
     }
     //ввод ФЛОАТ из строки В ЛЮБОЙ ЛОКАЛИ!!!(обрабатывает 10 разделитель ТОЧКУ или ЗАПЯТУЮ!!)
@@ -631,4 +636,5 @@ public class Util {
           }
         return false;
     }
+
 }

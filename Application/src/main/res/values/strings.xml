@@ -23,6 +23,11 @@
     <string name="title_devices">BLE Device Scan</string>
     <string name="error_bluetooth_not_supported">Bluetooth not supported.</string>
     <string name="ble_not_supported">BLE is not supported</string>
+
+    <string name="unable_to_obtain_a_BluetoothAdapter">Unable to obtain a Bluetooth Adapter</string>
+
+    <string name="bluetooth_adapter_is_turned_off">Bluetooth Adapter is turned off.</string>
+
     <string name="unknown_device">Unknown device</string>
     <!-- Menu items -->
     <string name="menu_connect">Connect</string>

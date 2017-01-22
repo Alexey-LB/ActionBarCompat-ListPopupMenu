@@ -15,6 +15,7 @@
  */
 package com.example.android.actionbarcompat.listpopupmenu;
 
+import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -141,7 +142,7 @@ private final int dividerHeight = 0;//расстояние в dp  между Э�
     public int getGraphDpY(int y){return (int)((float)y /densityY);}
     public int getGraphPixelsX(int xDp){return (int)(densityX *(float)xDp);}
     public int getGraphPixelsY(int yDp){return (int)(densityY *(float)yDp);}
-
+    private RunDataHub app;
     @SuppressWarnings("ResourceType")
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -242,7 +243,7 @@ fbButton = View.inflate(getContext(),R.layout.poplist_item_3,null);//пород�
         //      ArrayList<Sensor> item =  mBluetoothLeService.arraySensors;
         //     ArrayList<Sensor> item =  parentActivity.mBluetoothLeServiceM.arraySensors;
         ArrayList<Object> it = new ArrayList();
-        RunDataHub app = ((RunDataHub) getActivity().getApplicationContext());
+        app = ((RunDataHub) getActivity().getApplicationContext());
         if (app.mBluetoothLeServiceM != null) {
             Log.e(TAG, "Activity to frag initList()--- arraySensors.size= " + app.mBluetoothLeServiceM.arraySensors.size());
             ArrayList<Sensor> item = app.mBluetoothLeServiceM.arraySensors;
@@ -423,7 +424,23 @@ fbButton = View.inflate(getContext(),R.layout.poplist_item_3,null);//пород�
                 if(mHandlerWork) mHandler.postDelayed(this, 300);
             }
         },500);
+        //--
+//        //если блутуз не существует то и включать нечего!
+//        if(!app.mBluetoothLeServiceM.isBluetoothAdapterExist()
+//                || (countRepetitionRequestEnableBT-- <= 0)) return;//выходим на запрос ВКЛ блутуза 2 раза!!
+//        //вызываем окно включения блутуз модуля
+//        if(!app.mBluetoothLeServiceM.mBluetoothAdapter.isEnabled()) {
+//            if (!app.mBluetoothLeServiceM.mBluetoothAdapter.isEnabled()) {
+//                // Ensures Bluetooth is enabled on the device.  If Bluetooth is not currently enabled,
+//                // fire an intent to display a dialog asking the user to grant permission to enable it.
+//                Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+//                startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
+//            }
+//        }
     }
+//    private int countRepetitionRequestEnableBT = 2;
+//    public static final int REQUEST_ENABLE_BT = 15;
+
     @Override
     public void onDestroy() {
         super.onDestroy();

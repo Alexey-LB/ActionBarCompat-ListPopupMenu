@@ -68,6 +68,7 @@ public class DeviceScanActivity extends ListActivity {//AppCompatActivity {//Act
     private  String mDeviceNnameFiltr;
       private Sensor sensor;
     private  int mItem= 0;
+    private  RunDataHub app;
     @Override// Set up the {@link android.app.ActionBar}, if the API is available.
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,7 +80,7 @@ public class DeviceScanActivity extends ListActivity {//AppCompatActivity {//Act
         mItem = intent.getIntExtra(MainActivityWork.EXTRAS_DEVICE_ITEM,0);
         //фильтр АДВАНСИНГ пакетов при поиске блутуз устройст
         mDeviceNnameFiltr = intent.getStringExtra(MainActivityWork.EXTRAS_DEVICE_NAME_FILTR);
-        RunDataHub app = ((RunDataHub) getApplicationContext());
+        app = ((RunDataHub) getApplicationContext());
         if((app.mBluetoothLeServiceM == null)
                 || (app.mBluetoothLeServiceM.arraySensors == null)
                 || (app.mBluetoothLeServiceM.arraySensors.size() <= 0)){
@@ -151,29 +152,29 @@ mLeDeviceListAdapter.notifyDataSetInvalidated();
     @Override
     protected void onResume() {
         super.onResume();
-
-        // Ensures Bluetooth is enabled on the device.  If Bluetooth is not currently enabled,
-        // fire an intent to display a dialog asking the user to grant permission to enable it.
-        if (!mBluetoothAdapter.isEnabled()) {
-            if (!mBluetoothAdapter.isEnabled()) {
-                Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-                startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
-            }
-        }
-
         // Initializes list view adapter.
         mLeDeviceListAdapter = new LeDeviceListAdapter();
-
         setListAdapter(mLeDeviceListAdapter);
-        scanLeDevice(true);
-
+        //если блутуз не существует то и включать нечего!
+        if(!app.mBluetoothLeServiceM.isBluetoothAdapterExist()) return;//выходим на запрос ВКЛ блутуза 2 раза!!
+        //вызываем окно включения блутуз модуля
+        if (!app.mBluetoothLeServiceM.mBluetoothAdapter.isEnabled()) {
+            // Ensures Bluetooth is enabled on the device.  If Bluetooth is not currently enabled,
+            // fire an intent to display a dialog asking the user to grant permission to enable it.
+            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
+        }else{
+            scanLeDevice(true);
+        }
     }
 
     @Override//сюда прилетают ответы при возвращении из других ОКОН активити
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         // User chose not to enable Bluetooth.
-        if (requestCode == REQUEST_ENABLE_BT && resultCode == Activity.RESULT_CANCELED) {
-            finish();
+        if (requestCode == REQUEST_ENABLE_BT){
+            if(resultCode == Activity.RESULT_OK) {
+                scanLeDevice(true);
+            } else finish();
             return;
         }
         super.onActivityResult(requestCode, resultCode, data);
@@ -183,9 +184,9 @@ mLeDeviceListAdapter.notifyDataSetInvalidated();
     protected void onPause() {
         super.onPause();
         scanLeDevice(false);
-//        mLeDeviceListAdapter.clear();
-// mLeDeviceListAdapter.notifyDataSetChanged();
-// mLeDeviceListAdapter.notifyDataSetInvalidated();
+        mLeDeviceListAdapter.clear();
+        mLeDeviceListAdapter.notifyDataSetChanged();
+        mLeDeviceListAdapter.notifyDataSetInvalidated();
     }
     @Override
     protected void onDestroy() {
@@ -240,7 +241,9 @@ mLeDeviceListAdapter.notifyDataSetInvalidated();
                     //это запуск напрямую, работает хреново
                    // app.mBluetoothLeServiceM.connect(sensor.mBluetoothDeviceAddress,true);
                     //запуск на коннект через очередь!
-                    app.mBluetoothLeServiceM.queueSetConnect(sensor);
+                    //начинаем конект ВСЕГДА с чистого ЛИСТА, тоесть настроек связи (BluetoothGatt)
+                    if(sensor.mBluetoothGatt == null) app.mBluetoothLeServiceM.queueSetConnect(sensor);
+                    else app.mBluetoothLeServiceM.queueSetDisconnectCloseConnect(sensor);
                     Log.v(TAG,"sensor item= " + mItem + "  connectAdress= " + sensor.mBluetoothDeviceAddress);
                 }
         }

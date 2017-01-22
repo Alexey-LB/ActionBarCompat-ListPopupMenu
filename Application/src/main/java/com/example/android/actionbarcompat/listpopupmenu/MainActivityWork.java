@@ -28,6 +28,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.portfolio.alexey.connector.BluetoothLeServiceNew;
 import com.portfolio.alexey.connector.Sensor;
@@ -68,7 +69,7 @@ public class MainActivityWork extends AppCompatActivity {// ActionBarActivity {
     private  final   int mainIdFragmentWork = R.id.mainFragmentWork;
 
     public PopupListFragment popupListFragment;
-
+    RunDataHub app;
     //----------
 //    Анимация Floating Action Button в Android
 //    https://geektimes.ru/company/nixsolutions/blog/276128/
@@ -116,7 +117,7 @@ public class MainActivityWork extends AppCompatActivity {// ActionBarActivity {
         setContentView(R.layout.activity_main_work);//
         final Intent intent = getIntent();
         //--------ПРИМЕМ ЕСЛИ сервис не запущен и нет доступа к сенсорам, выходим!--
-        RunDataHub app = ((RunDataHub) getApplicationContext());
+        app = ((RunDataHub) getApplicationContext());
         if((app == null) || (app.mBluetoothLeServiceM == null)
                 || (app.mBluetoothLeServiceM.arraySensors == null)){
 
@@ -277,25 +278,23 @@ public class MainActivityWork extends AppCompatActivity {// ActionBarActivity {
         super.onResume();
         //при возвращениие из других окон, может быть системный бар, по этому еще раз его отменяем
         findViewById(mainIdFragmentWork).getRootView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
- Util.changeFragment(mainIdFragmentWork, new PopupListFragment(), getSupportFragmentManager());
+
+        Util.changeFragment(mainIdFragmentWork, new PopupListFragment(), getSupportFragmentManager());
 
         Log.e(TAG, "----onResume() ----------");
-//        RunDataHub app = ((RunDataHub) getApplicationContext());
-//        //а первый запуск показываем заставку несколько секунд, там и потом убираем системный бар
-//        // в случа нуля и если мы не первый раз уже просыпаемся то тогда надо убират
-//        // установка ИЗОБРАЖЕНИЕ на всь экран, УБИРАЕМ СВЕРХУ И СНИЗУ панели системные
-//        if((app == null) || (app.getStartApp() == true)){
-//            //прячем наш бар на время
-//            getSupportActionBar().hide();
-//          } else{
-//            getSupportActionBar().show();
-//        }
-        //--
-//        if(Util.getAppBleService().mBluetoothAdapter != null){
-//            Util.getAppBleService().mBluetoothAdapter.startLeScan(mLeScanCallback);
-//
-//        }
+
+        //если блутуз не существует то и включать нечего!
+        if(!app.mBluetoothLeServiceM.isBluetoothAdapterExist()) return;//выходим на запрос ВКЛ блутуза 2 раза!!
+        //вызываем окно включения блутуз модуля
+        if (!app.mBluetoothLeServiceM.mBluetoothAdapter.isEnabled()) {
+
+            // Ensures Bluetooth is enabled on the device.  If Bluetooth is not currently enabled,
+            // fire an intent to display a dialog asking the user to grant permission to enable it.
+            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
+        }
     }
+    public static final int REQUEST_ENABLE_BT = 15;
     @Override
     public  void onPause() {
         super.onPause();
@@ -337,6 +336,12 @@ final int iconActionEdit = 12345678;
 //!!            if(mBluetoothLeServiceM != null){
 //!!                mBluetoothLeServiceM.connect(data.getStringExtra(EXTRAS_DEVICE_ADDRESS),true);
 //!!            }
+            return;
+        }
+        if (requestCode == REQUEST_ENABLE_BT && resultCode == Activity.RESULT_CANCELED) {
+            Toast.makeText(this, getString(R.string.bluetooth_adapter_is_turned_off), Toast.LENGTH_LONG).show();
+            Log.e(TAG, getString(R.string.bluetooth_adapter_is_turned_off));
+            finish();
             return;
         }
         super.onActivityResult(requestCode, resultCode, data);
