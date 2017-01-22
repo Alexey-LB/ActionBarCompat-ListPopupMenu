@@ -200,7 +200,7 @@ setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         //переход в следующее окно
         Intent intent = new Intent(this, MainActivityWork.class);
       //  intent.putExtra(Util.EXTRAS_BAR_TITLE, "v2.6.16 Температура");//--
-        intent.putExtra(Util.EXTRAS_BAR_TITLE, "v2.6.27");//--
+        intent.putExtra(Util.EXTRAS_BAR_TITLE, "v2.6.28");//--
 
         // все изменения будет писать сразу в сенсор
         // по умолчанию устанавливаем минимум, все остальное делется НАПРЯМУЮ с данными

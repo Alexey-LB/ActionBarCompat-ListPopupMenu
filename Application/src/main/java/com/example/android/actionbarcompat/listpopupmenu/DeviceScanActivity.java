@@ -29,10 +29,14 @@ import android.bluetooth.BluetoothManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.PermissionChecker;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -48,6 +52,7 @@ import com.portfolio.alexey.connector.Sensor;
 import com.portfolio.alexey.connector.Util;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static android.support.v4.content.PermissionChecker.PERMISSION_GRANTED;
 import static java.security.AccessController.getContext;
@@ -88,28 +93,23 @@ public class DeviceScanActivity extends ListActivity {//AppCompatActivity {//Act
             Log.e(TAG,"ERROR -- No sensor item= " + mItem);
         }
         sensor = app.mBluetoothLeServiceM.arraySensors.get(mItem);
+        mBluetoothAdapter = app.mBluetoothLeServiceM.mBluetoothAdapter;
         Util.setActionBar(getActionBar(),TAG, intent.getStringExtra(Util.EXTRAS_BAR_TITLE));//"  BB3"
-        //-------------------------------------------
         //74:DA:EA:9F:4C:21-new
         mHandler = new Handler();
+        //-------------------------------------------
         // Use this check to determine whether BLE is supported on the device.  Then you can
         // selectively disable BLE-related features.
-        if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
-            Toast.makeText(this, R.string.ble_not_supported, Toast.LENGTH_LONG).show();
-            finish();
-        }
-        // Initializes a Bluetooth adapter.  For API level 18 and above, get a reference to
-        // BluetoothAdapter through BluetoothManager.
-        final BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
-        mBluetoothAdapter = bluetoothManager.getAdapter();
+        //если блутуз не существует то и включать нечего!
+        if(!app.mBluetoothLeServiceM.isBluetoothAdapterExist()) finish();//выходим
+        //вызываем окно включения блутуз модуля
 
-        // Checks if Bluetooth is supported on the device.
-        if (mBluetoothAdapter == null) {
-            Toast.makeText(this, R.string.error_bluetooth_not_supported, Toast.LENGTH_LONG).show();
-            finish();
+        if (!app.mBluetoothLeServiceM.mBluetoothAdapter.isEnabled()) {
+            // Ensures Bluetooth is enabled on the device.  If Bluetooth is not currently enabled,
+            // fire an intent to display a dialog asking the user to grant permission to enable it.
+            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
         }
-       ////--------
-
     }
     //вызывается при построениии и после вызова метода invalidateOptionsMenu();
     @Override
@@ -155,31 +155,30 @@ mLeDeviceListAdapter.notifyDataSetInvalidated();
         // Initializes list view adapter.
         mLeDeviceListAdapter = new LeDeviceListAdapter();
         setListAdapter(mLeDeviceListAdapter);
-        //если блутуз не существует то и включать нечего!
-        if(!app.mBluetoothLeServiceM.isBluetoothAdapterExist()) return;//выходим на запрос ВКЛ блутуза 2 раза!!
-        //вызываем окно включения блутуз модуля
-        if (!app.mBluetoothLeServiceM.mBluetoothAdapter.isEnabled()) {
-            // Ensures Bluetooth is enabled on the device.  If Bluetooth is not currently enabled,
-            // fire an intent to display a dialog asking the user to grant permission to enable it.
-            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
-        }else{
+        //проверяем разрешение на локацию-разрешено- можно делать поиск
+        // если нет, пока пропускаем это шаг, выводим активити и
+        // при запуске сканирования, запрашиваем на ЛОКАЦИЮ
+        if(ContextCompat.checkSelfPermission(getApplicationContext()
+                ,Manifest.permission.ACCESS_COARSE_LOCATION) == PermissionChecker.PERMISSION_GRANTED){
+            // разрешения ЕСТЬ, разрешаем сканирование
             scanLeDevice(true);
         }
     }
 
     @Override//сюда прилетают ответы при возвращении из других ОКОН активити
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         // User chose not to enable Bluetooth.
         if (requestCode == REQUEST_ENABLE_BT){
             if(resultCode == Activity.RESULT_OK) {
                 scanLeDevice(true);
-            } else finish();
+            } else {
+                Log.e(TAG,"--REQUEST_ENABLE_BT= Off,  finish()");
+                finish();
+            }
             return;
         }
-        super.onActivityResult(requestCode, resultCode, data);
     }
-
     @Override
     protected void onPause() {
         super.onPause();
@@ -248,30 +247,43 @@ mLeDeviceListAdapter.notifyDataSetInvalidated();
                 }
         }
         finish();
-       // startActivity(intent);//на подклшючение к устройству
+    }
+    private final int REQUEST_PERMISSION_REQ_CODE = 8973;
+    //сюда прилетает ответ по разрешению на локацию, если ДА повторяем запрос на поиск, если нет то СТОП сканирование
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        //Log.v(TAG,"--- PERMISSION --- = " + permissions[0]);
+        switch (requestCode) {
+            case REQUEST_PERMISSION_REQ_CODE:
+                if (grantResults == null || grantResults.length <= 0 || grantResults[0] != PermissionChecker.PERMISSION_GRANTED) {
+                    // Snackbar.make(getView(), (int) R.string.rationale_location_permission_denied, Snackbar.LENGTH_LONG).show();
+                    Log.e(TAG,"--- PERMISSION_GRANTED NO");
+                    scanLeDevice(false);
+                } else {
+                    Log.i(TAG,"--- PERMISSION_GRANTED OK");
+                    scanLeDevice(true);
+                }
+                break;
+            default:
+        }
     }
 
-//    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-//        switch (requestCode) {
-//            case REQUEST_PERMISSION_REQ_CODE:
-//                if (grantResults == null || grantResults.length <= 0 || grantResults[0] != PERMISSION_GRANTED) {
-//                    Snackbar.make(getView(), (int) R.string.rationale_location_permission_denied, Snackbar.LENGTH_LONG).show();
-//                } else {
-//                    //startScan();
-//                    scanLeDevice(true);
-//                }
-//                break;
-//            default:
-//        }
-//    }
+
     private void scanLeDevice(final boolean enable) {
-//        //проверяем а разрешения доступа сканирования ДОЛЖНО БАТЬ РАЗРЕШЕНИЕ НА ЛОКАЦИЮ
-//        if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PERMISSION_GRANTED) {
-//            // разрешения нет, запрашиваем у пользователя
-//            requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, REQUEST_PERMISSION_REQ_CODE);
-//            return;
-//        }
-        // разрешение есть, начинаем сканирование
+        if(enable){
+            //если сканировать, проверяем разрешение на ЛОКАЦИЮ- АПИ23, если его нет,
+            // выбрасываем окно с запросом, при ответе НЕТ, ствим сканирование стоп иждем что дальше
+            int i = ContextCompat.checkSelfPermission(getApplicationContext()
+                    ,Manifest.permission.ACCESS_COARSE_LOCATION);
+            Log.i(TAG,"--- LOCATION_SERVICE -- i= " + i + "  PERMISSION_GRANTED= "+ PermissionChecker.PERMISSION_GRANTED);
+            if(i != PermissionChecker.PERMISSION_GRANTED){
+                // разрешения нет, запрашиваем у пользователя
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, REQUEST_PERMISSION_REQ_CODE);
+                }
+                return;
+            }
+        }
+        // разрешение есть, начинаем сканирование -------------------------
         if (enable) {
             // Stops scanning after a pre-defined scan period.
             mHandler.postDelayed(new Runnable() {
@@ -287,6 +299,11 @@ mLeDeviceListAdapter.notifyDataSetInvalidated();
 
             mScanning = true;
             mBluetoothAdapter.startLeScan(mLeScanCallback);
+//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+//                mBluetoothAdapter.getBluetoothLeScanner().startScan(mLeScanCallback);
+//            }else {
+//                mBluetoothAdapter.startLeScan(mLeScanCallback);
+//            }
         } else {
             if(mScanning) {
                 mScanning = false;
@@ -422,6 +439,13 @@ mLeDeviceListAdapter.notifyDataSetInvalidated();
         }
     }
 
+//    // Device scan callback.
+//    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+//    private android.bluetooth.le.ScanCallback mleScanCallback =
+//            new android.bluetooth.le.ScanCallback() {
+//
+//            };
+
     // Device scan callback.
     private BluetoothAdapter.LeScanCallback mLeScanCallback =
             new BluetoothAdapter.LeScanCallback() {
@@ -442,12 +466,13 @@ mLeDeviceListAdapter.notifyDataSetInvalidated();
                         public void run() {
                             Log.w(TAG,"FIND device= " + device);
                             mLeDeviceListAdapter.addDevice(device);
- mLeDeviceListAdapter.notifyDataSetChanged();
- mLeDeviceListAdapter.notifyDataSetInvalidated();
+                            mLeDeviceListAdapter.notifyDataSetChanged();
+                            mLeDeviceListAdapter.notifyDataSetInvalidated();
                         }
                     });
                 }
             };
+
     //заснуть на млсек
     private  void sleep(long mls) {
         Log.d(TAG, " Sleep");
