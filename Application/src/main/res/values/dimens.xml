@@ -13,7 +13,8 @@
     <dimen name="iten_vertical_gap_wight">1dp</dimen>
     <dimen name="iten_text_size">18sp</dimen>
     <!--ширина рисунка градусника-->
-    <dimen name="frame_thermometer_wigth">64dp</dimen>
+    <dimen name="frame_thermometer_wigth">82dp</dimen>
+    <!--<dimen name="frame_thermometer_wigth">64dp</dimen>-->
 
     <dimen name="TextScaleDivisionThermometerSize">18sp</dimen>
     <!--размер переключателя на термеметре- сборос и отключение-!!! связан с вычислением размеров пеереключателя!!-->

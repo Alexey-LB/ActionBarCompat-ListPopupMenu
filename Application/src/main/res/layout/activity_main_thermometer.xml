@@ -178,8 +178,10 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="5"
-                        android:layout_margin="@dimen/ic_img_gap"
-                        android:background="@drawable/rectangle_line_corners_black_5dp">
+                        android:background="@drawable/rectangle_line_corners_black_5dp"
+                        android:layout_marginLeft="@dimen/ic_img_gap"
+                        android:layout_marginRight="@dimen/ic_img_gap"
+                        android:layout_marginTop="@dimen/ic_img_gap">
 
                         <LinearLayout
                             android:orientation="vertical"
@@ -408,11 +410,17 @@
                                 app:kswBackMeasureRatio="2"
                                 app:kswThumbWidth="45dp"
                                 app:kswThumbHeight="@dimen/switch_button_size"
+                                app:kswTextMarginH="0dp"
+                                app:kswAutoAdjustTextPosition="true"
+
                                 android:layout_weight="1"
-                                android:layout_marginRight="7dp"
+                                android:layout_marginRight="0dp"
                                 android:layout_gravity="top|left"
                                 android:paddingLeft="0dp"
-                                android:paddingRight="0dp" />
+                                android:paddingRight="0dp"
+                                android:paddingTop="0dp"
+                                android:layout_marginTop="2dp"
+                                android:elevation="1dp" />
                             <!--//размер по ШИРИНЕ переключателя можно определить примерно ТАК-->
                             <!--//Ratio(2f) * ThumbSize(45f,45f) + 20dp = 110dp, + layout_marginRight(3dp)== 113dp!!-->
                             <!--&lt;!&ndash;&lt;!&ndash;app:kswBackMeasureRatio="2"&ndash;&gt;&ndash;&gt;-->
@@ -441,11 +449,17 @@
                                 app:kswBackMeasureRatio="2"
                                 app:kswThumbWidth="@dimen/switch_button_size"
                                 app:kswThumbHeight="@dimen/switch_button_size"
+                                app:kswTextMarginH="0dp"
+                                app:kswAutoAdjustTextPosition="true"
+
                                 android:layout_weight="1"
-                                android:layout_marginRight="7dp"
+                                android:layout_marginRight="4dp"
                                 android:layout_gravity="top|right"
                                 android:paddingLeft="0dp"
-                                android:paddingRight="0dp" />
+                                android:paddingRight="0dp"
+                                android:elevation="1dp"
+                                android:paddingTop="0dp"
+                                android:layout_marginTop="2dp" />
                         </FrameLayout>
                     </LinearLayout>
 

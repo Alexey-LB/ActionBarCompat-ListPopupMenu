@@ -562,13 +562,13 @@ return null;//fbButton_;
      //ограничили добавление СЕНСОРОВ 3 штуками!!
      if(i >= 3) return false;
             mbleDot.add((Sensor) object);
-            //если сенсор не первый, ставим ему маркер следующий по цвету
-            if(i >= 1){
-                //берем предыдущий маркер прибавляем 1 - и брезаем (у нас 8 уровней цветов маркера)
-                mbleDot.get(i).markerColor = (mbleDot.get(i -1).markerColor + 1) & 0x7;
-            }
-adapter.notifyDataSetChanged();
- adapter.notifyDataSetInvalidated();
+// 2017.01.23-ПРЯМОЕ ТРЕБОВАНИЯ-> всегда белый, с него начинаем           //если сенсор не первый, ставим ему маркер следующий по цвету
+//            if(i >= 1){
+//                //берем предыдущий маркер прибавляем 1 - и брезаем (у нас 8 уровней цветов маркера)
+//                mbleDot.get(i).markerColor = (mbleDot.get(i -1).markerColor + 1) & 0x7;
+//            }
+ //adapter.notifyDataSetChanged();
+ //adapter.notifyDataSetInvalidated();
             // переходим в ОКНО настройки
            // goToSetting(adapter.getPosition(object));//один вариант
             //второй вариант, добавление в лист идет в конец, поэтому берем длинну лиcта -1

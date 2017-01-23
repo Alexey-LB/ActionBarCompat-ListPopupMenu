@@ -17,6 +17,7 @@
         </shape>
 		<!--android:color="#F0F0F0"/>-->
     </item>
+
 	<item android:state_checked="true">
 		<shape>
 			<solid android:color="#43d95d"/>
@@ -26,14 +27,15 @@
 	<item>
 		<!--<solid android:color="#FEFEFE"/>-->
 		<shape>
-			<!--эта заливка в выключенном сотоянии-->
+			<!--эта заливка в выключенном сотоянии ПЕРЕКЛЮЧАТЕЛЯ-->
 			<solid android:color="#f0f0f0"/>
 			<corners android:radius="99dp"/>
 			<!--обвод вокруг области в виде линии-->
 			<stroke
 				android:width="1.5dp"
-				android:color="#d0d0d0"/>
+				android:color="#C0C0C0"/>
 		</shape>
+		<!--android:color="#d0d0d0"/>-->
 		<!--android:color="#E6E6E6"/>-->
 	</item>
 </selector>

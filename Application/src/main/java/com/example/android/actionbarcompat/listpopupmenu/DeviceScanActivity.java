@@ -230,13 +230,13 @@ mLeDeviceListAdapter.notifyDataSetInvalidated();
                 //
                 RunDataHub app = ((RunDataHub) getApplicationContext());
                 if((app.mBluetoothLeServiceM != null) && (sensor.mBluetoothDeviceAddress != null)){
-                    // ПО умолчанию к имени уустройства дописываем 2 последние цифры адреса
-                    if(sensor.deviceLabel.compareTo(sensor.deviceLabelStringDefault) == 0){
-                        int i = sensor.mBluetoothDeviceAddress.length();
-                        //берем 2 символа последних из адреса устройства (16 адрес блутуз)
-                        sensor.deviceLabel = sensor.deviceLabelStringDefault + " "
-                                + sensor.mBluetoothDeviceAddress.substring(i-2);
-                    }
+////2017.01.23 ПРИНЯТО, название Термомето и Номер индекса по умолчанию ;                    // ПО умолчанию к имени уустройства дописываем 2 последние цифры адреса
+//                    if(sensor.deviceLabel.compareTo(sensor.deviceLabelStringDefault) == 0){
+//                        int i = sensor.mBluetoothDeviceAddress.length();
+//                        //берем 2 символа последних из адреса устройства (16 адрес блутуз)
+//                        sensor.deviceLabel = sensor.deviceLabelStringDefault + " "
+//                                + sensor.mBluetoothDeviceAddress.substring(i-2);
+//                    }
                     //это запуск напрямую, работает хреново
                    // app.mBluetoothLeServiceM.connect(sensor.mBluetoothDeviceAddress,true);
                     //запуск на коннект через очередь!

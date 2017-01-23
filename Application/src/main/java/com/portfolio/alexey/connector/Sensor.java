@@ -48,7 +48,6 @@ public class Sensor {
 //    public static final int STATE_FIND_DEVICE = 6;//advertising
 
     private static int indexDevace = 0;//для нумерации названий
-    public static final String deviceLabelStringDefault = "Monitor";//по умолчанию назначаем имя + номер
     public  RunDataHub app;
     private Context mContext;
     public float maxInputDeviceTemperature = 125f;// для универсального 70, промышленного +125
@@ -133,7 +132,8 @@ public class Sensor {
         minValue = Float.NaN;//минимальное значение текущей измеряемой температуры
         maxValue = Float.NaN;//максимальное значение текущей измеряемой температуры
         //сбрасываем счетчик времени сенсора
-        time = System.currentTimeMillis();
+//2017.01.23 ПРИНЯТО, сбро значений мин/мах, НО время идет,
+// чтоб продолжать рисовать график       time = System.currentTimeMillis();
     }
     //
     private boolean mHandlerWork = false;
@@ -191,7 +191,9 @@ public class Sensor {
     //
     private void initSensor (RunDataHub app_){
         app = app_;
-        deviceLabel = deviceLabelStringDefault;// + " " + indexDevace++;
+        //2017.01.23 ПРИНЯТО, название Термомето и Номер индекса по умолчанию ;
+        deviceLabel = app.getApplicationContext().getString(R.string.sThermometer);
+        deviceLabel = deviceLabel + " " + (app.mBluetoothLeServiceM.arraySensors.size()+1);
         markerColor = 0x7 & indexDevace;
         //----------
         minLevelNotification = new NotificationLevel(NotificationLevel.FLOAT_MIN,app.mainActivityWork);

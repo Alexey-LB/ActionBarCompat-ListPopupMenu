@@ -105,6 +105,8 @@ public class MainActivityThermometer  extends AppCompatActivity {// ActionBarAct
         //!!ВНИМАНИЕ размер кнопки-ЗАВИСИТ ОТ ДЛИННЫ ТЕКСТА!!!,
         // если тест длиннее указаний размера кнопки- равнение на длинну текста!
         mSwitchOffSensor.setText("",getString(R.string.sDiscon));//
+       // mSwitchOffSensor.setTextAlignment(View.TEXT_ALIGNMENT_VIEW_START);//
+   //     mSwitchOffSensor.setTextSize(14f);//
       //  mSwitchOffSensor.setMinWidth(200);
         //размер по ШИРИНЕ переключателя можно определить примерно ТАК
         //Ratio(2f) * ThumbSize(45f,45f) + 20dp = 110dp, + layout_marginRight(3dp)== 113dp!!
@@ -127,6 +129,8 @@ public class MainActivityThermometer  extends AppCompatActivity {// ActionBarAct
         //!!ВНИМАНИЕ размер кнопки-ЗАВИСИТ ОТ ДЛИННЫ ТЕКСТА!!!,
         // если тест длиннее указаний размера кнопки- равнение на длинну текста!
         mSwitchResetMeasurement.setText("",getString(R.string.sReset));//
+     //   mSwitchResetMeasurement.setTextAlignment(View.TEXT_ALIGNMENT_VIEW_START);//
+ //       mSwitchResetMeasurement.setTextSize(14f);//
         /////       sw.setThumbSize(50f,50f);//размер круга- большлго пальца
         //ловит касания и перемещение ЗДЕСЬ обработка сдвига переключателя
         // и фиксация во включенром сотоянии, в обновлении мы возвращяем его назад и
@@ -275,7 +279,7 @@ public class MainActivityThermometer  extends AppCompatActivity {// ActionBarAct
         width  = width/2;
         //дополнительный значения внутри переключателя, компенсируем
         //делим на размер кнопки (радиуса)// по ЭТОМУ РАСЧЕТ В ПИКСЕЛАЙ!!
-        width = (width - 20 * density) / getResources().getDimension(R.dimen.switch_button_size);
+        width = (width - 10 * density) / getResources().getDimension(R.dimen.switch_button_size);
 
         if (width > 7) width = 7;//ограничим длинну переключателя максимом
         //!!ВНИМАНИЕ размер кнопки-ЗАВИСИТ ОТ ДЛИННЫ ТЕКСТА!!!,
