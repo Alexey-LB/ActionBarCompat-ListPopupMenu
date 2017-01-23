@@ -132,7 +132,6 @@
                         android:textStyle="normal|bold" />
 
                     <TextView
-                        android:text="v 1.0.0                    2017"
                         android:layout_width="wrap_content"
                         android:id="@+id/textView17"
                         android:layout_weight="0"
@@ -143,7 +142,8 @@
                         android:fontFamily="sans-serif"
                         android:lineSpacingExtra="8sp"
                         android:layout_height="11dp"
-                        android:textStyle="normal|bold" />
+                        android:textStyle="normal|bold"
+                        android:text="v 1.0.0           2017" />
 
                 </LinearLayout>
 

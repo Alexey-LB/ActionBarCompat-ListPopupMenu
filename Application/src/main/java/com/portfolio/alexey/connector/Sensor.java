@@ -149,6 +149,12 @@ public class Sensor {
         Util.playerRingtoneStop();
        // Log.e(TAG," app= " + app +"  app.mainActivityWork=" +app.mainActivityWork);
     }
+    //сработала ли хоть одна сигнализация?
+    public boolean isNotificationVibrationLevelMinMax(){
+        return minLevelNotification.isNotification()
+            || maxLevelNotification.isNotification()
+            || endMeasurementNotification.isNotification();
+    }
     private void controlLevelMinMax(){
         minLevelNotification.calck(intermediateValue);
         maxLevelNotification.calck(intermediateValue);

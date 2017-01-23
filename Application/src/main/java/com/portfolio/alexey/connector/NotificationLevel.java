@@ -38,6 +38,10 @@ public class NotificationLevel {
     //показывает текущее состояние
     public boolean  onLevel = false;// входное значение равно срабатыванию ПОРОГА
     //
+    public boolean isNotification(){
+        return onNotification && !resetNotification;
+    }
+    //
     public NotificationLevel(int typelevel,Activity activity){
         typeLevel = typelevel;
     }

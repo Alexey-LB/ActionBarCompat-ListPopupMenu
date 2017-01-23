@@ -164,6 +164,16 @@ public class MainActivityThermometer  extends AppCompatActivity {// ActionBarAct
                  }
              }
         );
+        //нажати  СБРОС СИГНАЛИЗАЦИИ!! ИЛИ переход в темометр
+        findViewById(R.id.numbe_cur).setOnClickListener(
+                new View.OnClickListener(){
+                    @Override
+                    public void onClick(View v) {
+                        //СБРОС СИГНАЛИЗАЦИИ!!
+                        sensor.resetNotificationVibrationLevelMinMax();
+                    }
+                }
+        );
         numbe_cur_fon = (Drawable)findViewById(R.id.numbe_cur).getBackground();
 
         Log.v(TAG, "----" + mSwitchOffSensor.getWidth()

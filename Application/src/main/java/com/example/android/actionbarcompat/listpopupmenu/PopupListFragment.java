@@ -806,10 +806,15 @@ adapter.notifyDataSetChanged();
                             if(obj instanceof  Sensor){
                                 title += ((Sensor) obj).deviceLabel;
                             }
-
-                            intent.putExtra(Util.EXTRAS_BAR_TITLE, title);
-                           // startActivityForResult(intent,MainActivityWork.MAINACTIVITY);//
-                            startActivity(intent);//
+                            //устанавливаем  сброса аларма, а кода АЛАРМ сброшен
+                            // функция перехода на другое окно начинает работать
+                            if(((Sensor) obj).isNotificationVibrationLevelMinMax()) {
+                                ((Sensor) obj).resetNotificationVibrationLevelMinMax();
+                            } else{
+                                intent.putExtra(Util.EXTRAS_BAR_TITLE, title);
+                                // startActivityForResult(intent,MainActivityWork.MAINACTIVITY);//
+                                startActivity(intent);//
+                            }
                             //----------------
 //      //-------Setting --
 //      final Intent intent = new Intent(getActivity(), MainSettingSetting.class);
@@ -1087,6 +1092,24 @@ adapter.notifyDataSetChanged();
                         }
                     });
                 }
+//                //ищем текущее значение, и на него цепляем KЛИК для сброса АЛАРМА
+//                fon = view.findViewById(R.id.numbe_cur);
+//                fon.setTag(sensor);
+//                if(fon != null)  {
+//                    fon.setOnClickListener(new OnClickListener() {
+//                        @Override
+//                        public void onClick(View v) {
+//                            if((v.getTag() != null) || (v.getTag() instanceof Sensor)){
+//                                if(((Sensor)v.getTag()).isNotificationVibrationLevelMinMax()){
+//                                    ((Sensor)v.getTag()).resetNotificationVibrationLevelMinMax();
+//                                } else{
+//
+//                                }
+//                            }
+//                        }
+//                    });
+//                }
+
             }
 //          getActivity().runOnUiThread(new Runnable() { @Override  public void run() {;}});
             return view;
