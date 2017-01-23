@@ -61,12 +61,11 @@
                             android:layout_weight="6" />
 
                         <ImageView
-                            android:layout_width="wrap_content"
+                            android:layout_width="@dimen/thermometer_column_wigth"
                             android:layout_height="match_parent"
                             app:srcCompat="@drawable/rectangle_line_corners_black_5dp"
                             android:id="@+id/thermometer_column"
-                            android:layout_weight="2.5"
-                            android:visibility="visible" />
+                            android:layout_weight="0" />
 
                         <Space
                             android:layout_width="wrap_content"

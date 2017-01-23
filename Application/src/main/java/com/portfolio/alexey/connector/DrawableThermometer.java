@@ -32,9 +32,8 @@ public class DrawableThermometer extends Drawable {
 
     private final int offsetGapFinal = 5;//  5 dpi //через сколько дпи по У рисуем линии
     private int offsetGap = offsetGapFinal;//  5 dpi //через сколько дпи по У рисуем линии
-
-    private  final int columnWithFinal = 10;//  10 dpi - ширина столбика термометра
-    private  int columnWith = columnWithFinal;//  10 dpi - ширина столбика термометра
+    private final int columnWithFinal = 14;
+    private  int columnWith = columnWithFinal;//  14 dpi - ширина столбика термометра
 
     private final float textSizeFinal = 18f;//размер текста надписи в градусах
     private float textSize = textSizeFinal;
@@ -74,7 +73,11 @@ public class DrawableThermometer extends Drawable {
 
     //private Canvas canvasFon;// = new Canvas();
     private final Activity mActivity;
-    public DrawableThermometer(Activity activity){super(); mActivity = activity ;}
+    public DrawableThermometer(Activity activity){
+        super();
+        mActivity = activity ;//  14 dpi - ширина столбика термометра
+    //    columnWith = (int)mActivity.getResources().getDimension(R.dimen.thermometer_column_wigth);//  14 dpi - ширина столбика термометра
+    }
     //--
     private float  roundingFloat(float f, float round){
         int i = Math.round(f/round);
@@ -171,7 +174,7 @@ public class DrawableThermometer extends Drawable {
         density = density_;
         if(density != 0) {
             offsetGap = Math.round(offsetGapFinal * density);  ///5 dpi //через сколько дпи по У рисуем линии
-            columnWith = Math.round(columnWithFinal * density);//  10 dpi - ширина столбика термометра
+            columnWith = Math.round(columnWithFinal * density);//  14 dpi - ширина столбика термометра
             offsetX = Math.round(offsetXFinal * density);// смещение от края по Х в др
             textSize = (textSizeFinal * density);//размер текста надписи в градусах
         }
@@ -317,8 +320,8 @@ public class DrawableThermometer extends Drawable {
                 path = new Path();
             }else{
                 path = null;
-                if((i % 5) == 0)x = offsetX *2 + offsetX / 2;
-                else x = offsetX *4;
+                if((i % 5) == 0)x = offsetX *3 + offsetX / 2;
+                else x = offsetX *5 + offsetX / 2 ;
 
             }
             endX = width - x;
@@ -362,18 +365,18 @@ public class DrawableThermometer extends Drawable {
         drawRect(startX,0 ,endX,levelY,mPath);
         drawCanvas(canvas, res.getColor(R.color.colorColumnThermometer), mPath,   Paint.Style.FILL);//Paint.Style.STROKE
 
-        startX = (width - columnWith + Math.round((6 * density))) /2;
-        endX = startX + columnWith -Math.round((6 * density));
-        drawRect(startX,0 ,endX,levelY,mPath);
-        drawCanvas(canvas, 0x80ffffff, mPath,   Paint.Style.FILL);//Paint.Style.STROKE
-         //
         startX = (width - columnWith + Math.round((8 * density))) /2;
         endX = startX + columnWith -Math.round((8 * density));
         drawRect(startX,0 ,endX,levelY,mPath);
+        drawCanvas(canvas, 0x80ffffff, mPath,   Paint.Style.FILL);//Paint.Style.STROKE
+         //
+        startX = (width - columnWith + Math.round((12 * density))) /2;
+        endX = startX + columnWith -Math.round((12 * density));
+        drawRect(startX,0 ,endX,levelY,mPath);
         drawCanvas(canvas, 0xC0FFFFFF, mPath ,   Paint.Style.FILL);//Paint.Style.STROKE
 
-        startX = (width - columnWith + Math.round((9 * density))) /2;
-        endX = startX + columnWith -Math.round((9 * density));
+        startX = (width - columnWith + Math.round((14 * density))) /2;
+        endX = startX + columnWith -Math.round((14 * density));
         drawRect(startX,0 ,endX,levelY,mPath);
         drawCanvas(canvas, 0xFFffffff, mPath,   Paint.Style.FILL);//Paint.Style.STROKE
     }
