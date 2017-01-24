@@ -329,8 +329,12 @@ public class BluetoothLeServiceNew extends Service {
 //readRssiBatteryLevel();
 //!!??   sensor.readRSSIandBatteryLevel();
             sensor.onCharacteristicRead();
-
-
+            //если текшая команда нотификации, пытаемся сбросить и от сюда,
+            // иногда ОБРАТНЫЙ ВЫЗОВ ЗАПИСИ ДЕСКРИПТОРА не срабатывает, по этому дублируем!
+            if((mTxQueueItem != null) &&(mTxQueueItem.type == TxQueueItemType.WriteDescriptor)){
+                if(debug) Log.v(TAG,"---------onCharacteristicChanged --, RESET WriteDescriptor ---");
+                filtrInTxQueue(sensor,TxQueueItemType.WriteDescriptor, characteristic.getUuid(), BluetoothGatt.GATT_SUCCESS);
+            }
             //ЗАПРАШИВАТЬ (или записыват) ЗА 1 РАЗ можно только 1 характеристику
             // или свойства - иначе НЕ отвечает
             //
@@ -517,7 +521,7 @@ public class BluetoothLeServiceNew extends Service {
     //    if(debug)Log.v(TAG," --- queueSetDiscover --- START, " + txQueueItem.toString());
         addToTxQueue(txQueueItem);
         //на всякий случай делаем паузу после дисковери, он один раз только выполняется
-        queueSetTimer(sens,500);
+        queueSetTimer(sens,1000);
     }
     // ЧТЕНИЕ уровня сгнала СЕНСОРА, время ожидания не более 2 сек
     // установили Тайм аут
@@ -546,7 +550,7 @@ public class BluetoothLeServiceNew extends Service {
         //после нотификации, даем паузу, а то на некторых устройствах
         // ПИШЕТ С ОШИБКОЙ дескрипотр и переходит дисконнект И ТАК ЦИКЛИТ НЕСКОЛЬКО РАЗ
         //  при тестировании хватило 100мкс, на всякий случай поставим 500мкс
-        queueSetTimer(sens,500);
+        queueSetTimer(sens,1000);
     }
 
     /* queues enables/disables notification for characteristic */
