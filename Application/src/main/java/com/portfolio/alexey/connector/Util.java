@@ -22,6 +22,7 @@ import android.support.v4.content.ContextCompat;
 //import android.support.v4.content.ContextCompatApi23;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -636,5 +637,15 @@ public class Util {
           }
         return false;
     }
-
+    public static   void setFullscreen(Activity activity){
+        // Вариант работает ХРЕНОВО: // mLayoutMain.getRootView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
+        // ниже работает отлично! один раз объевил, работает пока окно не умрет!
+        //http://developer.alexanderklimov.ru/android/tips-android.php
+        //Убираем заголовок (перед вызовом setContentView):
+        //убирает бар в старой версии requestWindowFeature(Window.FEATURE_NO_TITLE);// можно еще <item name="android:windowNoTitle">true</item>
+        // Убираем панель уведомлений
+        //getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        activity.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        //  А после -> setContentView(R.layout.main);
+    }
 }

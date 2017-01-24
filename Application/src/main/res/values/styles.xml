@@ -47,7 +47,7 @@
         <!--<item name="android:textColor">@color/colorTextlight</item>-->
         <!--&lt;!&ndash;<item name="android:textAllCaps">false</item>&ndash;&gt;-->
         <!--&lt;!&ndash; <item name="android:ellipsize">none</item> &ndash;&gt;-->
-        <!--<item name="android:maxLines">1</item>-->
+        <!--<item name="android:maxLines">1</item>.Fullscreen-->
     <!--</style>-->
 
     <style name="AppThemeN" parent="@style/Theme.AppCompat.Light">
@@ -65,7 +65,6 @@
         <!--<item name="divider">@drawable/action_bar_divider</item>-->
 <!-- чтоб на 6 версии исчезли деления в ПОПЛИСТ, зрительно- там была токая линия, хотя я установил 0-->
         <item name="android:listDivider">@color/colorBackground</item>
-
 
         <item name="actionBarSize">@dimen/actionBarSize</item>
         <item name="android:actionBarSize">@dimen/actionBarSize</item>

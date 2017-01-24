@@ -15,6 +15,8 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 
 //import android.widget.Switch;
 import com.kyleduo.switchbutton.SwitchButton;
@@ -39,6 +41,7 @@ public class MainSettingSetting  extends Activity implements View.OnClickListene
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Util.setFullscreen(this);// работает отлично! один раз объевил, работает пока окно не умрет!
         setContentView(R.layout.activity_main_setting);
         //--------------------------
         final Intent intent = getIntent();
@@ -139,7 +142,7 @@ findViewById(R.id.LinearLayoutMeasurementMode).setVisibility(View.GONE);
     protected void onResume() {
         super.onResume();
         // установка ИЗОБРАЖЕНИЕ на всь экран, УБИРАЕМ СВЕРХУ И СНИЗУ панели системные
-        findViewById(R.id.textViewName).getRootView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
+ //??       findViewById(R.id.textViewName).getRootView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
     }
 
     @Override//сюда прилетают ответы при возвращении из других ОКОН активити

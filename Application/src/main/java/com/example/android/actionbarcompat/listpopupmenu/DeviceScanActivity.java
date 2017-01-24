@@ -43,6 +43,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -77,9 +78,10 @@ public class DeviceScanActivity extends ListActivity {//AppCompatActivity {//Act
     @Override// Set up the {@link android.app.ActionBar}, if the API is available.
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Util.setFullscreen(this);// работает отлично! один раз объевил, работает пока окно не умрет!
         Log.e(TAG,"START onCreate--");
         //урали вверху системный бар
-        if(getListView() != null ) getListView().getRootView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
+//??        if(getListView() != null ) getListView().getRootView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
         //--------------------------
         final Intent intent = getIntent();
         mItem = intent.getIntExtra(MainActivityWork.EXTRAS_DEVICE_ITEM,0);

@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.CompoundButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -55,6 +56,7 @@ public class MainActivityThermometer  extends AppCompatActivity {// ActionBarAct
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Util.setFullscreen(this);// работает отлично! один раз объевил, работает пока окно не умрет!
         setContentView(R.layout.activity_main_thermometer);
         //-------------------------------------------------------
         final Intent intent = getIntent();
@@ -77,7 +79,7 @@ public class MainActivityThermometer  extends AppCompatActivity {// ActionBarAct
         Util.setSupportV7appActionBar(getSupportActionBar(),TAG,"");
         //убираем системный бар
         thermometer = findViewById(R.id.LayoutMainThermometer);
-        thermometer.getRootView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
+//??        thermometer.getRootView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
         thermometer.findViewById(R.id.reset_min_max).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -441,7 +443,7 @@ public class MainActivityThermometer  extends AppCompatActivity {// ActionBarAct
     public  void onResume() {
         super.onResume();
         //при возвращениие из других окон, может быть системный бар, по этому еще раз его отменяем
-        thermometer.getRootView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
+//??        thermometer.getRootView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
         //делаем Здесь обновление термометра, чтоб при выходе из настроек сенсора, изменения были учтены
         mThermometerDrawable.setSettingThermometer(getResources().getDisplayMetrics().density
                 ,sensor.minLevelNotification.valueLevel

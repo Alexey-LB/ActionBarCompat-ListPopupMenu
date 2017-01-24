@@ -90,28 +90,32 @@ http://www.fandroid.info/nastrojka-paneli-dejstvij-actionbar/
         </activity>
         <activity android:name=".MainActivityWork" android:theme="@style/AppThemeN">
             <!-- Launcher Intent filter -->
-            <intent-filter>
-                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            <!--<intent-filter>-->
+                 <!--<category android:name="android.intent.category.LAUNCHER" />-->
+            <!--</intent-filter>-->
         </activity>
 
         <!--android:theme="@android:style/Theme.Holo.Light"-->
         <activity android:name=".DeviceScanActivity"
             android:theme="@style/AppThemeM">
-            <intent-filter>
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            <!--<intent-filter>-->
+                <!--<category android:name="android.intent.category.LAUNCHER" />-->
+            <!--</intent-filter>-->
         </activity>
 
         <activity android:name=".MainSettingSetting" android:theme="@style/AppThemeM"/>
         <!--android:windowSoftInputMode="stateAlwaysVisible" -  задал клавиатуру видимой всегда в этой активности-->
 
-        <activity android:name=".SettingInput" android:theme="@style/AppThemeM">
+        <activity
+            android:name=".SettingInput"
+            android:theme="@style/AppThemeM"
             android:windowSoftInputMode="stateAlwaysVisible"
-            <intent-filter>
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            >
+            <!--<intent-filter>-->
+                <!--<category android:name="android.intent.category.LAUNCHER" />-->
+            <!--</intent-filter>-->
         </activity>
+
         <activity android:name=".MainActivityThermometer"
             android:configChanges="orientation|screenSize" android:theme="@style/AppThemeN"/>
 

@@ -8,6 +8,7 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 //import android.widget.Switch;
 
 import com.portfolio.alexey.connector.Sensor;
@@ -33,6 +34,7 @@ public class SettingFon extends Activity implements View.OnClickListener{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Util.setFullscreen(this);// работает отлично! один раз объевил, работает пока окно не умрет!
         setContentView(R.layout.activity_setting_fon);
         //--------------------------
         final Intent intent = getIntent();
@@ -77,7 +79,7 @@ public class SettingFon extends Activity implements View.OnClickListener{
             }
         },500);
         // установка ИЗОБРАЖЕНИЕ на всь экран, УБИРАЕМ СВЕРХУ И СНИЗУ панели системные
-        findViewById(R.id.activity_main_min_max).getRootView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
+ //??       findViewById(R.id.activity_main_min_max).getRootView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
 
     }
 

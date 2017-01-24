@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 
 
 import com.portfolio.alexey.connector.Sensor;
@@ -24,6 +25,7 @@ public class SettingMaker extends Activity implements View.OnClickListener{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Util.setFullscreen(this);// работает отлично! один раз объевил, работает пока окно не умрет!
         setContentView(R.layout.activity_setting_maker);
         //--------------------------
         final Intent intent = getIntent();
@@ -81,7 +83,7 @@ public class SettingMaker extends Activity implements View.OnClickListener{
             }
         },500);
         // установка ИЗОБРАЖЕНИЕ на всь экран, УБИРАЕМ СВЕРХУ И СНИЗУ панели системные
-        findViewById(R.id.textViewFindName).getRootView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
+ //??       findViewById(R.id.textViewFindName).getRootView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
 
     }
     private  String mName;
