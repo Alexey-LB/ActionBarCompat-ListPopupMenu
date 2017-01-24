@@ -113,7 +113,7 @@ public class SettingMinMax extends Activity implements View.OnClickListener{
          if((resultCode == RESULT_OK) && (sensor != null)){
              switch (requestCode){
                  case ACTIVITY_SETTING_MIN_MAX_VALUE:
-                     str = data.getStringExtra(SettingName.EXTRAS_VALUE);
+                     str = data.getStringExtra(SettingInput.EXTRAS_VALUE);
                      value = Util.parseFloat(str);
                      if(value == null) break;
                      ////с учетом ЦЕЛСИЯ или фаренгейта
@@ -184,15 +184,15 @@ Util.playerRingtoneStop();
                 if(maxValue) value = sensor.maxLevelNotification.valueLevel;
                 else value = sensor.minLevelNotification.valueLevel;
                 //----НАСТРОЙКА И ЗАПУСК окна ввода ЧИСЛА -----------
-                intent = new Intent(this, SettingName.class);
+                intent = new Intent(this, SettingInput.class);
                 //с учетом ЦЕЛСИЯ или фаренгейта
-                intent.putExtra(SettingName.EXTRAS_VALUE, sensor.getStringValue( value, false));
-                intent.putExtra(SettingName.EXTRAS_TYPE, SettingName.VALUE_TYPE_FLOAT);
+                intent.putExtra(SettingInput.EXTRAS_VALUE, sensor.getStringValue( value, false));
+                intent.putExtra(SettingInput.EXTRAS_TYPE, SettingInput.VALUE_TYPE_FLOAT);
                 intent.putExtra(Util.EXTRAS_LABEL, getString(R.string.sLevel));
-                intent.putExtra(SettingName.EXTRAS_HINT,getString(R.string.sEnterTheNumber));
+                intent.putExtra(SettingInput.EXTRAS_HINT,getString(R.string.sEnterTheNumber));
                 //с учетом ЦЕЛСИЯ или фаренгейта
-                intent.putExtra(SettingName.EXTRAS_FLOAT_MAX,sensor.getStringValue( max, false));
-                intent.putExtra(SettingName.EXTRAS_FLOAT_MIN,sensor.getStringValue( min, false));
+                intent.putExtra(SettingInput.EXTRAS_FLOAT_MAX,sensor.getStringValue( max, false));
+                intent.putExtra(SettingInput.EXTRAS_FLOAT_MIN,sensor.getStringValue( min, false));
                 intent.putExtra(Util.EXTRAS_BAR_TITLE, title);
 
                 startActivityForResult(intent,ACTIVITY_SETTING_MIN_MAX_VALUE);

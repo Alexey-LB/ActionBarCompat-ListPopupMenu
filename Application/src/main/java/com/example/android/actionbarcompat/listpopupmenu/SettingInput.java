@@ -1,16 +1,15 @@
 package com.example.android.actionbarcompat.listpopupmenu;
 
-import android.app.ActionBar;
 //import android.support.v7.app.AppCompatActivity;
 //import android.support.v7.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
-import android.renderscript.ScriptGroup;
-import android.text.InputType;
+        import android.text.InputType;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
@@ -21,8 +20,8 @@ import android.widget.TextView;
 import com.portfolio.alexey.connector.Util;
 
 
-//public class SettingName extends AppCompatActivity {//} implements View.OnKeyListener{
-public class SettingName extends Activity {//} implements View.OnKeyListener{
+//public class SettingInput extends AppCompatActivity {//} implements View.OnKeyListener{
+public class SettingInput extends Activity {//} implements View.OnKeyListener{
     final String TAG = getClass().getSimpleName();
     public  final static int VALUE_TYPE_INT = 10;
     public  final static int VALUE_TYPE_FLOAT = 20;
@@ -50,7 +49,7 @@ public class SettingName extends Activity {//} implements View.OnKeyListener{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.setting_name);
+        setContentView(R.layout.setting_input);
         String extras; Float fl;
         final Intent intent = getIntent();
 
@@ -68,11 +67,15 @@ public class SettingName extends Activity {//} implements View.OnKeyListener{
 
         Util.setTextToTextView(intent.getStringExtra(EXTRAS_VALUE)
                 ,R.id.editTextName,this,"");
-
-        //определяем че читаем и настраиваем ввод значения
+         //определяем че читаем и настраиваем ввод значения
         // СТРОКА или ЧИСЛО!! по умолчанию строка
         type = intent.getIntExtra(EXTRAS_TYPE,VALUE_TYPE_STRING);
-
+//-----------
+ //2017.01.24- пока принимаем ВСЕГДА показывать клавиатуру
+ getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+// установка ИЗОБРАЖЕНИЕ на всь экран, УБИРАЕМ СВЕРХУ И СНИЗУ панели системные
+tv.getRootView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
+        //---------
         switch(type){
             case VALUE_TYPE_INT:
                 tv.setInputType(InputType.TYPE_CLASS_NUMBER
@@ -80,9 +83,10 @@ public class SettingName extends Activity {//} implements View.OnKeyListener{
                 sb.setVisibility(View.VISIBLE);
                 fl = Util.parseFloat(intent.getStringExtra(EXTRAS_VALUE));
                 setSettingSeekBar(fl);
-                /// всегда скрыват клавиатуру при вводе числа (есть сикБАР)!!
-                getWindow().setSoftInputMode(
-                        WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+  //2017.01.24- пока принимаем ВСЕГДА показывать клавиатуру
+ //               /// всегда скрыват клавиатуру при вводе числа (есть сикБАР)!!
+ //               getWindow().setSoftInputMode(
+  //                      WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
                 break;
             case VALUE_TYPE_FLOAT :
                 tv.setInputType(InputType.TYPE_CLASS_NUMBER
@@ -94,15 +98,17 @@ public class SettingName extends Activity {//} implements View.OnKeyListener{
                 min = Util.parseFloat(intent.getStringExtra(EXTRAS_FLOAT_MIN));
                 setSettingSeekBar(fl);
                 /// всегда скрыват клавиатуру при вводе числа (есть сикБАР)!!
-                getWindow().setSoftInputMode(
-                        WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+   //2017.01.24- пока принимаем ВСЕГДА показывать клавиатуру
+  //              getWindow().setSoftInputMode(
+  //                      WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
                 break;
             case VALUE_TYPE_STRING:
                 sb.setVisibility(View.GONE);
                // tv.setShowSoftInputOnFocus(true);
                 /// всегда показывать клавиатуру при вводе имени!!
-                getWindow().setSoftInputMode(
-                        WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+  //2017.01.24- пока принимаем ВСЕГДА показывать клавиатуру
+ //               getWindow().setSoftInputMode(
+ //                       WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
 
                 break;
             default:
@@ -113,7 +119,7 @@ public class SettingName extends Activity {//} implements View.OnKeyListener{
             public boolean onKey(View view, int i, KeyEvent keyEvent) {
 
                 if(i == KeyEvent.KEYCODE_ENTER){//выходим с результатом
-                    onFinish(view);
+                    onFinish(view, RESULT_OK);
                 }else{
                     //при изменении числа- меняем Положение движка
                     if(view instanceof TextView){
@@ -141,9 +147,9 @@ public class SettingName extends Activity {//} implements View.OnKeyListener{
         Log.w(TAG, "min= " + min+"   max= " + max + "  offset"+offset + "   sb.getMax()= "+ sb.getMax());
     }
 
-    private void onFinish(View view){
+    private void onFinish(View view,int result){
         Intent intent = new Intent();
-        if(view instanceof EditText){
+        if((result == RESULT_OK) && (view instanceof EditText)){
             String str = ((EditText)view).getText().toString();
             if((str != null) && (str.length() >= 1)){
                 if(str.length() > 32) str = str.substring(0,31);
@@ -179,16 +185,26 @@ public class SettingName extends Activity {//} implements View.OnKeyListener{
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         Log.w(TAG,"onOptionsItemSelected= "+ item);
-
-        onFinish(tv);
+        //если отказались от изменений, возвращяем все назад
+        if(item.getItemId() != DONE){
+            onFinish(tv, RESULT_CANCELED);
+        } else onFinish(tv, RESULT_OK);
         return true;
+    }
+    private final int DONE = 754849;
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        menu.add(Menu.NONE,DONE,Menu.NONE,getResources().getString(R.string.sAccept))
+              //  .setIcon(R.drawable.ic_clear_black_24dp)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        return super.onCreateOptionsMenu(menu);
     }
     @Override
     protected void onResume() {
        // ActionBar actionBar = getActionBar();//getSupportActionBar();??--это решалось в другом методе(getDelegate().getSupportActionBar();)
         super.onResume();
         // установка ИЗОБРАЖЕНИЕ на всь экран, УБИРАЕМ СВЕРХУ И СНИЗУ панели системные
-        findViewById(R.id.editTextName).getRootView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
+        tv.getRootView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
 
     }
 //    @Override

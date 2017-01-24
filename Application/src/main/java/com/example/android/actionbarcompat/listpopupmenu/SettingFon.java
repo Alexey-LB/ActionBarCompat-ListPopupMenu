@@ -2,7 +2,6 @@ package com.example.android.actionbarcompat.listpopupmenu;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -11,7 +10,6 @@ import android.view.MenuItem;
 import android.view.View;
 //import android.widget.Switch;
 
-import com.portfolio.alexey.connector.InputBox;
 import com.portfolio.alexey.connector.Sensor;
 import com.portfolio.alexey.connector.Util;
 
@@ -89,7 +87,7 @@ public class SettingFon extends Activity implements View.OnClickListener{
          if((resultCode == RESULT_OK) && (sensor != null)){
              switch (requestCode){
                  case ACTIVITY_SETTING_COLOR:
-                     str = data.getStringExtra(SettingName.EXTRAS_VALUE);
+                     str = data.getStringExtra(SettingInput.EXTRAS_VALUE);
                       break;
                  case  ACTIVITY_SETTING_IMG:
 
@@ -138,11 +136,11 @@ public class SettingFon extends Activity implements View.OnClickListener{
                  float value = 0;
 
 //                //----НАСТРОЙКА И ЗАПУСК окна ввода ЧИСЛА -----------
-//                intent = new Intent(this, SettingName.class);
-//                intent.putExtra(SettingName.EXTRAS_VALUE, String.format(" %2.1f",value));
-//                intent.putExtra(SettingName.EXTRAS_TYPE, SettingName.VALUE_TYPE_FLOAT);
+//                intent = new Intent(this, SettingInput.class);
+//                intent.putExtra(SettingInput.EXTRAS_VALUE, String.format(" %2.1f",value));
+//                intent.putExtra(SettingInput.EXTRAS_TYPE, SettingInput.VALUE_TYPE_FLOAT);
 //                intent.putExtra(Util.EXTRAS_LABEL, "Уровень");
-//                intent.putExtra(SettingName.EXTRAS_HINT,"Введите число");
+//                intent.putExtra(SettingInput.EXTRAS_HINT,"Введите число");
 //
 //                intent.putExtra(Util.EXTRAS_BAR_TITLE, "   BA2");
 //

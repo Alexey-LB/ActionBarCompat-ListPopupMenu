@@ -1,16 +1,11 @@
 package com.example.android.actionbarcompat.listpopupmenu;
 
-import android.app.ActionBar;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.media.AudioManager;
-import android.media.MediaPlayer;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Vibrator;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
@@ -20,9 +15,6 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
 
 //import android.widget.Switch;
 import com.kyleduo.switchbutton.SwitchButton;
@@ -155,8 +147,8 @@ findViewById(R.id.LinearLayoutMeasurementMode).setVisibility(View.GONE);
         if(resultCode == RESULT_OK) {
             switch(requestCode){
                 case ACTIVITY_SETTING_EDIT:
-                    name = data.getStringExtra(SettingName.EXTRAS_VALUE);
-                    str = SettingName.EXTRAS_VALUE + name;
+                    name = data.getStringExtra(SettingInput.EXTRAS_VALUE);
+                    str = SettingInput.EXTRAS_VALUE + name;
                     if(name.length() > 64) name = name.substring(0,63);
                     if((sensor != null) && (name != null))sensor.deviceLabel = name;
                     //
@@ -217,11 +209,11 @@ findViewById(R.id.LinearLayoutMeasurementMode).setVisibility(View.GONE);
             case R.id.imageButtonName:
                 Log.v(TAG,"imageButtonName");
                 if(sensor.deviceLabel != null) str = sensor.deviceLabel;
-                intent = new Intent(this, SettingName.class);
-                intent.putExtra(SettingName.EXTRAS_VALUE, str);
-                intent.putExtra(SettingName.EXTRAS_TYPE, SettingName.VALUE_TYPE_STRING);
+                intent = new Intent(this, SettingInput.class);
+                intent.putExtra(SettingInput.EXTRAS_VALUE, str);
+                intent.putExtra(SettingInput.EXTRAS_TYPE, SettingInput.VALUE_TYPE_STRING);
                 intent.putExtra(Util.EXTRAS_LABEL, getString(R.string.sName));
-                intent.putExtra(SettingName.EXTRAS_HINT,getString(R.string.sEnterName));
+                intent.putExtra(SettingInput.EXTRAS_HINT,getString(R.string.sEnterName));
                 intent.putExtra(Util.EXTRAS_BAR_TITLE, "   " + getString(R.string.sName));
 
                 startActivityForResult(intent,ACTIVITY_SETTING_EDIT);

@@ -86,12 +86,24 @@
     <!--<style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">-->
     <!--<item name="android:windowFullscreen">false</item>-->
 
+    <!--<style name="MyActionBarMenu"-->
+        <!--parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Title">-->
+        <!--<item name="android:textColor">@color/color_blue_light</item>-->
+        <!--<item name="android:textStyle">bold</item>-->
+        <!--<item name="android:textSize">18dip</item>-->
+    <!--</style>-->
 
     <style name="AppThemeM" parent="@android:style/Theme.Holo.Light">
         <!-- Customize your theme here. -->
         <item name="android:windowActionBar">true</item>
         <item name="android:actionBarSize">@dimen/actionBarSize</item>
         <item name="actionBarSize">@dimen/actionBarSize</item>
+
+        <!--<item name="android:actionBarStyle">@style/MyActionBarMenu</item>-->
+
+        <item name="android:actionMenuTextColor">@color/color_blue_light</item>
+        <item name="android:textSize">18dip</item>
+        <!--<item name="android:textStyle">bold</item>-->
 
         <!--<item name="android:panelColorForeground">#ffffff</item>-->
         <!--<item name="android:panelColorBackground">#ffffff</item>-->
