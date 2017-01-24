@@ -211,25 +211,10 @@ mLeDeviceListAdapter.notifyDataSetInvalidated();
         }
         ///-- теперь подключаем ЗДЕСЬ!!..
         if(sensor != null){
-                // TODO: 19.12.2016 может реализовать запрос на поиск через очередь?
-                // со старым устройством //если был коннект- отключаем нафиг
-                if((sensor.mBluetoothDeviceAddress == null)
-                        || (sensor.mBluetoothDeviceAddress.length() < 15)){//длинна адреса 17
-                    if(sensor.mBluetoothGatt != null)sensor.close();
-                    //сбрасываем все строковые значения которые касаются модели и номеров прошивок
-                    //все считываемпотом заново!
-                    sensor.softwareRevision = null;
-                    sensor.firmwareRevision = null;
-                    sensor.hardwareRevision = null;
-                    sensor.serialNumber = null;
-                    sensor.modelNumber = null;
-                    sensor.manufacturerName = null;
-                }
-                sensor.mBluetoothDeviceAddress = device.getAddress();
-                sensor.mDeviceName = device.getName();
-                //
-                RunDataHub app = ((RunDataHub) getApplicationContext());
-                if((app.mBluetoothLeServiceM != null) && (sensor.mBluetoothDeviceAddress != null)){
+            sensor.setNewAdressNameDevice(device.getAddress(), device.getName());
+            //
+            RunDataHub app = ((RunDataHub) getApplicationContext());
+            if((app.mBluetoothLeServiceM != null) && (sensor.mBluetoothDeviceAddress != null)){
 ////2017.01.23 ПРИНЯТО, название Термомето и Номер индекса по умолчанию ;                    // ПО умолчанию к имени уустройства дописываем 2 последние цифры адреса
 //                    if(sensor.deviceLabel.compareTo(sensor.deviceLabelStringDefault) == 0){
 //                        int i = sensor.mBluetoothDeviceAddress.length();
@@ -237,14 +222,14 @@ mLeDeviceListAdapter.notifyDataSetInvalidated();
 //                        sensor.deviceLabel = sensor.deviceLabelStringDefault + " "
 //                                + sensor.mBluetoothDeviceAddress.substring(i-2);
 //                    }
-                    //это запуск напрямую, работает хреново
-                   // app.mBluetoothLeServiceM.connect(sensor.mBluetoothDeviceAddress,true);
-                    //запуск на коннект через очередь!
-                    //начинаем конект ВСЕГДА с чистого ЛИСТА, тоесть настроек связи (BluetoothGatt)
-                    if(sensor.mBluetoothGatt == null) app.mBluetoothLeServiceM.queueSetConnect(sensor);
-                    else app.mBluetoothLeServiceM.queueSetDisconnectCloseConnect(sensor);
-                    Log.v(TAG,"sensor item= " + mItem + "  connectAdress= " + sensor.mBluetoothDeviceAddress);
-                }
+                //это запуск напрямую, работает хреново
+               // app.mBluetoothLeServiceM.connect(sensor.mBluetoothDeviceAddress,true);
+                //запуск на коннект через очередь!
+                //начинаем конект ВСЕГДА с чистого ЛИСТА, тоесть настроек связи (BluetoothGatt)
+                if(sensor.mBluetoothGatt == null) app.mBluetoothLeServiceM.queueSetConnect(sensor);
+                else app.mBluetoothLeServiceM.queueSetDisconnectCloseConnect(sensor);
+                Log.v(TAG,"sensor item= " + mItem + "  connectAdress= " + sensor.mBluetoothDeviceAddress);
+            }
         }
         finish();
     }

@@ -75,7 +75,7 @@ findViewById(R.id.LinearLayoutMeasurementMode).setVisibility(View.GONE);
         Util.setTextToTextView(sensor.deviceLabel,R.id.textViewName,this,"?");
         String str = sensor.getAddress();
         //берем кусочек адреса
-        if((str != null) && (str.length() > 5)) str = ", ID:"+ str.substring(str.length()-5);
+        if((str != null) && (str.length() > 5)) str = "  ID:"+ str.substring(str.length()-5);
         else str ="";
         ////имя в широковещятельных пакетах
         str = sensor.mDeviceName + str;
@@ -129,7 +129,8 @@ findViewById(R.id.LinearLayoutMeasurementMode).setVisibility(View.GONE);
         //--сохранение настроек
         RunDataHub app = ((RunDataHub) getApplicationContext());
         if(app.mBluetoothLeServiceM != null){
-            app.mBluetoothLeServiceM.settingPutFile();
+            //записываем УСТАНОВКИ если есть изменения в них
+            app.mBluetoothLeServiceM.testChangesAndSettingPutFile();//app.mBluetoothLeServiceM.settingPutFile();
         }
         finish();
         return true;

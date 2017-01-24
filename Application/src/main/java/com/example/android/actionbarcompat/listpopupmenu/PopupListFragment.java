@@ -595,6 +595,7 @@ adapter.notifyDataSetChanged();
             //сохранение в файл Сделано в АКтивити!мэйн
                 RunDataHub app = ((RunDataHub) getActivity().getApplicationContext());
                 if(app.mBluetoothLeServiceM != null){
+                    //здесь запись обязательно сразу
                     app.mBluetoothLeServiceM.settingPutFile();
                 }
         }

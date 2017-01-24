@@ -437,8 +437,11 @@ public class BluetoothLeServiceNew extends Service {
 
         @Override
         public String toString() {
+            String str;
             //return super.toString();
-            String str= "   adress= "+ Util.getAddress16Bits(sensor.getAddress()) + "   type= " + type + "   retry= "+retry;
+            if((sensor == null) || (sensor.getAddress() == null)) str = "null";
+            else str = Util.getAddress16Bits(sensor.getAddress());
+            str = "   adress= "+ str + "   type= " + type + "   retry= "+retry;
             if(characteristic == null) return str;
             else    return str + "   characteristic"+Util.getUidStringMost16Bits(characteristic);
         }
@@ -476,6 +479,7 @@ public class BluetoothLeServiceNew extends Service {
         if(i < 100) i = 100;
         else{if(i > 10000) i = 10000;}
         txQueueItem.timer = i;
+    //    if(debug)Log.v(TAG," --- queueSetTimer("+timer+") --- START, " + txQueueItem.toString());
         addToTxQueue(txQueueItem);
     }
     /* queues  */
@@ -491,6 +495,7 @@ public class BluetoothLeServiceNew extends Service {
             Log.e(TAG,"queueSetConnect() Adress= ERROR");
             return;
         }
+ //       if(debug)Log.v(TAG," --- queueSetConnect --- START, " + txQueueItem.toString());
         addToTxQueue(txQueueItem);
     }
     public void queueSetDisconnectCloseConnect(final Sensor sens)
@@ -499,7 +504,7 @@ public class BluetoothLeServiceNew extends Service {
         TxQueueItem txQueueItem = new TxQueueItem();
         txQueueItem.sensor = sens;
         txQueueItem.type = TxQueueItemType.DisconnectCloseConnect;
-   Log.e(TAG,"=========DISCONNEKT!!========== -------- go to connekt ADD to Queue command // " );
+     //   if(debug)Log.v(TAG," --- queueSetDisconnectCloseConnect --- START, " + txQueueItem.toString());
         addToTxQueue(txQueueItem);
     }
     /* queues  */
@@ -509,8 +514,10 @@ public class BluetoothLeServiceNew extends Service {
         TxQueueItem txQueueItem = new TxQueueItem();
         txQueueItem.sensor = sens;
         txQueueItem.type = TxQueueItemType.DiscoverServices;
-        Log.v(TAG, "-Start service discovery! adr= "+sens.mBluetoothDeviceAddress);
+    //    if(debug)Log.v(TAG," --- queueSetDiscover --- START, " + txQueueItem.toString());
         addToTxQueue(txQueueItem);
+        //на всякий случай делаем паузу после дисковери, он один раз только выполняется
+        queueSetTimer(sens,500);
     }
     // ЧТЕНИЕ уровня сгнала СЕНСОРА, время ожидания не более 2 сек
     // установили Тайм аут
@@ -521,7 +528,7 @@ public class BluetoothLeServiceNew extends Service {
         txQueueItem.sensor = sens;
         txQueueItem.type = TxQueueItemType.ReadRSSI;
         txQueueItem.timer = 2000;//время ожидания не более 2 сек
-        Log.v(TAG, "-Start ReadRSSI adr= "+sens.mBluetoothDeviceAddress);
+    //    if(debug)Log.v(TAG," --- queueReadRSSI --- START, " + txQueueItem.toString());
         addToTxQueue(txQueueItem);
     }
     /* queues enables/disables notification for characteristic */
@@ -534,6 +541,7 @@ public class BluetoothLeServiceNew extends Service {
         txQueueItem.enabled = enabled;
         txQueueItem.dataToWrite = dataToWrite;
         txQueueItem.type = TxQueueItemType.WriteDescriptor;
+    //    if(debug)Log.v(TAG," --- queueSetNotificationForCharacteristic --- START, " + txQueueItem.toString());
         addToTxQueue(txQueueItem);
         //после нотификации, даем паузу, а то на некторых устройствах
         // ПИШЕТ С ОШИБКОЙ дескрипотр и переходит дисконнект И ТАК ЦИКЛИТ НЕСКОЛЬКО РАЗ
@@ -551,6 +559,7 @@ public class BluetoothLeServiceNew extends Service {
         txQueueItem.characteristic = ch;
         txQueueItem.dataToWrite = dataToWrite;
         txQueueItem.type = TxQueueItemType.WriteCharacteristic;
+   //     if(debug)Log.v(TAG," --- queueWriteDataToCharacteristic --- START, " + txQueueItem.toString());
         addToTxQueue(txQueueItem);
         //  на всякий случай, в нотификации это оказалось важным!здесь остановимся на 100мкс
         queueSetTimer(sens,100);
@@ -564,6 +573,7 @@ public class BluetoothLeServiceNew extends Service {
         txQueueItem.sensor = sens;
         txQueueItem.characteristic = ch;
         txQueueItem.type = TxQueueItemType.ReadCharacteristic;
+      //  if(debug)Log.v(TAG," --- queueRequestCharacteristicValue --- START, " + txQueueItem.toString());
         addToTxQueue(txQueueItem);
     }
 
@@ -572,7 +582,7 @@ public class BluetoothLeServiceNew extends Service {
         public void run() {
             //если установлен тайм айт, просто дождались заданного времени и сбросили эту команду
             if(mTxQueueItem.type == TxQueueItemType.Timer){
-                Log.w(TAG,"mHandlerTxQueue: " + mTxQueueItem.toString());
+                if(debug)Log.w(TAG,"--- HANDLER QUEUE --- " + mTxQueueItem.toString());
                 processTxQueue(false);
                 return;
             }
@@ -583,20 +593,20 @@ public class BluetoothLeServiceNew extends Service {
             // по этому- коннет даем только 1 раз без повтора. Он может быть сброшен на
             // прямую из обратного вызова при коннете
             if(mTxQueueItem.type == TxQueueItemType.Connect){
-                Log.w(TAG,"mHandlerTxQueue: " + mTxQueueItem.toString());
+                if(debug)Log.w(TAG,"--- HANDLER QUEUE --- " + mTxQueueItem.toString());
                 processTxQueue(false);
                 return;
             }
             //при дисконнекте повторов НЕ надо
             if(mTxQueueItem.type == TxQueueItemType.DisconnectCloseConnect){
-                Log.w(TAG,"mHandlerTxQueue: " + mTxQueueItem.toString());
+                if(debug)Log.w(TAG,"--- HANDLER QUEUE --- " + mTxQueueItem.toString());
                 processTxQueue(false);
                 return;
             }
             //-- запускаем контроль запроса по времени, устангавливаем 10 секунд
             // если не уложились, то текущий запрос возвращяем в очередь и увеличиваем попытку
             // передачи, передаем 5 раз и облом! ему, запрашиваемому параметру
-            Log.e(TAG,"mHandlerTxQueue: ERROR " + mTxQueueItem.toString());
+            if(debug)Log.e(TAG,"--- HANDLER QUEUE ---  ERROR " + mTxQueueItem.toString());
             if(mTxQueueItem.retry++ <= 5){
                 //---------------------------------------
                 //если после поиска, подождать кода закончатся адвансинг пакеты передавать!
@@ -611,7 +621,7 @@ public class BluetoothLeServiceNew extends Service {
                     // полное отключение КЛОУС и заново порождаем соединение, оно переходит в состояние дисконнект
                     // если просто закрыть- останется в коннекте!// в ОЧЕРЕДЬ!!!
                     queueSetDisconnectCloseConnect(mTxQueueItem.sensor);
-                    Log.v(TAG,"mHandlerTxQueue: ERROR >=3 count " + mTxQueueItem.toString());
+                    if(debug)Log.v(TAG,"--- HANDLER QUEUE ---  ERROR >=3 count " + mTxQueueItem.toString());
                 } else {
                     //---------------------------------------
                     //добавляем из начала прямо в КОНЕЦ очереди!
@@ -631,7 +641,7 @@ public class BluetoothLeServiceNew extends Service {
     private void filtrInTxQueue(Sensor sensor, TxQueueItemType type, UUID uuid, int status){
         // если прилетает дисконнект по сенсору
         if(TxQueueItemType.DisconnectCloseConnect == type){
-            Log.v(TAG,"=========DISCONNEKT!!==");
+            if(debug)Log.w(TAG,"=========DISCONNEKT!!==");
             //никого нет на очереди ставим в очередь дисконнект
             if(mTxQueueItem == null)queueSetDisconnectCloseConnect(sensor);
             else{
@@ -666,7 +676,7 @@ public class BluetoothLeServiceNew extends Service {
                 return;
             }
         }
-        Log.i(TAG,"Ok  " + mTxQueueItem.toString());
+        if(debug)Log.i(TAG,"--- RESET OK --- " + mTxQueueItem.toString());
 
 //для теста блокировал уровень батареи посмотрет повтор запроса, работает
 //        if(uuid.compareTo(PartGatt.UUID_BATTERY_LEVEL) == 0) {
@@ -681,7 +691,7 @@ public class BluetoothLeServiceNew extends Service {
      * @param txQueueItem
      */
     private void addToTxQueue(TxQueueItem txQueueItem) {
-
+        if(debug)Log.v(TAG," --- ADD QUEUE --- , " + txQueueItem.toString());
         txQueue.add(txQueueItem);
 
         // If there is no other transmission processing, go do this one!
@@ -712,13 +722,22 @@ public class BluetoothLeServiceNew extends Service {
                 txQueueProcessing = false;
                 return;
             }
+            if(debug){
+                if(mTxQueueItem != null)Log.w(TAG," --- REMOVE --- , " + mTxQueueItem.toString());
+                else Log.w(TAG," --- REMOVE --- , TxQueueItem= null");
+            }
             mTxQueueItem = txQueue.remove();
+            if(debug){
+                if(mTxQueueItem != null)Log.w(TAG," --- EXECUTE --- , " + mTxQueueItem.toString());
+                else Log.w(TAG," --- EXECUTE --- , TxQueueItem= null");
+            }
+
             if((mTxQueueItem.sensor.mConnectionState  == STATE_DISCONNECTED)
                 && (mTxQueueItem.type != TxQueueItemType.DisconnectCloseConnect)//выполнения последовательности закрытия канала
                 && (mTxQueueItem.type != TxQueueItemType.Connect)//выполнения коннекта
                 && (mTxQueueItem.type != TxQueueItemType.Timer)// ожидания выполнения команды, чтоб она прошла полностью
                     ){
-                Log.w(TAG,"Remove TxQueueItem, STATE_DISCONNECTED, "+ mTxQueueItem.toString());
+                Log.w(TAG,"--- REMOVE TxQueueItem, STATE_DISCONNECTED, ---"+ mTxQueueItem.toString());
             } else break;
         }
         //----------------
@@ -999,6 +1018,16 @@ public class BluetoothLeServiceNew extends Service {
             Log.e(TAG,"getSharedPreferences= null!");
         }
     }
+    //записываем УСТАНОВКИ если есть изменения в них
+    public void testChangesAndSettingPutFile(){
+        for(int i= 0; i < arraySensors.size(); i++){
+            if(arraySensors.get(i).changeConfig){
+                settingPutFile();
+                return;
+            }
+        }
+        Log.v(TAG,"No SettingPutFile (no change config)");
+    }
     public void settingPutFile(){
         // Запоминаем данные
 
@@ -1016,6 +1045,8 @@ public class BluetoothLeServiceNew extends Service {
                 defName = "item"+i;
                 //сохраняем УСТРОЙСТВО в файле отдельном
                 sensor = arraySensors.get(i);
+                //Поскольку записываем НАСТРОЙКИ сенсора, сбрасываем флаг изменения Настроек
+                sensor.changeConfig = false;
                 // "74:DA:EA:9F:54:C9"= 17
                 if((sensor.mBluetoothDeviceAddress != null)
                         && (sensor.mBluetoothDeviceAddress.length() == 17)){
@@ -1034,9 +1065,9 @@ public class BluetoothLeServiceNew extends Service {
                 sensor.putConfig(settingsDevaceEditor);
             }
             editor.apply();
-            Log.i(TAG,"getSharedPreferences, Write OK, size= " + i);
+            Log.i(TAG,"SettingPutFile, Write OK, size= " + i);
         }else{
-            Log.e(TAG,"getSharedPreferences= null!");
+            Log.e(TAG,"SettingPutFile= null!");
         }
     }
     @Override

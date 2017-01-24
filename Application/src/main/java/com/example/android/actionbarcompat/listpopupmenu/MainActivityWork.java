@@ -365,7 +365,8 @@ final int iconActionEdit = 12345678;
                 //сохранение в файл
                 RunDataHub app = ((RunDataHub) getApplicationContext());
                 if(app.mBluetoothLeServiceM != null){
-                    app.mBluetoothLeServiceM.settingPutFile();
+                    //записываем УСТАНОВКИ если есть изменения в них
+                    app.mBluetoothLeServiceM.testChangesAndSettingPutFile();//app.mBluetoothLeServiceM.settingPutFile();
                     Log.v(TAG,"android.R.id.home--  settingPutFile()--");
                 }
     // Добавить вызов ЗАСТАВКИ!!релсиба

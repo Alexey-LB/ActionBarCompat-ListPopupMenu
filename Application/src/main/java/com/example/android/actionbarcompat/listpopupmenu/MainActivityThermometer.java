@@ -517,6 +517,12 @@ public class MainActivityThermometer  extends AppCompatActivity {// ActionBarAct
         switch (item.getItemId()) {
             case android.R.id.home:
                 Log.i(TAG,"android.R.id.home");
+                //--сохранение настроек
+                RunDataHub app = ((RunDataHub) getApplicationContext());
+                if(app.mBluetoothLeServiceM != null){
+                    //записываем УСТАНОВКИ если есть изменения в них
+                    app.mBluetoothLeServiceM.testChangesAndSettingPutFile();//app.mBluetoothLeServiceM.settingPutFile();
+                }
                 finish();
                 return true;
             case iconActionSetting:

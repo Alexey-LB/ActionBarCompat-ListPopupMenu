@@ -47,6 +47,8 @@ public class Sensor {
 //    public static final int STATE_CONNECTED = 5;// состояние ПОДКЛЮЧЕНО, вмемте с бондом
 //    public static final int STATE_FIND_DEVICE = 6;//advertising
 
+    public boolean changeConfig = true;//флаг указывающий на ИМЕНЕНИя и ОБЯЗАЕЛЬНО СОХРАНИТЬ  объект(изменились настройки)!!
+
     private static int indexDevace = 0;//для нумерации названий
     public  RunDataHub app;
     private Context mContext;
@@ -83,7 +85,7 @@ public class Sensor {
     public float endTemperature = 0f;//C ПРОГНОЗИРИРОВАНИЕ температуры для медецинского градусника
 
     //
-    public boolean changeConfig = true;//флаг указывающий на ИМЕНЕНИя и ОБЯЗАЕЛЬНО СОХРАНИТЬ  объект(изменились настройки)!!
+
     public boolean avtoConnect = true;
     public String mBluetoothDeviceAddress = null;//64 bita
     public String deviceLabel = "";
@@ -425,16 +427,19 @@ return getStringValue( maxLevelNotification.valueLevel, onFahrenheit, addType);
 //        }
         if ((PartGatt.UUID_MANUFACTURER_NAME_STRING.equals(characteristic.getUuid()))) {//string
             manufacturerName = characteristic.getStringValue(0);
+            changeConfig = true;
             if(logON) Log.d(TAG, "MANUFACTURER_NAME_STRING: " + manufacturerName + "  Properties= " + flag);
             return true;
         }
         if ((PartGatt.UUID_MODEL_NUMBER_STRING.equals(characteristic.getUuid()))) {//string
             modelNumber = characteristic.getStringValue(0);
+            changeConfig = true;
             if(logON) Log.d(TAG, "MODEL_NUMBER_STRING: " + modelNumber + "  Properties= " + flag);
             return true;
         }
         if ((PartGatt.UUID_SERIAL_NUMBER_STRING.equals(characteristic.getUuid()))) {//string
             serialNumber = characteristic.getStringValue(0);
+            changeConfig = true;
             if(logON) Log.d(TAG, "SERIAL_NUMBER_STRING: " + serialNumber + "  Properties= " + flag);
             return true;
         }
@@ -444,16 +449,19 @@ return getStringValue( maxLevelNotification.valueLevel, onFahrenheit, addType);
 //            String temp = new String.(characteristic.getValue(),0);
 //            str = temp.substring(0,temp.length() - 1);
             softwareRevision = characteristic.getStringValue(0);
+            changeConfig = true;
             if(logON) Log.d(TAG, "SOFTWARE_REVISION_STRING: " + softwareRevision + "  Properties= " + flag);
             return true;
         }
         if ((PartGatt.UUID_FIRMWARE_REVISION_STRING.equals(characteristic.getUuid()))) {//string
             firmwareRevision = characteristic.getStringValue(0);
+            changeConfig = true;
             if(logON) Log.d(TAG, "FIRMWARE_REVISION_STRING: " + firmwareRevision + "  Properties= " + flag);
             return true;
         }
         if ((PartGatt.UUID_HARDWARE_REVISION_STRING.equals(characteristic.getUuid()))) {//string
             hardwareRevision = characteristic.getStringValue(0);
+            changeConfig = true;
             if(logON) Log.d(TAG, "HARDWARE_REVISION_STRING: " + hardwareRevision  + "  Properties= " + flag);
             return true;
         }
@@ -630,6 +638,20 @@ return getStringValue( maxLevelNotification.valueLevel, onFahrenheit, addType);
  //               , PartGatt.UUID_RELSIB_TEMP, PartGatt.UUID_CLIENT_CHARACTERISTIC_CONFIG);
     }
     //--------------
+    public void setNewAdressNameDevice(String address, String deviceName){
+        //if(sensor.mBluetoothGatt != null)sensor.close();
+        //сбрасываем все строковые значения которые касаются модели и номеров прошивок
+        //все считываемпотом заново!
+        softwareRevision = null;
+        firmwareRevision = null;
+        hardwareRevision = null;
+        serialNumber = null;
+        modelNumber = null;
+        manufacturerName = null;
+        flagRead = false;
+        mBluetoothDeviceAddress = address;
+        mDeviceName = deviceName;
+    }
     private boolean flagRead = false;
 
     /**
