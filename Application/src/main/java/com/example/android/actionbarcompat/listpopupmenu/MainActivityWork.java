@@ -164,8 +164,6 @@ public class MainActivityWork extends AppCompatActivity {// ActionBarActivity {
         Log.e(TAG, "----onCreate END-----");
     }
 //    private void updateView(){
-//        // установка ИЗОБРАЖЕНИЕ на всь экран, УБИРАЕМ СВЕРХУ И СНИЗУ панели системные
-//        findViewById(mainIdFragmentWork).getRootView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
 //        //
 //        RunDataHub app = ((RunDataHub) getApplicationContext());
 //        //а первый запуск показываем заставку несколько секунд, там и потом убираем системный бар

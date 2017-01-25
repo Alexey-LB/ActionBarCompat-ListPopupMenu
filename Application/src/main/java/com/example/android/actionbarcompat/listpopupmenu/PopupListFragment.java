@@ -158,9 +158,6 @@ private final int dividerHeight = 0;//расстояние в dp  между Э�
             Log.e(TAG,"onActivityCreated ERROR: View root=null");
             return;
         }
-        //убрать системный бар----------------
-        //if(root.getSystemUiVisibility() != View.SYSTEM_UI_FLAG_FULLSCREEN)
-        root.setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
 //========================
         //---------
         //это для ГРАФИКИ - точного представления соотношений РИСУНКА!!но НЕ для меню!!
@@ -409,9 +406,6 @@ fbButton = View.inflate(getContext(),R.layout.poplist_item_3,null);//пород�
  adapter.notifyDataSetChanged();
  adapter.notifyDataSetInvalidated();
         }
-        //убрать системный бар----------------
-        //if(root.getSystemUiVisibility() != View.SYSTEM_UI_FLAG_FULLSCREEN)
-        lw.getRootView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
         //---
         mHandlerWork = true;
         //сам заводится и работает

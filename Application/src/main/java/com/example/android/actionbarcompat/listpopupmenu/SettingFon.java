@@ -78,9 +78,6 @@ public class SettingFon extends Activity implements View.OnClickListener{
                 if(mHandlerWork) mHandler.postDelayed(this, 400);
             }
         },500);
-        // установка ИЗОБРАЖЕНИЕ на всь экран, УБИРАЕМ СВЕРХУ И СНИЗУ панели системные
- //??       findViewById(R.id.activity_main_min_max).getRootView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
-
     }
 
     @Override//сюда прилетают ответы при возвращении из других ОКОН активити

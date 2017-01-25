@@ -637,7 +637,9 @@ public class Util {
           }
         return false;
     }
+    public static boolean flagFullscreen = false;
     public static   void setFullscreen(Activity activity){
+        if(!flagFullscreen) return;
         // Вариант работает ХРЕНОВО: // mLayoutMain.getRootView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
         // ниже работает отлично! один раз объевил, работает пока окно не умрет!
         //http://developer.alexanderklimov.ru/android/tips-android.php
