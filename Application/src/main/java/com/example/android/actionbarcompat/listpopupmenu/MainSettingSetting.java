@@ -141,9 +141,7 @@ findViewById(R.id.LinearLayoutMeasurementMode).setVisibility(View.GONE);
     @Override
     protected void onResume() {
         super.onResume();
-        // установка ИЗОБРАЖЕНИЕ на всь экран, УБИРАЕМ СВЕРХУ И СНИЗУ панели системные
- //??       findViewById(R.id.textViewName).getRootView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
-    }
+     }
 
     @Override//сюда прилетают ответы при возвращении из других ОКОН активити
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

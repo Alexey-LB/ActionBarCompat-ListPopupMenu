@@ -79,7 +79,6 @@ public class MainActivityThermometer  extends AppCompatActivity {// ActionBarAct
         Util.setSupportV7appActionBar(getSupportActionBar(),TAG,"");
         //убираем системный бар
         thermometer = findViewById(R.id.LayoutMainThermometer);
-//??        thermometer.getRootView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
         thermometer.findViewById(R.id.reset_min_max).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -443,7 +442,6 @@ public class MainActivityThermometer  extends AppCompatActivity {// ActionBarAct
     public  void onResume() {
         super.onResume();
         //при возвращениие из других окон, может быть системный бар, по этому еще раз его отменяем
-//??        thermometer.getRootView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
         //делаем Здесь обновление термометра, чтоб при выходе из настроек сенсора, изменения были учтены
         mThermometerDrawable.setSettingThermometer(getResources().getDisplayMetrics().density
                 ,sensor.minLevelNotification.valueLevel

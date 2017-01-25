@@ -133,7 +133,6 @@ public class MainActivityWork extends AppCompatActivity {// ActionBarActivity {
          //------------------------------
 //!!??  УБРАЛ в РЕЗЮМЕ и удаление в паузе-, ИНАЧЕ В ФОНЕ РАБОТАЛО!! Util.changeFragment(mainIdFragmentWork, new PopupListFragment(), getSupportFragmentManager());
         // установка ИЗОБРАЖЕНИЕ на всь экран, УБИРАЕМ СВЕРХУ И СНИЗУ панели системные
-//??        findViewById(mainIdFragmentWork).getRootView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
         //настраиваем и включаем тулбар
         Util.setSupportV7appActionBar(getSupportActionBar(),TAG,
                 intent.getStringExtra(Util.EXTRAS_BAR_TITLE));
@@ -278,9 +277,6 @@ public class MainActivityWork extends AppCompatActivity {// ActionBarActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        //при возвращениие из других окон, может быть системный бар, по этому еще раз его отменяем
-//??        findViewById(mainIdFragmentWork).getRootView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
-
         Util.changeFragment(mainIdFragmentWork, new PopupListFragment(), getSupportFragmentManager());
 
         Log.e(TAG, "----onResume() ----------");
@@ -388,9 +384,6 @@ final int iconActionEdit = 12345678;
                 return true;
             case R.id.edit_a://.new_game_:
                 View v =((View)findViewById(R.id.textViewName));
-                if(v != null){
-//??                    v.setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
-                }
 //                FragmentManager fm= getSupportFragmentManager();
 //
 //                Fragment f =  fm.findFragmentById(R.layout.list_item);

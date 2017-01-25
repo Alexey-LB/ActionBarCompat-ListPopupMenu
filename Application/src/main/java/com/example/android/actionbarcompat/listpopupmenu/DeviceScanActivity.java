@@ -78,10 +78,10 @@ public class DeviceScanActivity extends ListActivity {//AppCompatActivity {//Act
     @Override// Set up the {@link android.app.ActionBar}, if the API is available.
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //урали вверху системный бар
+        // работает отлично! один раз объевил, работает пока окно не умрет!
         Util.setFullscreen(this);// работает отлично! один раз объевил, работает пока окно не умрет!
         Log.e(TAG,"START onCreate--");
-        //урали вверху системный бар
-//??        if(getListView() != null ) getListView().getRootView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
         //--------------------------
         final Intent intent = getIntent();
         mItem = intent.getIntExtra(MainActivityWork.EXTRAS_DEVICE_ITEM,0);

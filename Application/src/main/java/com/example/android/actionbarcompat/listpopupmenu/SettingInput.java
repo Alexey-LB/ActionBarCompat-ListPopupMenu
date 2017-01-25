@@ -74,8 +74,6 @@ public class SettingInput extends Activity {//} implements View.OnKeyListener{
 //-----------
  //2017.01.24- пока принимаем ВСЕГДА показывать клавиатуру
  getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
-// установка ИЗОБРАЖЕНИЕ на всь экран, УБИРАЕМ СВЕРХУ И СНИЗУ панели системные
-//??tv.getRootView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
         //---------
         switch(type){
             case VALUE_TYPE_INT:
@@ -204,8 +202,6 @@ public class SettingInput extends Activity {//} implements View.OnKeyListener{
     protected void onResume() {
        // ActionBar actionBar = getActionBar();//getSupportActionBar();??--это решалось в другом методе(getDelegate().getSupportActionBar();)
         super.onResume();
-        // установка ИЗОБРАЖЕНИЕ на всь экран, УБИРАЕМ СВЕРХУ И СНИЗУ панели системные
- //??       tv.getRootView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
 
     }
 //    @Override

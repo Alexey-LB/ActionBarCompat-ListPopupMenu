@@ -109,16 +109,16 @@ public class MainActivity extends AppCompatActivity {// ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Util.setFullscreen(this);// работает отлично! один раз объевил, работает пока окно не умрет!
+        //убираем системный бар работает отлично! один раз объевил, работает пока окно не умрет!
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main);
         //-------------------------------------------------------
         RunDataHub app = ((RunDataHub) getApplicationContext());
         if(app == null)finish();
          //------------------------------
         // показываем заставку релсиба --------------
-        //первый запуск показываем заставку,убираем системный бар
+        //первый запуск показываем заставку,
         mLayoutMain = findViewById(R.id.LayoutMain);
-//?? mLayoutMain.getRootView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
         getSupportActionBar().hide();
 //        //переходы и АНИМАЦИИ примеры ---------
 //        //http://startandroid.ru/ru/uroki/vse-uroki-spiskom/392-urok-164-grafika-drawable-level-list-transition-inset-clip-scale.html
@@ -202,7 +202,7 @@ setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         //переход в следующее окно
         Intent intent = new Intent(this, MainActivityWork.class);
       //  intent.putExtra(Util.EXTRAS_BAR_TITLE, "v2.6.16 Температура");//--
-        intent.putExtra(Util.EXTRAS_BAR_TITLE, "v2.6.36");//--
+        intent.putExtra(Util.EXTRAS_BAR_TITLE, "v2.6.37");//--
 
         // все изменения будет писать сразу в сенсор
         // по умолчанию устанавливаем минимум, все остальное делется НАПРЯМУЮ с данными
@@ -214,7 +214,6 @@ setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
     protected void onResume() {
         super.onResume();
         //при возвращениие из других окон, может быть системный бар, по этому еще раз его отменяем
-//??mLayoutMain.getRootView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
         //а первый запуск показываем заставку,убираем системный бар
         getSupportActionBar().hide();
         //быстро возвращяем назад кнопку в  OFF, рисунк ON -> off button

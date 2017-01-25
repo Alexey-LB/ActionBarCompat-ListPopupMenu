@@ -82,10 +82,7 @@ public class SettingMaker extends Activity implements View.OnClickListener{
                 if(mHandlerWork) mHandler.postDelayed(this, 400);
             }
         },500);
-        // установка ИЗОБРАЖЕНИЕ на всь экран, УБИРАЕМ СВЕРХУ И СНИЗУ панели системные
- //??       findViewById(R.id.textViewFindName).getRootView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
-
-    }
+     }
     private  String mName;
     private  String mAdress;
     @Override//сюда прилетают ответы при возвращении из других ОКОН активити
