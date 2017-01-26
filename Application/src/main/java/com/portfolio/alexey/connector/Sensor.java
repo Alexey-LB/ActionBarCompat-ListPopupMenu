@@ -839,5 +839,7 @@ return getStringValue( maxLevelNotification.valueLevel, onFahrenheit, addType);
         editor.putString("endMelody", endMeasurementNotification.melody);
         //записать на флеш
         editor.apply();//
+        //Поскольку записываем НАСТРОЙКИ сенсора, сбрасываем флаг изменения Настроек
+        changeConfig = false;
     }
 }

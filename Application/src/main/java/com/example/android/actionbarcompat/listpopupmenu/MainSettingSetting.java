@@ -147,6 +147,8 @@ findViewById(R.id.LinearLayoutMeasurementMode).setVisibility(View.GONE);
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         String name,str = "?";Uri uri=null;float fl;
         if(resultCode == RESULT_OK) {
+            ////Поскольку меняем НАСТРОЙКИ сенсора, Устанавливаем флаг изменения Настроек
+            if(sensor != null)sensor.changeConfig = true;
             switch(requestCode){
                 case ACTIVITY_SETTING_EDIT:
                     name = data.getStringExtra(SettingInput.EXTRAS_VALUE);

@@ -1049,8 +1049,6 @@ public class BluetoothLeServiceNew extends Service {
                 defName = "item"+i;
                 //сохраняем УСТРОЙСТВО в файле отдельном
                 sensor = arraySensors.get(i);
-                //Поскольку записываем НАСТРОЙКИ сенсора, сбрасываем флаг изменения Настроек
-                sensor.changeConfig = false;
                 // "74:DA:EA:9F:54:C9"= 17
                 if((sensor.mBluetoothDeviceAddress != null)
                         && (sensor.mBluetoothDeviceAddress.length() == 17)){
