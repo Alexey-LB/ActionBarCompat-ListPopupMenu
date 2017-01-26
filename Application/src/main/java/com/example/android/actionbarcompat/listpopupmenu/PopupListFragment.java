@@ -373,7 +373,8 @@ fbButton = View.inflate(getContext(),R.layout.poplist_item_3,null);//пород�
                 updateViewItem(sensor, getListView().getChildAt(i));
 
                 //читаем уровень сигнала для каждого в отведенное время для него
-                if((lloop & 0x7) == i)sensor.readRSSIandBatteryLevel();
+               // if((lloop & 0x7) == i)sensor.readRSSIandBatteryLevel();
+                if((lloop & 0x1F) == (i << 3))sensor.readRSSIandBatteryLevel();
  //                   int con = 0;
 //                BluetoothGatt bleGatt = sensor.mBluetoothGatt;
 //                BluetoothDevice bd = sensor.mBluetoothGatt.getDevice();
@@ -381,9 +382,9 @@ fbButton = View.inflate(getContext(),R.layout.poplist_item_3,null);//пород�
 //                if(Util.isNoNull(bleGatt,bd))
 //                    con = bleGatt.getConnectionState(bd);
 
-                if((lloop & 0x7) == 0) str = str + String.format("  (%d/%d)%d[%d]%2.1f",sensor.mConnectionState
+                if((lloop & 0x7) == 0) str = str + String.format("  (%d/%d)%d[%d]%2.1f (QueueSize= %d)",sensor.mConnectionState
                         ,sensor.rssi ,sensor.battery_level
-                        ,i,sensor.intermediateValue);
+                        ,i,sensor.intermediateValue, app.mBluetoothLeServiceM.getSizeTxQueue());
             }
 
         }

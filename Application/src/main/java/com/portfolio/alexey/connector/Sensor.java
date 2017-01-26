@@ -483,7 +483,7 @@ return getStringValue( maxLevelNotification.valueLevel, onFahrenheit, addType);
             //-- 1.95v=  это 0 процентов, 2.95-100% для обычного блутуза
             // наш диапазон - 2.5в- это 0%, по этому - y=(x - 59)*100/41
             battery_level = (battery_level - 59)*100/41;
-            if(battery_level < 0) battery_level = 0;
+            if(battery_level < 1) battery_level = 1;//0 - показываем что не считали значение батареи
             if(battery_level > 100) battery_level = 100;
             if(logON) {
                 str = String.format("%d", battery_level);
@@ -729,15 +729,18 @@ return getStringValue( maxLevelNotification.valueLevel, onFahrenheit, addType);
     //каждый вызов этого метода запрашивает RSSI или BatteryLevel
     // ПРИНИМАЕМ, что вызов идит через каждые 2 секунды!!
     // тогда: батарею будем опрашивать каждые 2 минуты
+    //вызов каждые 8 секунд
     public boolean readRSSIandBatteryLevel(){
         //контролтруем в каком мы состоянии, только при конекте работаем
         if((mBluetoothGatt == null)
-                || (mConnectionState < BluetoothLeServiceNew.STATE_CONNECTED))return false;
-        //только если работаем и очердь НЕ занята!!
-        if(app.mBluetoothLeServiceM.getSizeTxQueue() > 0)return false;
-
+                || (mConnectionState < BluetoothLeServiceNew.STATE_CONNECTED)
+                || !flagRead//если мы не прочитали еще описание сенсора(версия, изготовитель и тд)
+                || (app.mBluetoothLeServiceM.getSizeTxQueue() > 10)){//только если работаем и очердь НЕ занята!
+            loop_rssi  = 0;//опрос в 0
+            return false;
+        }
         //каждые 2 минуты уровень батареи
-         if(((loop_rssi++ & 0x3F) == 1)){
+         if(((loop_rssi++ & 0x0F) == 1)){
             //читать уровень батареи
             readUuidCharacteristic(PartGatt.UUID_BATTERY_SERVICE, PartGatt.UUID_BATTERY_LEVEL);
             Log.e(TAG, "R: BATTERY Service -- ");

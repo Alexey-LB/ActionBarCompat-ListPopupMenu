@@ -209,13 +209,14 @@ mLeDeviceListAdapter.notifyDataSetInvalidated();
 
         if (mScanning) {
             mScanning = false;
-            mBluetoothAdapter.stopLeScan(mLeScanCallback);
+
+            //mBluetoothAdapter.stopLeScan(mLeScanCallback);
+            app.mBluetoothLeServiceM.queueStoptLeScan(mLeScanCallback);
         }
         ///-- теперь подключаем ЗДЕСЬ!!..
         if(sensor != null){
             sensor.setNewAdressNameDevice(device.getAddress(), device.getName());
             //
-            RunDataHub app = ((RunDataHub) getApplicationContext());
             if((app.mBluetoothLeServiceM != null) && (sensor.mBluetoothDeviceAddress != null)){
 ////2017.01.23 ПРИНЯТО, название Термомето и Номер индекса по умолчанию ;                    // ПО умолчанию к имени уустройства дописываем 2 последние цифры адреса
 //                    if(sensor.deviceLabel.compareTo(sensor.deviceLabelStringDefault) == 0){
@@ -228,7 +229,7 @@ mLeDeviceListAdapter.notifyDataSetInvalidated();
                // app.mBluetoothLeServiceM.connect(sensor.mBluetoothDeviceAddress,true);
                 //запуск на коннект через очередь!
                 //начинаем конект ВСЕГДА с чистого ЛИСТА, тоесть настроек связи (BluetoothGatt)
-                if(sensor.mBluetoothGatt == null) app.mBluetoothLeServiceM.queueSetConnect(sensor);
+                if(sensor.mBluetoothGatt == null)app.mBluetoothLeServiceM.queueSetConnect(sensor);
                 else app.mBluetoothLeServiceM.queueSetDisconnectCloseConnect(sensor);
                 Log.v(TAG,"sensor item= " + mItem + "  connectAdress= " + sensor.mBluetoothDeviceAddress);
             }
@@ -278,14 +279,16 @@ mLeDeviceListAdapter.notifyDataSetInvalidated();
                 public void run() {
                     if(mScanning) {
                         mScanning = false;
-                        mBluetoothAdapter.stopLeScan(mLeScanCallback);
+                        //mBluetoothAdapter.stopLeScan(mLeScanCallback);
+                        app.mBluetoothLeServiceM.queueStoptLeScan(mLeScanCallback);
                     }
                     invalidateOptionsMenu();
                 }
             }, SCAN_PERIOD);
 
             mScanning = true;
-            mBluetoothAdapter.startLeScan(mLeScanCallback);
+            //mBluetoothAdapter.startLeScan(mLeScanCallback);
+            app.mBluetoothLeServiceM.queueStartLeScan(mLeScanCallback);
 //            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 //                mBluetoothAdapter.getBluetoothLeScanner().startScan(mLeScanCallback);
 //            }else {
@@ -295,7 +298,8 @@ mLeDeviceListAdapter.notifyDataSetInvalidated();
             if(mScanning) {
                 mScanning = false;
                 // mBluetoothAdapter.getScanMode()
-                mBluetoothAdapter.stopLeScan(mLeScanCallback);
+                //mBluetoothAdapter.stopLeScan(mLeScanCallback);
+                app.mBluetoothLeServiceM.queueStoptLeScan(mLeScanCallback);
             }
         }
         //декларирует что Меню ИМЕНИЛОСЬ!!*? чтоб заново его прорисовали!!?? класс активити

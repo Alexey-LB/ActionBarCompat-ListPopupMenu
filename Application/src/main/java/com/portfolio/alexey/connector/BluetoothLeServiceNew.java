@@ -191,16 +191,14 @@ public class BluetoothLeServiceNew extends Service {
             if (newState == BluetoothProfile.STATE_CONNECTED) {
 
                 if(status == 133){
+                    sensor.battery_level = 0;// уровня батареи нет
+                    sensor.rssi = STATE_DISCONNECTED;//показываем что отключились
                     Log.e(TAG,"---ERROR -- STATE_CONNECTED -- go to STATE_DISCONNECTED" + str);
                     queueSetDisconnectCloseConnect(sensor);//в дисконнекте есть востановление коннекта
                     return;
                 } else {
                     Log.w(TAG,"-- STATE_CONNECTED --" +str);
                 }
-
-// сбрасываем запрос на коннект, он выполнен//сброс команды
-                filtrInTxQueue(sensor,TxQueueItemType.Connect, null, status);
-
                 intentAction = ACTION_GATT_CONNECTED;
                 // состояние промежуточное-МЫ подключились- но ЕЩЕ НЕ СЧИТАЛИ СЕРВИСЫ доступные на этом устройстве
                 sensor.mConnectionState = STATE_CONNECTING;
@@ -209,7 +207,6 @@ public class BluetoothLeServiceNew extends Service {
                 //Запускаем считывание СЕРВИСОВ и характеристик (discovery)
                 // broadcastUpdate(intentAction, sensor);
                 // Attempts to discover services after successful connection.
-
 //   пытался без дисковери запросить характеристику НЕ получилось, не отвечает сенсор!
 //                // BluetoothGattService#SERVICE_TYPE_SECONDARY
 //                BluetoothGattCharacteristic ch;BluetoothGattService sv;
@@ -221,12 +218,13 @@ public class BluetoothLeServiceNew extends Service {
                 queueSetDiscover(sensor);
 // ds= sensor.mBluetoothGatt.discoverServices();
 // Log.v(TAG, "Attempting to start service discovery:" + ds +"  adress= "+sensor.mBluetoothDeviceAddress);
-
+                // сбрасываем запрос на коннект, он выполнен//сброс команды
+                filtrInTxQueue(sensor,TxQueueItemType.Connect, null, status);
             } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
                 // просто отключение-оБлом
                 sensor.mConnectionState = STATE_DISCONNECTED;
                 Log.w(TAG, "--- STATE_DISCONNECTED --- " + str);
-
+                sensor.battery_level = 0;// уровня батареи нет
                 sensor.rssi = STATE_DISCONNECTED;//показываем что отключились
                 //intentAction = ACTION_GATT_DISCONNECTED;
                 // broadcastUpdate(intentAction, sensor);//сброс команды
@@ -246,8 +244,7 @@ public class BluetoothLeServiceNew extends Service {
             //если у нас есть такое устройство
             final Sensor sensor = getBluetoothDevice(gatt.getDevice().getAddress());
             if(sensor == null) return;
-            //сброс команды
-            filtrInTxQueue(sensor, TxQueueItemType.DiscoverServices, null, status);
+
             //
             if (status == BluetoothGatt.GATT_SUCCESS) {
                 // broadcastUpdate(ACTION_GATT_SERVICES_DISCOVERED, sensor);
@@ -266,6 +263,8 @@ public class BluetoothLeServiceNew extends Service {
             } else {
                 Log.e(TAG, "--- STATE_DISCOVERED_ERROR ---  ERROR status: " + status);
             }
+            //сброс команды
+            filtrInTxQueue(sensor, TxQueueItemType.DiscoverServices, null, status);
         }
         //-------------------------------------------------------------------------------------------------------
         @Override
@@ -322,24 +321,18 @@ public class BluetoothLeServiceNew extends Service {
             sensor.goToConnect = false;//подключение закончилочсь УДАЧНО!!
             sensor.setValue(characteristic, false);
 
-            //постоянно запрашивает характеристику- и обламывает остальное!! убираем
-            //       sensor.onCharacteristicRead();
-
-//последователно опрашивает все сенсоры
-//readRssiBatteryLevel();
-//!!??   sensor.readRSSIandBatteryLevel();
             sensor.onCharacteristicRead();
+            //ЗАПРАШИВАТЬ (или записыват) ЗА 1 РАЗ можно только 1 характеристику
+            // или свойства - иначе НЕ отвечает
+            //
+            // broadcastUpdate(ACTION_DATA_AVAILABLE, sensor, characteristic);
+            //       Log.i(TAG, "   adress= " + sensor.mBluetoothDeviceAddress);
             //если текшая команда нотификации, пытаемся сбросить и от сюда,
             // иногда ОБРАТНЫЙ ВЫЗОВ ЗАПИСИ ДЕСКРИПТОРА не срабатывает, по этому дублируем!
             if((mTxQueueItem != null) &&(mTxQueueItem.type == TxQueueItemType.WriteDescriptor)){
                 if(debug) Log.v(TAG,"---------onCharacteristicChanged --, RESET WriteDescriptor ---");
                 filtrInTxQueue(sensor,TxQueueItemType.WriteDescriptor, characteristic.getUuid(), BluetoothGatt.GATT_SUCCESS);
             }
-            //ЗАПРАШИВАТЬ (или записыват) ЗА 1 РАЗ можно только 1 характеристику
-            // или свойства - иначе НЕ отвечает
-            //
-            // broadcastUpdate(ACTION_DATA_AVAILABLE, sensor, characteristic);
-            //       Log.i(TAG, "   adress= " + sensor.mBluetoothDeviceAddress);
         }
         //----------------------------------------------------------------------------------------------
         @Override
@@ -354,13 +347,10 @@ public class BluetoothLeServiceNew extends Service {
             //если у нас есть такое устройство//входной контроль
             final Sensor sensor = getBluetoothDevice(gatt.getDevice().getAddress());
             if(sensor == null) return;
-            //
+            ////  Log.i(TAG, "onReadRemoteRssi= " + rssi);
             sensor.rssi = rssi;
             //сброс команды
             filtrInTxQueue(sensor,TxQueueItemType.ReadRSSI, null, status);
-
-            //  Log.i(TAG, "onReadRemoteRssi= " + rssi);
-            //sensor.mBluetoothGatt.readRemoteRssi();
         }
         //-------------------------------------------------------------------------
         //.. https://gist.github.com/SoulAuctioneer/ee4cb9bc0b3785bbdd51 -- пример
@@ -438,6 +428,7 @@ public class BluetoothLeServiceNew extends Service {
         public TxQueueItemType type;
         public int retry = 0;//количество повторов запроса
         public int timer = 0;//длительность задержки Тайм аута
+        public BluetoothAdapter.LeScanCallback leScanCallback;//обратный вызов для поиска
 
         @Override
         public String toString() {
@@ -470,6 +461,8 @@ public class BluetoothLeServiceNew extends Service {
         ,DisconnectCloseConnect//запрос дисконнекта  и потом снова на коннект!
         ,Timer //временная пауза - используется для окончания переходных процессов или состояний
         ,ReadRSSI //чтение амплитуды сигнала сенсора
+        ,StartLeScanCallback
+        ,StopLeScanCallback
     }
     /* queues  */
     public void queueSetTimer(final Sensor sens, int timer)
@@ -484,6 +477,25 @@ public class BluetoothLeServiceNew extends Service {
         else{if(i > 10000) i = 10000;}
         txQueueItem.timer = i;
     //    if(debug)Log.v(TAG," --- queueSetTimer("+timer+") --- START, " + txQueueItem.toString());
+        addToTxQueue(txQueueItem);
+    }
+
+    public void queueStartLeScan(BluetoothAdapter.LeScanCallback leScanCallback_)
+    {//mBluetoothAdapter.stopLeScan(mLeScanCallback);
+        // Add to queue because shitty Android GATT stuff is only synchronous
+        TxQueueItem txQueueItem = new TxQueueItem();
+        txQueueItem.type = TxQueueItemType.StartLeScanCallback;
+        txQueueItem.leScanCallback = leScanCallback_;
+        //    if(debug)Log.v(TAG," --- queueSetTimer("+timer+") --- START, " + txQueueItem.toString());
+        addToTxQueue(txQueueItem);
+    }
+    public void queueStoptLeScan(BluetoothAdapter.LeScanCallback leScanCallback_)
+    {//mBluetoothAdapter.stopLeScan(mLeScanCallback);
+        // Add to queue because shitty Android GATT stuff is only synchronous
+        TxQueueItem txQueueItem = new TxQueueItem();
+        txQueueItem.type = TxQueueItemType.StopLeScanCallback;
+        txQueueItem.leScanCallback = leScanCallback_;
+        //    if(debug)Log.v(TAG," --- queueSetTimer("+timer+") --- START, " + txQueueItem.toString());
         addToTxQueue(txQueueItem);
     }
     /* queues  */
@@ -607,6 +619,13 @@ public class BluetoothLeServiceNew extends Service {
                 processTxQueue(false);
                 return;
             }
+            //при старте и стопе сканирования повторов НЕ надо
+            if((mTxQueueItem.type == TxQueueItemType.StartLeScanCallback)
+                || (mTxQueueItem.type == TxQueueItemType.StopLeScanCallback)){
+                if(debug)Log.w(TAG,"--- HANDLER QUEUE --- " + mTxQueueItem.toString());
+                processTxQueue(false);
+                return;
+            }
             //-- запускаем контроль запроса по времени, устангавливаем 10 секунд
             // если не уложились, то текущий запрос возвращяем в очередь и увеличиваем попытку
             // передачи, передаем 5 раз и облом! ему, запрашиваемому параметру
@@ -712,7 +731,7 @@ public class BluetoothLeServiceNew extends Service {
        // release();
     }
 
-    private void processTxQueueWork(boolean init)//false-  если это обратная связь ИЛИ тайм аут по ответу
+    synchronized private void processTxQueueWork(boolean init)//false-  если это обратная связь ИЛИ тайм аут по ответу
     {   //если мы стартуем с новым значением, то это ттолько если не заняты работой по передаче
         // нового значения
         if(init && txQueueProcessing) return;//
@@ -736,7 +755,8 @@ public class BluetoothLeServiceNew extends Service {
                 else Log.w(TAG," --- EXECUTE --- , TxQueueItem= null");
             }
 
-            if((mTxQueueItem.sensor.mConnectionState  == STATE_DISCONNECTED)
+            if((mTxQueueItem.sensor != null)
+                &&(mTxQueueItem.sensor.mConnectionState  == STATE_DISCONNECTED)
                 && (mTxQueueItem.type != TxQueueItemType.DisconnectCloseConnect)//выполнения последовательности закрытия канала
                 && (mTxQueueItem.type != TxQueueItemType.Connect)//выполнения коннекта
                 && (mTxQueueItem.type != TxQueueItemType.Timer)// ожидания выполнения команды, чтоб она прошла полностью
@@ -793,6 +813,16 @@ public class BluetoothLeServiceNew extends Service {
                 mTxQueueItem.sensor.mBluetoothGatt.readRemoteRssi();
                 mHandlerTxQueue.removeCallbacks(runnable);
                 mHandlerTxQueue.postDelayed(runnable,mTxQueueItem.timer);//-- запускаем тайм аут,
+                break;
+            case StartLeScanCallback:// запуск поиска блутуз устройств
+                mBluetoothAdapter.startLeScan(mTxQueueItem.leScanCallback);
+                mHandlerTxQueue.removeCallbacks(runnable);
+                mHandlerTxQueue.postDelayed(runnable,1000);//-- запускаем тайм аут,
+                break;
+            case StopLeScanCallback:// запуск поиска блутуз устройств
+                mBluetoothAdapter.stopLeScan(mTxQueueItem.leScanCallback);
+                mHandlerTxQueue.removeCallbacks(runnable);
+                mHandlerTxQueue.postDelayed(runnable,3000);//-- запускаем тайм аут,
                 break;
         }
     }

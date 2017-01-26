@@ -328,7 +328,9 @@ public class MainActivityThermometer  extends AppCompatActivity {// ActionBarAct
         boolean b = (sensor.mConnectionState == BluetoothLeServiceNew.STATE_CONNECTED);
         //читаем уровень сигнала для каждого в отведенное время для него
         // поскольку он один берем с 0
+        // сенсор опрашиваем каждые 2.4 секунды
         if((mHandlerLoop & 0x7) == 0)sensor.readRSSIandBatteryLevel();
+        //if((lloop & 0x1F) == (i << 3))sensor.readRSSIandBatteryLevel();
         //
         Util.setTextToTextView(sensor.getStringTime(),R.id.time, view);
         Util.setLevelToImageView(b? sensor.battery_level: 0, R.id.battery, view);

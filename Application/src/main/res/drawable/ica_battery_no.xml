@@ -3,37 +3,26 @@
         android:height="24dp"
         android:viewportWidth="100.0"
         android:viewportHeight="100.0">
-    <!--android:fillAlpha=".6"-->
-    <path
-        android:fillColor="#ffff6600"
-        android:pathData="
-        M42,82
-        h27
-        v6
-        c0,3 -3,6 -6,6
-        h-26
-        c-3,0 -6,-3 -6,-6
-        v-6
-        h13
-        z"
-        />
-    <!--<path-->
-        <!--android:fillColor="#ffff6600"-->
 
+    <!--<path-->
+        <!--android:fillColor="#80000000"-->
+        <!--android:strokeWidth="8.0"-->
         <!--android:pathData="-->
-        <!--M42,86-->
+        <!--M40,40-->
         <!--h27-->
-        <!--v2-->
-        <!--c0,3 -3,6 -6,6-->
+        <!--v40-->
+        <!--c0,2 -2,4 -4,4-->
         <!--h-26-->
-        <!--c-3,0 -6,-3 -6,-6-->
-        <!--v-2-->
+        <!--c-2,0 -4,-2 -4,-4-->
+        <!--v-40-->
         <!--h13-->
         <!--z"-->
         <!--/>-->
-    <!--android:strokeAlpha="0.6"-->
+    <!--android:strokeAlpha="0.2"-->
+
+    <!--android:strokeColor="@color/colorBatteryStrok"-->
     <path
-        android:strokeColor="#80000000"
+        android:strokeColor="#10000000"
         android:strokeWidth="8.0"
 
         android:pathData="
