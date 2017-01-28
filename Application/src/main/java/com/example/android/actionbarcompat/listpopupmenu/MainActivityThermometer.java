@@ -470,6 +470,9 @@ public class MainActivityThermometer  extends AppCompatActivity {// ActionBarAct
             public void run() {
             //    Log.v(TAG,"mHandler --");
                 updateViewItem(sensor, thermometer);
+                //если только начали в этом окне, сбросим счетчик выдачи уровня сигнала и батарей
+                // чтоб батарея быстрее была опрошена, после смены окна
+                if(mHandlerLoop == 0)sensor.loop_rssi = 0;
                 mHandlerLoop++;
                 // повторяем через каждые 300 миллисекунд
                 if(mHandlerWork) mHandler.postDelayed(this, 300);

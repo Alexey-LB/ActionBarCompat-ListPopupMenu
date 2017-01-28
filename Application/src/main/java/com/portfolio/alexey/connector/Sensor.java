@@ -725,7 +725,7 @@ return getStringValue( maxLevelNotification.valueLevel, onFahrenheit, addType);
                 , PartGatt.UUID_HEART_RATE_MEASUREMENT, PartGatt.UUID_CLIENT_CHARACTERISTIC_CONFIG, true);
     }
 
-    private   int loop_rssi  = 0;
+    public    int loop_rssi  = 0;
     //каждый вызов этого метода запрашивает RSSI или BatteryLevel
     // ПРИНИМАЕМ, что вызов идит через каждые 2 секунды!!
     // тогда: батарею будем опрашивать каждые 2 минуты

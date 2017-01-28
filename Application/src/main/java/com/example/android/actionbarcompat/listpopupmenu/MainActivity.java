@@ -163,7 +163,8 @@ public class MainActivity extends AppCompatActivity {// ActionBarActivity {
             }
         });
 //ПРИНУДИТЕЛЬНО задал ОРИНТАЦИЮ экрана ВНЕ зависимости от положения устройства
-setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+//setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+//2017.01.28 -- оринтацию задали в манифесте - android:screenOrientation="portrait"
         Log.e(TAG, "----onCreate END-----");
 //      //  ImageView iv = (ImageView)findViewById(R.id.imageView2);
 //        TransitionDrawable td = (TransitionDrawable)getResources().getDrawable(R.drawable.marker_transition);

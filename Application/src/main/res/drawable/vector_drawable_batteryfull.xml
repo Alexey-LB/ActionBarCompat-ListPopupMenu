@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android" android:viewportWidth="23"
+    android:viewportHeight="12" android:width="4dp" android:height="2dp">
+    <group android:name="Layer_x0020_1">
+        <path
+            android:pathData="M20 9l0 -2 2 0 0 0 0 -3 0 0 -2 0 0 -2c0,-1 -1,-1 -1,-1l-16 0c-1,0 -1,1 -1,1l0 7c0,1 1,1 1,1l16 0c1,0 1,-1 1,-1z"
+            android:name="fil0 str0" android:fillColor="#FF000000" />
+        <path android:pathData="M1,1L20,1L20,4L22,4L22,7L20,7L20,11L1,1z" android:name="fil1"
+            android:fillColor="#4DE2C2" />
+    </group>
+</vector>
