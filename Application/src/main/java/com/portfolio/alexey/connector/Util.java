@@ -208,7 +208,7 @@ public class Util {
         //context.getSystemService();
         Vibrator  vibrator = (Vibrator) context.getSystemService (VIBRATOR_SERVICE);
         try {
-            vibrator.vibrate(milsec);
+            vibrator.vibrate(milsec);//
         }catch (Exception e){
            ;// Log.e(TAG, " vibrator ERR= " + e);
         }
